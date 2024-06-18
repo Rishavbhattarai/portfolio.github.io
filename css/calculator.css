@@ -21,3 +21,13 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
+
+  .code-box{
+    background-color: #101010;
+
+}
+
+.code-box{
+    font: 30px;
+    color: #fff;
+}

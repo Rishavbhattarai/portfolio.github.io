@@ -39,74 +39,76 @@
     <!-- banner -->
     
 
-    <div class="container"> 
-        <div class="row">
-            <h2> How to build a html css and js project from scratch to run on localhost using live server? </h2>
-        </div>
-
-        <div class="row col-xs-10">
-           <p> To build a html css and js project from scratch we will have to download nodejs from here. After installing nodejs on your computer,
-             now you type the following to test if nodejs is installed and set in environment variables. </p>
+    <div class="container">
+        <div class="paper_setup"> 
+            <div class="row">
+                <h2> How to build a html css and js project from scratch to run on localhost using live server? </h2>
+            </div>
+    
+            <div class="row">
+               <p> To build a html css and js project from scratch we will have to download nodejs from here. After installing nodejs on your computer,
+                 now you type the following to test if nodejs is installed and set in environment variables. </p>
+                    <div class="code-box">
+                        <pre class="code-content">
+                            npm --version
+                        </pre>
+                    </div>
+                    
+            </div>
+            <div class="row">
+                <p>
+                    After this if it doesnt show a version than that means you need to add node into your environment variable.
+                    You can click here! to setup your environment variables. Now that we have node or npm in our command line 
+                </p>
+    
+                <p>
+                    Now, make a folder in your Desktop and jump  to that location using a terminal.
+                    You can use any terminal git bash or cmd from your Desktop.
+                    You can use the following command to go to the folder.
+                    <div class="code-box">
+                        <pre class="code-content">
+                            cd location_of_your_file(D:\Git)
+                        </pre>
+                      </div>
+                      
+                    
+                </p>
+            </div>
+            <div class="row col-xs-10">
+                <p>
+                    Now, you should initialize npm in your folder by doing the series of comands from below
+                </p>
                 <div class="code-box">
                     <pre class="code-content">
-                        npm --version
+                        npm init
+                    </pre>
+                    <pre class="code-content">
+                        npm install lite-server jquery  --save
+                    </pre>
+                    
+                </div>
+            </div>
+    
+            <div class="row">
+                <h3>
+                    There is a final step to integrate live server in your project.   
+            </h3>
+                <p>
+                    You have now made a html, css and js project from scratch. You will now be able 
+                    to code in html, style in css and bring user interaction to your website. Enter the following
+                    line of script in your package.json file that is create by node when you initialized it. You can just Copy and
+                    paste the "start":"lite-server" from the following script where "script"{  } is situated.
+                </p>
+                <div class="code-box">
+                    <pre class="code-content">
+                        "scripts": {
+                            "start": "lite-server"
+                          },
                     </pre>
                 </div>
                 
-        </div>
-        <div class="row col-xs-10">
-            <p>
-                After this if it doesnt show a version than that means you need to add node into your environment variable.
-                You can click here! to setup your environment variables. Now that we have node or npm in our command line 
-            </p>
-
-            <p>
-                Now, make a folder in your Desktop and jump  to that location using a terminal.
-                You can use any terminal git bash or cmd from your Desktop.
-                You can use the following command to go to the folder.
-                <div class="code-box">
-                    <pre class="code-content">
-                        cd location_of_your_file(D:\Git)
-                    </pre>
-                  </div>
-                  
-                
-            </p>
-        </div>
-        <div class="row col-xs-10">
-            <p>
-                Now, you should initialize npm in your folder by doing the series of comands from below
-            </p>
-            <div class="code-box">
-                <pre class="code-content">
-                    npm init
-                </pre>
-                <pre class="code-content">
-                    npm install lite-server jquery  --save
-                </pre>
-                
-            </div>
-        </div>
-
-        <div class="row">
-            <h3>
-                There is a final step to integrate live server in your project.   
-        </h3>
-            <p>
-                You have now made a html, css and js project from scratch. You will now be able 
-                to code in html, style in css and bring user interaction to your website. Enter the following
-                line of script in your package.json file that is create by node when you initialized it. You can just Copy and
-                paste the "start":"lite-server" from the following script where "script"{  } is situated.
-            </p>
-            <div class="code-box">
-                <pre class="code-content">
-                    "scripts": {
-                        "start": "lite-server"
-                      },
-                </pre>
-            </div>
             
-        
+            </div>
         </div>
     </div>
 
