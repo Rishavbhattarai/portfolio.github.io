@@ -1,0 +1,57 @@
+
+# DATA DICTIONARY
+=================
+
+## 1. nepal_migration_data.csv
+Columns:
+- Year: Academic year (2010-2024)
+- Destination: Country name (Australia, USA, Japan, South Korea, UK)
+- Students: Number of Nepali students in that country
+
+## 2. field_of_study.csv
+Columns:
+- Field: Academic field name
+- Percentage: Percentage of students in this field
+- Avg_Annual_Cost_USD: Average annual tuition cost in USD
+
+## 3. nepal_indicators.csv
+Columns:
+- Year: Calendar year (2010-2024)
+- GDP_Per_Capita_USD: Nepal's GDP per capita in USD
+- Remittance_Billion_USD: Total remittances received (in billions)
+- Unemployment_Rate: Unemployment rate as percentage
+
+## 4. forecast_2025_2030.csv
+Columns:
+- Year: Future year (2025-2030)
+- Predicted_Students: Predicted total students abroad
+
+## 5. economic_impact_analysis.csv
+Columns:
+- Year: Calendar year
+- Total_Students: Sum of students across all destinations
+- YoY_Growth: Year-over-year growth rate (%)
+- GDP_Per_Capita_USD: GDP per capita
+- Remittance_Billion_USD: Total remittances
+- Unemployment_Rate: Unemployment rate (%)
+- Total_Education_Cost_Million_USD: Annual education expenditure
+- Nepal_GDP_Billion_USD: Total GDP estimate
+- Cost_as_Pct_GDP: Education cost as % of GDP
+- Cost_as_Pct_Remittance: Education cost as % of remittances
+- Permanent_Brain_Drain: Students not returning (70%)
+- Cumulative_Brain_Drain: Total cumulative loss
+
+## 6. destination_statistics.csv
+Columns:
+- Destination: Country name
+- Students_2010: Students in 2010
+- Students_2024: Students in 2024
+- Total_Growth_Pct: Total percentage growth
+- CAGR_Pct: Compound Annual Growth Rate
+- Market_Share_2024_Pct: Market share in 2024
+
+DATA NOTES:
+- All monetary values are in USD
+- Growth rates are percentages
+- Brain drain rate assumption: 70% non-return
+- Average education cost: $34,000/year for 3 years

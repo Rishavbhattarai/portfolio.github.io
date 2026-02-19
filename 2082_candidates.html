@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Nepal Election 2082 Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent: #38bdf8;
+            --uml: #ff4d4d;
+            --nc: #4d79ff;
+            --rsp: #ffcc00;
+            --un: #00cc99;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #ffffff;
+            background: #020617;
+            /* Animated Liquid Background */
+            background: linear-gradient(45deg, #020617, #0f172a, #1e1b4b, #020617);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle { color: #94a3b8; font-weight: 300; margin-top: 10px; }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card span { display: block; color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px; }
+        .stat-card h2 { margin: 0; font-size: 2.2rem; color: var(--accent); text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+
+        /* Controls Section */
+        .controls-wrapper {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .input-group { flex: 1; min-width: 250px; position: relative; }
+
+        select, input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        select:focus, input:focus { border-color: var(--accent); background: rgba(0,0,0,0.4); }
+
+        /* Table Design */
+        .table-container {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th {
+            background: rgba(255,255,255,0.03);
+            padding: 18px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* Party Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.05);
+        }
+        .uml { color: var(--uml); border: 1px solid rgba(255, 77, 77, 0.3); }
+        .nc { color: var(--nc); border: 1px solid rgba(77, 121, 255, 0.3); }
+        .rsp { color: var(--rsp); border: 1px solid rgba(255, 204, 0, 0.3); }
+        .un { color: var(--un); border: 1px solid rgba(0, 204, 153, 0.3); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            td, th { padding: 12px; font-size: 0.8rem; }
+            .table-container { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🇳🇵 Election Dashboard 2082</h1>
+        <div class="subtitle">Real-time Constituency Analysis & High-Profile Matchups</div>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>Total Districts</span>
+            <h2 id="districtCount">0</h2>
+        </div>
+        <div class="stat-card">
+            <span>Constituencies</span>
+            <h2 id="constCount">0</h2>
+        </div>
+        <div class="stat-card">
+            <span>Tracked Candidates</span>
+            <h2 id="candCount">0</h2>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <div class="input-group">
+            <select id="districtFilter">
+                <option value="All">All Districts (Nationwide)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <input id="searchInput" type="text" placeholder="Search names (e.g. Balen, Oli, Toshima)..." />
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>District / No.</th>
+                    <th>CPN (UML)</th>
+                    <th>Nepali Congress</th>
+                    <th>RSP (Bell)</th>
+                    <th>Ujyaalo Nepal</th>
+                    <th>Others / Ind.</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const data = [
+    { "Dist.":"Jhapa","Const.":1,"CPN (UML)":"Ramchandra Upreti","Nepali Congress":"Keshav Raj Pandey","RSP (Bell)":"Nisha Dangi","Ujyaalo Nepal":"Naresh Lawati","Independent / Others":"Hemraj Karki (RPP)" },
+    { "Dist.":"Jhapa","Const.":2,"CPN (UML)":"Dev Raj Ghimire","Nepali Congress":"Sarita Prasain","RSP (Bell)":"Indira Rana Magar","Ujyaalo Nepal":"Chudakarna Begha","Independent / Others":"Dr. Yubaraj Sangroula" },
+    { "Dist.":"Jhapa","Const.":3,"CPN (UML)":"Dilli Ghimire","Nepali Congress":"Rajendra K. Ghimire","RSP (Bell)":"Prakash Pathak","Ujyaalo Nepal":"Shyam K. Pathak","Independent / Others":"Rajendra Lingden (RPP)" },
+    { "Dist.":"Jhapa","Const.":4,"CPN (UML)":"Lal Prasad Sawa","Nepali Congress":"Deu Kumar Thebe","RSP (Bell)":"Shambhu P. Dhakal","Ujyaalo Nepal":"Santosh Tamang","Independent / Others":"Bhakti P. Sitaula (RPP)" },
+    { "Dist.":"Jhapa","Const.":5,"CPN (UML)":"K. P. Sharma Oli","Nepali Congress":"Mandhara Chimoriya","RSP (Bell)":"Balen Shah","Ujyaalo Nepal":"Sabin Rai","Independent / Others":"Ranjit Tamang (NCP)" },
+    { "Dist.":"Sunsari","Const.":1,"CPN (UML)":"Tikaram Limbu","Nepali Congress":"Sujendra Tamang","RSP (Bell)":"Goma Tamang","Ujyaalo Nepal":"Dambar Lawati","Independent / Others":"Harka Sampang (SSP)" },
+    { "Dist.":"Sunsari","Const.":2,"CPN (UML)":"Sujan Lama","Nepali Congress":"Rajeev Koirala","RSP (Bell)":"Lalbikram Thapa","Ujyaalo Nepal":"Ramkumari (NCP)","Independent / Others":"Iqwal Ahmad" },
+    { "Dist.":"Sunsari","Const.":3,"CPN (UML)":"Bhagwati Chaudhary","Nepali Congress":"Vijay Gachhadar","RSP (Bell)":"Ashok Chaudhary","Ujyaalo Nepal":"Durgesh Chaudhary","Independent / Others":"—" },
+    { "Dist.":"Sunsari","Const.":4,"CPN (UML)":"Jagadish Kusiyait","Nepali Congress":"Gyanendra B. Karki","RSP (Bell)":"Dipak Kumar Sah","Ujyaalo Nepal":"Mahmud Ansari","Independent / Others":"—" },
+    { "Dist.":"Lalitpur","Const.":1,"CPN (UML)":"Chet Nath Sanjel","Nepali Congress":"Udaya Shamsher Rana","RSP (Bell)":"Buddha Ratna Maharjan","Ujyaalo Nepal":"Sunil Maharjan (NCP)","Independent / Others":"N/A" },
+    { "Dist.":"Lalitpur","Const.":2,"CPN (UML)":"Prem Bahadur Maharjan","Nepali Congress":"Prem Krishna Maharjan","RSP (Bell)":"Jagadish Kharel","Ujyaalo Nepal":"N/A","Independent / Others":"Raghuvar Raj Thapa (RPP)" },
+    { "Dist.":"Lalitpur","Const.":3,"CPN (UML)":"Sandan Thapa Magar","Nepali Congress":"Jitendra Shrestha","RSP (Bell)":"Dr. Toshima Karki","Ujyaalo Nepal":"Dr. Vijay Pant","Independent / Others":"Shyam Bahadur (SNP)" },
+    { "Dist.":"KTM","Const.":1,"CPN (UML)":"Mohan Raj Regmi","Nepali Congress":"Prabal Thapa","RSP (Bell)":"Ranju Darshana","Ujyaalo Nepal":"Mangal Shrestha","Independent / Others":"Rabindra Mishra (RPP)" },
+    { "Dist.":"KTM","Const.":2,"CPN (UML)":"Maniram Phuyal","Nepali Congress":"Kabir Sharma","RSP (Bell)":"Sunil K.C.","Ujyaalo Nepal":"Pawan Pokharel","Independent / Others":"Rupak Simkhada" },
+    { "Dist.":"KTM","Const.":3,"CPN (UML)":"Rameshwar Phuyal","Nepali Congress":"Ramesh Aryal","RSP (Bell)":"Raju Nath Pandey","Ujyaalo Nepal":"Kulman Ghising","Independent / Others":"Dr. Sundar S. Bohora" },
+    { "Dist.":"KTM","Const.":4,"CPN (UML)":"Rajan Bhattarai","Nepali Congress":"Sachin Timilsina","RSP (Bell)":"Pukar Bam","Ujyaalo Nepal":"Jhanak Adhikari","Independent / Others":"Dr. Surendra Bhandari" },
+    { "Dist.":"KTM","Const.":5,"CPN (UML)":"Ishwar Pokharel","Nepali Congress":"Pradip Paudel","RSP (Bell)":"Sasmit Pokharel","Ujyaalo Nepal":"Shriram Gurung","Independent / Others":"Kamal Thapa (RPP)" },
+    { "Dist.":"KTM","Const.":6,"CPN (UML)":"Aman Kumar Maske","Nepali Congress":"Krishna Baniya","RSP (Bell)":"Shishir Khanal","Ujyaalo Nepal":"Waris Dharel","Independent / Others":"—" },
+    { "Dist.":"KTM","Const.":7,"CPN (UML)":"Prakash Shrestha","Nepali Congress":"Pramod H. Guragain","RSP (Bell)":"Ganesh Parajuli","Ujyaalo Nepal":"Vimala Lama","Independent / Others":"Maniram Pradhan" },
+    { "Dist.":"KTM","Const.":8,"CPN (UML)":"Rajesh Shakya","Nepali Congress":"Sapana Rajbhandari","RSP (Bell)":"Viraj Bhakta","Ujyaalo Nepal":"Rajan Khadgi","Independent / Others":"—" },
+    { "Dist.":"KTM","Const.":9,"CPN (UML)":"Ajay Kranti Shakya","Nepali Congress":"Nanu M. Bastola","RSP (Bell)":"Dol Prasad Aryal","Ujyaalo Nepal":"Rameshwor Shrestha","Independent / Others":"Navin Sahi" },
+    { "Dist.":"KTM","Const.":10,"CPN (UML)":"Binod Shrestha","Nepali Congress":"Himal Karki","RSP (Bell)":"Pradip Bista","Ujyaalo Nepal":"Rakesh Neupane","Independent / Others":"—" }
+];
+
+const tableBody = document.getElementById("tableBody");
+const districtFilter = document.getElementById("districtFilter");
+const searchInput = document.getElementById("searchInput");
+
+function render(rows) {
+    tableBody.innerHTML = "";
+    rows.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td style="font-weight:600">${r["Dist."]} - ${r["Const."]}</td>
+            <td><span class="badge uml">${r["CPN (UML)"]}</span></td>
+            <td><span class="badge nc">${r["Nepali Congress"]}</span></td>
+            <td><span class="badge rsp">${r["RSP (Bell)"]}</span></td>
+            <td><span class="badge un">${r["Ujyaalo Nepal"]}</span></td>
+            <td style="color:#94a3b8">${r["Independent / Others"]}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+function init() {
+    const districts = [...new Set(data.map(d => d["Dist."]))];
+    districts.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d;
+        opt.textContent = d;
+        districtFilter.appendChild(opt);
+    });
+
+    document.getElementById("districtCount").textContent = districts.length;
+    document.getElementById("constCount").textContent = data.length;
+    document.getElementById("candCount").textContent = data.length * 5; // Simplified estimate
+
+    render(data);
+}
+
+function applyFilters() {
+    const d = districtFilter.value;
+    const q = searchInput.value.toLowerCase();
+
+    const filtered = data.filter(row =>
+        (d === "All" || row["Dist."] === d) &&
+        Object.values(row).join(" ").toLowerCase().includes(q)
+    );
+    render(filtered);
+}
+
+districtFilter.addEventListener("change", applyFilters);
+searchInput.addEventListener("input", applyFilters);
+
+init();
+</script>
+
+</body>
+</html>
