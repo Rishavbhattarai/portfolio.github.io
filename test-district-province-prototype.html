@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal Constituency Financial Dashboard · 2079</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Tiro+Devanagari+Hindi&display=swap');
+
+:root {
+  --bg:#070910; --s1:#0e1118; --s2:#141720; --s3:#1a1e2a;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.12);
+  --text:#dde2ec; --muted:#5a6478; --muted2:#8896b0;
+  --gold:#f5c842; --teal:#2dd4bf; --red:#f87171; --green:#4ade80;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;height:58px;background:rgba(7,9,16,0.9);backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.75rem;gap:1rem}
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f5c842,#e89b18);display:flex;align-items:center;justify-content:center;font-family:'Tiro Devanagari Hindi',serif;font-size:17px;color:#070910;font-weight:700;box-shadow:0 0 20px rgba(245,200,66,0.3)}
+.brand-name{font-weight:700;font-size:.9rem;letter-spacing:-.01em;line-height:1}
+.brand-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:2px;text-transform:uppercase}
+nav{display:flex;gap:2px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:3px}
+.np{padding:6px 16px;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:500;color:var(--muted);transition:all .2s;user-select:none;display:flex;align-items:center;gap:6px}
+.np:hover{color:var(--text)}
+.np.active{background:var(--s3);color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.status-bar{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.status-txt{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.08em}
+.status-count{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gold);padding:3px 10px;border-radius:20px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2)}
+
+/* LAYOUT */
+main{max-width:1480px;margin:0 auto;padding:1.75rem}
+.section{display:none;animation:fadeUp .35s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:1.5rem}
+.ph h1{font-size:1.65rem;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.ph h1 em{font-style:normal;color:var(--gold)}
+.ph p{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:1rem 1.25rem;background:var(--s1);border:1px solid var(--border);border-radius:12px;margin-bottom:1.5rem}
+.fg{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1}
+.fg label{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+.fg select{background:var(--s2);border:1px solid var(--border2);color:var(--text);padding:7px 30px 7px 11px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-size:.8rem;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%235a6478'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;transition:border-color .2s}
+.fg select:focus{border-color:rgba(245,200,66,.4)}
+.btn-reset{padding:7px 14px;background:transparent;border:1px solid var(--border2);color:var(--muted2);border-radius:8px;cursor:pointer;font-size:.76rem;font-family:'Space Grotesk',sans-serif;transition:all .2s;align-self:flex-end;white-space:nowrap}
+.btn-reset:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:1.5rem}
+.kpi{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem;position:relative;overflow:hidden;transition:border-color .25s,transform .2s}
+.kpi:hover{transform:translateY(-2px);border-color:var(--border2)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,var(--gold));border-radius:12px 12px 0 0}
+.kpi-lbl{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.kpi-val{font-size:1.6rem;font-weight:700;letter-spacing:-.04em;color:var(--text);line-height:1}
+.kpi-meta{font-size:.68rem;color:var(--muted);margin-top:5px;font-family:'JetBrains Mono',monospace}
+.kpi-ico{position:absolute;top:1rem;right:1rem;font-size:1.25rem;opacity:.18}
+
+/* CARDS & GRIDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;gap:12px;flex-wrap:wrap}
+.card-title{font-size:.9rem;font-weight:600;color:var(--text)}
+.card-sub{font-size:.66rem;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+.pill{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:4px 11px;border-radius:20px;background:var(--s3);border:1px solid var(--border2);color:var(--muted2);white-space:nowrap;letter-spacing:.06em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
+.ch{position:relative}
+
+/* LEADERBOARD */
+.lboard{display:flex;flex-direction:column;gap:6px}
+.lb-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--s2);transition:background .15s}
+.lb-row:hover{background:var(--s3)}
+.lb-rank{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);width:20px;text-align:right;flex-shrink:0}
+.lb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lb-name{font-size:.8rem;font-weight:500;flex:1}
+.lb-dist{font-size:.68rem;color:var(--muted)}
+.lb-val{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--text)}
+.lb-bar-wrap{width:60px;height:4px;background:var(--s3);border-radius:2px;flex-shrink:0}
+.lb-bar-fill{height:100%;border-radius:2px}
+
+/* HEATMAP */
+.province-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.prov-cell{border-radius:10px;padding:1rem 1.1rem;cursor:pointer;transition:all .2s;border:1px solid transparent;position:relative;overflow:hidden}
+.prov-cell:hover{transform:scale(1.03);filter:brightness(1.1)}
+.pc-name{font-size:.78rem;font-weight:600;color:#fff}
+.pc-val{font-size:1.15rem;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;margin:4px 0 2px}
+.pc-sub{font-size:.61rem;color:rgba(255,255,255,.55);font-family:'JetBrains Mono',monospace}
+.pc-bar{height:3px;border-radius:2px;margin-top:8px;background:rgba(255,255,255,.2)}
+.pc-bar-fill{height:100%;border-radius:2px;background:rgba(255,255,255,.65)}
+.map-toggle{display:flex;gap:3px;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:3px}
+.mt-btn{padding:5px 13px;border:none;background:transparent;color:var(--muted);font-size:.72rem;font-family:'Space Grotesk',sans-serif;border-radius:5px;cursor:pointer;transition:all .2s}
+.mt-btn.active{background:var(--gold);color:#070910;font-weight:600}
+
+/* SANKEY */
+#sankey-wrap{overflow-x:auto}
+#sankey-svg{display:block;min-width:560px;width:100%}
+
+/* SCORE CHIPS */
+.score-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:1.25rem;scrollbar-width:thin}
+.score-chip{flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:var(--s2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.score-chip:hover{border-color:var(--border2)}
+.sc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sc-name{font-size:.75rem;font-weight:500}
+.sc-val{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted)}
+
+/* TABLE */
+.tbl-controls{display:flex;gap:10px;margin-bottom:1.1rem;flex-wrap:wrap;align-items:center}
+.tbl-search{flex:1;min-width:200px;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:8px 13px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.8rem;outline:none;transition:border-color .2s}
+.tbl-search:focus{border-color:rgba(245,200,66,.35)}
+.tbl-search::placeholder{color:var(--muted)}
+.btn-export{padding:8px 16px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.22);color:var(--gold);border-radius:8px;cursor:pointer;font-size:.76rem;font-family:'Space Grotesk',sans-serif;font-weight:500;transition:all .2s;display:flex;align-items:center;gap:6px}
+.btn-export:hover{background:rgba(245,200,66,.15)}
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead{background:var(--s2)}
+th{padding:11px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;cursor:pointer;user-select:none;transition:color .2s;border-bottom:1px solid var(--border)}
+th:hover{color:var(--text)}
+th.sa::after{content:' ↑';color:var(--gold)}
+th.sd::after{content:' ↓';color:var(--gold)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+.mono{font-family:'JetBrains Mono',monospace}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:.66rem;font-family:'JetBrains Mono',monospace;font-weight:500}
+.bp{background:rgba(74,222,128,.1);color:var(--green)}
+.bn{background:rgba(248,113,113,.1);color:var(--red)}
+.pv-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.pgn{display:flex;align-items:center;justify-content:space-between;margin-top:1rem;flex-wrap:wrap;gap:8px}
+.pgn-info{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted)}
+.pgn-btns{display:flex;gap:3px}
+.pb{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid var(--border);background:var(--s2);color:var(--muted);cursor:pointer;font-size:.75rem;transition:all .15s}
+.pb:hover{color:var(--text);border-color:var(--border2)}
+.pb.on{background:var(--gold);color:#070910;border-color:var(--gold);font-weight:700}
+.pb:disabled{opacity:.25;cursor:not-allowed}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted)}
+.leg-swatch{width:10px;height:10px;border-radius:3px}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.loader-ring{width:48px;height:48px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .85s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-brand{font-size:1.2rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.loader-brand span{color:var(--gold)}
+.loader-txt{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+
+@media(max-width:640px){header{padding:0 1rem}main{padding:1rem}.kpi-val{font-size:1.2rem}nav .np{padding:6px 10px;font-size:.72rem}}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-brand">Nepal <span>Constituency</span> Dashboard</div>
+  <div class="loader-ring"></div>
+  <div class="loader-txt">Loading · 2079 Data</div>
+</div>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">ने</div>
+    <div>
+      <div class="brand-name">Constituency Dashboard</div>
+      <div class="brand-sub">Federal Election 2079 · Nepal</div>
+    </div>
+  </div>
+  <nav>
+    <div class="np active" onclick="go('overview')">📊 Overview</div>
+    <div class="np" onclick="go('visuals')">🗺 Visuals</div>
+    <div class="np" onclick="go('reports')">📋 Reports</div>
+  </nav>
+  <div class="status-bar">
+    <div class="live-dot"></div>
+    <span class="status-txt">LIVE</span>
+    <div class="status-count" id="hdr-count">— seats</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══ OVERVIEW ══ -->
+<section class="section active" id="s-overview">
+  <div class="ph">
+    <div>
+      <h1>National <em>Overview</em></h1>
+      <p>Fiscal &amp; demographic summary · Cascading filters</p>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <div class="fg"><label>Province</label><select id="f-prov" onchange="applyFilters()"><option value="">All Provinces</option></select></div>
+    <div class="fg"><label>District</label><select id="f-dist" onchange="applyFilters()"><option value="">All Districts</option></select></div>
+    <div class="fg"><label>Constituency</label><select id="f-con" onchange="applyFilters()"><option value="">All Constituencies</option></select></div>
+    <button class="btn-reset" onclick="resetFilters()">↺ Reset</button>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:#38bdf8"><div class="kpi-ico">🏛</div><div class="kpi-lbl">Constituencies</div><div class="kpi-val" id="k-count">—</div><div class="kpi-meta" id="k-count-s">—</div></div>
+    <div class="kpi" style="--kc:#f5c842"><div class="kpi-ico">👥</div><div class="kpi-lbl">Total Population</div><div class="kpi-val" id="k-pop">—</div><div class="kpi-meta" id="k-pop-s">—</div></div>
+    <div class="kpi" style="--kc:#2dd4bf"><div class="kpi-ico">💰</div><div class="kpi-lbl">Tax Generated</div><div class="kpi-val" id="k-tax">—</div><div class="kpi-meta">total revenue (NPR)</div></div>
+    <div class="kpi" style="--kc:#f87171"><div class="kpi-ico">🏦</div><div class="kpi-lbl">Federal Allocation</div><div class="kpi-val" id="k-alloc">—</div><div class="kpi-meta">total grants (NPR)</div></div>
+    <div class="kpi" style="--kc:#4ade80"><div class="kpi-ico">⚖</div><div class="kpi-lbl">Net Fiscal Position</div><div class="kpi-val" id="k-net">—</div><div class="kpi-meta" id="k-net-s">—</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-header"><div><div class="card-title">Revenue vs Allocation</div><div class="card-sub">Top 30 constituencies (Crore NPR)</div></div><div class="pill">Grouped Bar</div></div>
+      <div class="ch" style="height:300px"><canvas id="c-bar"></canvas></div>
+      <div class="legend"><div class="leg-item"><div class="leg-swatch" style="background:#2dd4bf"></div>Tax Generated</div><div class="leg-item"><div class="leg-swatch" style="background:#f87171"></div>Federal Allocation</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div><div class="card-title">Population by Province</div><div class="card-sub">Share distribution</div></div><div class="pill">Doughnut</div></div>
+      <div class="ch" style="height:300px"><canvas id="c-donut"></canvas></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-header"><div><div class="card-title">Top Tax Generators</div><div class="card-sub">Highest revenue constituencies</div></div><div class="pill">Top 10</div></div>
+      <div class="lboard" id="lb-tax"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div><div class="card-title">Highest Fed. Allocations</div><div class="card-sub">Largest grant recipients</div></div><div class="pill">Top 10</div></div>
+      <div class="lboard" id="lb-alloc"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VISUALS ══ -->
+<section class="section" id="s-visuals">
+  <div class="ph"><div><h1>Province <em>Heatmap</em> &amp; Flows</h1><p>Intensity map · Sankey flow · Net surplus / deficit</p></div></div>
+  <div class="score-strip" id="prov-chips"></div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Province Financial Intensity Map</div><div class="card-sub">Color depth = relative magnitude</div></div>
+      <div class="map-toggle">
+        <button class="mt-btn active" id="mt-tax" onclick="setMapMode('tax')">Tax</button>
+        <button class="mt-btn" id="mt-alloc" onclick="setMapMode('alloc')">Allocation</button>
+        <button class="mt-btn" id="mt-pop" onclick="setMapMode('pop')">Population</button>
+      </div>
+    </div>
+    <div class="province-map" id="prov-map"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div><div class="card-title">Federal Money Flow</div><div class="card-sub">Central Government → Provinces → Top 10 Constituencies</div></div><div class="pill">Sankey</div></div>
+    <div id="sankey-wrap"><svg id="sankey-svg" height="400"></svg></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div><div class="card-title">Fiscal Surplus / Deficit</div><div class="card-sub">Tax − Allocation per constituency (Crore NPR)</div></div><div class="pill">Diverging Bar</div></div>
+    <div class="ch" style="height:360px"><canvas id="c-net"></canvas></div>
+    <div class="legend"><div class="leg-item"><div class="leg-swatch" style="background:#2dd4bf"></div>Surplus</div><div class="leg-item"><div class="leg-swatch" style="background:#f87171"></div>Deficit</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div><div class="card-title">Population vs Tax Revenue</div><div class="card-sub">Each dot = 1 constituency · color = province</div></div><div class="pill">Scatter</div></div>
+    <div class="ch" style="height:320px"><canvas id="c-scatter"></canvas></div>
+  </div>
+</section>
+
+<!-- ══ REPORTS ══ -->
+<section class="section" id="s-reports">
+  <div class="ph"><div><h1>Data <em>Reports</em></h1><p>Sortable · Searchable · Exportable</p></div></div>
+  <div class="card">
+    <div class="tbl-controls">
+      <input class="tbl-search" id="tbl-q" type="text" placeholder="Search constituency, district, province, ID…" oninput="renderTable()">
+      <button class="btn-export" onclick="exportCSV()">⬇ CSV Export</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th onclick="sortBy('province')">Province</th>
+          <th onclick="sortBy('district')">District</th>
+          <th onclick="sortBy('constituency_name')">Constituency</th>
+          <th onclick="sortBy('constituency_id')">ID</th>
+          <th onclick="sortBy('population')">Population</th>
+          <th onclick="sortBy('tax_generated_npr')">Tax Generated</th>
+          <th onclick="sortBy('federal_allocation_npr')">Fed. Allocation</th>
+          <th onclick="sortBy('net')">Net Position</th>
+        </tr></thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+    <div class="pgn"><div class="pgn-info" id="pgn-info"></div><div class="pgn-btns" id="pgn-btns"></div></div>
+  </div>
+</section>
+</main>
+
+<script>
+// ── STATE ──
+let ALL=[],FD=[],sortCol='province',sortDir=1,curPage=1,mapMode='tax';
+const PG=12, charts={};
+const PC={'Koshi':'#38bdf8','Madhesh':'#fb923c','Bagmati':'#facc15','Gandaki':'#a78bfa','Lumbini':'#4ade80','Karnali':'#f472b6','Sudurpashchim':'#94a3b8'};
+const col=p=>PC[p]||'#aaa';
+
+// ── FORMAT ──
+const fNPR=v=>{const a=Math.abs(v),s=v<0?'−':'';return a>=1e9?s+(a/1e9).toFixed(2)+' Arb':a>=1e7?s+(a/1e7).toFixed(2)+' Cr':a>=1e5?s+(a/1e5).toFixed(1)+' L':s+a.toLocaleString('en-IN')};
+const fPop=v=>v>=1e6?(v/1e6).toFixed(2)+'M':v>=1000?(v/1000).toFixed(1)+'K':v;
+
+// ── LOAD ──
+async function init(){
+  try{
+    const r=await fetch('dashboard_elect_2079.json');
+    if(!r.ok)throw new Error();
+    ALL=(await r.json()).map(d=>({...d,net:d.tax_generated_npr-d.federal_allocation_npr}));
+    FD=[...ALL];
+    document.getElementById('hdr-count').textContent=`${ALL.length} seats`;
+    buildFilters();
+    renderOverview();
+    const ldr=document.getElementById('loader');
+    ldr.style.transition='opacity 0.5s';
+    setTimeout(()=>{ldr.style.opacity='0';setTimeout(()=>ldr.style.display='none',500)},700);
+  }catch(e){
+    document.getElementById('loader').innerHTML=`<div style="font-family:'JetBrains Mono',monospace;text-align:center;line-height:2.2;color:#f87171;font-size:.85rem">⚠ Could not load dashboard_elect_2079.json<br><span style="color:#5a6478;font-size:.72rem">Place both files in the same directory, then open in a browser</span></div>`;
+  }
+}
+
+// ── FILTERS ──
+function buildFilters(){
+  const ps=document.getElementById('f-prov');
+  [...new Set(ALL.map(d=>d.province))].sort().forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;ps.appendChild(o)});
+}
+function applyFilters(){
+  const pv=document.getElementById('f-prov').value;
+  const ds=document.getElementById('f-dist'),cs=document.getElementById('f-con');
+  const prevD=ds.value,prevC=cs.value;
+  ds.innerHTML='<option value="">All Districts</option>';
+  [...new Set(ALL.filter(d=>!pv||d.province===pv).map(d=>d.district))].sort()
+    .forEach(x=>{const o=document.createElement('option');o.value=x;o.textContent=x;ds.appendChild(o)});
+  if(prevD&&[...ds.options].some(o=>o.value===prevD))ds.value=prevD;
+  const dv=ds.value;
+  cs.innerHTML='<option value="">All Constituencies</option>';
+  [...new Set(ALL.filter(d=>(!pv||d.province===pv)&&(!dv||d.district===dv)).map(d=>d.constituency_name))].sort()
+    .forEach(x=>{const o=document.createElement('option');o.value=x;o.textContent=x;cs.appendChild(o)});
+  if(prevC&&[...cs.options].some(o=>o.value===prevC))cs.value=prevC;
+  const cv=cs.value;
+  FD=ALL.filter(d=>(!pv||d.province===pv)&&(!dv||d.district===dv)&&(!cv||d.constituency_name===cv));
+  curPage=1;renderOverview();
+}
+function resetFilters(){
+  document.getElementById('f-prov').value='';
+  document.getElementById('f-dist').innerHTML='<option value="">All Districts</option>';
+  document.getElementById('f-con').innerHTML='<option value="">All Constituencies</option>';
+  buildFilters();FD=[...ALL];curPage=1;renderOverview();
+}
+
+// ── KPIS ──
+function renderKPIs(){
+  const D=FD;
+  document.getElementById('k-count').textContent=D.length;
+  document.getElementById('k-count-s').textContent=[...new Set(D.map(d=>d.province))].length+' province(s) · '+[...new Set(D.map(d=>d.district))].length+' district(s)';
+  const pop=D.reduce((s,d)=>s+d.population,0);
+  document.getElementById('k-pop').textContent=fPop(pop);
+  document.getElementById('k-pop-s').textContent='avg '+fPop(Math.round(pop/(D.length||1)))+'/constituency';
+  document.getElementById('k-tax').textContent=fNPR(D.reduce((s,d)=>s+d.tax_generated_npr,0));
+  document.getElementById('k-alloc').textContent=fNPR(D.reduce((s,d)=>s+d.federal_allocation_npr,0));
+  const net=D.reduce((s,d)=>s+d.net,0);
+  const ne=document.getElementById('k-net');
+  ne.textContent=fNPR(net);ne.style.color=net>=0?'var(--green)':'var(--red)';
+  document.getElementById('k-net-s').textContent=net>=0?'▲ Net surplus':'▼ Net deficit';
+}
+
+// ── LEADERBOARDS ──
+function renderLB(id,key,fmt){
+  const top=[...FD].sort((a,b)=>b[key]-a[key]).slice(0,10);
+  const max=top[0]?.[key]||1;
+  document.getElementById(id).innerHTML=top.map((d,i)=>`
+    <div class="lb-row">
+      <div class="lb-rank">${i+1}</div>
+      <div class="lb-dot" style="background:${col(d.province)}"></div>
+      <div style="flex:1;min-width:0"><div class="lb-name">${d.constituency_name}</div><div class="lb-dist">${d.district} · ${d.province}</div></div>
+      <div class="lb-bar-wrap"><div class="lb-bar-fill" style="width:${(d[key]/max*100).toFixed(0)}%;background:${col(d.province)}"></div></div>
+      <div class="lb-val">${fmt(d[key])}</div>
+    </div>`).join('');
+}
+
+// ── CHART HELPERS ──
+const TIP={backgroundColor:'#141720',borderColor:'rgba(255,255,255,.08)',borderWidth:1,titleColor:'#dde2ec',bodyColor:'#5a6478',padding:10,cornerRadius:8};
+function mkChart(id,cfg){const ctx=document.getElementById(id)?.getContext('2d');if(!ctx)return;if(charts[id])charts[id].destroy();charts[id]=new Chart(ctx,cfg)}
+
+// ── BAR CHART ──
+function renderBar(){
+  const D=[...FD].sort((a,b)=>b.tax_generated_npr-a.tax_generated_npr).slice(0,30);
+  mkChart('c-bar',{type:'bar',data:{labels:D.map(d=>d.constituency_id),datasets:[
+    {label:'Tax',data:D.map(d=>+(d.tax_generated_npr/1e7).toFixed(2)),backgroundColor:'rgba(45,212,191,.65)',borderColor:'#2dd4bf',borderWidth:1,borderRadius:4},
+    {label:'Allocation',data:D.map(d=>+(d.federal_allocation_npr/1e7).toFixed(2)),backgroundColor:'rgba(248,113,113,.65)',borderColor:'#f87171',borderWidth:1,borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y} Cr`}}},
+  scales:{x:{ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},maxRotation:55},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},callback:v=>v+'Cr'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+
+// ── DONUT ──
+function renderDonut(){
+  const pMap={};
+  FD.forEach(d=>{pMap[d.province]=(pMap[d.province]||0)+d.population});
+  const labels=Object.keys(pMap);
+  mkChart('c-donut',{type:'doughnut',data:{labels,datasets:[{data:labels.map(l=>pMap[l]),backgroundColor:labels.map(l=>col(l)+'bb'),borderColor:labels.map(l=>col(l)),borderWidth:1.5,hoverOffset:10}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#5a6478',font:{family:'JetBrains Mono',size:10},boxWidth:11,padding:10}},tooltip:{...TIP,callbacks:{label:c=>`${c.label}: ${fPop(c.parsed)}`}}}}});
+}
+
+// ── NET CHART ──
+function renderNetChart(){
+  const D=[...FD].sort((a,b)=>b.net-a.net);
+  const vals=D.map(d=>+(d.net/1e7).toFixed(2));
+  mkChart('c-net',{type:'bar',data:{labels:D.map(d=>d.constituency_id),datasets:[{data:vals,backgroundColor:vals.map(v=>v>=0?'rgba(45,212,191,.7)':'rgba(248,113,113,.7)'),borderColor:vals.map(v=>v>=0?'#2dd4bf':'#f87171'),borderWidth:1,borderRadius:3}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>`Net: ${c.parsed.y} Cr NPR`}}},
+  scales:{x:{ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:8},maxRotation:55},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},callback:v=>v+'Cr'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+
+// ── SCATTER ──
+function renderScatter(){
+  const datasets=Object.keys(PC).map(pv=>({label:pv,data:ALL.filter(d=>d.province===pv).map(d=>({x:d.population,y:+(d.tax_generated_npr/1e7).toFixed(2)})),backgroundColor:col(pv)+'aa',borderColor:col(pv),borderWidth:1,pointRadius:5,pointHoverRadius:8}));
+  mkChart('c-scatter',{type:'scatter',data:{datasets},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{labels:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},boxWidth:10,padding:12}},tooltip:{...TIP,callbacks:{label:c=>`Pop: ${fPop(c.parsed.x)} · Tax: ${c.parsed.y} Cr`}}},
+  scales:{x:{title:{display:true,text:'Population',color:'#5a6478',font:{family:'JetBrains Mono',size:9}},ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},callback:v=>fPop(v)},grid:{color:'rgba(255,255,255,.03)'}},
+          y:{title:{display:true,text:'Tax Revenue (Cr NPR)',color:'#5a6478',font:{family:'JetBrains Mono',size:9}},ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},callback:v=>v+'Cr'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+
+// ── HEATMAP ──
+function setMapMode(m){mapMode=m;['tax','alloc','pop'].forEach(x=>document.getElementById('mt-'+x)?.classList.toggle('active',x===m));renderHeatmap()}
+function renderHeatmap(){
+  const pMap={};
+  ALL.forEach(d=>{if(!pMap[d.province])pMap[d.province]={tax:0,alloc:0,pop:0,count:0};pMap[d.province].tax+=d.tax_generated_npr;pMap[d.province].alloc+=d.federal_allocation_npr;pMap[d.province].pop+=d.population;pMap[d.province].count++});
+  const provs=Object.keys(pMap);
+  const getVal=p=>mapMode==='tax'?pMap[p].tax:mapMode==='alloc'?pMap[p].alloc:pMap[p].pop;
+  const max=Math.max(...provs.map(getVal));
+  const sorted=[...provs].sort((a,b)=>getVal(b)-getVal(a));
+  const grid=document.getElementById('prov-map');
+  grid.innerHTML='';
+  sorted.forEach(pv=>{
+    const info=pMap[pv],val=getVal(pv),pct=val/max;
+    const alpha=Math.round(pct*200+30).toString(16).padStart(2,'0');
+    const cell=document.createElement('div');
+    cell.className='prov-cell';
+    cell.style.background=col(pv)+alpha;
+    cell.style.borderColor=col(pv)+'44';
+    cell.innerHTML=`<div class="pc-name">${pv}</div><div class="pc-val">${mapMode==='pop'?fPop(val):fNPR(val)}</div><div class="pc-sub">${info.count} constituencies</div><div class="pc-bar"><div class="pc-bar-fill" style="width:${(pct*100).toFixed(0)}%"></div></div>`;
+    grid.appendChild(cell);
+  });
+  // chips
+  const chips=document.getElementById('prov-chips');
+  if(chips){chips.innerHTML='';Object.keys(pMap).forEach(pv=>{const c=document.createElement('div');c.className='score-chip';c.innerHTML=`<div class="sc-dot" style="background:${col(pv)}"></div><div class="sc-name">${pv}</div><div class="sc-val">${pMap[pv].count} seats · ${fNPR(pMap[pv].tax)}</div>`;chips.appendChild(c)})}
+}
+
+// ── SANKEY ──
+function renderSankey(){
+  const svg=document.getElementById('sankey-svg');if(!svg)return;
+  const W=Math.max(svg.parentElement.clientWidth||700,560),H=400;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('width',W);svg.innerHTML='';
+  const NS='http://www.w3.org/2000/svg';
+  const pMap={};
+  ALL.forEach(d=>{if(!pMap[d.province])pMap[d.province]={alloc:0};pMap[d.province].alloc+=d.federal_allocation_npr});
+  const totAlloc=ALL.reduce((s,d)=>s+d.federal_allocation_npr,0);
+  const provs=Object.keys(pMap).sort((a,b)=>pMap[b].alloc-pMap[a].alloc);
+  const NW=16,PAD=6,C0=60,C1=W*.38,C2=W-90;
+  const fedH=H-60;
+  dR(svg,NS,C0-NW/2,30,NW,fedH,'#f5c842',.9);dT(svg,NS,C0,20,'Federal Gov.','#f5c842',9);
+  let pY=30;const pNodes={};
+  provs.forEach(pv=>{
+    const ph=Math.max((pMap[pv].alloc/totAlloc)*(H-60),14);
+    pNodes[pv]={y:pY,h:ph};
+    dR(svg,NS,C1,pY,NW,ph,col(pv),.85);dT(svg,NS,C1+NW+7,pY+ph/2,pv,col(pv),8.5,'start');
+    dL(svg,NS,C0+NW/2,30+((pY-30)/(H-60))*fedH+ph/2,C1,pY+ph/2,col(pv),Math.max(ph*.5,1.5));
+    pY+=ph+PAD;
+  });
+  const topC=[...ALL].sort((a,b)=>b.federal_allocation_npr-a.federal_allocation_npr).slice(0,10);
+  const totTop=topC.reduce((s,d)=>s+d.federal_allocation_npr,0);
+  let cY=30;
+  topC.forEach(con=>{
+    const ch=Math.max((con.federal_allocation_npr/totTop)*(H-60),9);
+    dR(svg,NS,C2,cY,NW,ch,col(con.province),.8);dT(svg,NS,C2+NW+7,cY+ch/2,con.constituency_id,col(con.province),8,'start');
+    const pn=pNodes[con.province];
+    if(pn)dL(svg,NS,C1+NW,pn.y+pn.h/2,C2,cY+ch/2,col(con.province),Math.max(ch*.4,1.2));
+    cY+=ch+PAD;
+  });
+  dT(svg,NS,C0,H-10,'Central','#5a6478',8);dT(svg,NS,C1+NW/2,H-10,'Provinces','#5a6478',8);dT(svg,NS,C2+NW/2,H-10,'Top 10','#5a6478',8);
+}
+function dR(svg,NS,x,y,w,h,fill,op){const el=document.createElementNS(NS,'rect');Object.entries({x,y,width:w,height:h,fill,opacity:op,rx:3}).forEach(([k,v])=>el.setAttribute(k,v));svg.appendChild(el)}
+function dT(svg,NS,x,y,text,fill,size,anchor='middle'){const el=document.createElementNS(NS,'text');Object.entries({x,y,fill,'font-size':size,'font-family':'JetBrains Mono, monospace','text-anchor':anchor,'dominant-baseline':'middle'}).forEach(([k,v])=>el.setAttribute(k,v));el.textContent=text;svg.appendChild(el)}
+function dL(svg,NS,x0,y0,x1,y1,color,sw){const el=document.createElementNS(NS,'path');const cx=(x0+x1)/2;el.setAttribute('d',`M${x0},${y0} C${cx},${y0} ${cx},${y1} ${x1},${y1}`);el.setAttribute('fill','none');el.setAttribute('stroke',color);el.setAttribute('stroke-width',sw);el.setAttribute('stroke-opacity','.22');svg.appendChild(el)}
+
+// ── TABLE ──
+function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1};document.querySelectorAll('th').forEach(t=>t.className='');const map=['province','district','constituency_name','constituency_id','population','tax_generated_npr','federal_allocation_npr','net'];const ths=document.querySelectorAll('th');const idx=map.indexOf(col);if(idx>=0&&ths[idx])ths[idx].className=sortDir>0?'sa':'sd';curPage=1;renderTable()}
+function renderTable(){
+  const q=document.getElementById('tbl-q')?.value.toLowerCase()||'';
+  let D=[...FD];
+  if(q)D=D.filter(d=>[d.province,d.district,d.constituency_name,d.constituency_id].some(s=>s.toLowerCase().includes(q)));
+  D.sort((a,b)=>{const av=a[sortCol]??0,bv=b[sortCol]??0;return typeof av==='string'?sortDir*av.localeCompare(bv):sortDir*(av-bv)});
+  const total=D.length,pages=Math.ceil(total/PG)||1;
+  if(curPage>pages)curPage=pages;
+  const slice=D.slice((curPage-1)*PG,curPage*PG);
+  document.getElementById('tbl-body').innerHTML=slice.map(d=>`<tr>
+    <td><span class="pv-dot" style="background:${col(d.province)}"></span>${d.province}</td>
+    <td>${d.district}</td><td style="font-weight:600">${d.constituency_name}</td>
+    <td class="mono" style="color:var(--muted);font-size:.72rem">${d.constituency_id}</td>
+    <td class="mono">${fPop(d.population)}</td>
+    <td class="mono">${fNPR(d.tax_generated_npr)}</td>
+    <td class="mono">${fNPR(d.federal_allocation_npr)}</td>
+    <td><span class="badge ${d.net>=0?'bp':'bn'}">${d.net>=0?'▲':'▼'} ${fNPR(Math.abs(d.net))}</span></td>
+  </tr>`).join('');
+  const start=(curPage-1)*PG+1;
+  document.getElementById('pgn-info').textContent=`Showing ${start}–${Math.min(start+PG-1,total)} of ${total} constituencies`;
+  const btns=document.getElementById('pgn-btns');btns.innerHTML='';
+  const mk=(lbl,pg,on,dis)=>{const b=document.createElement('button');b.className='pb'+(on?' on':'');b.textContent=lbl;b.disabled=dis;if(!dis)b.onclick=()=>{curPage=pg;renderTable()};return b};
+  btns.appendChild(mk('‹',curPage-1,false,curPage===1));
+  for(let i=1;i<=pages;i++){if(pages>8&&i>2&&i<curPage-1){btns.appendChild(mk('…',null,false,true));i=curPage-1;continue}if(pages>8&&i>curPage+1&&i<pages-1){btns.appendChild(mk('…',null,false,true));i=pages-1;continue}btns.appendChild(mk(i,i,i===curPage,false))}
+  btns.appendChild(mk('›',curPage+1,false,curPage===pages));
+}
+
+// ── EXPORT ──
+function exportCSV(){const hdr='Province,District,Constituency,ID,Population,Tax NPR,Allocation NPR,Net NPR';const rows=FD.map(d=>[d.province,d.district,d.constituency_name,d.constituency_id,d.population,d.tax_generated_npr,d.federal_allocation_npr,d.net].join(','));const blob=new Blob([[hdr,...rows].join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nepal_constituency_2079.csv';a.click()}
+
+// ── NAV ──
+function go(name){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.np').forEach(n=>n.classList.remove('active'));
+  document.getElementById('s-'+name).classList.add('active');
+  document.querySelectorAll('.np').forEach(n=>{if(n.textContent.toLowerCase().includes(name.slice(0,3)))n.classList.add('active')});
+  if(name==='visuals'){renderHeatmap();setTimeout(renderSankey,80);renderNetChart();renderScatter()}
+  if(name==='reports')renderTable();
+}
+
+// ── OVERVIEW BUNDLE ──
+function renderOverview(){renderKPIs();renderBar();renderDonut();renderLB('lb-tax','tax_generated_npr',fNPR);renderLB('lb-alloc','federal_allocation_npr',fNPR);if(document.getElementById('s-visuals').classList.contains('active')){renderHeatmap();renderSankey();renderNetChart();renderScatter()}if(document.getElementById('s-reports').classList.contains('active'))renderTable()}
+
+init();
+</script>
+</body>
+</html>

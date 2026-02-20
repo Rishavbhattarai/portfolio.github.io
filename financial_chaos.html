@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal National Budget Dashboard · FY 2080/081</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=Tiro+Devanagari+Hindi&display=swap');
+
+:root {
+  --ink:    #0f1117;
+  --ink2:   #1c2033;
+  --paper:  #f5f0e8;
+  --paper2: #ede8dc;
+  --paper3: #e4ddd0;
+  --rule:   rgba(15,17,23,0.1);
+  --rule2:  rgba(15,17,23,0.06);
+
+  --crimson: #c0392b;
+  --gold:    #b8860b;
+  --gold2:   #d4a017;
+  --teal:    #1a6b6b;
+  --teal2:   #2a9d8f;
+  --blue:    #1d3557;
+  --orange:  #c05e1a;
+  --green:   #1a6b3c;
+  --purple:  #5a2d82;
+  --slate:   #4a5568;
+
+  /* Receipt colors */
+  --c-tax:    #1d3557;
+  --c-other:  #2a9d8f;
+  --c-grant:  #b8860b;
+  --c-intern: #c05e1a;
+  --c-extern: #5a2d82;
+  --c-misc:   #6b7280;
+
+  /* Payment colors */
+  --c-rem:    #c0392b;
+  --c-goods:  #e67e22;
+  --c-int:    #8b0000;
+  --c-grants: #1a6b3c;
+  --c-social: #1d3557;
+  --c-cap:    #2a9d8f;
+  --c-debt:   #5a2d82;
+  --c-other2: #78716c;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── MASTHEAD ── */
+.masthead {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0;
+  border-bottom: 3px solid var(--gold2);
+}
+
+.masthead-top {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.mh-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 1.1rem 0;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  padding-right: 2rem;
+  margin-right: 2rem;
+}
+
+.mh-seal {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold2), #8b6914);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Tiro Devanagari Hindi', serif;
+  font-size: 20px; color: var(--ink); font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(212,160,23,0.3);
+}
+
+.mh-title-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-weight: 700;
+  letter-spacing: -0.01em; line-height: 1.1;
+  color: var(--paper);
+}
+.mh-title-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.18em;
+  color: rgba(245,240,232,0.45); text-transform: uppercase;
+  margin-top: 3px;
+}
+
+nav {
+  display: flex; align-items: center; gap: 0; flex: 1;
+}
+
+.nav-item {
+  padding: 0 1.5rem;
+  height: 100%;
+  display: flex; align-items: center;
+  font-size: 0.76rem; font-weight: 500;
+  color: rgba(245,240,232,0.5);
+  cursor: pointer; transition: all 0.2s;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  letter-spacing: 0.04em; white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+}
+.nav-item:hover { color: var(--paper); }
+.nav-item.active { color: var(--gold2); border-bottom-color: var(--gold2); }
+
+.mh-meta {
+  display: flex; align-items: center; gap: 16px;
+  padding: 0.75rem 0;
+}
+.mh-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em;
+  padding: 4px 12px; border-radius: 2px;
+  text-transform: uppercase;
+}
+.badge-deficit { background: rgba(192,57,43,0.2); color: #e88; border: 1px solid rgba(192,57,43,0.35); }
+.badge-fy { background: rgba(212,160,23,0.15); color: var(--gold2); border: 1px solid rgba(212,160,23,0.3); }
+
+/* HEADLINE ROW */
+.masthead-headline {
+  padding: 1.25rem 2.5rem 1.5rem;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
+  flex-wrap: wrap;
+}
+.hl-text h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 900; letter-spacing: -0.03em;
+  color: var(--paper); line-height: 1;
+}
+.hl-text h1 em { font-style: normal; color: var(--gold2); }
+.hl-text p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem; color: rgba(245,240,232,0.4);
+  letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px;
+}
+
+.hl-summary {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+}
+.hl-fig { text-align: right; }
+.hl-fig-lbl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem; color: rgba(245,240,232,0.4);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.hl-fig-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 700; color: var(--paper);
+  line-height: 1; margin-top: 2px;
+}
+.hl-fig-val.deficit { color: #e88; }
+.hl-fig-val.surplus { color: #6deba0; }
+.hl-fig-unit {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem; color: rgba(245,240,232,0.35); margin-top: 2px;
+}
+
+/* ── MAIN LAYOUT ── */
+main { max-width: 1440px; margin: 0 auto; padding: 2rem 2.5rem; }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── SECTION RULE ── */
+.sec-label {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 1.5rem; margin-top: 0.25rem;
+}
+.sec-label-line { flex: 1; height: 1px; background: var(--rule); }
+.sec-label-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.2em; color: var(--slate);
+  text-transform: uppercase; white-space: nowrap;
+}
+.sec-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; color: var(--paper3); font-weight: 900;
+}
+
+/* ── KPI STRIP ── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.kpi {
+  background: var(--paper);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  transition: background 0.2s;
+}
+.kpi:hover { background: var(--paper2); }
+.kpi::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--kc, var(--ink));
+}
+
+.kpi-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--slate); margin-bottom: 8px;
+}
+.kpi-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em;
+  color: var(--ink); line-height: 1;
+}
+.kpi-unit {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem; color: var(--slate); margin-top: 4px;
+}
+.kpi-change {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem; margin-top: 6px;
+  display: inline-block; padding: 2px 8px; border-radius: 2px;
+}
+.kpi-change.neg { background: rgba(192,57,43,0.08); color: var(--crimson); }
+.kpi-change.pos { background: rgba(26,107,60,0.08); color: var(--green); }
+
+/* ── GRID LAYOUTS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.g3 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.g-full { margin-bottom: 1.5rem; }
+@media(max-width:880px) { .g2,.g3 { grid-template-columns:1fr; } }
+
+/* ── CARDS ── */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.card-head {
+  padding: 1.1rem 1.4rem 1rem;
+  border-bottom: 1px solid var(--rule2);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink);
+}
+.card-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem; color: var(--slate); margin-top: 3px; letter-spacing: 0.06em;
+}
+.card-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem; padding: 3px 9px;
+  background: var(--paper3); border: 1px solid var(--rule);
+  border-radius: 2px; color: var(--slate); white-space: nowrap; letter-spacing: 0.08em;
+}
+.card-body { padding: 1.4rem; }
+.card-body-sm { padding: 1rem 1.4rem; }
+
+/* ── CHART CONTAINER ── */
+.ch { position: relative; }
+
+/* ── DONUT LEGEND ── */
+.donut-wrap {
+  display: flex; flex-direction: column; justify-content: center; height: 100%;
+}
+.donut-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; }
+.dl-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px; border-radius: 3px;
+  transition: background 0.15s; cursor: default;
+}
+.dl-item:hover { background: var(--paper2); }
+.dl-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.dl-name { font-size: 0.78rem; color: var(--ink); flex: 1; }
+.dl-pct { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--slate); }
+.dl-val { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--slate); min-width: 70px; text-align: right; }
+
+/* ── SANKEY ── */
+#sankey-wrap { overflow-x: auto; }
+#sankey-svg { display: block; min-width: 700px; width: 100%; }
+
+/* ── TREEMAP ── */
+.treemap-wrap { position: relative; }
+#treemap { display: grid; gap: 3px; }
+.tm-cell {
+  border-radius: 3px;
+  padding: 8px 10px;
+  cursor: default;
+  transition: filter 0.2s;
+  overflow: hidden;
+  position: relative;
+}
+.tm-cell:hover { filter: brightness(1.08); }
+.tm-label { font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.9); line-height: 1.2; }
+.tm-val { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: rgba(255,255,255,0.65); margin-top: 3px; }
+
+/* ── BAR CHART STACK ── */
+.stacked-legend {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px;
+}
+.sl-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--slate); }
+.sl-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── RATIO GAUGE ── */
+.ratio-gauge {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.rg-arc { position: relative; }
+.rg-labels { display: flex; justify-content: space-between; width: 100%; margin-top: -10px; }
+.rg-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--slate); }
+.rg-center {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  text-align: center;
+}
+.rg-pct { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--ink); }
+.rg-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--slate); letter-spacing: 0.1em; }
+
+.ratio-stats { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+.rs-item { text-align: center; }
+.rs-val { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.rs-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--slate); margin-top: 2px; letter-spacing: 0.08em; }
+.rs-item .rs-val.cap { color: var(--teal); }
+.rs-item .rs-val.rec { color: var(--crimson); }
+
+/* ── PROGRESS BARS ── */
+.prog-list { display: flex; flex-direction: column; gap: 12px; }
+.prog-item {}
+.prog-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.prog-name { font-size: 0.78rem; color: var(--ink); }
+.prog-val { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--slate); }
+.prog-track { height: 6px; background: var(--paper3); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.data-table thead { background: var(--ink); }
+.data-table th {
+  padding: 10px 14px; text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(245,240,232,0.6); border: none; white-space: nowrap;
+}
+.data-table td { padding: 9px 14px; border-bottom: 1px solid var(--rule2); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--paper2); }
+.data-table .mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; }
+.data-table .rec-badge { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
+.data-table .type-r { color: var(--teal); font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 500; }
+.data-table .type-p { color: var(--crimson); font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 500; }
+.data-table .code { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--slate); }
+.surplus-row { background: rgba(26,107,60,0.04) !important; }
+.deficit-row { background: rgba(192,57,43,0.04) !important; }
+
+/* ── DEFICIT BANNER ── */
+.deficit-banner {
+  background: linear-gradient(135deg, rgba(192,57,43,0.06), rgba(192,57,43,0.02));
+  border: 1px solid rgba(192,57,43,0.2);
+  border-left: 4px solid var(--crimson);
+  border-radius: 4px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+}
+.db-icon { font-size: 1.8rem; }
+.db-text .db-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--crimson); }
+.db-text .db-body { font-size: 0.78rem; color: var(--slate); margin-top: 3px; line-height: 1.5; }
+.db-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--crimson); margin-left: auto; }
+.db-unit { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--slate); margin-top: 2px; text-align: right; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--rule); margin: 2rem 0; }
+
+@media(max-width:640px) {
+  .masthead-top { padding: 0 1rem; }
+  .masthead-headline { padding: 1rem; }
+  main { padding: 1rem; }
+  .kpi-value { font-size: 1.1rem; }
+  .hl-text h1 { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ MASTHEAD ════════════════════════════════ -->
+<div class="masthead">
+  <div class="masthead-top">
+    <div class="mh-brand">
+      <div class="mh-seal">ने</div>
+      <div>
+        <div class="mh-title-main">सरकार नेपाल</div>
+        <div class="mh-title-sub">Ministry of Finance · Public Finance Dashboard</div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-item active" onclick="switchTab('overview')">Executive Summary</div>
+      <div class="nav-item" onclick="switchTab('revenue')">Revenue</div>
+      <div class="nav-item" onclick="switchTab('expenditure')">Expenditure</div>
+      <div class="nav-item" onclick="switchTab('flow')">Money Flow</div>
+      <div class="nav-item" onclick="switchTab('data')">Full Data</div>
+    </nav>
+    <div class="mh-meta">
+      <span class="mh-badge badge-fy">FY 2080/081</span>
+      <span class="mh-badge badge-deficit">▼ Deficit Budget</span>
+    </div>
+  </div>
+  <div class="masthead-headline">
+    <div class="hl-text">
+      <h1>Consolidated <em>Financial</em> Statement</h1>
+      <p>Government of Nepal · Fiscal Year 2080/081 (2023/2024) · All figures in NPR</p>
+    </div>
+    <div class="hl-summary">
+      <div class="hl-fig">
+        <div class="hl-fig-lbl">Total Receipts</div>
+        <div class="hl-fig-val">NPR 133.19</div>
+        <div class="hl-fig-unit">Arba (₹1.33 Trillion)</div>
+      </div>
+      <div class="hl-fig">
+        <div class="hl-fig-lbl">Total Payments</div>
+        <div class="hl-fig-val">NPR 139.24</div>
+        <div class="hl-fig-unit">Arba (₹1.39 Trillion)</div>
+      </div>
+      <div class="hl-fig">
+        <div class="hl-fig-lbl">Fiscal Deficit</div>
+        <div class="hl-fig-val deficit">▼ NPR 6.05</div>
+        <div class="hl-fig-unit">Arba deficit</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+<!-- ═══ OVERVIEW ═══ -->
+<section class="section active" id="tab-overview">
+
+  <!-- DEFICIT BANNER -->
+  <div class="deficit-banner">
+    <div class="db-icon">⚠</div>
+    <div class="db-text">
+      <div class="db-title">Fiscal Deficit — FY 2080/081</div>
+      <div class="db-body">Total government payments exceeded receipts. Nepal spent more than it collected in revenue and loans combined, resulting in a consolidated fiscal deficit for this fiscal year.</div>
+    </div>
+    <div>
+      <div class="db-val">₹ 60,522.40 Cr</div>
+      <div class="db-unit">NPR 6,05,22,40,17,62.32 · Shortfall</div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi" style="--kc:var(--blue)">
+      <div class="kpi-label">Total Receipts</div>
+      <div class="kpi-value">₹133.19 Arb</div>
+      <div class="kpi-unit">NPR 1,331,865,690,079.70</div>
+    </div>
+    <div class="kpi" style="--kc:var(--crimson)">
+      <div class="kpi-label">Total Payments</div>
+      <div class="kpi-value">₹139.24 Arb</div>
+      <div class="kpi-unit">NPR 1,392,388,091,842.02</div>
+    </div>
+    <div class="kpi" style="--kc:var(--teal)">
+      <div class="kpi-label">Tax Revenue</div>
+      <div class="kpi-value">₹82.07 Arb</div>
+      <div class="kpi-unit">61.6% of total receipts</div>
+    </div>
+    <div class="kpi" style="--kc:var(--green)">
+      <div class="kpi-label">Capital Expenditure</div>
+      <div class="kpi-value">₹19.20 Arb</div>
+      <div class="kpi-unit">13.8% of total payments</div>
+    </div>
+    <div class="kpi" style="--kc:var(--orange)">
+      <div class="kpi-label">Debt Repayment</div>
+      <div class="kpi-value">₹27.12 Arb</div>
+      <div class="kpi-unit">Internal + External Principal</div>
+    </div>
+    <div class="kpi" style="--kc:var(--crimson)">
+      <div class="kpi-label">Fiscal Deficit</div>
+      <div class="kpi-value" style="color:var(--crimson)">▼ ₹6.05 Arb</div>
+      <div class="kpi-unit">Payments exceed receipts</div>
+      <div class="kpi-change neg">−4.54% of receipts</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Revenue donut + Capital gauge -->
+  <div class="g2">
+    <!-- Revenue Composition -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Revenue Composition</div>
+          <div class="card-sub">Breakdown of all receipts by source</div>
+        </div>
+        <div class="card-tag">Donut Chart</div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;">
+          <div class="ch" style="width:200px;height:200px;flex-shrink:0;margin:0 auto;">
+            <canvas id="c-donut"></canvas>
+          </div>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recurrent vs Capital Gauge -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Recurrent vs Capital Ratio</div>
+          <div class="card-sub">Expenditure type allocation gauge</div>
+        </div>
+        <div class="card-tag">Gauge</div>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+        <div class="rg-arc" style="width:220px;height:120px;position:relative;">
+          <canvas id="c-gauge" width="220" height="120"></canvas>
+          <div class="rg-center" style="bottom:10px;">
+            <div class="rg-pct" id="gauge-pct">82%</div>
+            <div class="rg-lbl">RECURRENT</div>
+          </div>
+        </div>
+        <div class="rg-labels" style="width:220px;margin-top:-8px;">
+          <span class="rg-label" style="color:var(--crimson)">Recurrent</span>
+          <span class="rg-label" style="color:var(--teal)">Capital</span>
+        </div>
+        <div class="ratio-stats">
+          <div class="rs-item">
+            <div class="rs-val rec">₹92.91 Arb</div>
+            <div class="rs-lbl">Recurrent Exp.</div>
+          </div>
+          <div class="rs-item">
+            <div class="rs-val cap">₹19.20 Arb</div>
+            <div class="rs-lbl">Capital Exp.</div>
+          </div>
+          <div class="rs-item">
+            <div class="rs-val" style="color:var(--purple)">₹27.12 Arb</div>
+            <div class="rs-lbl">Debt Repayment</div>
+          </div>
+        </div>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--slate);text-align:center;max-width:260px;line-height:1.6;">
+          82% of expenditure is recurrent (operational). Only 13.8% goes to capital development, signaling limited infrastructure investment relative to total spending.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Expenditure breakdown bars -->
+  <div class="card g-full">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Expenditure Breakdown by Category</div>
+        <div class="card-sub">Major payment heads sorted by volume</div>
+      </div>
+      <div class="card-tag">Horizontal Bar</div>
+    </div>
+    <div class="card-body">
+      <div class="prog-list" id="exp-bars"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ REVENUE ═══ -->
+<section class="section" id="tab-revenue">
+  <div class="sec-label">
+    <div class="sec-number">01</div>
+    <div class="sec-label-line"></div>
+    <div class="sec-label-text">Revenue Analysis · FY 2080/081</div>
+    <div class="sec-label-line"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Revenue Sources</div>
+          <div class="card-sub">All receipt categories with share</div>
+        </div>
+        <div class="card-tag">Bar Chart</div>
+      </div>
+      <div class="card-body">
+        <div class="ch" style="height:320px"><canvas id="c-rev-bar"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Revenue Distribution</div>
+          <div class="card-sub">Share of each receipt type</div>
+        </div>
+        <div class="card-tag">Doughnut</div>
+      </div>
+      <div class="card-body">
+        <div class="ch" style="height:320px"><canvas id="c-rev-donut2"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card g-full">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Receipt Breakdown — Detailed</div>
+        <div class="card-sub">Each sub-head contribution to total NPR 133.19 Arb</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="prog-list" id="rev-bars"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EXPENDITURE ═══ -->
+<section class="section" id="tab-expenditure">
+  <div class="sec-label">
+    <div class="sec-number">02</div>
+    <div class="sec-label-line"></div>
+    <div class="sec-label-text">Expenditure Analysis · FY 2080/081</div>
+    <div class="sec-label-line"></div>
+  </div>
+
+  <!-- Treemap -->
+  <div class="card g-full">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Expenditure Treemap</div>
+        <div class="card-sub">Box size proportional to expenditure volume — grouped by type</div>
+      </div>
+      <div class="card-tag">Treemap</div>
+    </div>
+    <div class="card-body">
+      <div id="treemap-container"></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Recurrent Expenditure</div>
+          <div class="card-sub">चालु खर्च breakdown</div>
+        </div>
+        <div class="card-tag">Bar</div>
+      </div>
+      <div class="card-body">
+        <div class="ch" style="height:280px"><canvas id="c-rec-bar"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Capital Expenditure</div>
+          <div class="card-sub">पूँजीगत खर्च breakdown</div>
+        </div>
+        <div class="card-tag">Bar</div>
+      </div>
+      <div class="card-body">
+        <div class="ch" style="height:280px"><canvas id="c-cap-bar"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FLOW ═══ -->
+<section class="section" id="tab-flow">
+  <div class="sec-label">
+    <div class="sec-number">03</div>
+    <div class="sec-label-line"></div>
+    <div class="sec-label-text">National Money Flow · Sankey Diagram</div>
+    <div class="sec-label-line"></div>
+  </div>
+
+  <div class="card g-full">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Federal Budget Flow — "Where did the money go?"</div>
+        <div class="card-sub">Income sources → Consolidated Fund → Expenditure categories (NPR Arba)</div>
+      </div>
+      <div class="card-tag">Sankey Flow</div>
+    </div>
+    <div class="card-body" style="padding:1rem 0.5rem;">
+      <div id="sankey-wrap">
+        <svg id="sankey-svg" height="480"></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash vs Third Party -->
+  <div class="card g-full">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Overall Budget Balance</div>
+        <div class="card-sub">Receipts vs Payments comparison</div>
+      </div>
+      <div class="card-tag">Comparative Bar</div>
+    </div>
+    <div class="card-body">
+      <div class="ch" style="height:200px"><canvas id="c-balance"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DATA ═══ -->
+<section class="section" id="tab-data">
+  <div class="sec-label">
+    <div class="sec-number">04</div>
+    <div class="sec-label-line"></div>
+    <div class="sec-label-text">Full Financial Data · Consolidated Statement</div>
+    <div class="sec-label-line"></div>
+  </div>
+  <div class="card g-full">
+    <div class="card-head">
+      <div>
+        <div class="card-title">All Financial Heads</div>
+        <div class="card-sub">Economic codes, descriptions, and total amounts · FY 2080/081</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table" id="full-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Type</th>
+            <th>Description (EN)</th>
+            <th>विवरण (NP)</th>
+            <th style="text-align:right">Amount (NPR)</th>
+            <th style="text-align:right">In Arba</th>
+            <th style="text-align:right">% of Total</th>
+          </tr>
+        </thead>
+        <tbody id="full-table-body"></tbody>
+      </table>
+      <div style="font-size:0.78rem;color:var(--slate);margin-top:8px;">
+        Note: Amounts are in Nepalese Rupees (NPR). "In Arba" column converts amounts to Arba (1 Arba = 100 Crore NPR) for easier readability. "% of Total" is calculated against total receipts for income heads and total payments for expenditure heads.
+        Here is the link to the data : <a href="https://mof.gov.np/uploads/document/file/Consolidated%20Financial%20Statement%20FY%202080-081%20(1).pdf" target="_blank" style="color:var(--blue);">Consolidated Financial Statement FY 2080/081 (PDF)</a>.
+      </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+const DATA = [
+  // RECEIPTS
+  { code:'10000', cat:'Receipts', np:'राजस्व, अनुदान र अन्य प्राप्ति', en:'Revenue, Grants & Other Receipts', total:976911850513.05, sub:true },
+  { code:'11000', cat:'Receipts', np:'कर राजस्व', en:'Tax Revenue', total:820697033432.69, sub:false },
+  { code:'14000', cat:'Receipts', np:'अन्य राजस्व', en:'Other Revenue', total:108350760440.68, sub:false },
+  { code:'13000', cat:'Receipts', np:'अनुदान', en:'Grants', total:24009395892.52, sub:false },
+  { code:'15000', cat:'Receipts', np:'अन्य प्राप्ति', en:'Other Receipts', total:23854660747.16, sub:false },
+  { code:'32000', cat:'Receipts', np:'लगानी तथा वित्तीय प्राप्ति', en:'Investment & Financial Receipts', total:354953839566.65, sub:true },
+  { code:'32156', cat:'Receipts', np:'आन्तरिक ऋण लगानी फिर्ता', en:'Internal Loan Return Receipts', total:7260989738.00, sub:false },
+  { code:'33141', cat:'Receipts', np:'आन्तरिक ऋण प्राप्ति', en:'Internal Loan Receipts', total:234421420000.00, sub:false },
+  { code:'33241', cat:'Receipts', np:'वैदेशिक ऋण प्राप्ति', en:'External Loan Receipts', total:113271429828.65, sub:false },
+  { code:'00000', cat:'Receipts', np:'कुल जम्मा प्राप्ति', en:'TOTAL RECEIPTS', total:1331865690079.70, sub:true },
+  // PAYMENTS
+  { code:'20000', cat:'Payments', np:'चालु खर्च', en:'Recurrent Expenditure', total:929126442589.35, sub:true },
+  { code:'21000', cat:'Payments', np:'पारिश्रमिक / सुविधा खर्च', en:'Remuneration & Facility Expenses', total:154682133950.35, sub:false },
+  { code:'22000', cat:'Payments', np:'मालसमान तथा सेवाको उपभोग खर्च', en:'Consumption of Goods & Services', total:39264041089.31, sub:false },
+  { code:'24000', cat:'Payments', np:'ब्याज, सेवा शुल्क तथा बैङ्क कमिशन', en:'Interest, Service Charges & Bank Commissions', total:82097795282.40, sub:false },
+  { code:'25000', cat:'Payments', np:'सहायता खर्च', en:'Assistance Expenses', total:695984112.45, sub:false },
+  { code:'26000', cat:'Payments', np:'अनुदान खर्च', en:'Grant Expenses', total:422562049116.68, sub:false },
+  { code:'27000', cat:'Payments', np:'सामाजिक सुरक्षा खर्च', en:'Social Security Expenses', total:226669775930.06, sub:false },
+  { code:'28000', cat:'Payments', np:'अन्य चालु खर्च', en:'Other Recurrent Expenses', total:3154663108.10, sub:false },
+  { code:'31000', cat:'Payments', np:'पूँजीगत खर्च', en:'Capital Expenditure', total:192027363180.53, sub:true },
+  { code:'31100', cat:'Payments', np:'स्थिर सम्पत्ति प्राप्ति खर्च', en:'Fixed Assets Acquisition', total:188688162931.93, sub:false },
+  { code:'31110', cat:'Payments', np:'भवन तथा संरचना', en:'Buildings & Structures', total:24209015324.83, sub:false },
+  { code:'31120', cat:'Payments', np:'सवारी साधन तथा मेशिनरी', en:'Vehicles & Machinery', total:9177116536.43, sub:false },
+  { code:'31130', cat:'Payments', np:'सार्वजनिक निर्माण', en:'Public Works / Infrastructure', total:132489027716.76, sub:false },
+  { code:'31150', cat:'Payments', np:'निर्मित संरचनाको सुधार', en:'Improvement of Structures', total:11910127410.66, sub:false },
+  { code:'31410', cat:'Payments', np:'जग्गा प्राप्ति', en:'Land Acquisition', total:2641054154.45, sub:false },
+  { code:'32000', cat:'Payments', np:'वित्तीय व्यवस्था', en:'Financial Arrangements (Debt)', total:271234286072.14, sub:true },
+  { code:'32100', cat:'Payments', np:'आन्तरिक ऋणको साँवा भुक्तानी', en:'Principal Repayment — Internal Loans', total:182557400000.00, sub:false },
+  { code:'32200', cat:'Payments', np:'बाह्य ऋणको साँवा भुक्तानी', en:'Principal Repayment — External Loans', total:40722142625.06, sub:false },
+  { code:'32150', cat:'Payments', np:'आन्तरिक सेयर लगानी', en:'Internal Share Investment', total:7001360814.87, sub:false },
+  { code:'32251', cat:'Payments', np:'बाह्य सेयर लगानी', en:'External Share Investment', total:216059400.00, sub:false },
+  { code:'00000', cat:'Payments', np:'कुल जम्मा भुक्तानी', en:'TOTAL PAYMENTS', total:1392388091842.02, sub:true },
+];
+
+const totalReceipts = 1331865690079.70;
+const totalPayments = 1392388091842.02;
+
+const fArb = v => (v/1e9).toFixed(2) + ' Arb';
+const fCr  = v => '₹' + (v/1e7).toFixed(0).replace(/\B(?=(\d+)+(?!\d))/g, ',') + ' Cr';
+const fRaw = v => 'NPR ' + v.toLocaleString('en-IN', {maximumFractionDigits:2});
+const pct  = (v,total) => ((v/total)*100).toFixed(1) + '%';
+
+const COLORS = {
+  tax:    '#1d3557',
+  other:  '#2a9d8f',
+  grant:  '#b8860b',
+  iLoan:  '#c05e1a',
+  eLoan:  '#5a2d82',
+  misc:   '#6b7280',
+  rem:    '#c0392b',
+  goods:  '#e67e22',
+  int:    '#800000',
+  grants: '#1a6b3c',
+  social: '#1d3557',
+  cap:    '#1a6b6b',
+  debt:   '#5a2d82',
+  assist: '#78716c',
+};
+
+const TIP_STYLE = {
+  backgroundColor: '#0f1117',
+  borderColor: 'rgba(245,240,232,0.12)',
+  borderWidth: 1,
+  titleColor: '#f5f0e8',
+  bodyColor: '#9ca3af',
+  padding: 12, cornerRadius: 3,
+};
+
+function mkChart(id, cfg) {
+  const ctx = document.getElementById(id)?.getContext('2d');
+  if (!ctx) return;
+  return new Chart(ctx, cfg);
+}
+
+// ══════════════════════════════════════════════════════
+// OVERVIEW CHARTS
+// ══════════════════════════════════════════════════════
+
+function buildDonut() {
+  const receipts = [
+    { label: 'Tax Revenue', value: 820697033432.69, color: COLORS.tax },
+    { label: 'Other Revenue', value: 108350760440.68, color: COLORS.other },
+    { label: 'Internal Loans', value: 234421420000.00, color: COLORS.iLoan },
+    { label: 'External Loans', value: 113271429828.65, color: COLORS.eLoan },
+    { label: 'Grants', value: 24009395892.52, color: COLORS.grant },
+    { label: 'Other Receipts', value: 23854660747.16, color: COLORS.misc },
+    { label: 'Loan Returns', value: 7260989738.00, color: '#94a3b8' },
+  ];
+  const total = receipts.reduce((s,r) => s+r.value, 0);
+
+  mkChart('c-donut', {
+    type: 'doughnut',
+    data: {
+      labels: receipts.map(r => r.label),
+      datasets: [{ data: receipts.map(r => r.value), backgroundColor: receipts.map(r => r.color), borderColor: '#f5f0e8', borderWidth: 2, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: { legend: { display: false }, tooltip: { ...TIP_STYLE, callbacks: { label: c => `${fArb(c.parsed)} · ${((c.parsed/total)*100).toFixed(1)}%` } } }
+    }
+  });
+
+  const legend = document.getElementById('donut-legend');
+  receipts.forEach(r => {
+    legend.innerHTML += `
+      <div class="dl-item">
+        <div class="dl-swatch" style="background:${r.color}"></div>
+        <div class="dl-name">${r.label}</div>
+        <div class="dl-pct">${((r.value/total)*100).toFixed(1)}%</div>
+        <div class="dl-val">${fArb(r.value)}</div>
+      </div>`;
+  });
+}
+
+function buildGauge() {
+  const canvas = document.getElementById('c-gauge');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 220, H = 120;
+  const cx = W/2, cy = H-10;
+  const R = 90, rIn = 60;
+
+  const recurrent = 929126442589.35;
+  const capital   = 192027363180.53;
+  const total = recurrent + capital;
+  const recPct = recurrent / total;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // background arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, Math.PI, 0);
+  ctx.arc(cx, cy, rIn, 0, Math.PI, true);
+  ctx.fillStyle = '#1a6b6b22';
+  ctx.fill();
+
+  // recurrent arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, Math.PI, Math.PI + recPct * Math.PI);
+  ctx.arc(cx, cy, rIn, Math.PI + recPct * Math.PI, Math.PI, true);
+  ctx.fillStyle = COLORS.rem;
+  ctx.fill();
+
+  // capital arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, Math.PI + recPct * Math.PI, 0);
+  ctx.arc(cx, cy, rIn, 0, Math.PI + recPct * Math.PI, true);
+  ctx.fillStyle = COLORS.cap;
+  ctx.fill();
+}
+
+function buildExpBars() {
+  const items = [
+    { label: 'Grant Expenses (to local gov.)', value: 422562049116.68, color: COLORS.grants },
+    { label: 'Social Security', value: 226669775930.06, color: COLORS.social },
+    { label: 'Internal Debt Repayment', value: 182557400000.00, color: COLORS.debt },
+    { label: 'Remuneration & Salaries', value: 154682133950.35, color: COLORS.rem },
+    { label: 'Public Works & Infrastructure', value: 132489027716.76, color: COLORS.cap },
+    { label: 'Interest & Bank Charges', value: 82097795282.40, color: COLORS.int },
+    { label: 'External Debt Repayment', value: 40722142625.06, color: '#6d28d9' },
+    { label: 'Fixed Assets Acquisition', value: 188688162931.93, color: '#0d9488' },
+    { label: 'Goods & Services', value: 39264041089.31, color: COLORS.goods },
+    { label: 'Other Recurrent', value: 3154663108.10, color: COLORS.misc },
+  ].sort((a,b) => b.value - a.value);
+
+  const max = items[0].value;
+  const el = document.getElementById('exp-bars');
+  el.innerHTML = items.map(it => `
+    <div class="prog-item">
+      <div class="prog-header">
+        <span class="prog-name">${it.label}</span>
+        <span class="prog-val">${fArb(it.value)} · ${((it.value/totalPayments)*100).toFixed(1)}%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" style="width:${(it.value/max*100).toFixed(1)}%;background:${it.color}"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// REVENUE TAB
+// ══════════════════════════════════════════════════════
+function buildRevCharts() {
+  const items = [
+    { label: 'Tax Revenue', value: 820697033432.69, color: COLORS.tax },
+    { label: 'Other Revenue', value: 108350760440.68, color: COLORS.other },
+    { label: 'Internal Loans', value: 234421420000.00, color: COLORS.iLoan },
+    { label: 'External Loans', value: 113271429828.65, color: COLORS.eLoan },
+    { label: 'Grants', value: 24009395892.52, color: COLORS.grant },
+    { label: 'Other Receipts', value: 23854660747.16, color: COLORS.misc },
+    { label: 'Loan Returns', value: 7260989738.00, color: '#94a3b8' },
+  ];
+
+  mkChart('c-rev-bar', {
+    type: 'bar',
+    data: {
+      labels: items.map(i => i.label),
+      datasets: [{ data: items.map(i => +(i.value/1e9).toFixed(2)), backgroundColor: items.map(i => i.color), borderRadius: 3 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { ...TIP_STYLE, callbacks: { label: c => `${c.parsed.x.toFixed(2)} Arb NPR` } } },
+      scales: {
+        x: { ticks: { color: '#6b7280', font: { family: 'IBM Plex Mono', size: 9 }, callback: v => v+'Arb' }, grid: { color: 'rgba(15,17,23,0.06)' } },
+        y: { ticks: { color: '#374151', font: { family: 'IBM Plex Sans', size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+
+  mkChart('c-rev-donut2', {
+    type: 'doughnut',
+    data: {
+      labels: items.map(i => i.label),
+      datasets: [{ data: items.map(i => i.value), backgroundColor: items.map(i => i.color), borderColor: '#f5f0e8', borderWidth: 2, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '55%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#374151', font: { family: 'IBM Plex Mono', size: 9 }, boxWidth: 10, padding: 10 } },
+        tooltip: { ...TIP_STYLE, callbacks: { label: c => `${fArb(c.parsed)} · ${((c.parsed/totalReceipts)*100).toFixed(1)}%` } }
+      }
+    }
+  });
+
+  const max = 820697033432.69;
+  const el = document.getElementById('rev-bars');
+  el.innerHTML = items.map(it => `
+    <div class="prog-item">
+      <div class="prog-header">
+        <span class="prog-name" style="font-weight:500">${it.label}</span>
+        <span class="prog-val">${fArb(it.value)} · ${((it.value/totalReceipts)*100).toFixed(1)}%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" style="width:${(it.value/max*100).toFixed(1)}%;background:${it.color}"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// EXPENDITURE TAB
+// ══════════════════════════════════════════════════════
+function buildExpCharts() {
+  // Treemap
+  const items = [
+    { label: 'Grant Expenses', desc: 'अनुदान खर्च', value: 422562049116.68, group: 'Recurrent', color: '#166534' },
+    { label: 'Social Security', desc: 'सामाजिक सुरक्षा', value: 226669775930.06, group: 'Recurrent', color: '#1d3557' },
+    { label: 'Remuneration', desc: 'पारिश्रमिक', value: 154682133950.35, group: 'Recurrent', color: '#c0392b' },
+    { label: 'Internal Debt Repay', desc: 'साँवा भुक्तानी', value: 182557400000.00, group: 'Debt', color: '#4c1d95' },
+    { label: 'Fixed Assets', desc: 'स्थिर सम्पत्ति', value: 188688162931.93, group: 'Capital', color: '#0f766e' },
+    { label: 'Interest Charges', desc: 'ब्याज', value: 82097795282.40, group: 'Recurrent', color: '#7f1d1d' },
+    { label: 'External Debt Repay', desc: 'बाह्य साँवा', value: 40722142625.06, group: 'Debt', color: '#6d28d9' },
+    { label: 'Public Works', desc: 'सार्वजनिक निर्माण', value: 132489027716.76, group: 'Capital', color: '#0e7490' },
+    { label: 'Goods & Services', desc: 'मालसमान', value: 39264041089.31, group: 'Recurrent', color: '#c05e1a' },
+    { label: 'Buildings', desc: 'भवन', value: 24209015324.83, group: 'Capital', color: '#065f46' },
+    { label: 'Other Recurrent', desc: 'अन्य चालु', value: 3154663108.10, group: 'Recurrent', color: '#78716c' },
+    { label: 'Assistance', desc: 'सहायता', value: 695984112.45, group: 'Recurrent', color: '#92400e' },
+  ].sort((a,b) => b.value-a.value);
+
+  const totalForMap = items.reduce((s,i) => s+i.value, 0);
+  const container = document.getElementById('treemap-container');
+  // Simple proportional grid treemap
+  let html = '<div style="display:flex;flex-wrap:wrap;gap:4px;">';
+  items.forEach(it => {
+    const w = Math.max((it.value/totalForMap)*100, 8);
+    const h = Math.max(80, Math.min(140, (it.value/totalForMap)*600));
+    html += `
+      <div class="tm-cell" style="background:${it.color};width:${w.toFixed(1)}%;min-height:${h.toFixed(0)}px;" title="${it.label}: ${fArb(it.value)}">
+        <div class="tm-label">${it.label}</div>
+        <div class="tm-val">${fArb(it.value)}</div>
+        <div class="tm-val" style="opacity:0.45;font-size:.55rem">${it.group} · ${((it.value/totalForMap)*100).toFixed(1)}%</div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+
+  // Recurrent chart
+  const rec = [
+    { label: 'Grant Expenses', v: 422562049116.68, c: '#166534' },
+    { label: 'Social Security', v: 226669775930.06, c: '#1d3557' },
+    { label: 'Remuneration', v: 154682133950.35, c: '#c0392b' },
+    { label: 'Interest Charges', v: 82097795282.40, c: '#7f1d1d' },
+    { label: 'Goods & Services', v: 39264041089.31, c: '#c05e1a' },
+    { label: 'Other Recurrent', v: 3154663108.10, c: '#78716c' },
+    { label: 'Assistance', v: 695984112.45, c: '#92400e' },
+  ];
+  mkChart('c-rec-bar', {
+    type: 'bar',
+    data: {
+      labels: rec.map(r => r.label),
+      datasets: [{ data: rec.map(r => +(r.v/1e9).toFixed(2)), backgroundColor: rec.map(r => r.c), borderRadius: 3 }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TIP_STYLE, callbacks:{label:c=>`${c.parsed.x.toFixed(2)} Arb NPR`}}},
+      scales:{x:{ticks:{color:'#6b7280',font:{family:'IBM Plex Mono',size:9},callback:v=>v+'Arb'},grid:{color:'rgba(15,17,23,0.06)'}},y:{ticks:{color:'#374151',font:{family:'IBM Plex Sans',size:10}},grid:{display:false}}}
+    }
+  });
+
+  // Capital chart
+  const cap = [
+    { label: 'Fixed Assets Acq.', v: 188688162931.93, c: '#0f766e' },
+    { label: 'Public Works', v: 132489027716.76, c: '#0e7490' },
+    { label: 'Buildings & Structures', v: 24209015324.83, c: '#065f46' },
+    { label: 'Improvement of Structures', v: 11910127410.66, c: '#1a6b6b' },
+    { label: 'Vehicles & Machinery', v: 9177116536.43, c: '#2a9d8f' },
+    { label: 'Land Acquisition', v: 2641054154.45, c: '#84cc16' },
+  ];
+  mkChart('c-cap-bar', {
+    type: 'bar',
+    data: {
+      labels: cap.map(r => r.label),
+      datasets: [{ data: cap.map(r => +(r.v/1e9).toFixed(2)), backgroundColor: cap.map(r => r.c), borderRadius: 3 }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TIP_STYLE, callbacks:{label:c=>`${c.parsed.x.toFixed(2)} Arb NPR`}}},
+      scales:{x:{ticks:{color:'#6b7280',font:{family:'IBM Plex Mono',size:9},callback:v=>v+'Arb'},grid:{color:'rgba(15,17,23,0.06)'}},y:{ticks:{color:'#374151',font:{family:'IBM Plex Sans',size:10}},grid:{display:false}}}
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SANKEY
+// ══════════════════════════════════════════════════════
+function buildSankey() {
+  const svg = document.getElementById('sankey-svg');
+  if (!svg) return;
+  const W = Math.max(svg.parentElement.clientWidth || 900, 700);
+  const H = 480;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W);
+  svg.innerHTML = '';
+  const NS = 'http://www.w3.org/2000/svg';
+
+  const sources = [
+    { label: 'Tax Revenue', v: 820.70, color: COLORS.tax },
+    { label: 'Internal Loans', v: 234.42, color: COLORS.iLoan },
+    { label: 'External Loans', v: 113.27, color: COLORS.eLoan },
+    { label: 'Other Revenue', v: 108.35, color: COLORS.other },
+    { label: 'Grants', v: 24.01, color: COLORS.grant },
+    { label: 'Other Receipts', v: 31.12, color: COLORS.misc },
+  ];
+
+  const uses = [
+    { label: 'Grant Expenses', v: 422.56, color: '#166534' },
+    { label: 'Social Security', v: 226.67, color: COLORS.social },
+    { label: 'Internal Debt', v: 182.56, color: COLORS.debt },
+    { label: 'Fixed Assets/Capital', v: 188.69, color: COLORS.cap },
+    { label: 'Remuneration', v: 154.68, color: COLORS.rem },
+    { label: 'Interest Charges', v: 82.10, color: COLORS.int },
+    { label: 'External Debt', v: 40.72, color: '#6d28d9' },
+    { label: 'Goods & Services', v: 39.26, color: COLORS.goods },
+    { label: 'Investments', v: 7.22, color: '#94a3b8' },
+    { label: 'Other', v: 3.85, color: COLORS.misc },
+  ];
+
+  const totalS = sources.reduce((s,n) => s+n.v, 0);
+  const totalU = uses.reduce((s,n) => s+n.v, 0);
+
+  const NW = 22, PAD = 6;
+  const C0 = 20, C1 = W*0.3, C2 = W*0.7, C3 = W - 140;
+  const PLOTH = H - 60;
+  const TOP = 30;
+
+  // Source nodes
+  let sy = TOP;
+  const sNodes = sources.map(s => {
+    const h = Math.max((s.v / totalS) * PLOTH, 12);
+    const node = { ...s, y: sy, h };
+    sy += h + PAD;
+    return node;
+  });
+
+  // Central Fund node
+  const cfH = PLOTH * 0.85;
+  const cfY = TOP + (PLOTH - cfH) / 2;
+  const cfX = (C1 + C2) / 2 - NW / 2;
+
+  // Use nodes
+  let uy = TOP;
+  const uNodes = uses.map(u => {
+    const h = Math.max((u.v / totalU) * PLOTH, 12);
+    const node = { ...u, y: uy, h };
+    uy += h + PAD;
+    return node;
+  });
+
+  // Draw links: sources → central fund
+  sNodes.forEach(n => {
+    const x0 = C0 + NW, y0 = n.y + n.h/2;
+    const x1 = cfX, y1 = cfY + (n.y - TOP + n.h/2) / PLOTH * cfH;
+    const cx = (x0 + x1) / 2;
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', `M${x0},${y0} C${cx},${y0} ${cx},${y1} ${x1},${y1}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', n.color);
+    path.setAttribute('stroke-width', Math.max(n.h * 0.5, 1.5));
+    path.setAttribute('stroke-opacity', '0.25');
+    svg.appendChild(path);
+  });
+
+  // Draw links: central fund → uses
+  uNodes.forEach(n => {
+    const x0 = cfX + NW, y0 = cfY + (n.y - TOP + n.h/2) / PLOTH * cfH;
+    const x1 = C3, y1 = n.y + n.h/2;
+    const cx = (x0 + x1) / 2;
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', `M${x0},${y0} C${cx},${y0} ${cx},${y1} ${x1},${y1}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', n.color);
+    path.setAttribute('stroke-width', Math.max(n.h * 0.5, 1.5));
+    path.setAttribute('stroke-opacity', '0.2');
+    svg.appendChild(path);
+  });
+
+  // Draw source nodes
+  sNodes.forEach(n => {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', C0); r.setAttribute('y', n.y);
+    r.setAttribute('width', NW); r.setAttribute('height', n.h);
+    r.setAttribute('fill', n.color); r.setAttribute('rx', 2);
+    svg.appendChild(r);
+
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', C0 - 6); t.setAttribute('y', n.y + n.h/2);
+    t.setAttribute('fill', '#1c2033'); t.setAttribute('font-size', '9');
+    t.setAttribute('font-family', 'IBM Plex Mono, monospace');
+    t.setAttribute('text-anchor', 'end'); t.setAttribute('dominant-baseline', 'middle');
+    t.textContent = `${n.label} (${n.v.toFixed(0)}Arb)`;
+    svg.appendChild(t);
+  });
+
+  // Draw central fund node
+  const cfRect = document.createElementNS(NS, 'rect');
+  cfRect.setAttribute('x', cfX); cfRect.setAttribute('y', cfY);
+  cfRect.setAttribute('width', NW); cfRect.setAttribute('height', cfH);
+  cfRect.setAttribute('fill', '#0f1117'); cfRect.setAttribute('rx', 2);
+  svg.appendChild(cfRect);
+
+  const cfT = document.createElementNS(NS, 'text');
+  cfT.setAttribute('x', cfX + NW/2); cfT.setAttribute('y', cfY - 10);
+  cfT.setAttribute('fill', '#374151'); cfT.setAttribute('font-size', '8');
+  cfT.setAttribute('font-family', 'IBM Plex Mono, monospace');
+  cfT.setAttribute('text-anchor', 'middle');
+  cfT.textContent = 'CONSOLIDATED';
+  svg.appendChild(cfT);
+  const cfT2 = document.createElementNS(NS, 'text');
+  cfT2.setAttribute('x', cfX + NW/2); cfT2.setAttribute('y', cfY - 2);
+  cfT2.setAttribute('fill', '#374151'); cfT2.setAttribute('font-size', '8');
+  cfT2.setAttribute('font-family', 'IBM Plex Mono, monospace');
+  cfT2.setAttribute('text-anchor', 'middle');
+  cfT2.textContent = 'FUND';
+  svg.appendChild(cfT2);
+
+  // Draw use nodes
+  uNodes.forEach(n => {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', C3); r.setAttribute('y', n.y);
+    r.setAttribute('width', NW); r.setAttribute('height', n.h);
+    r.setAttribute('fill', n.color); r.setAttribute('rx', 2);
+    svg.appendChild(r);
+
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', C3 + NW + 6); t.setAttribute('y', n.y + n.h/2);
+    t.setAttribute('fill', '#1c2033'); t.setAttribute('font-size', '9');
+    t.setAttribute('font-family', 'IBM Plex Mono, monospace');
+    t.setAttribute('text-anchor', 'start'); t.setAttribute('dominant-baseline', 'middle');
+    t.textContent = `${n.label} (${n.v.toFixed(0)}Arb)`;
+    svg.appendChild(t);
+  });
+
+  // Bottom labels
+  const bl = (x, text) => {
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', x); t.setAttribute('y', H - 8);
+    t.setAttribute('fill', '#9ca3af'); t.setAttribute('font-size', '8');
+    t.setAttribute('font-family', 'IBM Plex Mono, monospace');
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = text;
+    svg.appendChild(t);
+  };
+  bl(C0 + NW/2, 'INCOME SOURCES');
+  bl(cfX + NW/2, 'CONSOLIDATED FUND');
+  bl(C3 + NW/2, 'EXPENDITURES');
+}
+
+function buildBalanceChart() {
+  mkChart('c-balance', {
+    type: 'bar',
+    data: {
+      labels: ['FY 2080/081'],
+      datasets: [
+        { label: 'Total Receipts', data: [1331.87], backgroundColor: '#1d355788', borderColor: '#1d3557', borderWidth: 2, borderRadius: 4 },
+        { label: 'Total Payments', data: [1392.39], backgroundColor: '#c0392b88', borderColor: '#c0392b', borderWidth: 2, borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#374151', font: { family: 'IBM Plex Mono', size: 10 }, boxWidth: 12 } },
+        tooltip: { ...TIP_STYLE, callbacks: { label: c => `${c.dataset.label}: NPR ${c.parsed.y.toFixed(2)} Arb` } } },
+      scales: {
+        x: { ticks: { color: '#6b7280', font: { family: 'IBM Plex Mono', size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: '#6b7280', font: { family: 'IBM Plex Mono', size: 10 }, callback: v => v+'Arb' }, grid: { color: 'rgba(15,17,23,0.06)' } }
+      }
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// FULL TABLE
+// ══════════════════════════════════════════════════════
+function buildTable() {
+  const tbody = document.getElementById('full-table-body');
+  const totalRef = totalReceipts;
+
+  tbody.innerHTML = DATA.map(d => {
+    const isTotal = d.code === '00000';
+    const isReceipt = d.cat === 'Receipts';
+    const rowClass = isTotal ? (isReceipt ? 'surplus-row' : 'deficit-row') : '';
+    const boldStyle = d.sub ? 'font-weight:600;' : '';
+    const bgStyle = d.sub ? 'background:rgba(15,17,23,0.02);' : '';
+    return `
+      <tr class="${rowClass}" style="${bgStyle}">
+        <td class="code">${d.code}</td>
+        <td><span class="${isReceipt ? 'type-r' : 'type-p'}">${d.cat}</span></td>
+        <td style="${boldStyle}">${d.en}</td>
+        <td style="font-family:'Tiro Devanagari Hindi',serif;font-size:.8rem">${d.np}</td>
+        <td class="mono" style="text-align:right;${boldStyle}">${d.total.toLocaleString('en-IN', {maximumFractionDigits:2})}</td>
+        <td class="mono" style="text-align:right;${boldStyle}">${(d.total/1e9).toFixed(2)}</td>
+        <td class="mono" style="text-align:right;color:var(--slate)">${((d.total/totalRef)*100).toFixed(2)}%</td>
+      </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+const built = {};
+
+function switchTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    const map = { overview:'Executive', revenue:'Revenue', expenditure:'Expenditure', flow:'Flow', data:'Full' };
+    if (n.textContent.includes(map[name])) n.classList.add('active');
+  });
+
+  if (!built[name]) {
+    built[name] = true;
+    if (name === 'revenue') buildRevCharts();
+    if (name === 'expenditure') buildExpCharts();
+    if (name === 'flow') { buildSankey(); buildBalanceChart(); }
+    if (name === 'data') buildTable();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  buildDonut();
+  buildGauge();
+  buildExpBars();
+  built['overview'] = true;
+});
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('tab-flow').classList.contains('active')) buildSankey();
+});
+</script>
+</body>
+</html>

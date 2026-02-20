@@ -1,0 +1,1613 @@
+[
+  {
+    "constituency_id": "MO-1",
+    "constituency_name": "Morang 1",
+    "district": "Morang",
+    "province": "Koshi",
+    "population": 43454,
+    "tax_generated_npr": 321545507,
+    "federal_allocation_npr": 675688355
+  },
+  {
+    "constituency_id": "MO-2",
+    "constituency_name": "Morang 2",
+    "district": "Morang",
+    "province": "Koshi",
+    "population": 37244,
+    "tax_generated_npr": 752328650,
+    "federal_allocation_npr": 660627641
+  },
+  {
+    "constituency_id": "MO-3",
+    "constituency_name": "Morang 3",
+    "district": "Morang",
+    "province": "Koshi",
+    "population": 48285,
+    "tax_generated_npr": 327028797,
+    "federal_allocation_npr": 736161074
+  },
+  {
+    "constituency_id": "MO-4",
+    "constituency_name": "Morang 4",
+    "district": "Morang",
+    "province": "Koshi",
+    "population": 43908,
+    "tax_generated_npr": 325700150,
+    "federal_allocation_npr": 479107805
+  },
+  {
+    "constituency_id": "MO-5",
+    "constituency_name": "Morang 5",
+    "district": "Morang",
+    "province": "Koshi",
+    "population": 49145,
+    "tax_generated_npr": 501141207,
+    "federal_allocation_npr": 466063095
+  },
+  {
+    "constituency_id": "SU-1",
+    "constituency_name": "Sunsari 1",
+    "district": "Sunsari",
+    "province": "Koshi",
+    "population": 55160,
+    "tax_generated_npr": 321012734,
+    "federal_allocation_npr": 596616754
+  },
+  {
+    "constituency_id": "SU-2",
+    "constituency_name": "Sunsari 2",
+    "district": "Sunsari",
+    "province": "Koshi",
+    "population": 44539,
+    "tax_generated_npr": 825818048,
+    "federal_allocation_npr": 430910030
+  },
+  {
+    "constituency_id": "SU-3",
+    "constituency_name": "Sunsari 3",
+    "district": "Sunsari",
+    "province": "Koshi",
+    "population": 37539,
+    "tax_generated_npr": 304582925,
+    "federal_allocation_npr": 746836780
+  },
+  {
+    "constituency_id": "SU-4",
+    "constituency_name": "Sunsari 4",
+    "district": "Sunsari",
+    "province": "Koshi",
+    "population": 53384,
+    "tax_generated_npr": 660830593,
+    "federal_allocation_npr": 728169638
+  },
+  {
+    "constituency_id": "JH-1",
+    "constituency_name": "Jhapa 1",
+    "district": "Jhapa",
+    "province": "Koshi",
+    "population": 28158,
+    "tax_generated_npr": 482989798,
+    "federal_allocation_npr": 543405590
+  },
+  {
+    "constituency_id": "JH-2",
+    "constituency_name": "Jhapa 2",
+    "district": "Jhapa",
+    "province": "Koshi",
+    "population": 53156,
+    "tax_generated_npr": 335138580,
+    "federal_allocation_npr": 647687705
+  },
+  {
+    "constituency_id": "JH-3",
+    "constituency_name": "Jhapa 3",
+    "district": "Jhapa",
+    "province": "Koshi",
+    "population": 39665,
+    "tax_generated_npr": 475433712,
+    "federal_allocation_npr": 596514101
+  },
+  {
+    "constituency_id": "JH-4",
+    "constituency_name": "Jhapa 4",
+    "district": "Jhapa",
+    "province": "Koshi",
+    "population": 40483,
+    "tax_generated_npr": 415536338,
+    "federal_allocation_npr": 468978768
+  },
+  {
+    "constituency_id": "JH-5",
+    "constituency_name": "Jhapa 5",
+    "district": "Jhapa",
+    "province": "Koshi",
+    "population": 29284,
+    "tax_generated_npr": 567736410,
+    "federal_allocation_npr": 686578185
+  },
+  {
+    "constituency_id": "IL-1",
+    "constituency_name": "Ilam 1",
+    "district": "Ilam",
+    "province": "Koshi",
+    "population": 41653,
+    "tax_generated_npr": 560088511,
+    "federal_allocation_npr": 730833744
+  },
+  {
+    "constituency_id": "IL-2",
+    "constituency_name": "Ilam 2",
+    "district": "Ilam",
+    "province": "Koshi",
+    "population": 38900,
+    "tax_generated_npr": 766865426,
+    "federal_allocation_npr": 485677566
+  },
+  {
+    "constituency_id": "IL-3",
+    "constituency_name": "Ilam 3",
+    "district": "Ilam",
+    "province": "Koshi",
+    "population": 43404,
+    "tax_generated_npr": 458613585,
+    "federal_allocation_npr": 707345479
+  },
+  {
+    "constituency_id": "TA-1",
+    "constituency_name": "Taplejung 1",
+    "district": "Taplejung",
+    "province": "Koshi",
+    "population": 51802,
+    "tax_generated_npr": 563321819,
+    "federal_allocation_npr": 747878684
+  },
+  {
+    "constituency_id": "TA-2",
+    "constituency_name": "Taplejung 2",
+    "district": "Taplejung",
+    "province": "Koshi",
+    "population": 31415,
+    "tax_generated_npr": 604618511,
+    "federal_allocation_npr": 599808465
+  },
+  {
+    "constituency_id": "SA-1",
+    "constituency_name": "Sankhuwasabha 1",
+    "district": "Sankhuwasabha",
+    "province": "Koshi",
+    "population": 46659,
+    "tax_generated_npr": 699766283,
+    "federal_allocation_npr": 589375027
+  },
+  {
+    "constituency_id": "SA-2",
+    "constituency_name": "Sankhuwasabha 2",
+    "district": "Sankhuwasabha",
+    "province": "Koshi",
+    "population": 39028,
+    "tax_generated_npr": 439207026,
+    "federal_allocation_npr": 720966893
+  },
+  {
+    "constituency_id": "TE-1",
+    "constituency_name": "Terhathum 1",
+    "district": "Terhathum",
+    "province": "Koshi",
+    "population": 57803,
+    "tax_generated_npr": 386296310,
+    "federal_allocation_npr": 461308302
+  },
+  {
+    "constituency_id": "TE-2",
+    "constituency_name": "Terhathum 2",
+    "district": "Terhathum",
+    "province": "Koshi",
+    "population": 30954,
+    "tax_generated_npr": 421547182,
+    "federal_allocation_npr": 695433114
+  },
+  {
+    "constituency_id": "DH-1",
+    "constituency_name": "Dhankuta 1",
+    "district": "Dhankuta",
+    "province": "Koshi",
+    "population": 45207,
+    "tax_generated_npr": 498440195,
+    "federal_allocation_npr": 746223880
+  },
+  {
+    "constituency_id": "DH-2",
+    "constituency_name": "Dhankuta 2",
+    "district": "Dhankuta",
+    "province": "Koshi",
+    "population": 50766,
+    "tax_generated_npr": 520105357,
+    "federal_allocation_npr": 405004868
+  },
+  {
+    "constituency_id": "BH-1",
+    "constituency_name": "Bhojpur 1",
+    "district": "Bhojpur",
+    "province": "Koshi",
+    "population": 33107,
+    "tax_generated_npr": 724658098,
+    "federal_allocation_npr": 614332710
+  },
+  {
+    "constituency_id": "BH-2",
+    "constituency_name": "Bhojpur 2",
+    "district": "Bhojpur",
+    "province": "Koshi",
+    "population": 57046,
+    "tax_generated_npr": 628781089,
+    "federal_allocation_npr": 469535750
+  },
+  {
+    "constituency_id": "KH-1",
+    "constituency_name": "Khotang 1",
+    "district": "Khotang",
+    "province": "Koshi",
+    "population": 55717,
+    "tax_generated_npr": 413029353,
+    "federal_allocation_npr": 652853598
+  },
+  {
+    "constituency_id": "KH-2",
+    "constituency_name": "Khotang 2",
+    "district": "Khotang",
+    "province": "Koshi",
+    "population": 33648,
+    "tax_generated_npr": 574152686,
+    "federal_allocation_npr": 444143500
+  },
+  {
+    "constituency_id": "PA-1",
+    "constituency_name": "Parsa 1",
+    "district": "Parsa",
+    "province": "Madhesh",
+    "population": 53820,
+    "tax_generated_npr": 640736645,
+    "federal_allocation_npr": 871587383
+  },
+  {
+    "constituency_id": "PA-2",
+    "constituency_name": "Parsa 2",
+    "district": "Parsa",
+    "province": "Madhesh",
+    "population": 55180,
+    "tax_generated_npr": 626045727,
+    "federal_allocation_npr": 752615886
+  },
+  {
+    "constituency_id": "PA-3",
+    "constituency_name": "Parsa 3",
+    "district": "Parsa",
+    "province": "Madhesh",
+    "population": 63494,
+    "tax_generated_npr": 328799391,
+    "federal_allocation_npr": 965258037
+  },
+  {
+    "constituency_id": "PA-4",
+    "constituency_name": "Parsa 4",
+    "district": "Parsa",
+    "province": "Madhesh",
+    "population": 38373,
+    "tax_generated_npr": 292144296,
+    "federal_allocation_npr": 787634743
+  },
+  {
+    "constituency_id": "BA-1",
+    "constituency_name": "Bara 1",
+    "district": "Bara",
+    "province": "Madhesh",
+    "population": 48851,
+    "tax_generated_npr": 281786451,
+    "federal_allocation_npr": 1217981199
+  },
+  {
+    "constituency_id": "BA-2",
+    "constituency_name": "Bara 2",
+    "district": "Bara",
+    "province": "Madhesh",
+    "population": 54509,
+    "tax_generated_npr": 380263702,
+    "federal_allocation_npr": 1221138555
+  },
+  {
+    "constituency_id": "BA-3",
+    "constituency_name": "Bara 3",
+    "district": "Bara",
+    "province": "Madhesh",
+    "population": 57220,
+    "tax_generated_npr": 597558198,
+    "federal_allocation_npr": 1139200591
+  },
+  {
+    "constituency_id": "BA-4",
+    "constituency_name": "Bara 4",
+    "district": "Bara",
+    "province": "Madhesh",
+    "population": 50667,
+    "tax_generated_npr": 516448469,
+    "federal_allocation_npr": 715805871
+  },
+  {
+    "constituency_id": "RA-1",
+    "constituency_name": "Rautahat 1",
+    "district": "Rautahat",
+    "province": "Madhesh",
+    "population": 38713,
+    "tax_generated_npr": 491989963,
+    "federal_allocation_npr": 836347062
+  },
+  {
+    "constituency_id": "RA-2",
+    "constituency_name": "Rautahat 2",
+    "district": "Rautahat",
+    "province": "Madhesh",
+    "population": 62169,
+    "tax_generated_npr": 460947100,
+    "federal_allocation_npr": 969955700
+  },
+  {
+    "constituency_id": "RA-3",
+    "constituency_name": "Rautahat 3",
+    "district": "Rautahat",
+    "province": "Madhesh",
+    "population": 65726,
+    "tax_generated_npr": 686106250,
+    "federal_allocation_npr": 945089820
+  },
+  {
+    "constituency_id": "SA-3",
+    "constituency_name": "Sarlahi 1",
+    "district": "Sarlahi",
+    "province": "Madhesh",
+    "population": 45313,
+    "tax_generated_npr": 488272867,
+    "federal_allocation_npr": 1287390242
+  },
+  {
+    "constituency_id": "SA-4",
+    "constituency_name": "Sarlahi 2",
+    "district": "Sarlahi",
+    "province": "Madhesh",
+    "population": 43998,
+    "tax_generated_npr": 777201658,
+    "federal_allocation_npr": 891002441
+  },
+  {
+    "constituency_id": "SA-5",
+    "constituency_name": "Sarlahi 3",
+    "district": "Sarlahi",
+    "province": "Madhesh",
+    "population": 45072,
+    "tax_generated_npr": 586522226,
+    "federal_allocation_npr": 752178063
+  },
+  {
+    "constituency_id": "SA-6",
+    "constituency_name": "Sarlahi 4",
+    "district": "Sarlahi",
+    "province": "Madhesh",
+    "population": 61167,
+    "tax_generated_npr": 537449109,
+    "federal_allocation_npr": 1221822169
+  },
+  {
+    "constituency_id": "MA-1",
+    "constituency_name": "Mahottari 1",
+    "district": "Mahottari",
+    "province": "Madhesh",
+    "population": 61491,
+    "tax_generated_npr": 406245077,
+    "federal_allocation_npr": 951432013
+  },
+  {
+    "constituency_id": "MA-2",
+    "constituency_name": "Mahottari 2",
+    "district": "Mahottari",
+    "province": "Madhesh",
+    "population": 51341,
+    "tax_generated_npr": 579571975,
+    "federal_allocation_npr": 780967704
+  },
+  {
+    "constituency_id": "MA-3",
+    "constituency_name": "Mahottari 3",
+    "district": "Mahottari",
+    "province": "Madhesh",
+    "population": 41200,
+    "tax_generated_npr": 588637869,
+    "federal_allocation_npr": 953182158
+  },
+  {
+    "constituency_id": "DH-3",
+    "constituency_name": "Dhanusha 1",
+    "district": "Dhanusha",
+    "province": "Madhesh",
+    "population": 49170,
+    "tax_generated_npr": 321072885,
+    "federal_allocation_npr": 1221359696
+  },
+  {
+    "constituency_id": "DH-4",
+    "constituency_name": "Dhanusha 2",
+    "district": "Dhanusha",
+    "province": "Madhesh",
+    "population": 57677,
+    "tax_generated_npr": 407464120,
+    "federal_allocation_npr": 1223211585
+  },
+  {
+    "constituency_id": "DH-5",
+    "constituency_name": "Dhanusha 3",
+    "district": "Dhanusha",
+    "province": "Madhesh",
+    "population": 41539,
+    "tax_generated_npr": 287103052,
+    "federal_allocation_npr": 960720812
+  },
+  {
+    "constituency_id": "DH-6",
+    "constituency_name": "Dhanusha 4",
+    "district": "Dhanusha",
+    "province": "Madhesh",
+    "population": 65353,
+    "tax_generated_npr": 832159710,
+    "federal_allocation_npr": 958867937
+  },
+  {
+    "constituency_id": "SI-1",
+    "constituency_name": "Siraha 1",
+    "district": "Siraha",
+    "province": "Madhesh",
+    "population": 51355,
+    "tax_generated_npr": 446120710,
+    "federal_allocation_npr": 1155759015
+  },
+  {
+    "constituency_id": "SI-2",
+    "constituency_name": "Siraha 2",
+    "district": "Siraha",
+    "province": "Madhesh",
+    "population": 55799,
+    "tax_generated_npr": 616975359,
+    "federal_allocation_npr": 1194308437
+  },
+  {
+    "constituency_id": "SI-3",
+    "constituency_name": "Siraha 3",
+    "district": "Siraha",
+    "province": "Madhesh",
+    "population": 41514,
+    "tax_generated_npr": 844691744,
+    "federal_allocation_npr": 855906562
+  },
+  {
+    "constituency_id": "SI-4",
+    "constituency_name": "Siraha 4",
+    "district": "Siraha",
+    "province": "Madhesh",
+    "population": 59781,
+    "tax_generated_npr": 410260862,
+    "federal_allocation_npr": 1177953421
+  },
+  {
+    "constituency_id": "SA-7",
+    "constituency_name": "Saptari 1",
+    "district": "Saptari",
+    "province": "Madhesh",
+    "population": 50694,
+    "tax_generated_npr": 258552239,
+    "federal_allocation_npr": 1245160575
+  },
+  {
+    "constituency_id": "SA-8",
+    "constituency_name": "Saptari 2",
+    "district": "Saptari",
+    "province": "Madhesh",
+    "population": 67212,
+    "tax_generated_npr": 798022081,
+    "federal_allocation_npr": 1228238672
+  },
+  {
+    "constituency_id": "SA-9",
+    "constituency_name": "Saptari 3",
+    "district": "Saptari",
+    "province": "Madhesh",
+    "population": 39204,
+    "tax_generated_npr": 583614036,
+    "federal_allocation_npr": 1178616119
+  },
+  {
+    "constituency_id": "KA-1",
+    "constituency_name": "Kathmandu 1",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 56928,
+    "tax_generated_npr": 3310379181,
+    "federal_allocation_npr": 524559606
+  },
+  {
+    "constituency_id": "KA-2",
+    "constituency_name": "Kathmandu 2",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 32236,
+    "tax_generated_npr": 1775648753,
+    "federal_allocation_npr": 484953200
+  },
+  {
+    "constituency_id": "KA-3",
+    "constituency_name": "Kathmandu 3",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 51539,
+    "tax_generated_npr": 3881507007,
+    "federal_allocation_npr": 600031248
+  },
+  {
+    "constituency_id": "KA-4",
+    "constituency_name": "Kathmandu 4",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 40274,
+    "tax_generated_npr": 1073463778,
+    "federal_allocation_npr": 653966649
+  },
+  {
+    "constituency_id": "KA-5",
+    "constituency_name": "Kathmandu 5",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 53325,
+    "tax_generated_npr": 2230063476,
+    "federal_allocation_npr": 642463038
+  },
+  {
+    "constituency_id": "KA-6",
+    "constituency_name": "Kathmandu 6",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 44826,
+    "tax_generated_npr": 2203820187,
+    "federal_allocation_npr": 394991172
+  },
+  {
+    "constituency_id": "KA-7",
+    "constituency_name": "Kathmandu 7",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 52240,
+    "tax_generated_npr": 1212860710,
+    "federal_allocation_npr": 391838586
+  },
+  {
+    "constituency_id": "KA-8",
+    "constituency_name": "Kathmandu 8",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 44219,
+    "tax_generated_npr": 3038402478,
+    "federal_allocation_npr": 581797572
+  },
+  {
+    "constituency_id": "KA-9",
+    "constituency_name": "Kathmandu 9",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 53851,
+    "tax_generated_npr": 2085871012,
+    "federal_allocation_npr": 606274477
+  },
+  {
+    "constituency_id": "KA-10",
+    "constituency_name": "Kathmandu 10",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 57587,
+    "tax_generated_npr": 2057885474,
+    "federal_allocation_npr": 555857490
+  },
+  {
+    "constituency_id": "LA-1",
+    "constituency_name": "Lalitpur 1",
+    "district": "Lalitpur",
+    "province": "Bagmati",
+    "population": 43529,
+    "tax_generated_npr": 1189839232,
+    "federal_allocation_npr": 487918311
+  },
+  {
+    "constituency_id": "LA-2",
+    "constituency_name": "Lalitpur 2",
+    "district": "Lalitpur",
+    "province": "Bagmati",
+    "population": 35901,
+    "tax_generated_npr": 1022141294,
+    "federal_allocation_npr": 598295443
+  },
+  {
+    "constituency_id": "LA-3",
+    "constituency_name": "Lalitpur 3",
+    "district": "Lalitpur",
+    "province": "Bagmati",
+    "population": 50117,
+    "tax_generated_npr": 3112156571,
+    "federal_allocation_npr": 423020505
+  },
+  {
+    "constituency_id": "BH-3",
+    "constituency_name": "Bhaktapur 1",
+    "district": "Bhaktapur",
+    "province": "Bagmati",
+    "population": 57378,
+    "tax_generated_npr": 3345090792,
+    "federal_allocation_npr": 571427684
+  },
+  {
+    "constituency_id": "BH-4",
+    "constituency_name": "Bhaktapur 2",
+    "district": "Bhaktapur",
+    "province": "Bagmati",
+    "population": 41538,
+    "tax_generated_npr": 2453273105,
+    "federal_allocation_npr": 425559929
+  },
+  {
+    "constituency_id": "KA-11",
+    "constituency_name": "Kavrepalanchok 1",
+    "district": "Kavrepalanchok",
+    "province": "Bagmati",
+    "population": 42722,
+    "tax_generated_npr": 1253259621,
+    "federal_allocation_npr": 326241358
+  },
+  {
+    "constituency_id": "KA-12",
+    "constituency_name": "Kavrepalanchok 2",
+    "district": "Kavrepalanchok",
+    "province": "Bagmati",
+    "population": 45677,
+    "tax_generated_npr": 793916591,
+    "federal_allocation_npr": 364057811
+  },
+  {
+    "constituency_id": "KA-13",
+    "constituency_name": "Kavrepalanchok 3",
+    "district": "Kavrepalanchok",
+    "province": "Bagmati",
+    "population": 42966,
+    "tax_generated_npr": 1174269096,
+    "federal_allocation_npr": 587827014
+  },
+  {
+    "constituency_id": "SI-5",
+    "constituency_name": "Sindhupalchok 1",
+    "district": "Sindhupalchok",
+    "province": "Bagmati",
+    "population": 46203,
+    "tax_generated_npr": 1712136578,
+    "federal_allocation_npr": 536780901
+  },
+  {
+    "constituency_id": "SI-6",
+    "constituency_name": "Sindhupalchok 2",
+    "district": "Sindhupalchok",
+    "province": "Bagmati",
+    "population": 51105,
+    "tax_generated_npr": 1373670158,
+    "federal_allocation_npr": 535193212
+  },
+  {
+    "constituency_id": "RA-4",
+    "constituency_name": "Rasuwa 1",
+    "district": "Rasuwa",
+    "province": "Bagmati",
+    "population": 33620,
+    "tax_generated_npr": 1720643408,
+    "federal_allocation_npr": 517517739
+  },
+  {
+    "constituency_id": "NU-1",
+    "constituency_name": "Nuwakot 1",
+    "district": "Nuwakot",
+    "province": "Bagmati",
+    "population": 34070,
+    "tax_generated_npr": 668814567,
+    "federal_allocation_npr": 323193550
+  },
+  {
+    "constituency_id": "NU-2",
+    "constituency_name": "Nuwakot 2",
+    "district": "Nuwakot",
+    "province": "Bagmati",
+    "population": 45468,
+    "tax_generated_npr": 715312108,
+    "federal_allocation_npr": 531591238
+  },
+  {
+    "constituency_id": "DH-7",
+    "constituency_name": "Dhading 1",
+    "district": "Dhading",
+    "province": "Bagmati",
+    "population": 47581,
+    "tax_generated_npr": 1329461637,
+    "federal_allocation_npr": 367332466
+  },
+  {
+    "constituency_id": "DH-8",
+    "constituency_name": "Dhading 2",
+    "district": "Dhading",
+    "province": "Bagmati",
+    "population": 37287,
+    "tax_generated_npr": 647209723,
+    "federal_allocation_npr": 573926285
+  },
+  {
+    "constituency_id": "MA-4",
+    "constituency_name": "Makwanpur 1",
+    "district": "Makwanpur",
+    "province": "Bagmati",
+    "population": 47516,
+    "tax_generated_npr": 660115244,
+    "federal_allocation_npr": 486553714
+  },
+  {
+    "constituency_id": "MA-5",
+    "constituency_name": "Makwanpur 2",
+    "district": "Makwanpur",
+    "province": "Bagmati",
+    "population": 40804,
+    "tax_generated_npr": 894486774,
+    "federal_allocation_npr": 438047899
+  },
+  {
+    "constituency_id": "MA-6",
+    "constituency_name": "Makwanpur 3",
+    "district": "Makwanpur",
+    "province": "Bagmati",
+    "population": 53858,
+    "tax_generated_npr": 806924263,
+    "federal_allocation_npr": 584134046
+  },
+  {
+    "constituency_id": "CH-1",
+    "constituency_name": "Chitwan 1",
+    "district": "Chitwan",
+    "province": "Bagmati",
+    "population": 53599,
+    "tax_generated_npr": 1218295015,
+    "federal_allocation_npr": 409461696
+  },
+  {
+    "constituency_id": "CH-2",
+    "constituency_name": "Chitwan 2",
+    "district": "Chitwan",
+    "province": "Bagmati",
+    "population": 37534,
+    "tax_generated_npr": 555338778,
+    "federal_allocation_npr": 361065098
+  },
+  {
+    "constituency_id": "CH-3",
+    "constituency_name": "Chitwan 3",
+    "district": "Chitwan",
+    "province": "Bagmati",
+    "population": 32171,
+    "tax_generated_npr": 1090834709,
+    "federal_allocation_npr": 305429985
+  },
+  {
+    "constituency_id": "CH-4",
+    "constituency_name": "Chitwan 4",
+    "district": "Chitwan",
+    "province": "Bagmati",
+    "population": 33430,
+    "tax_generated_npr": 1637787654,
+    "federal_allocation_npr": 678527407
+  },
+  {
+    "constituency_id": "KA-14",
+    "constituency_name": "Kaski 1",
+    "district": "Kaski",
+    "province": "Gandaki",
+    "population": 31555,
+    "tax_generated_npr": 491121232,
+    "federal_allocation_npr": 509668808
+  },
+  {
+    "constituency_id": "KA-15",
+    "constituency_name": "Kaski 2",
+    "district": "Kaski",
+    "province": "Gandaki",
+    "population": 42342,
+    "tax_generated_npr": 401549940,
+    "federal_allocation_npr": 592043431
+  },
+  {
+    "constituency_id": "KA-16",
+    "constituency_name": "Kaski 3",
+    "district": "Kaski",
+    "province": "Gandaki",
+    "population": 30453,
+    "tax_generated_npr": 384498846,
+    "federal_allocation_npr": 540389765
+  },
+  {
+    "constituency_id": "KA-17",
+    "constituency_name": "Kaski 4",
+    "district": "Kaski",
+    "province": "Gandaki",
+    "population": 31653,
+    "tax_generated_npr": 387429582,
+    "federal_allocation_npr": 768473729
+  },
+  {
+    "constituency_id": "SY-1",
+    "constituency_name": "Syangja 1",
+    "district": "Syangja",
+    "province": "Gandaki",
+    "population": 50540,
+    "tax_generated_npr": 335656624,
+    "federal_allocation_npr": 680580846
+  },
+  {
+    "constituency_id": "SY-2",
+    "constituency_name": "Syangja 2",
+    "district": "Syangja",
+    "province": "Gandaki",
+    "population": 26320,
+    "tax_generated_npr": 667917525,
+    "federal_allocation_npr": 726053605
+  },
+  {
+    "constituency_id": "SY-3",
+    "constituency_name": "Syangja 3",
+    "district": "Syangja",
+    "province": "Gandaki",
+    "population": 32438,
+    "tax_generated_npr": 508902023,
+    "federal_allocation_npr": 688431401
+  },
+  {
+    "constituency_id": "PA-5",
+    "constituency_name": "Parbat 1",
+    "district": "Parbat",
+    "province": "Gandaki",
+    "population": 28724,
+    "tax_generated_npr": 435025354,
+    "federal_allocation_npr": 591932717
+  },
+  {
+    "constituency_id": "PA-6",
+    "constituency_name": "Parbat 2",
+    "district": "Parbat",
+    "province": "Gandaki",
+    "population": 36313,
+    "tax_generated_npr": 474319643,
+    "federal_allocation_npr": 740212800
+  },
+  {
+    "constituency_id": "BA-5",
+    "constituency_name": "Baglung 1",
+    "district": "Baglung",
+    "province": "Gandaki",
+    "population": 48708,
+    "tax_generated_npr": 406718020,
+    "federal_allocation_npr": 745337685
+  },
+  {
+    "constituency_id": "BA-6",
+    "constituency_name": "Baglung 2",
+    "district": "Baglung",
+    "province": "Gandaki",
+    "population": 48033,
+    "tax_generated_npr": 434557161,
+    "federal_allocation_npr": 486278023
+  },
+  {
+    "constituency_id": "BA-7",
+    "constituency_name": "Baglung 3",
+    "district": "Baglung",
+    "province": "Gandaki",
+    "population": 33928,
+    "tax_generated_npr": 247368267,
+    "federal_allocation_npr": 754188295
+  },
+  {
+    "constituency_id": "MU-1",
+    "constituency_name": "Mustang 1",
+    "district": "Mustang",
+    "province": "Gandaki",
+    "population": 38752,
+    "tax_generated_npr": 518209292,
+    "federal_allocation_npr": 702958625
+  },
+  {
+    "constituency_id": "MY-1",
+    "constituency_name": "Myagdi 1",
+    "district": "Myagdi",
+    "province": "Gandaki",
+    "population": 46579,
+    "tax_generated_npr": 680441849,
+    "federal_allocation_npr": 608463239
+  },
+  {
+    "constituency_id": "MY-2",
+    "constituency_name": "Myagdi 2",
+    "district": "Myagdi",
+    "province": "Gandaki",
+    "population": 30683,
+    "tax_generated_npr": 666969947,
+    "federal_allocation_npr": 542996328
+  },
+  {
+    "constituency_id": "GO-1",
+    "constituency_name": "Gorkha 1",
+    "district": "Gorkha",
+    "province": "Gandaki",
+    "population": 24475,
+    "tax_generated_npr": 477609259,
+    "federal_allocation_npr": 810023916
+  },
+  {
+    "constituency_id": "GO-2",
+    "constituency_name": "Gorkha 2",
+    "district": "Gorkha",
+    "province": "Gandaki",
+    "population": 41276,
+    "tax_generated_npr": 200830759,
+    "federal_allocation_npr": 575792503
+  },
+  {
+    "constituency_id": "GO-3",
+    "constituency_name": "Gorkha 3",
+    "district": "Gorkha",
+    "province": "Gandaki",
+    "population": 33667,
+    "tax_generated_npr": 410793141,
+    "federal_allocation_npr": 813845563
+  },
+  {
+    "constituency_id": "LA-4",
+    "constituency_name": "Lamjung 1",
+    "district": "Lamjung",
+    "province": "Gandaki",
+    "population": 34374,
+    "tax_generated_npr": 438541951,
+    "federal_allocation_npr": 742966110
+  },
+  {
+    "constituency_id": "LA-5",
+    "constituency_name": "Lamjung 2",
+    "district": "Lamjung",
+    "province": "Gandaki",
+    "population": 49749,
+    "tax_generated_npr": 301912068,
+    "federal_allocation_npr": 743117925
+  },
+  {
+    "constituency_id": "TA-3",
+    "constituency_name": "Tanahu 1",
+    "district": "Tanahu",
+    "province": "Gandaki",
+    "population": 40575,
+    "tax_generated_npr": 623068221,
+    "federal_allocation_npr": 527735928
+  },
+  {
+    "constituency_id": "TA-4",
+    "constituency_name": "Tanahu 2",
+    "district": "Tanahu",
+    "province": "Gandaki",
+    "population": 31350,
+    "tax_generated_npr": 207700519,
+    "federal_allocation_npr": 521206108
+  },
+  {
+    "constituency_id": "TA-5",
+    "constituency_name": "Tanahu 3",
+    "district": "Tanahu",
+    "province": "Gandaki",
+    "population": 24484,
+    "tax_generated_npr": 368569505,
+    "federal_allocation_npr": 848809425
+  },
+  {
+    "constituency_id": "NA-1",
+    "constituency_name": "Nawalpur 1",
+    "district": "Nawalpur",
+    "province": "Gandaki",
+    "population": 26895,
+    "tax_generated_npr": 711947903,
+    "federal_allocation_npr": 519208853
+  },
+  {
+    "constituency_id": "NA-2",
+    "constituency_name": "Nawalpur 2",
+    "district": "Nawalpur",
+    "province": "Gandaki",
+    "population": 43638,
+    "tax_generated_npr": 242047537,
+    "federal_allocation_npr": 650283354
+  },
+  {
+    "constituency_id": "RU-1",
+    "constituency_name": "Rupandehi 1",
+    "district": "Rupandehi",
+    "province": "Lumbini",
+    "population": 35120,
+    "tax_generated_npr": 471657124,
+    "federal_allocation_npr": 632768278
+  },
+  {
+    "constituency_id": "RU-2",
+    "constituency_name": "Rupandehi 2",
+    "district": "Rupandehi",
+    "province": "Lumbini",
+    "population": 50107,
+    "tax_generated_npr": 460728231,
+    "federal_allocation_npr": 853865871
+  },
+  {
+    "constituency_id": "RU-3",
+    "constituency_name": "Rupandehi 3",
+    "district": "Rupandehi",
+    "province": "Lumbini",
+    "population": 43732,
+    "tax_generated_npr": 843042603,
+    "federal_allocation_npr": 579159997
+  },
+  {
+    "constituency_id": "RU-4",
+    "constituency_name": "Rupandehi 4",
+    "district": "Rupandehi",
+    "province": "Lumbini",
+    "population": 64140,
+    "tax_generated_npr": 276640947,
+    "federal_allocation_npr": 730247718
+  },
+  {
+    "constituency_id": "RU-5",
+    "constituency_name": "Rupandehi 5",
+    "district": "Rupandehi",
+    "province": "Lumbini",
+    "population": 48271,
+    "tax_generated_npr": 270839779,
+    "federal_allocation_npr": 1011306393
+  },
+  {
+    "constituency_id": "KA-18",
+    "constituency_name": "Kapilvastu 1",
+    "district": "Kapilvastu",
+    "province": "Lumbini",
+    "population": 33875,
+    "tax_generated_npr": 909078163,
+    "federal_allocation_npr": 661081447
+  },
+  {
+    "constituency_id": "KA-19",
+    "constituency_name": "Kapilvastu 2",
+    "district": "Kapilvastu",
+    "province": "Lumbini",
+    "population": 52829,
+    "tax_generated_npr": 581552781,
+    "federal_allocation_npr": 551803419
+  },
+  {
+    "constituency_id": "KA-20",
+    "constituency_name": "Kapilvastu 3",
+    "district": "Kapilvastu",
+    "province": "Lumbini",
+    "population": 43614,
+    "tax_generated_npr": 345234360,
+    "federal_allocation_npr": 730162235
+  },
+  {
+    "constituency_id": "NAWE-1",
+    "constituency_name": "Nawalparasi West 1",
+    "district": "Nawalparasi West",
+    "province": "Lumbini",
+    "population": 38527,
+    "tax_generated_npr": 915683404,
+    "federal_allocation_npr": 921668472
+  },
+  {
+    "constituency_id": "NAWE-2",
+    "constituency_name": "Nawalparasi West 2",
+    "district": "Nawalparasi West",
+    "province": "Lumbini",
+    "population": 50812,
+    "tax_generated_npr": 642519096,
+    "federal_allocation_npr": 894326254
+  },
+  {
+    "constituency_id": "NAWE-3",
+    "constituency_name": "Nawalparasi West 3",
+    "district": "Nawalparasi West",
+    "province": "Lumbini",
+    "population": 30515,
+    "tax_generated_npr": 264403920,
+    "federal_allocation_npr": 1044280451
+  },
+  {
+    "constituency_id": "PA-7",
+    "constituency_name": "Palpa 1",
+    "district": "Palpa",
+    "province": "Lumbini",
+    "population": 33463,
+    "tax_generated_npr": 889158944,
+    "federal_allocation_npr": 699994466
+  },
+  {
+    "constituency_id": "PA-8",
+    "constituency_name": "Palpa 2",
+    "district": "Palpa",
+    "province": "Lumbini",
+    "population": 54932,
+    "tax_generated_npr": 428068241,
+    "federal_allocation_npr": 803588811
+  },
+  {
+    "constituency_id": "GU-1",
+    "constituency_name": "Gulmi 1",
+    "district": "Gulmi",
+    "province": "Lumbini",
+    "population": 36180,
+    "tax_generated_npr": 552671614,
+    "federal_allocation_npr": 1020725110
+  },
+  {
+    "constituency_id": "GU-2",
+    "constituency_name": "Gulmi 2",
+    "district": "Gulmi",
+    "province": "Lumbini",
+    "population": 41752,
+    "tax_generated_npr": 434212926,
+    "federal_allocation_npr": 1038625225
+  },
+  {
+    "constituency_id": "AR-1",
+    "constituency_name": "Arghakhanchi 1",
+    "district": "Arghakhanchi",
+    "province": "Lumbini",
+    "population": 41816,
+    "tax_generated_npr": 621855633,
+    "federal_allocation_npr": 619583473
+  },
+  {
+    "constituency_id": "AR-2",
+    "constituency_name": "Arghakhanchi 2",
+    "district": "Arghakhanchi",
+    "province": "Lumbini",
+    "population": 63912,
+    "tax_generated_npr": 437385274,
+    "federal_allocation_npr": 702811879
+  },
+  {
+    "constituency_id": "PY-1",
+    "constituency_name": "Pyuthan 1",
+    "district": "Pyuthan",
+    "province": "Lumbini",
+    "population": 46197,
+    "tax_generated_npr": 778595660,
+    "federal_allocation_npr": 682146632
+  },
+  {
+    "constituency_id": "PY-2",
+    "constituency_name": "Pyuthan 2",
+    "district": "Pyuthan",
+    "province": "Lumbini",
+    "population": 52099,
+    "tax_generated_npr": 922217929,
+    "federal_allocation_npr": 632578523
+  },
+  {
+    "constituency_id": "RO-1",
+    "constituency_name": "Rolpa 1",
+    "district": "Rolpa",
+    "province": "Lumbini",
+    "population": 57977,
+    "tax_generated_npr": 274538505,
+    "federal_allocation_npr": 721381210
+  },
+  {
+    "constituency_id": "RO-2",
+    "constituency_name": "Rolpa 2",
+    "district": "Rolpa",
+    "province": "Lumbini",
+    "population": 42915,
+    "tax_generated_npr": 740930179,
+    "federal_allocation_npr": 875891011
+  },
+  {
+    "constituency_id": "RUEA-1",
+    "constituency_name": "Rukum East 1",
+    "district": "Rukum East",
+    "province": "Lumbini",
+    "population": 53227,
+    "tax_generated_npr": 961869269,
+    "federal_allocation_npr": 1029297741
+  },
+  {
+    "constituency_id": "DA-1",
+    "constituency_name": "Dang 1",
+    "district": "Dang",
+    "province": "Lumbini",
+    "population": 44871,
+    "tax_generated_npr": 305674797,
+    "federal_allocation_npr": 810186755
+  },
+  {
+    "constituency_id": "DA-2",
+    "constituency_name": "Dang 2",
+    "district": "Dang",
+    "province": "Lumbini",
+    "population": 33871,
+    "tax_generated_npr": 218541930,
+    "federal_allocation_npr": 756297795
+  },
+  {
+    "constituency_id": "DA-3",
+    "constituency_name": "Dang 3",
+    "district": "Dang",
+    "province": "Lumbini",
+    "population": 36762,
+    "tax_generated_npr": 432460847,
+    "federal_allocation_npr": 959714491
+  },
+  {
+    "constituency_id": "DA-4",
+    "constituency_name": "Dang 4",
+    "district": "Dang",
+    "province": "Lumbini",
+    "population": 37221,
+    "tax_generated_npr": 674349272,
+    "federal_allocation_npr": 594658337
+  },
+  {
+    "constituency_id": "SU-5",
+    "constituency_name": "Surkhet 1",
+    "district": "Surkhet",
+    "province": "Karnali",
+    "population": 29545,
+    "tax_generated_npr": 175539512,
+    "federal_allocation_npr": 827135143
+  },
+  {
+    "constituency_id": "SU-6",
+    "constituency_name": "Surkhet 2",
+    "district": "Surkhet",
+    "province": "Karnali",
+    "population": 18338,
+    "tax_generated_npr": 170038978,
+    "federal_allocation_npr": 648912679
+  },
+  {
+    "constituency_id": "SU-7",
+    "constituency_name": "Surkhet 3",
+    "district": "Surkhet",
+    "province": "Karnali",
+    "population": 15291,
+    "tax_generated_npr": 232617624,
+    "federal_allocation_npr": 1021463753
+  },
+  {
+    "constituency_id": "DA-5",
+    "constituency_name": "Dailekh 1",
+    "district": "Dailekh",
+    "province": "Karnali",
+    "population": 33657,
+    "tax_generated_npr": 105437168,
+    "federal_allocation_npr": 775658352
+  },
+  {
+    "constituency_id": "DA-6",
+    "constituency_name": "Dailekh 2",
+    "district": "Dailekh",
+    "province": "Karnali",
+    "population": 23629,
+    "tax_generated_npr": 157724211,
+    "federal_allocation_npr": 704980235
+  },
+  {
+    "constituency_id": "JA-1",
+    "constituency_name": "Jajarkot 1",
+    "district": "Jajarkot",
+    "province": "Karnali",
+    "population": 29378,
+    "tax_generated_npr": 100488479,
+    "federal_allocation_npr": 748933479
+  },
+  {
+    "constituency_id": "JA-2",
+    "constituency_name": "Jajarkot 2",
+    "district": "Jajarkot",
+    "province": "Karnali",
+    "population": 25534,
+    "tax_generated_npr": 138540457,
+    "federal_allocation_npr": 639487042
+  },
+  {
+    "constituency_id": "DO-1",
+    "constituency_name": "Dolpa 1",
+    "district": "Dolpa",
+    "province": "Karnali",
+    "population": 26095,
+    "tax_generated_npr": 238063029,
+    "federal_allocation_npr": 963260367
+  },
+  {
+    "constituency_id": "MU-2",
+    "constituency_name": "Mugu 1",
+    "district": "Mugu",
+    "province": "Karnali",
+    "population": 14024,
+    "tax_generated_npr": 69593130,
+    "federal_allocation_npr": 1068627309
+  },
+  {
+    "constituency_id": "HU-1",
+    "constituency_name": "Humla 1",
+    "district": "Humla",
+    "province": "Karnali",
+    "population": 23420,
+    "tax_generated_npr": 100482717,
+    "federal_allocation_npr": 1016703164
+  },
+  {
+    "constituency_id": "JU-1",
+    "constituency_name": "Jumla 1",
+    "district": "Jumla",
+    "province": "Karnali",
+    "population": 14130,
+    "tax_generated_npr": 160198361,
+    "federal_allocation_npr": 665602840
+  },
+  {
+    "constituency_id": "JU-2",
+    "constituency_name": "Jumla 2",
+    "district": "Jumla",
+    "province": "Karnali",
+    "population": 32594,
+    "tax_generated_npr": 181457561,
+    "federal_allocation_npr": 1067521401
+  },
+  {
+    "constituency_id": "KA-21",
+    "constituency_name": "Kalikot 1",
+    "district": "Kalikot",
+    "province": "Karnali",
+    "population": 30903,
+    "tax_generated_npr": 156480800,
+    "federal_allocation_npr": 709963425
+  },
+  {
+    "constituency_id": "KA-22",
+    "constituency_name": "Kalikot 2",
+    "district": "Kalikot",
+    "province": "Karnali",
+    "population": 17595,
+    "tax_generated_npr": 54909364,
+    "federal_allocation_npr": 874370280
+  },
+  {
+    "constituency_id": "SA-10",
+    "constituency_name": "Salyan 1",
+    "district": "Salyan",
+    "province": "Karnali",
+    "population": 16514,
+    "tax_generated_npr": 225303558,
+    "federal_allocation_npr": 1078118215
+  },
+  {
+    "constituency_id": "SA-11",
+    "constituency_name": "Salyan 2",
+    "district": "Salyan",
+    "province": "Karnali",
+    "population": 17090,
+    "tax_generated_npr": 83475467,
+    "federal_allocation_npr": 729168705
+  },
+  {
+    "constituency_id": "RUWE-1",
+    "constituency_name": "Rukum West 1",
+    "district": "Rukum West",
+    "province": "Karnali",
+    "population": 27132,
+    "tax_generated_npr": 67672650,
+    "federal_allocation_npr": 976479478
+  },
+  {
+    "constituency_id": "RUWE-2",
+    "constituency_name": "Rukum West 2",
+    "district": "Rukum West",
+    "province": "Karnali",
+    "population": 22041,
+    "tax_generated_npr": 135918357,
+    "federal_allocation_npr": 937080854
+  },
+  {
+    "constituency_id": "KA-23",
+    "constituency_name": "Kailali 1",
+    "district": "Kailali",
+    "province": "Sudurpashchim",
+    "population": 46725,
+    "tax_generated_npr": 306460779,
+    "federal_allocation_npr": 845030734
+  },
+  {
+    "constituency_id": "KA-24",
+    "constituency_name": "Kailali 2",
+    "district": "Kailali",
+    "province": "Sudurpashchim",
+    "population": 50703,
+    "tax_generated_npr": 381304571,
+    "federal_allocation_npr": 1010733492
+  },
+  {
+    "constituency_id": "KA-25",
+    "constituency_name": "Kailali 3",
+    "district": "Kailali",
+    "province": "Sudurpashchim",
+    "population": 49508,
+    "tax_generated_npr": 260222694,
+    "federal_allocation_npr": 1047125481
+  },
+  {
+    "constituency_id": "KA-26",
+    "constituency_name": "Kailali 4",
+    "district": "Kailali",
+    "province": "Sudurpashchim",
+    "population": 30915,
+    "tax_generated_npr": 188441901,
+    "federal_allocation_npr": 813489662
+  },
+  {
+    "constituency_id": "KA-27",
+    "constituency_name": "Kanchanpur 1",
+    "district": "Kanchanpur",
+    "province": "Sudurpashchim",
+    "population": 31766,
+    "tax_generated_npr": 306202387,
+    "federal_allocation_npr": 879742702
+  },
+  {
+    "constituency_id": "KA-28",
+    "constituency_name": "Kanchanpur 2",
+    "district": "Kanchanpur",
+    "province": "Sudurpashchim",
+    "population": 25924,
+    "tax_generated_npr": 314266685,
+    "federal_allocation_npr": 812187599
+  },
+  {
+    "constituency_id": "KA-29",
+    "constituency_name": "Kanchanpur 3",
+    "district": "Kanchanpur",
+    "province": "Sudurpashchim",
+    "population": 23470,
+    "tax_generated_npr": 291568064,
+    "federal_allocation_npr": 904857560
+  },
+  {
+    "constituency_id": "DA-7",
+    "constituency_name": "Dadeldhura 1",
+    "district": "Dadeldhura",
+    "province": "Sudurpashchim",
+    "population": 21524,
+    "tax_generated_npr": 203855567,
+    "federal_allocation_npr": 919337196
+  },
+  {
+    "constituency_id": "DA-8",
+    "constituency_name": "Dadeldhura 2",
+    "district": "Dadeldhura",
+    "province": "Sudurpashchim",
+    "population": 47571,
+    "tax_generated_npr": 238085742,
+    "federal_allocation_npr": 703225883
+  },
+  {
+    "constituency_id": "BA-8",
+    "constituency_name": "Baitadi 1",
+    "district": "Baitadi",
+    "province": "Sudurpashchim",
+    "population": 22620,
+    "tax_generated_npr": 244831536,
+    "federal_allocation_npr": 731144006
+  },
+  {
+    "constituency_id": "BA-9",
+    "constituency_name": "Baitadi 2",
+    "district": "Baitadi",
+    "province": "Sudurpashchim",
+    "population": 51284,
+    "tax_generated_npr": 266204832,
+    "federal_allocation_npr": 837066406
+  },
+  {
+    "constituency_id": "DA-9",
+    "constituency_name": "Darchula 1",
+    "district": "Darchula",
+    "province": "Sudurpashchim",
+    "population": 21278,
+    "tax_generated_npr": 334213479,
+    "federal_allocation_npr": 896437479
+  },
+  {
+    "constituency_id": "DA-10",
+    "constituency_name": "Darchula 2",
+    "district": "Darchula",
+    "province": "Sudurpashchim",
+    "population": 26415,
+    "tax_generated_npr": 365393657,
+    "federal_allocation_npr": 816451561
+  },
+  {
+    "constituency_id": "DO-2",
+    "constituency_name": "Doti 1",
+    "district": "Doti",
+    "province": "Sudurpashchim",
+    "population": 48042,
+    "tax_generated_npr": 180421831,
+    "federal_allocation_npr": 947280219
+  },
+  {
+    "constituency_id": "DO-3",
+    "constituency_name": "Doti 2",
+    "district": "Doti",
+    "province": "Sudurpashchim",
+    "population": 22875,
+    "tax_generated_npr": 145570675,
+    "federal_allocation_npr": 827572824
+  },
+  {
+    "constituency_id": "AC-1",
+    "constituency_name": "Achham 1",
+    "district": "Achham",
+    "province": "Sudurpashchim",
+    "population": 39541,
+    "tax_generated_npr": 227244206,
+    "federal_allocation_npr": 1037454297
+  },
+  {
+    "constituency_id": "AC-2",
+    "constituency_name": "Achham 2",
+    "district": "Achham",
+    "province": "Sudurpashchim",
+    "population": 43583,
+    "tax_generated_npr": 393223793,
+    "federal_allocation_npr": 865077761
+  },
+  {
+    "constituency_id": "BA-10",
+    "constituency_name": "Bajhang 1",
+    "district": "Bajhang",
+    "province": "Sudurpashchim",
+    "population": 37448,
+    "tax_generated_npr": 359578276,
+    "federal_allocation_npr": 781393849
+  },
+  {
+    "constituency_id": "BA-11",
+    "constituency_name": "Bajhang 2",
+    "district": "Bajhang",
+    "province": "Sudurpashchim",
+    "population": 40987,
+    "tax_generated_npr": 326458809,
+    "federal_allocation_npr": 893025100
+  },
+  {
+    "constituency_id": "BA-12",
+    "constituency_name": "Bajura 1",
+    "district": "Bajura",
+    "province": "Sudurpashchim",
+    "population": 24787,
+    "tax_generated_npr": 347844230,
+    "federal_allocation_npr": 691589281
+  }
+]
