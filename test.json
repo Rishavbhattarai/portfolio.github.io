@@ -1,0 +1,29 @@
+[
+  {
+    "constituency_id": "KTM-1",
+    "constituency_name": "Kathmandu 1",
+    "district": "Kathmandu",
+    "province": "Bagmati",
+    "population": 45000,
+    "tax_generated_npr": 1200000000,
+    "federal_allocation_npr": 500000000
+  },
+  {
+    "constituency_id": "PAR-2",
+    "constituency_name": "Parsa 2",
+    "district": "Parsa",
+    "province": "Madhesh",
+    "population": 52000,
+    "tax_generated_npr": 800000000,
+    "federal_allocation_npr": 1100000000
+  },
+  {
+    "constituency_id": "RUP-3",
+    "constituency_name": "Rupandehi 3",
+    "district": "Rupandehi",
+    "province": "Lumbini",
+    "population": 60000,
+    "tax_generated_npr": 950000000,
+    "federal_allocation_npr": 900000000
+  }
+]
