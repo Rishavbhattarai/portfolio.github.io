@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal HoR Election 2079 — Results Dashboard</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111418;
+    --surface2: #181c22;
+    --border: #252b34;
+    --accent: #c8973a;
+    --accent2: #e8b55a;
+    --red: #e05252;
+    --green: #52a882;
+    --blue: #5285e0;
+    --purple: #8c52e0;
+    --text: #e8e0d4;
+    --muted: #7a7268;
+    --dim: #3a3630;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(180deg, #0d0f13 0%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 0 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(200,151,58,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .site-header::after {
+    content: 'नेपाल';
+    position: absolute;
+    right: -20px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 180px;
+    font-weight: 900;
+    color: rgba(200,151,58,0.04);
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
+  .badge-pill {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .header-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-meta {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin-top: 8px;
+  }
+
+  /* ── STAT CARDS ── */
+  .stat-row { padding: 24px 0; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent-color, var(--accent));
+  }
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── PARTY LEGEND ── */
+  .party-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 10px;
+    margin: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .party-chip:hover { border-color: var(--accent); }
+  .party-chip.active { border-color: var(--accent); background: rgba(200,151,58,0.1); }
+  .party-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── FILTERS ── */
+  .filter-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .custom-select, .custom-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 7px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .custom-select:focus, .custom-input:focus { border-color: var(--accent); }
+  .custom-select option { background: #1a1e25; }
+  .custom-input::placeholder { color: var(--muted); }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .table-header-row {
+    display: grid;
+    grid-template-columns: 40px 160px 1fr 1fr 130px 100px;
+    gap: 0;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+  }
+  .th {
+    padding: 10px 14px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-right: 1px solid var(--border);
+    transition: color 0.15s;
+  }
+  .th:last-child { border-right: none; }
+  .th:hover { color: var(--accent); }
+  .th.sorted { color: var(--accent); }
+  .sort-arrow { font-size: 8px; opacity: 0.6; }
+
+  .data-row {
+    display: grid;
+    grid-template-columns: 40px 160px 1fr 1fr 130px 100px;
+    gap: 0;
+    border-bottom: 1px solid rgba(37,43,52,0.5);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-row:hover { background: rgba(200,151,58,0.04); }
+  .data-row.expanded { background: rgba(200,151,58,0.06); }
+
+  .td {
+    padding: 11px 14px;
+    border-right: 1px solid rgba(37,43,52,0.4);
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+  }
+  .td:last-child { border-right: none; }
+
+  .row-num {
+    color: var(--muted);
+    font-size: 10px;
+    justify-content: center;
+  }
+  .constituency-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .province-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .candidate-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+  .cand-name {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .cand-party {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .cand-votes {
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  /* Vote bar */
+  .vote-bar-cell {
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+  }
+  .vote-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .vote-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .vote-pct { font-size: 10px; color: var(--muted); }
+
+  /* Margin badge */
+  .margin-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .margin-close { background: rgba(224,82,82,0.15); color: #e07070; }
+  .margin-medium { background: rgba(200,151,58,0.15); color: var(--accent2); }
+  .margin-safe { background: rgba(82,168,130,0.15); color: var(--green); }
+
+  /* expanded detail */
+  .row-detail {
+    display: none;
+    background: rgba(10,12,15,0.6);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 20px;
+    animation: fadeSlide 0.2s ease;
+  }
+  .row-detail.open { display: block; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 200px;
+    gap: 16px;
+  }
+  .detail-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px 16px;
+  }
+  .detail-title {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .detail-stat { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; }
+  .detail-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  .head2head {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .h2h-bar-wrap { flex: 1; }
+  .h2h-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .h2h-bar { height: 6px; border-radius: 3px; }
+
+  /* ── PAGINATION ── */
+  .pagination-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .page-info { font-size: 10px; color: var(--muted); }
+  .page-btns { display: flex; gap: 4px; }
+  .page-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .page-btn:hover, .page-btn.active { background: var(--accent); border-color: var(--accent); color: #000; }
+  .page-btn:disabled { opacity: 0.3; cursor: default; }
+  .page-btn:disabled:hover { background: var(--surface); border-color: var(--border); color: var(--text); }
+
+  /* ── CHARTS SECTION ── */
+  .chart-section { padding: 0 0 32px; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span { color: var(--accent); }
+
+  /* Party seats chart */
+  .seats-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    height: 100%;
+  }
+  .party-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .party-bar-name {
+    width: 160px;
+    font-size: 11px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+  }
+  .party-bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .party-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.8);
+    min-width: 24px;
+    transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .party-bar-num {
+    width: 30px;
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* Province donut */
+  .province-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    height: 100%;
+  }
+  .donut-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 16px;
+  }
+  .donut-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .donut-center-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .donut-center-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; }
+  .province-legend { display: flex; flex-direction: column; gap: 6px; }
+  .prov-leg-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+  }
+  .prov-leg-left { display: flex; align-items: center; gap: 7px; }
+  .prov-leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .prov-leg-name { color: var(--text); }
+  .prov-leg-count { color: var(--muted); }
+
+  /* Margin distribution */
+  .margin-dist {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+  }
+  .dist-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .dist-bar-label { width: 70px; font-size: 10px; color: var(--muted); flex-shrink: 0; }
+  .dist-bar-track { flex: 1; height: 16px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .dist-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+  .dist-bar-count { width: 30px; text-align: right; font-size: 10px; color: var(--muted); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .table-header-row, .data-row {
+      grid-template-columns: 30px 120px 1fr 80px;
+    }
+    .td:nth-child(4), .th:nth-child(4) { display: none; }
+    .td:nth-child(6), .th:nth-child(6) { display: none; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .site-header::after { display: none; }
+  }
+
+  /* Loading state */
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 3px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .top-banner {
+    background: rgba(200,151,58,0.08);
+    border-bottom: 1px solid rgba(200,151,58,0.2);
+    padding: 8px 0;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  .results-count {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .results-count strong { color: var(--accent); }
+
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .no-results .big { font-family: 'Playfair Display', serif; font-size: 48px; opacity: 0.3; }
+
+  .winner-badge {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 5px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  🏔️ &nbsp; House of Representatives General Election — Federal Democratic Republic of Nepal — 20 November 2022 (Mangsir 4, 2079 BS)
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <div class="badge-pill">FPTP Results · 165 Constituencies</div>
+    <h1 class="header-title">Nepal <em>Election</em><br>Dashboard 2079</h1>
+    <p class="header-meta">प्रतिनिधि सभा सदस्य निर्वाचन · Interactive Constituency Explorer</p>
+  </div>
+</header>
+
+<main class="container py-3">
+
+  <!-- STAT CARDS -->
+  <div class="stat-row">
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="stat-card" style="--accent-color: var(--accent)">
+          <div class="stat-label">Total Constituencies</div>
+          <div class="stat-value" id="stat-total">165</div>
+          <div class="stat-sub">FPTP seats</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card" style="--accent-color: var(--green)">
+          <div class="stat-label">Total Votes Cast</div>
+          <div class="stat-value" id="stat-votes">—</div>
+          <div class="stat-sub">valid votes counted</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card" style="--accent-color: var(--blue)">
+          <div class="stat-label">Closest Race</div>
+          <div class="stat-value" id="stat-closest">—</div>
+          <div class="stat-sub" id="stat-closest-name">votes margin</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card" style="--accent-color: var(--red)">
+          <div class="stat-label">Biggest Win</div>
+          <div class="stat-value" id="stat-biggest">—</div>
+          <div class="stat-sub" id="stat-biggest-name">votes margin</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-section">
+    <div class="section-title">Seats by <span>Party & Province</span></div>
+    <div class="row g-3 mb-4">
+      <div class="col-lg-5">
+        <div class="seats-chart">
+          <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Party Seat Breakdown</div>
+          <div id="party-bars"></div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="province-chart">
+          <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Constituencies by Province</div>
+          <div class="donut-wrap">
+            <svg viewBox="0 0 160 160" width="160" height="160" id="donut-svg"></svg>
+            <div class="donut-center">
+              <div class="donut-center-num">165</div>
+              <div class="donut-center-label">SEATS</div>
+            </div>
+          </div>
+          <div class="province-legend" id="province-legend"></div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="margin-dist">
+          <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Victory Margin Distribution</div>
+          <div id="margin-dist-bars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <span class="filter-label">Filter</span>
+    <input type="text" id="search" class="custom-input" placeholder="Search constituency or candidate…" style="min-width:200px">
+    <select id="filter-province" class="custom-select">
+      <option value="">All Provinces</option>
+    </select>
+    <select id="filter-party" class="custom-select">
+      <option value="">All Parties (Winner)</option>
+    </select>
+    <select id="filter-margin" class="custom-select">
+      <option value="">All Margins</option>
+      <option value="close">Close (< 1,000)</option>
+      <option value="medium">Medium (1,000–10,000)</option>
+      <option value="safe">Safe (> 10,000)</option>
+    </select>
+    <select id="sort-by" class="custom-select">
+      <option value="default">Sort: Default</option>
+      <option value="margin-asc">Margin ↑ Closest</option>
+      <option value="margin-desc">Margin ↓ Biggest</option>
+      <option value="votes-desc">Most Votes Cast</option>
+      <option value="votes-asc">Fewest Votes Cast</option>
+      <option value="winner-pct-asc">Tightest %</option>
+      <option value="winner-pct-desc">Widest %</option>
+    </select>
+    <button onclick="resetFilters()" style="background:none;border:1px solid var(--dim);color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;padding:6px 12px;border-radius:3px;cursor:pointer;">Reset</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <div class="table-header-row">
+      <div class="th">#</div>
+      <div class="th" onclick="sortBy('name')">Constituency <span class="sort-arrow" id="sort-name">↕</span></div>
+      <div class="th">1st Place</div>
+      <div class="th">2nd Place</div>
+      <div class="th" onclick="sortBy('margin')">Margin <span class="sort-arrow" id="sort-margin">↕</span></div>
+      <div class="th" onclick="sortBy('votes')">Total Votes <span class="sort-arrow" id="sort-votes">↕</span></div>
+    </div>
+    <div class="results-count" id="results-count"></div>
+    <div id="table-body"></div>
+    <div class="pagination-wrap">
+      <div class="page-info" id="page-info"></div>
+      <div class="page-btns" id="page-btns"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:20px 0;margin-top:20px;text-align:center;color:var(--muted);font-size:10px;letter-spacing:0.08em;">
+  Source: Election Commission of Nepal / Setopati &nbsp;·&nbsp; Data for informational purposes &nbsp;·&nbsp; Nepal House of Representatives Election 2079 BS
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const RAW = {"election":"Nepal House of Representatives General Election 2079 (2022)","electoral_system":"First-Past-The-Post (FPTP)","total_constituencies":165,"source":"Election Commission Nepal / Setopati","constituencies":[{"province":"Province 1","constituency":"Taplejung-1","first":{"candidate":"Yogesh Kumar Bhattarai","party":"CPN-UML","votes":21943},"second":{"candidate":"Khel Prasad Budachhetri","party":"CPN (Maoist Center)","votes":21735},"total_votes_cast":48099},{"province":"Province 1","constituency":"Panchthar-1","first":{"candidate":"Basanta Kumar Nembang","party":"CPN-UML","votes":32135},"second":{"candidate":"Bhishma Raj Angdembe","party":"Nepali Congress","votes":32089},"total_votes_cast":67210},{"province":"Province 1","constituency":"Ilam-1","first":{"candidate":"Mahesh Basnet","party":"CPN-UML","votes":25753},"second":{"candidate":"Jhala Nath Khanal","party":"CPN (Unified Socialist)","votes":23089},"total_votes_cast":53284},{"province":"Province 1","constituency":"Ilam-2","first":{"candidate":"Subash Chandra Nembang","party":"CPN-UML","votes":30020},"second":{"candidate":"Dambar Bahadur Khadka","party":"Nepali Congress","votes":29906},"total_votes_cast":63306},{"province":"Province 1","constituency":"Jhapa-1","first":{"candidate":"Bishwa Prakash Sharma","party":"Nepali Congress","votes":39624},"second":{"candidate":"Agni Prasad Kharel","party":"CPN-UML","votes":25349},"total_votes_cast":75537},{"province":"Province 1","constituency":"Jhapa-2","first":{"candidate":"Dev Raj Ghimire","party":"CPN-UML","votes":28716},"second":{"candidate":"Bhadra Prasad Nepal","party":"Independent","votes":26455},"total_votes_cast":72101},{"province":"Province 1","constituency":"Jhapa-3","first":{"candidate":"Rajendra Prasad Lingden","party":"Rastriya Prajatantra Party","votes":40662},"second":{"candidate":"Krishna Prasad Sitaula","party":"Nepali Congress","votes":37386},"total_votes_cast":83509},{"province":"Province 1","constituency":"Jhapa-4","first":{"candidate":"Lal Prasad Sanwa Limbu","party":"CPN-UML","votes":29315},"second":{"candidate":"Deu Kumar Thebe","party":"Nepali Congress","votes":22448},"total_votes_cast":67832},{"province":"Province 1","constituency":"Jhapa-5","first":{"candidate":"KP Sharma Oli","party":"CPN-UML","votes":52319},"second":{"candidate":"Khagendra Adhikari","party":"Nepali Congress","votes":23743},"total_votes_cast":92821},{"province":"Province 1","constituency":"Sankhuwasabha-1","first":{"candidate":"Deepak Khadka","party":"Nepali Congress","votes":32161},"second":{"candidate":"Rajendra Prasad Gautam","party":"CPN-UML","votes":26721},"total_votes_cast":62018},{"province":"Province 1","constituency":"Tehrathum-1","first":{"candidate":"Sita Gurung","party":"Nepali Congress","votes":19707},"second":{"candidate":"Bijaya Subba","party":"CPN-UML","votes":18631},"total_votes_cast":40957},{"province":"Province 1","constituency":"Bhojpur-1","first":{"candidate":"Sudan Kirati","party":"CPN (Maoist Center)","votes":28591},"second":{"candidate":"Sherdhan Rai","party":"CPN-UML","votes":26202},"total_votes_cast":57880},{"province":"Province 1","constituency":"Dhankuta-1","first":{"candidate":"Rajendra Kumar Rai","party":"CPN-UML","votes":30101},"second":{"candidate":"Sunil Bahadur Thapa","party":"Nepali Congress","votes":28704},"total_votes_cast":67657},{"province":"Province 1","constituency":"Morang-1","first":{"candidate":"Dig Bahadur Limbu","party":"Nepali Congress","votes":27297},"second":{"candidate":"Ghanashyam Khatiwada","party":"CPN-UML","votes":26867},"total_votes_cast":65327},{"province":"Province 1","constituency":"Morang-2","first":{"candidate":"Rishikesh Pokharel","party":"CPN-UML","votes":33148},"second":{"candidate":"Sujata Koirala","party":"Nepali Congress","votes":31940},"total_votes_cast":72075},{"province":"Province 1","constituency":"Morang-3","first":{"candidate":"Sunil Kumar Sharma","party":"Nepali Congress","votes":48631},"second":{"candidate":"Bhanubhakta Dhakal","party":"CPN-UML","votes":25895},"total_votes_cast":92524},{"province":"Province 1","constituency":"Morang-4","first":{"candidate":"Aman Lal Modi","party":"CPN (Maoist Center)","votes":30612},"second":{"candidate":"Binod Prasad Dhakal","party":"CPN-UML","votes":24463},"total_votes_cast":65543},{"province":"Province 1","constituency":"Morang-5","first":{"candidate":"Yogendra Mandal","party":"Independent","votes":21820},"second":{"candidate":"Shiva Kumar Mandal (Kevat)","party":"CPN (Maoist Center)","votes":17486},"total_votes_cast":63696},{"province":"Province 1","constituency":"Morang-6","first":{"candidate":"Dr Shekhar Koirala","party":"Nepali Congress","votes":35224},"second":{"candidate":"Lal Babu Pandit","party":"CPN-UML","votes":22946},"total_votes_cast":73310},{"province":"Province 1","constituency":"Sunsari-1","first":{"candidate":"Ashok Kumar Rai","party":"Janata Samajwadi Party Nepal","votes":17059},"second":{"candidate":"Goma Tamang","party":"Rastriya Swatantra Party","votes":16606},"total_votes_cast":54752},{"province":"Province 1","constituency":"Sunsari-2","first":{"candidate":"Bhim Prasad Acharya","party":"CPN-UML","votes":32024},"second":{"candidate":"Sitaram Mahato","party":"Nepali Congress","votes":26068},"total_votes_cast":85483},{"province":"Province 1","constituency":"Sunsari-3","first":{"candidate":"Bhagawati Chaudhary","party":"CPN-UML","votes":40788},"second":{"candidate":"Bijaya Kumar Gachchhadar","party":"Nepali Congress","votes":35600},"total_votes_cast":90841},{"province":"Province 1","constituency":"Sunsari-4","first":{"candidate":"Gyanendra Bahadur Karki","party":"Nepali Congress","votes":30483},"second":{"candidate":"Jagadish Prasad Kusiyait","party":"CPN-UML","votes":30371},"total_votes_cast":70086},{"province":"Province 1","constituency":"Solukhumbu-1","first":{"candidate":"Manbir Rai","party":"CPN-UML","votes":19324},"second":{"candidate":"Bal Bahadur KC","party":"Nepali Congress","votes":16545},"total_votes_cast":39770},{"province":"Province 1","constituency":"Khotang-1","first":{"candidate":"Ram Kumar Rai","party":"CPN (Maoist Center)","votes":31351},"second":{"candidate":"Bishal Bhattarai","party":"CPN-UML","votes":28682},"total_votes_cast":64947},{"province":"Province 1","constituency":"Okhaldhunga-1","first":{"candidate":"Ram Hari Khatiwada","party":"Nepali Congress","votes":33556},"second":{"candidate":"Yagya Raj Sunuwar","party":"CPN-UML","votes":26738},"total_votes_cast":64191},{"province":"Province 1","constituency":"Udayapur-1","first":{"candidate":"Dr Narayan Khadka","party":"Nepali Congress","votes":31270},"second":{"candidate":"Manju Kumari Chaudhary","party":"CPN-UML","votes":28891},"total_votes_cast":70076},{"province":"Province 1","constituency":"Udayapur-2","first":{"candidate":"Ambar Bahadur Rayamajhi","party":"CPN-UML","votes":15251},"second":{"candidate":"Jagannath Khatiwada","party":"CPN (Unified Socialist)","votes":12893},"total_votes_cast":43523},{"province":"Madhes Province","constituency":"Saptari-1","first":{"candidate":"Nawal Kishor Sah Sudi","party":"Janata Samajwadi Party Nepal","votes":23604},"second":{"candidate":"Jay Kant Raut","party":"Janamat Party","votes":19996},"total_votes_cast":62912},{"province":"Madhes Province","constituency":"Saptari-2","first":{"candidate":"Chandra Kant Raut","party":"Janamat Party","votes":35042},"second":{"candidate":"Upendra Yadav","party":"Janata Samajwadi Party Nepal","votes":16979},"total_votes_cast":68368},{"province":"Madhes Province","constituency":"Saptari-3","first":{"candidate":"Dinesh Kumar Yadav","party":"Nepali Congress","votes":26166},"second":{"candidate":"Tara Kant Chaudhary","party":"CPN-UML","votes":22300},"total_votes_cast":70580},{"province":"Madhes Province","constituency":"Saptari-4","first":{"candidate":"Teju Lal Chaudhary","party":"Nepali Congress","votes":23491},"second":{"candidate":"Bal Kishor Yadav","party":"Janata Samajwadi Party Nepal","votes":17977},"total_votes_cast":52418},{"province":"Madhes Province","constituency":"Siraha-1","first":{"candidate":"Ram Shankar Yadav","party":"CPN-UML","votes":29462},"second":{"candidate":"Padam Narayan Chaudhary","party":"Nepali Congress","votes":27379},"total_votes_cast":72690},{"province":"Madhes Province","constituency":"Siraha-2","first":{"candidate":"Raj Kishor Yadav","party":"Janata Samajwadi Party Nepal","votes":24178},"second":{"candidate":"Chitralekha Yadav","party":"Nepali Congress","votes":23028},"total_votes_cast":69108},{"province":"Madhes Province","constituency":"Siraha-3","first":{"candidate":"Lilanath Shrestha","party":"CPN-UML","votes":28064},"second":{"candidate":"Bishwanath Sah","party":"CPN (Maoist Center)","votes":26882},"total_votes_cast":74092},{"province":"Madhes Province","constituency":"Siraha-4","first":{"candidate":"Birendra Prasad Mahato","party":"Janata Samajwadi Party Nepal","votes":24102},"second":{"candidate":"Birendra Prasad Sah","party":"Janamat Party","votes":16294},"total_votes_cast":62049},{"province":"Madhes Province","constituency":"Dhanusha-1","first":{"candidate":"Deepak Karki","party":"Janata Samajwadi Party Nepal","votes":27431},"second":{"candidate":"Matrika Prasad Yadav","party":"CPN (Maoist Center)","votes":21483},"total_votes_cast":69381},{"province":"Madhes Province","constituency":"Dhanusha-2","first":{"candidate":"Ram Krishna Yadav","party":"Nepali Congress","votes":20112},"second":{"candidate":"Uma Shankar Argariya","party":"CPN-UML","votes":19955},"total_votes_cast":61672},{"province":"Madhes Province","constituency":"Dhanusha-3","first":{"candidate":"Juli Kumari Mahato (Mahaseth)","party":"CPN-UML","votes":33388},"second":{"candidate":"Anil Kumar Jha","party":"Loktantrik Samajwadi Party Nepal","votes":23686},"total_votes_cast":72458},{"province":"Madhes Province","constituency":"Dhanusha-4","first":{"candidate":"Raghubir Mahaseth","party":"CPN-UML","votes":32236},"second":{"candidate":"Mahendra Yadav","party":"Nepali Congress","votes":32112},"total_votes_cast":75560},{"province":"Madhes Province","constituency":"Mahottari-1","first":{"candidate":"Laxmi Mahato Koiri","party":"CPN-UML","votes":23402},"second":{"candidate":"Giriraj Mani Pokharel","party":"CPN (Maoist Center)","votes":22372},"total_votes_cast":59586},{"province":"Madhes Province","constituency":"Mahottari-2","first":{"candidate":"Sharat Singh Bhandari","party":"Loktantrik Samajwadi Party Nepal","votes":25190},"second":{"candidate":"Bijay Kumar Singh","party":"Tarai Madhesh Loktantrik Party","votes":11120},"total_votes_cast":48568},{"province":"Madhes Province","constituency":"Mahottari-3","first":{"candidate":"Mahantha Thakur","party":"Loktantrik Samajwadi Party Nepal","votes":16375},"second":{"candidate":"Hari Narayan Yadav","party":"Janata Samajwadi Party Nepal","votes":14325},"total_votes_cast":52433},{"province":"Madhes Province","constituency":"Mahottari-4","first":{"candidate":"Mahendra Kumar Raya","party":"Nepali Congress","votes":25448},"second":{"candidate":"Surendra Kumar Yadav","party":"Janata Samajwadi Party Nepal","votes":21331},"total_votes_cast":62838},{"province":"Madhes Province","constituency":"Sarlahi-1","first":{"candidate":"Ram Prakash Chaudhary","party":"Loktantrik Samajwadi Party Nepal","votes":24838},"second":{"candidate":"Man Bahadur Khadka","party":"Independent","votes":18404},"total_votes_cast":63497},{"province":"Madhes Province","constituency":"Sarlahi-2","first":{"candidate":"Mahindra Raya Yadav","party":"CPN (Maoist Center)","votes":23529},"second":{"candidate":"Rajendra Mahato","party":"Loktantrik Samajwadi Party Nepal","votes":21518},"total_votes_cast":67066},{"province":"Madhes Province","constituency":"Sarlahi-3","first":{"candidate":"Hari Prasad Upreti","party":"CPN-UML","votes":32938},"second":{"candidate":"Narendra Sah Kalwar","party":"CPN (Maoist Center)","votes":32168},"total_votes_cast":82625},{"province":"Madhes Province","constituency":"Sarlahi-4","first":{"candidate":"Amaresh Kumar Singh","party":"Independent","votes":20017},"second":{"candidate":"Nagendra Kumar","party":"Nepali Congress","votes":18253},"total_votes_cast":58892},{"province":"Madhes Province","constituency":"Rautahat-1","first":{"candidate":"Madhav Kumar Nepal","party":"CPN (Unified Socialist)","votes":33522},"second":{"candidate":"Ajay Kumar Gupta","party":"CPN-UML","votes":26922},"total_votes_cast":67855},{"province":"Madhes Province","constituency":"Rautahat-2","first":{"candidate":"Kiran Kumar Sah","party":"Independent","votes":32842},"second":{"candidate":"Md. Firdos Alam","party":"Nepali Congress","votes":28248},"total_votes_cast":73090},{"province":"Madhes Province","constituency":"Rautahat-3","first":{"candidate":"Prabhu Sah","party":"Independent","votes":32437},"second":{"candidate":"Om Prakash","party":"Independent","votes":25200},"total_votes_cast":72195},{"province":"Madhes Province","constituency":"Rautahat-4","first":{"candidate":"Dev Prasad Timalsena","party":"Nepali Congress","votes":34161},"second":{"candidate":"Uddhav Prasad Regmi","party":"CPN-UML","votes":26559},"total_votes_cast":67095},{"province":"Madhes Province","constituency":"Bara-1","first":{"candidate":"Achyut Prasad Mainali","party":"CPN-UML","votes":39195},"second":{"candidate":"Umakant Chaudhary","party":"Nepali Congress","votes":30056},"total_votes_cast":76570},{"province":"Madhes Province","constituency":"Bara-2","first":{"candidate":"Ram Sahay Prasad Yadav","party":"Janata Samajwadi Party Nepal","votes":13822},"second":{"candidate":"Shiva Chandra Prasad Kushwaha","party":"CPN (Maoist Center)","votes":13468},"total_votes_cast":43333},{"province":"Madhes Province","constituency":"Bara-3","first":{"candidate":"Jwala Kumari Sah","party":"CPN-UML","votes":20251},"second":{"candidate":"Rambabu Kumar Yadav","party":"Janata Samajwadi Party Nepal","votes":17279},"total_votes_cast":57494},{"province":"Madhes Province","constituency":"Bara-4","first":{"candidate":"Krishna Kumar Shrestha","party":"CPN (Unified Socialist)","votes":30341},"second":{"candidate":"Ekbal Miyan","party":"CPN-UML","votes":20336},"total_votes_cast":60219},{"province":"Madhes Province","constituency":"Parsa-1","first":{"candidate":"Pradip Yadav","party":"Janata Samajwadi Party Nepal","votes":22537},"second":{"candidate":"Ajay Kumar Dwivedi","party":"Independent","votes":20917},"total_votes_cast":49113},{"province":"Madhes Province","constituency":"Parsa-2","first":{"candidate":"Ajay Kumar Chaurasiya","party":"Nepali Congress","votes":28451},"second":{"candidate":"Surendra Prasad Kurmi","party":"Janata Samajwadi Party Nepal","votes":22445},"total_votes_cast":58637},{"province":"Madhes Province","constituency":"Parsa-3","first":{"candidate":"Raj Kumar Gupta","party":"CPN-UML","votes":24319},"second":{"candidate":"Surendra Prasad Chaudhary","party":"Nepali Congress","votes":24152},"total_votes_cast":65974},{"province":"Madhes Province","constituency":"Parsa-4","first":{"candidate":"Ramesh Rijal","party":"Nepali Congress","votes":31224},"second":{"candidate":"Zalim Miyan Mansuri","party":"CPN-UML","votes":25671},"total_votes_cast":61178},{"province":"Bagmati Province","constituency":"Dolakha-1","first":{"candidate":"Ganga Karki","party":"CPN (Maoist Center)","votes":36321},"second":{"candidate":"Bal Krishna Shivakoti","party":"CPN-UML","votes":36016},"total_votes_cast":79110},{"province":"Bagmati Province","constituency":"Ramechhap-1","first":{"candidate":"Purna Bahadur Tamang","party":"Nepali Congress","votes":47099},"second":{"candidate":"Kailash Prasad Dhungel","party":"CPN-UML","votes":30730},"total_votes_cast":82313},{"province":"Bagmati Province","constituency":"Sindhuli-1","first":{"candidate":"Shyam Kumar Ghimire","party":"Nepali Congress","votes":30391},"second":{"candidate":"Pradip Kumar Katuwal Chhetri (KC)","party":"CPN-UML","votes":25546},"total_votes_cast":62629},{"province":"Bagmati Province","constituency":"Sindhuli-2","first":{"candidate":"Lekhnath Dahal","party":"CPN (Maoist Center)","votes":27517},"second":{"candidate":"Manoj Jung Thapa","party":"CPN-UML","votes":21687},"total_votes_cast":57757},{"province":"Bagmati Province","constituency":"Rasuwa-1","first":{"candidate":"Mohan Acharya","party":"Nepali Congress","votes":18235},"second":{"candidate":"Chhowang Tenzin Tamang","party":"CPN-UML","votes":8614},"total_votes_cast":27059},{"province":"Bagmati Province","constituency":"Dhading-1","first":{"candidate":"Rajendra Prasad Pandey","party":"CPN (Unified Socialist)","votes":36018},"second":{"candidate":"Bhumi Prasad Tripathi","party":"CPN-UML","votes":27997},"total_votes_cast":81509},{"province":"Bagmati Province","constituency":"Dhading-2","first":{"candidate":"Ramnath Adhikari","party":"Nepali Congress","votes":34736},"second":{"candidate":"Khem Prasad Lohani","party":"CPN-UML","votes":24190},"total_votes_cast":69495},{"province":"Bagmati Province","constituency":"Nuwakot-1","first":{"candidate":"Hit Bahadur Tamang","party":"CPN (Maoist Center)","votes":26548},"second":{"candidate":"Badri Mainali","party":"CPN-UML","votes":23465},"total_votes_cast":60126},{"province":"Bagmati Province","constituency":"Nuwakot-2","first":{"candidate":"Arjun Narsingh KC","party":"Nepali Congress","votes":28107},"second":{"candidate":"Suman Bikram Pandey","party":"Rastriya Swatantra Party","votes":16477},"total_votes_cast":51145},{"province":"Bagmati Province","constituency":"Kathmandu-1","first":{"candidate":"Prakash Man Singh","party":"Nepali Congress","votes":7143},"second":{"candidate":"Rabindra Mishra","party":"Rastriya Prajatantra Party","votes":7018},"total_votes_cast":20176},{"province":"Bagmati Province","constituency":"Kathmandu-2","first":{"candidate":"Sobita Gautam","party":"Rastriya Swatantra Party","votes":15238},"second":{"candidate":"Maniram Phuyal","party":"CPN-UML","votes":11566},"total_votes_cast":41828},{"province":"Bagmati Province","constituency":"Kathmandu-3","first":{"candidate":"Santosh Chalise","party":"Nepali Congress","votes":15158},"second":{"candidate":"Krishna Bahadur Rai","party":"CPN-UML","votes":11196},"total_votes_cast":35219},{"province":"Bagmati Province","constituency":"Kathmandu-4","first":{"candidate":"Gagan Kumar Thapa","party":"Nepali Congress","votes":21302},"second":{"candidate":"Rajan Bhattarai","party":"CPN-UML","votes":13855},"total_votes_cast":45207},{"province":"Bagmati Province","constituency":"Kathmandu-5","first":{"candidate":"Pradeep Paudel","party":"Nepali Congress","votes":15269},"second":{"candidate":"Ishwar Pokharel","party":"CPN-UML","votes":10190},"total_votes_cast":35936},{"province":"Bagmati Province","constituency":"Kathmandu-6","first":{"candidate":"Shishir Khanal","party":"Rastriya Swatantra Party","votes":14221},"second":{"candidate":"Sarbendra Khanal","party":"CPN-UML","votes":8917},"total_votes_cast":34950},{"province":"Bagmati Province","constituency":"Kathmandu-7","first":{"candidate":"Ganesh Parajuli","party":"Rastriya Swatantra Party","votes":8743},"second":{"candidate":"Shyam Kumar Ghimire","party":"CPN-UML","votes":6800},"total_votes_cast":24606},{"province":"Bagmati Province","constituency":"Kathmandu-8","first":{"candidate":"Biraj Bhakta Shrestha","party":"Rastriya Swatantra Party","votes":10112},"second":{"candidate":"Suman Sayami","party":"Hamro Nepali Party","votes":6179},"total_votes_cast":24172},{"province":"Bagmati Province","constituency":"Kathmandu-9","first":{"candidate":"Krishna Gopal Shrestha","party":"CPN-UML","votes":11956},"second":{"candidate":"Tek Bahadur Pokharel","party":"Rastriya Swatantra Party","votes":10961},"total_votes_cast":32319},{"province":"Bagmati Province","constituency":"Kathmandu-10","first":{"candidate":"Rajendra Kumar KC","party":"Nepali Congress","votes":14463},"second":{"candidate":"Himesh KC","party":"CPN-UML","votes":11791},"total_votes_cast":38993},{"province":"Bagmati Province","constituency":"Bhaktapur-1","first":{"candidate":"Prem Suwal","party":"Nepal Workers and Peasants Party","votes":42761},"second":{"candidate":"Nawaraj Gelal","party":"CPN-UML","votes":11968},"total_votes_cast":67032},{"province":"Bagmati Province","constituency":"Bhaktapur-2","first":{"candidate":"Durlabh Thapa Chhetri","party":"Nepali Congress","votes":24239},"second":{"candidate":"Mahesh Basnet","party":"CPN-UML","votes":23282},"total_votes_cast":58648},{"province":"Bagmati Province","constituency":"Lalitpur-1","first":{"candidate":"Udaya Shumsher JB Rana","party":"Nepali Congress","votes":23892},"second":{"candidate":"Nawa Raj Silwal","party":"CPN-UML","votes":19278},"total_votes_cast":52447},{"province":"Bagmati Province","constituency":"Lalitpur-2","first":{"candidate":"Prem Bahadur Maharjan","party":"CPN-UML","votes":15025},"second":{"candidate":"Sudin Shakya","party":"Hamro Nepali Party","votes":8886},"total_votes_cast":37577},{"province":"Bagmati Province","constituency":"Lalitpur-3","first":{"candidate":"Toshima Karki","party":"Rastriya Swatantra Party","votes":31136},"second":{"candidate":"Amrit Khadka","party":"CPN-UML","votes":12963},"total_votes_cast":58868},{"province":"Bagmati Province","constituency":"Kavrepalanchok-1","first":{"candidate":"Surya Man Tamang (Dong)","party":"CPN (Maoist Center)","votes":34512},"second":{"candidate":"Resham Bahadur Lama","party":"CPN-UML","votes":30548},"total_votes_cast":80757},{"province":"Bagmati Province","constituency":"Kavrepalanchok-2","first":{"candidate":"Gokul Prasad Banskota","party":"CPN-UML","votes":45345},"second":{"candidate":"Shiva Prasad Humagain","party":"Nepali Congress","votes":39482},"total_votes_cast":100400},{"province":"Bagmati Province","constituency":"Sindhupalchok-1","first":{"candidate":"Madhav Sapkota","party":"CPN (Maoist Center)","votes":30408},"second":{"candidate":"Saresh Nepal","party":"CPN-UML","votes":27066},"total_votes_cast":63977},{"province":"Bagmati Province","constituency":"Sindhupalchok-2","first":{"candidate":"Mohan Bahadur Basnet","party":"Nepali Congress","votes":39381},"second":{"candidate":"Sher Bahadur Tamang","party":"CPN-UML","votes":27515},"total_votes_cast":72716},{"province":"Bagmati Province","constituency":"Makawanpur-1","first":{"candidate":"Deepak Bahadur Singh","party":"Rastriya Prajatantra Party","votes":27851},"second":{"candidate":"Mahalaxmi Upadhyaya (Dina)","party":"Nepali Congress","votes":25464},"total_votes_cast":81771},{"province":"Bagmati Province","constituency":"Makawanpur-2","first":{"candidate":"Mahesh Kumar Bartaula","party":"CPN-UML","votes":34950},"second":{"candidate":"Birodh Khatiwada","party":"CPN (Unified Socialist)","votes":30432},"total_votes_cast":85441},{"province":"Bagmati Province","constituency":"Chitwan-1","first":{"candidate":"Hari Dhakal","party":"Rastriya Swatantra Party","votes":34218},"second":{"candidate":"Surendra Prasad Pandey","party":"CPN-UML","votes":26634},"total_votes_cast":92474},{"province":"Bagmati Province","constituency":"Chitwan-2","first":{"candidate":"Rabi Lamichhane","party":"Rastriya Swatantra Party","votes":49300},"second":{"candidate":"Umesh Shrestha","party":"Nepali Congress","votes":14988},"total_votes_cast":86288},{"province":"Bagmati Province","constituency":"Chitwan-3","first":{"candidate":"Bikram Pandey","party":"Rastriya Prajatantra Party","votes":35060},"second":{"candidate":"Bhoj Raj Adhikari","party":"CPN (Maoist Center)","votes":25824},"total_votes_cast":82727},{"province":"Gandaki Province","constituency":"Gorkha-1","first":{"candidate":"Rajendra Bajagain","party":"Nepali Congress","votes":33428},"second":{"candidate":"Ram Sharan Basnet","party":"CPN-UML","votes":16785},"total_votes_cast":60105},{"province":"Gandaki Province","constituency":"Gorkha-2","first":{"candidate":"Pushpa Kamal Dahal","party":"CPN (Maoist Center)","votes":26109},"second":{"candidate":"Kabindra Burlakoti","party":"Rastriya Swatantra Party","votes":12639},"total_votes_cast":49143},{"province":"Gandaki Province","constituency":"Manang-1","first":{"candidate":"Tek Bahadur Gurung","party":"Nepali Congress","votes":2575},"second":{"candidate":"Polden Chhopang Gurung","party":"CPN-UML","votes":2247},"total_votes_cast":4827},{"province":"Gandaki Province","constituency":"Lamjung-1","first":{"candidate":"Prithvi Subba Gurung","party":"CPN-UML","votes":34985},"second":{"candidate":"Dev Prasad Gurung","party":"CPN (Maoist Center)","votes":31791},"total_votes_cast":82809},{"province":"Gandaki Province","constituency":"Kaski-1","first":{"candidate":"Man Bahadur Gurung","party":"CPN-UML","votes":25708},"second":{"candidate":"Kishor Datta Baral","party":"Nepali Congress","votes":23189},"total_votes_cast":66838},{"province":"Gandaki Province","constituency":"Kaski-2","first":{"candidate":"Bidya Bhattarai","party":"CPN-UML","votes":16998},"second":{"candidate":"Madhav Prasad Kandel","party":"Rastriya Swatantra Party","votes":12495},"total_votes_cast":46152},{"province":"Gandaki Province","constituency":"Kaski-3","first":{"candidate":"Damodar Paudel Bairagi","party":"CPN-UML","votes":22980},"second":{"candidate":"Ramji Prasad Baral Jeevan","party":"CPN (Maoist Center)","votes":17535},"total_votes_cast":58695},{"province":"Gandaki Province","constituency":"Tanahun-1","first":{"candidate":"Ram Chandra Paudel","party":"Nepali Congress","votes":25361},"second":{"candidate":"Ek Bahadur Rana Magar","party":"CPN-UML","votes":19981},"total_votes_cast":57228},{"province":"Gandaki Province","constituency":"Tanahun-2","first":{"candidate":"Shankar Bhandari","party":"Nepali Congress","votes":30604},"second":{"candidate":"Kiran Gurung","party":"CPN-UML","votes":25130},"total_votes_cast":67977},{"province":"Gandaki Province","constituency":"Syangja-1","first":{"candidate":"Raju Thapa","party":"Nepali Congress","votes":31999},"second":{"candidate":"Narayan Prasad Marasini","party":"CPN-UML","votes":28744},"total_votes_cast":71064},{"province":"Gandaki Province","constituency":"Syangja-2","first":{"candidate":"Dhan Raj Gurung","party":"Nepali Congress","votes":31466},"second":{"candidate":"Padma Kumari Aryal","party":"CPN-UML","votes":25839},"total_votes_cast":69419},{"province":"Gandaki Province","constituency":"Nawalparasi East-1","first":{"candidate":"Shashank Koirala","party":"Nepali Congress","votes":27067},"second":{"candidate":"Krishna Prasad Paudel","party":"CPN-UML","votes":25047},"total_votes_cast":76377},{"province":"Gandaki Province","constituency":"Nawalparasi East-2","first":{"candidate":"Bishnu Kumar Karki","party":"Nepali Congress","votes":36132},"second":{"candidate":"Til Bahadur Mahat Chhetri","party":"CPN-UML","votes":34110},"total_votes_cast":82691},{"province":"Gandaki Province","constituency":"Mustang-1","first":{"candidate":"Yogesh Gauchan Thakali","party":"Nepali Congress","votes":3992},"second":{"candidate":"Prem Prasad Tulachan","party":"CPN-UML","votes":3078},"total_votes_cast":7157},{"province":"Gandaki Province","constituency":"Myagdi-1","first":{"candidate":"Kham Bahadur Garbuja","party":"Nepali Congress","votes":24021},"second":{"candidate":"Hari Krishna Shrestha","party":"CPN-UML","votes":20189},"total_votes_cast":48634},{"province":"Gandaki Province","constituency":"Baglung-1","first":{"candidate":"Chitra Bahadur KC","party":"Rastriya Janamorcha","votes":21464},"second":{"candidate":"Surya Prasad Pathak","party":"CPN-UML","votes":18845},"total_votes_cast":53500},{"province":"Gandaki Province","constituency":"Baglung-2","first":{"candidate":"Devendra Paudel","party":"CPN (Maoist Center)","votes":24794},"second":{"candidate":"Manju Sharma","party":"CPN-UML","votes":20193},"total_votes_cast":53314},{"province":"Gandaki Province","constituency":"Parbat-1","first":{"candidate":"Padam Giri","party":"CPN-UML","votes":29872},"second":{"candidate":"Arjun Prasad Joshi","party":"Nepali Congress","votes":27609},"total_votes_cast":64654},{"province":"Lumbini Province","constituency":"Gulmi-1","first":{"candidate":"Chandra Kanta Bhandari","party":"Nepali Congress","votes":33744},"second":{"candidate":"Pradeep Kumar Gyawali","party":"CPN-UML","votes":32152},"total_votes_cast":71778},{"province":"Lumbini Province","constituency":"Gulmi-2","first":{"candidate":"Gokarna Raj Bista","party":"CPN-UML","votes":28476},"second":{"candidate":"Ram Kumari Jhakri","party":"CPN (Unified Socialist)","votes":26441},"total_votes_cast":59421},{"province":"Lumbini Province","constituency":"Palpa-1","first":{"candidate":"Narayan Prasad Acharya","party":"CPN-UML","votes":31103},"second":{"candidate":"Gyan Bahadur Gaha","party":"Nepali Congress","votes":20256},"total_votes_cast":59222},{"province":"Lumbini Province","constituency":"Palpa-2","first":{"candidate":"Thakur Prasad Gaire","party":"CPN-UML","votes":28645},"second":{"candidate":"Som Prasad Pandeya","party":"CPN (Unified Socialist)","votes":24899},"total_votes_cast":65893},{"province":"Lumbini Province","constituency":"Arghakhanchi-1","first":{"candidate":"Top Bahadur Rayamajhi","party":"CPN-UML","votes":42675},"second":{"candidate":"Pushpa Bhusal (Gautam)","party":"Nepali Congress","votes":40945},"total_votes_cast":90820},{"province":"Lumbini Province","constituency":"Rupandehi-1","first":{"candidate":"Chhabilal Bishwakarma","party":"CPN-UML","votes":24882},"second":{"candidate":"Ghanashyam Bhusal","party":"Independent","votes":21318},"total_votes_cast":68545},{"province":"Lumbini Province","constituency":"Rupandehi-2","first":{"candidate":"Bishnu Prasad Paudel","party":"CPN-UML","votes":27165},"second":{"candidate":"Ganesh Paudel","party":"Rastriya Swatantra Party","votes":25795},"total_votes_cast":80987},{"province":"Lumbini Province","constituency":"Rupandehi-3","first":{"candidate":"Deepak Bohara","party":"Rastriya Prajatantra Party","votes":36717},"second":{"candidate":"Bal Krishna Khand","party":"Nepali Congress","votes":34036},"total_votes_cast":87549},{"province":"Lumbini Province","constituency":"Rupandehi-4","first":{"candidate":"Sarbendra Nath Shukla","party":"Loktantrik Samajwadi Party Nepal","votes":28000},"second":{"candidate":"Pramod Kumar Yadav","party":"Nepali Congress","votes":22704},"total_votes_cast":74230},{"province":"Lumbini Province","constituency":"Rupandehi-5","first":{"candidate":"Basu Dev Ghimire","party":"CPN-UML","votes":36822},"second":{"candidate":"Bharat Kumar Shah","party":"Nepali Congress","votes":27120},"total_votes_cast":79932},{"province":"Lumbini Province","constituency":"Kapilvastu-1","first":{"candidate":"Balaram Adhikari","party":"CPN-UML","votes":34675},"second":{"candidate":"Chakrapani Khanal","party":"CPN (Maoist Center)","votes":18983},"total_votes_cast":66054},{"province":"Lumbini Province","constituency":"Kapilvastu-2","first":{"candidate":"Surendra Raj Acharya","party":"Nepali Congress","votes":39014},"second":{"candidate":"Brijesh Kumar Gupta","party":"CPN-UML","votes":38697},"total_votes_cast":85285},{"province":"Lumbini Province","constituency":"Kapilvastu-3","first":{"candidate":"Mangal Prasad Gupta","party":"CPN-UML","votes":22619},"second":{"candidate":"Abhishek Pratap Shah","party":"Nepali Congress","votes":18983},"total_votes_cast":59632},{"province":"Lumbini Province","constituency":"Rukum East-1","first":{"candidate":"Purna Bahadur Gharti Magar","party":"CPN (Maoist Center)","votes":12262},"second":{"candidate":"Kailash Kumar Malla","party":"CPN-UML","votes":5211},"total_votes_cast":19369},{"province":"Lumbini Province","constituency":"Rolpa-1","first":{"candidate":"Barshaman Pun","party":"CPN (Maoist Center)","votes":41714},"second":{"candidate":"Purna Budha Magar","party":"CPN-UML","votes":16485},"total_votes_cast":64755},{"province":"Lumbini Province","constituency":"Pyuthan-1","first":{"candidate":"Surya Bahadur Thapa Chhetri","party":"CPN-UML","votes":41118},"second":{"candidate":"Durga Paudel","party":"Rastriya Janamorcha","votes":35814},"total_votes_cast":83250},{"province":"Lumbini Province","constituency":"Dang-1","first":{"candidate":"Met Mani Chaudhary","party":"CPN (Unified Socialist)","votes":26576},"second":{"candidate":"Shanta Chaudhary","party":"CPN-UML","votes":21493},"total_votes_cast":67867},{"province":"Lumbini Province","constituency":"Dang-2","first":{"candidate":"Rekha Sharma","party":"CPN (Maoist Center)","votes":26880},"second":{"candidate":"Shankar Pokharel","party":"CPN-UML","votes":26687},"total_votes_cast":81428},{"province":"Lumbini Province","constituency":"Dang-3","first":{"candidate":"Dipak Giri","party":"Nepali Congress","votes":36911},"second":{"candidate":"Komal Oli","party":"CPN-UML","votes":29092},"total_votes_cast":88249},{"province":"Lumbini Province","constituency":"Banke-1","first":{"candidate":"Surya Prasad Dhakal","party":"CPN-UML","votes":25026},"second":{"candidate":"Maheshwar Jung Gahatraj (Athak)","party":"CPN (Maoist Center)","votes":19632},"total_votes_cast":62123},{"province":"Lumbini Province","constituency":"Banke-2","first":{"candidate":"Dhawal Shumsher JB Rana","party":"Rastriya Prajatantra Party","votes":29577},"second":{"candidate":"Mohammad Ishtiyaq Rai","party":"Janata Samajwadi Party Nepal","votes":23520},"total_votes_cast":62500},{"province":"Lumbini Province","constituency":"Banke-3","first":{"candidate":"Kishor Singh Rathore","party":"Nepali Congress","votes":29097},"second":{"candidate":"Kismat Kumar Kakshapati","party":"CPN-UML","votes":24305},"total_votes_cast":67869},{"province":"Lumbini Province","constituency":"Bardiya-1","first":{"candidate":"Sanjay Kumar Gautam","party":"Nepali Congress","votes":30611},"second":{"candidate":"Laxman Raj Gyawali","party":"CPN-UML","votes":26155},"total_votes_cast":86771},{"province":"Lumbini Province","constituency":"Bardiya-2","first":{"candidate":"Lalbir Chaudhary","party":"Independent","votes":26520},"second":{"candidate":"Suresh Pantha","party":"CPN (Maoist Center)","votes":26384},"total_votes_cast":73994},{"province":"Lumbini Province","constituency":"Nawalparasi West-1","first":{"candidate":"Binod Kumar Chaudhary","party":"Nepali Congress","votes":29519},"second":{"candidate":"Hridayesh Tripathi","party":"Janata Pragatisheel Party Nepal","votes":22328},"total_votes_cast":66346},{"province":"Lumbini Province","constituency":"Nawalparasi West-2","first":{"candidate":"Dhruba Bahadur Pradhan","party":"Rastriya Prajatantra Party","votes":34764},"second":{"candidate":"Devendra Raj Kandel","party":"Nepali Congress","votes":19594},"total_votes_cast":71860},{"province":"Karnali Province","constituency":"Salyan-1","first":{"candidate":"Prakash Jwala","party":"CPN (Unified Socialist)","votes":35707},"second":{"candidate":"Rajendra Bahadur Shah","party":"Independent","votes":19792},"total_votes_cast":72538},{"province":"Karnali Province","constituency":"Dolpa-1","first":{"candidate":"Dhan Bahadur Budha","party":"CPN (Unified Socialist)","votes":11292},"second":{"candidate":"Ganesh Bahadur Shahi","party":"CPN-UML","votes":5505},"total_votes_cast":18458},{"province":"Karnali Province","constituency":"Mugu-1","first":{"candidate":"Ain Bahadur Shahi Thakuri","party":"Nepali Congress","votes":14706},"second":{"candidate":"Raj Bahadur Karki","party":"CPN-UML","votes":10710},"total_votes_cast":26715},{"province":"Karnali Province","constituency":"Jumla-1","first":{"candidate":"Gyan Bahadur Shahi","party":"Rastriya Prajatantra Party","votes":22819},"second":{"candidate":"Goma Gautam (Kunwar)","party":"CPN (Maoist Center)","votes":11959},"total_votes_cast":44306},{"province":"Karnali Province","constituency":"Kalikot-1","first":{"candidate":"Mahendra Bahadur Shahi","party":"CPN (Maoist Center)","votes":23727},"second":{"candidate":"Shree Nagindra Shahi","party":"CPN-UML","votes":16718},"total_votes_cast":46038},{"province":"Karnali Province","constituency":"Humla-1","first":{"candidate":"Chhiring Damdul Lama (Bhote)","party":"CPN (Maoist Center)","votes":14371},"second":{"candidate":"Dal Rawal","party":"CPN-UML","votes":9516},"total_votes_cast":24265},{"province":"Karnali Province","constituency":"Jajarkot-1","first":{"candidate":"Shakti Bahadur Basnet","party":"CPN (Maoist Center)","votes":34151},"second":{"candidate":"Niraj Prasad Acharya","party":"CPN-UML","votes":25120},"total_votes_cast":62462},{"province":"Karnali Province","constituency":"Dailekh-1","first":{"candidate":"Ammar Bahadur Thapa","party":"CPN (Unified Socialist)","votes":18297},"second":{"candidate":"Rabindra Raj Sharma","party":"CPN-UML","votes":17445},"total_votes_cast":43354},{"province":"Karnali Province","constituency":"Dailekh-2","first":{"candidate":"Dikpal Kumar Shahi","party":"Nepali Congress","votes":20183},"second":{"candidate":"Laxmi Prasad Pokharel","party":"CPN-UML","votes":20016},"total_votes_cast":46285},{"province":"Karnali Province","constituency":"Surkhet-1","first":{"candidate":"Purna Bahadur Khadka","party":"Nepali Congress","votes":42607},"second":{"candidate":"Dhruba Kumar Shahi","party":"CPN-UML","votes":30988},"total_votes_cast":78492},{"province":"Karnali Province","constituency":"Surkhet-2","first":{"candidate":"Hridaya Ram Thani","party":"Nepali Congress","votes":34625},"second":{"candidate":"Dhruba Kumar Shahi","party":"CPN-UML","votes":29558},"total_votes_cast":71784},{"province":"Karnali Province","constituency":"Rukum West-1","first":{"candidate":"Janardan Sharma","party":"CPN (Maoist Center)","votes":39549},"second":{"candidate":"Nanda Ram Devkota","party":"CPN-UML","votes":12961},"total_votes_cast":57077},{"province":"Far West Province","constituency":"Bajura-1","first":{"candidate":"Badri Prasad Pandey","party":"Nepali Congress","votes":31786},"second":{"candidate":"Karna Bahadur Thapa","party":"CPN-UML","votes":26349},"total_votes_cast":60341},{"province":"Far West Province","constituency":"Achham-1","first":{"candidate":"Sher Bahadur Kunwar","party":"CPN (Unified Socialist)","votes":19534},"second":{"candidate":"Jhapat Bahadur Bohara","party":"CPN-UML","votes":15045},"total_votes_cast":43971},{"province":"Far West Province","constituency":"Achham-2","first":{"candidate":"Pushpa Bahadur Shah","party":"Nepali Congress","votes":22954},"second":{"candidate":"Yagya Bahadur Bogati","party":"CPN-UML","votes":16114},"total_votes_cast":42279},{"province":"Far West Province","constituency":"Bajhang-1","first":{"candidate":"Bhanubhakta Joshi","party":"CPN (Unified Socialist)","votes":28413},"second":{"candidate":"Ain Bahadur Mahar","party":"CPN-UML","votes":27412},"total_votes_cast":63033},{"province":"Far West Province","constituency":"Doti-1","first":{"candidate":"Prem Bahadur Ale","party":"CPN (Unified Socialist)","votes":27210},"second":{"candidate":"Gauri Kumari Oli","party":"CPN-UML","votes":23004},"total_votes_cast":62903},{"province":"Far West Province","constituency":"Kailali-1","first":{"candidate":"Ranjita Shrestha","party":"Nagarik Unmukti Party","votes":30404},"second":{"candidate":"Ram Janam Chaudhary","party":"Nepali Congress","votes":18081},"total_votes_cast":57895},{"province":"Far West Province","constituency":"Kailali-2","first":{"candidate":"Arun Kumar Chaudhary","party":"Nagarik Unmukti Party","votes":21871},"second":{"candidate":"Jhapat Bahadur Rawal","party":"CPN-UML","votes":16128},"total_votes_cast":59115},{"province":"Far West Province","constituency":"Kailali-3","first":{"candidate":"Ganga Ram Chaudhary","party":"Nagarik Unmukti Party","votes":23120},"second":{"candidate":"Krishna Kumar Chaudhary","party":"CPN (Maoist Center)","votes":17749},"total_votes_cast":53743},{"province":"Far West Province","constituency":"Kailali-4","first":{"candidate":"Bir Bahadur Balayar","party":"Nepali Congress","votes":26275},"second":{"candidate":"Lekh Raj Bhatta","party":"CPN-UML","votes":22663},"total_votes_cast":59171},{"province":"Far West Province","constituency":"Kailali-5","first":{"candidate":"Dilli Raj Panta","party":"Nepali Congress","votes":21392},"second":{"candidate":"Narad Muni Rana","party":"CPN-UML","votes":20318},"total_votes_cast":54059},{"province":"Far West Province","constituency":"Darchula-1","first":{"candidate":"Dilendra Prasad Badu","party":"Nepali Congress","votes":28515},"second":{"candidate":"Ganesh Singh Thagunna","party":"CPN-UML","votes":26381},"total_votes_cast":62896},{"province":"Far West Province","constituency":"Dadeldhura-1","first":{"candidate":"Sher Bahadur Deuba","party":"Nepali Congress","votes":25534},"second":{"candidate":"Sagar Dhakal","party":"Independent","votes":1302},"total_votes_cast":28836},{"province":"Far West Province","constituency":"Baitadi-1","first":{"candidate":"Damodar Bhandari","party":"CPN-UML","votes":38411},"second":{"candidate":"Hari Mohan Bhandari","party":"Nepali Congress","votes":30373},"total_votes_cast":70447},{"province":"Far West Province","constituency":"Kanchanpur-1","first":{"candidate":"Tara Lama Tamang","party":"CPN-UML","votes":36173},"second":{"candidate":"Gopal Singh Gurung","party":"Independent","votes":19513},"total_votes_cast":62425},{"province":"Far West Province","constituency":"Kanchanpur-2","first":{"candidate":"Narayan Prakash Saud","party":"Nepali Congress","votes":28136},"second":{"candidate":"Nar Bahadur Dhami","party":"CPN-UML","votes":21682},"total_votes_cast":59832},{"province":"Far West Province","constituency":"Kanchanpur-3","first":{"candidate":"Ramesh Lekhak","party":"Nepali Congress","votes":30523},"second":{"candidate":"Nirudevi Pal","party":"CPN-UML","votes":18448},"total_votes_cast":58971}]};
+
+// ── PARTY COLORS ────────────────────────────────────────────────────────
+const PARTY_COLORS = {
+  'Nepali Congress': '#3a7bd5',
+  'CPN-UML': '#e05252',
+  'CPN (Maoist Center)': '#c0392b',
+  'CPN (Unified Socialist)': '#e67e22',
+  'Rastriya Swatantra Party': '#27ae60',
+  'Rastriya Prajatantra Party': '#8e44ad',
+  'Janata Samajwadi Party Nepal': '#16a085',
+  'Janamat Party': '#d4ac0d',
+  'Loktantrik Samajwadi Party Nepal': '#1abc9c',
+  'Nagarik Unmukti Party': '#e91e63',
+  'Independent': '#95a5a6',
+  'Nepal Workers and Peasants Party': '#795548',
+  'Rastriya Janamorcha': '#ff5722',
+  'Hamro Nepali Party': '#607d8b',
+  'Tarai Madhesh Loktantrik Party': '#009688',
+  'Janata Pragatisheel Party Nepal': '#4caf50',
+};
+function partyColor(p) { return PARTY_COLORS[p] || '#888'; }
+
+const PROVINCE_COLORS = ['#c8973a','#5285e0','#52a882','#e05252','#8c52e0','#e08252','#52c8e0'];
+
+// ── STATE ────────────────────────────────────────────────────────────────
+let data = RAW.constituencies.map((d,i) => {
+  const margin = (d.first.votes && d.second.votes) ? d.first.votes - d.second.votes : null;
+  const winPct = (d.first.votes && d.total_votes_cast) ? (d.first.votes / d.total_votes_cast * 100) : null;
+  return { ...d, margin, winPct, _idx: i };
+});
+
+let filtered = [...data];
+let sortKey = null;
+let sortDir = 1;
+let currentPage = 1;
+const PER_PAGE = 20;
+let expandedRow = null;
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  populateFilters();
+  renderStats();
+  renderCharts();
+  renderTable();
+
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('filter-province').addEventListener('change', applyFilters);
+  document.getElementById('filter-party').addEventListener('change', applyFilters);
+  document.getElementById('filter-margin').addEventListener('change', applyFilters);
+  document.getElementById('sort-by').addEventListener('change', e => {
+    applySort(e.target.value);
+    renderTable();
+  });
+});
+
+// ── POPULATE DROPDOWNS ───────────────────────────────────────────────────
+function populateFilters() {
+  const provinces = [...new Set(data.map(d => d.province))].sort();
+  const pSel = document.getElementById('filter-province');
+  provinces.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    pSel.appendChild(o);
+  });
+
+  const parties = [...new Set(data.map(d => d.first.party))].sort();
+  const parSel = document.getElementById('filter-party');
+  parties.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    parSel.appendChild(o);
+  });
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function renderStats() {
+  const totalVotes = data.reduce((a,d) => a + (d.total_votes_cast || 0), 0);
+  document.getElementById('stat-votes').textContent = fmt(totalVotes);
+
+  const withMargin = data.filter(d => d.margin !== null);
+  const closest = withMargin.reduce((a,b) => a.margin < b.margin ? a : b);
+  const biggest = withMargin.reduce((a,b) => a.margin > b.margin ? a : b);
+
+  document.getElementById('stat-closest').textContent = fmt(closest.margin);
+  document.getElementById('stat-closest-name').textContent = closest.constituency;
+  document.getElementById('stat-biggest').textContent = fmt(biggest.margin);
+  document.getElementById('stat-biggest-name').textContent = biggest.constituency;
+}
+
+// ── CHARTS ───────────────────────────────────────────────────────────────
+function renderCharts() {
+  // Party seats
+  const partyCounts = {};
+  data.forEach(d => { partyCounts[d.first.party] = (partyCounts[d.first.party] || 0) + 1; });
+  const sorted = Object.entries(partyCounts).sort((a,b) => b[1]-a[1]);
+  const maxSeats = sorted[0][1];
+  const partyBarsEl = document.getElementById('party-bars');
+  partyBarsEl.innerHTML = sorted.map(([p,n]) => `
+    <div class="party-bar-row">
+      <div class="party-bar-name" title="${p}">${p}</div>
+      <div class="party-bar-track">
+        <div class="party-bar-fill" style="width:${(n/maxSeats*100).toFixed(1)}%;background:${partyColor(p)}">
+          ${n >= 3 ? n : ''}
+        </div>
+      </div>
+      <div class="party-bar-num">${n < 3 ? n : ''}</div>
+    </div>
+  `).join('');
+
+  // Province donut
+  const provCounts = {};
+  data.forEach(d => { provCounts[d.province] = (provCounts[d.province] || 0) + 1; });
+  const provinces = Object.entries(provCounts).sort((a,b) => b[1]-a[1]);
+  const total = provinces.reduce((s,[,v]) => s+v, 0);
+  const svg = document.getElementById('donut-svg');
+  const cx=80,cy=80,r=65,ir=42;
+  let angle = -Math.PI/2;
+  let paths = '';
+  provinces.forEach(([name,count],i) => {
+    const slice = (count/total) * 2 * Math.PI;
+    const x1 = cx + r*Math.cos(angle), y1 = cy + r*Math.sin(angle);
+    const x2 = cx + r*Math.cos(angle+slice), y2 = cy + r*Math.sin(angle+slice);
+    const ix1 = cx + ir*Math.cos(angle), iy1 = cy + ir*Math.sin(angle);
+    const ix2 = cx + ir*Math.cos(angle+slice), iy2 = cy + ir*Math.sin(angle+slice);
+    const lg = slice > Math.PI ? 1 : 0;
+    paths += `<path d="M${ix1},${iy1} L${x1},${y1} A${r},${r} 0 ${lg} 1 ${x2},${y2} L${ix2},${iy2} A${ir},${ir} 0 ${lg} 0 ${ix1},${iy1}" fill="${PROVINCE_COLORS[i]}" opacity="0.85" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()}" stroke-width="1.5"><title>${name}: ${count}</title></path>`;
+    angle += slice;
+  });
+  svg.innerHTML = paths;
+
+  const legend = document.getElementById('province-legend');
+  legend.innerHTML = provinces.map(([name,count],i) => `
+    <div class="prov-leg-row">
+      <div class="prov-leg-left">
+        <div class="prov-leg-dot" style="background:${PROVINCE_COLORS[i]}"></div>
+        <div class="prov-leg-name">${name.replace(' Province','').replace('Province ','')} </div>
+      </div>
+      <div class="prov-leg-count">${count} seats</div>
+    </div>
+  `).join('');
+
+  // Margin distribution
+  const bands = [
+    { label:'<500', min:0, max:500, color:'#e05252' },
+    { label:'500–1k', min:500, max:1000, color:'#e07050' },
+    { label:'1k–5k', min:1000, max:5000, color:'#c8973a' },
+    { label:'5k–10k', min:5000, max:10000, color:'#7ab852' },
+    { label:'10k–25k', min:10000, max:25000, color:'#52a882' },
+    { label:'>25k', min:25000, max:Infinity, color:'#52c8e0' },
+  ];
+  const withM = data.filter(d => d.margin !== null);
+  const maxCount = Math.max(...bands.map(b => withM.filter(d => d.margin >= b.min && d.margin < b.max).length));
+  document.getElementById('margin-dist-bars').innerHTML = bands.map(b => {
+    const count = withM.filter(d => d.margin >= b.min && d.margin < b.max).length;
+    return `<div class="dist-bar-row">
+      <div class="dist-bar-label">${b.label}</div>
+      <div class="dist-bar-track"><div class="dist-bar-fill" style="width:${(count/maxCount*100).toFixed(1)}%;background:${b.color}"></div></div>
+      <div class="dist-bar-count">${count}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── FILTERS & SORT ───────────────────────────────────────────────────────
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const prov = document.getElementById('filter-province').value;
+  const party = document.getElementById('filter-party').value;
+  const marginF = document.getElementById('filter-margin').value;
+
+  filtered = data.filter(d => {
+    if (q && !d.constituency.toLowerCase().includes(q) &&
+        !d.first.candidate.toLowerCase().includes(q) &&
+        !d.second.candidate.toLowerCase().includes(q) &&
+        !d.first.party.toLowerCase().includes(q)) return false;
+    if (prov && d.province !== prov) return false;
+    if (party && d.first.party !== party) return false;
+    if (marginF && d.margin !== null) {
+      if (marginF === 'close' && d.margin >= 1000) return false;
+      if (marginF === 'medium' && (d.margin < 1000 || d.margin >= 10000)) return false;
+      if (marginF === 'safe' && d.margin < 10000) return false;
+    }
+    return true;
+  });
+
+  applySort(document.getElementById('sort-by').value);
+  currentPage = 1;
+  renderTable();
+}
+
+function applySort(key) {
+  if (key === 'margin-asc') filtered.sort((a,b) => (a.margin||Infinity)-(b.margin||Infinity));
+  else if (key === 'margin-desc') filtered.sort((a,b) => (b.margin||0)-(a.margin||0));
+  else if (key === 'votes-desc') filtered.sort((a,b) => (b.total_votes_cast||0)-(a.total_votes_cast||0));
+  else if (key === 'votes-asc') filtered.sort((a,b) => (a.total_votes_cast||Infinity)-(b.total_votes_cast||Infinity));
+  else if (key === 'winner-pct-asc') filtered.sort((a,b) => (a.winPct||100)-(b.winPct||100));
+  else if (key === 'winner-pct-desc') filtered.sort((a,b) => (b.winPct||0)-(a.winPct||0));
+  else filtered.sort((a,b) => a._idx - b._idx);
+}
+
+function sortBy(col) {
+  // manual column sort
+  if (sortKey === col) sortDir *= -1; else { sortKey = col; sortDir = 1; }
+  filtered.sort((a,b) => {
+    if (col === 'name') return sortDir * a.constituency.localeCompare(b.constituency);
+    if (col === 'margin') return sortDir * ((a.margin||0)-(b.margin||0));
+    if (col === 'votes') return sortDir * ((a.total_votes_cast||0)-(b.total_votes_cast||0));
+    return 0;
+  });
+  renderTable();
+}
+
+function resetFilters() {
+  document.getElementById('search').value = '';
+  document.getElementById('filter-province').value = '';
+  document.getElementById('filter-party').value = '';
+  document.getElementById('filter-margin').value = '';
+  document.getElementById('sort-by').value = 'default';
+  filtered = [...data];
+  currentPage = 1;
+  renderTable();
+}
+
+// ── TABLE RENDER ─────────────────────────────────────────────────────────
+function fmt(n) { return n != null ? n.toLocaleString() : '—'; }
+function marginClass(m) {
+  if (m === null) return '';
+  if (m < 1000) return 'margin-close';
+  if (m < 10000) return 'margin-medium';
+  return 'margin-safe';
+}
+
+function renderTable() {
+  const tbody = document.getElementById('table-body');
+  const total = filtered.length;
+  const pages = Math.ceil(total / PER_PAGE);
+  if (currentPage > pages) currentPage = 1;
+  const start = (currentPage-1)*PER_PAGE;
+  const pageData = filtered.slice(start, start+PER_PAGE);
+
+  document.getElementById('results-count').innerHTML = `Showing <strong>${total}</strong> of <strong>${data.length}</strong> constituencies`;
+
+  if (pageData.length === 0) {
+    tbody.innerHTML = `<div class="no-results"><div class="big">∅</div><div>No constituencies match your filters</div></div>`;
+  } else {
+    tbody.innerHTML = pageData.map((d,i) => {
+      const idx = start + i + 1;
+      const m = d.margin;
+      const winV = d.first.votes || 0;
+      const totV = d.total_votes_cast || 0;
+      const pct = totV ? (winV/totV*100).toFixed(1) : null;
+      const secPct = totV && d.second.votes ? (d.second.votes/totV*100).toFixed(1) : null;
+      return `
+      <div class="data-row" onclick="toggleDetail('det-${d._idx}', this)" data-id="${d._idx}">
+        <div class="td row-num">${idx}</div>
+        <div class="td constituency-name">
+          ${d.constituency}
+          <span class="province-tag">${d.province}</span>
+        </div>
+        <div class="td candidate-cell">
+          <div style="display:flex;align-items:center;gap:5px">
+            <span class="winner-badge" style="background:${partyColor(d.first.party)}"></span>
+            <span class="cand-name">${d.first.candidate}</span>
+          </div>
+          <div class="cand-party" style="color:${partyColor(d.first.party)}">${d.first.party}</div>
+          <div class="cand-votes" style="color:var(--accent)">${fmt(d.first.votes)}${pct ? ` <span style="color:var(--muted)">(${pct}%)</span>` : ''}</div>
+        </div>
+        <div class="td candidate-cell">
+          <div class="cand-name">${d.second.candidate || '—'}</div>
+          <div class="cand-party" style="color:${partyColor(d.second.party)}">${d.second.party || '—'}</div>
+          <div class="cand-votes" style="color:var(--muted)">${fmt(d.second.votes)}${secPct ? ` <span style="opacity:.6">(${secPct}%)</span>` : ''}</div>
+        </div>
+        <div class="td">
+          ${m !== null ? `<span class="margin-badge ${marginClass(m)}">${fmt(m)}</span>` : '<span style="color:var(--muted)">—</span>'}
+        </div>
+        <div class="td" style="color:var(--muted);font-size:11px">${fmt(totV)}</div>
+      </div>
+      <div class="row-detail" id="det-${d._idx}">
+        ${renderDetail(d)}
+      </div>`;
+    }).join('');
+  }
+
+  renderPagination(pages, total);
+}
+
+function renderDetail(d) {
+  const totV = d.total_votes_cast || 0;
+  const winV = d.first.votes || 0;
+  const secV = d.second.votes || 0;
+  const pct1 = totV ? (winV/totV*100).toFixed(1) : '—';
+  const pct2 = totV ? (secV/totV*100).toFixed(1) : '—';
+  const w1 = totV ? (winV/totV*100).toFixed(1) : 50;
+  const w2 = totV ? (secV/totV*100).toFixed(1) : 50;
+  return `
+  <div class="detail-grid">
+    <div class="detail-block">
+      <div class="detail-title">🥇 Winner</div>
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text)">${d.first.candidate}</div>
+      <div style="color:${partyColor(d.first.party)};font-size:11px;margin:4px 0">${d.first.party}</div>
+      <div class="detail-stat" style="color:var(--accent)">${fmt(winV)}</div>
+      <div class="detail-sub">${pct1}% of total votes</div>
+      <div style="margin-top:12px">
+        <div class="h2h-label">Vote share comparison</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:6px">
+          <div style="flex:1;height:6px;border-radius:3px;background:${partyColor(d.first.party)};width:${w1}%"></div>
+          <div style="font-size:9px;color:var(--muted);width:30px;text-align:center">${pct1}%</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
+          <div style="flex:1;height:6px;border-radius:3px;background:${partyColor(d.second.party)};width:${w2}%"></div>
+          <div style="font-size:9px;color:var(--muted);width:30px;text-align:center">${pct2}%</div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-block">
+      <div class="detail-title">🥈 Runner-up</div>
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text)">${d.second.candidate || 'N/A'}</div>
+      <div style="color:${partyColor(d.second.party)};font-size:11px;margin:4px 0">${d.second.party || '—'}</div>
+      <div class="detail-stat" style="color:var(--muted)">${fmt(secV)}</div>
+      <div class="detail-sub">${pct2}% of total votes</div>
+      <div style="margin-top:12px">
+        <div class="h2h-label">Victory margin</div>
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:${d.margin < 1000 ? 'var(--red)' : d.margin < 10000 ? 'var(--accent)' : 'var(--green)'};margin-top:4px">${fmt(d.margin)}</div>
+        <div style="font-size:10px;color:var(--muted)">${d.margin < 1000 ? '🔴 Very close race' : d.margin < 10000 ? '🟡 Competitive' : '🟢 Comfortable win'}</div>
+      </div>
+    </div>
+    <div class="detail-block">
+      <div class="detail-title">📊 Turnout Data</div>
+      <div class="detail-stat">${fmt(totV)}</div>
+      <div class="detail-sub">Total votes cast</div>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:10px;color:var(--muted);display:flex;justify-content:space-between"><span>Province</span><span style="color:var(--text)">${d.province}</span></div>
+        <div style="font-size:10px;color:var(--muted);display:flex;justify-content:space-between"><span>Constituency</span><span style="color:var(--text)">${d.constituency}</span></div>
+        <div style="font-size:10px;color:var(--muted);display:flex;justify-content:space-between"><span>Winner %</span><span style="color:var(--accent)">${pct1}%</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleDetail(id, rowEl) {
+  const det = document.getElementById(id);
+  if (!det) return;
+  const isOpen = det.classList.contains('open');
+  // close all
+  document.querySelectorAll('.row-detail.open').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.data-row.expanded').forEach(el => el.classList.remove('expanded'));
+  if (!isOpen) { det.classList.add('open'); rowEl.classList.add('expanded'); }
+}
+
+// ── PAGINATION ─────────────────────────────────────────────────────────
+function renderPagination(pages, total) {
+  const info = document.getElementById('page-info');
+  const btns = document.getElementById('page-btns');
+  const start = (currentPage-1)*PER_PAGE+1;
+  const end = Math.min(currentPage*PER_PAGE, total);
+  info.textContent = total > 0 ? `${start}–${end} of ${total}` : 'No results';
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  const range = getPageRange(currentPage, pages);
+  range.forEach(p => {
+    if (p === '…') html += `<span style="padding:5px 6px;color:var(--muted);font-size:11px">…</span>`;
+    else html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  });
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  btns.innerHTML = html;
+}
+
+function getPageRange(cur, total) {
+  if (total <= 7) return Array.from({length:total},(_,i)=>i+1);
+  const r = [];
+  if (cur <= 4) { for(let i=1;i<=5;i++) r.push(i); r.push('…'); r.push(total); }
+  else if (cur >= total-3) { r.push(1); r.push('…'); for(let i=total-4;i<=total;i++) r.push(i); }
+  else { r.push(1); r.push('…'); for(let i=cur-1;i<=cur+1;i++) r.push(i); r.push('…'); r.push(total); }
+  return r;
+}
+
+function goPage(p) {
+  const pages = Math.ceil(filtered.length / PER_PAGE);
+  if (p < 1 || p > pages) return;
+  currentPage = p;
+  expandedRow = null;
+  renderTable();
+  document.querySelector('.table-wrap').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>

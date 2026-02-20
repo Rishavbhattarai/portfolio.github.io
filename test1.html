@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal Election Dashboard</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    background-color: #f4f6f9;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.kpi-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.kpi-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2a5298;
+}
+
+.section-title {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+select {
+    border-radius: 10px !important;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark p-3">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">🇳🇵 Nepal Election Dashboard</span>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- KPI CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div>Total Constituencies</div>
+                <div class="kpi-number" id="totalConst"></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div>Total Voters</div>
+                <div class="kpi-number" id="totalVoters"></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div>Total FPTP Seats</div>
+                <div class="kpi-number" id="totalFPTP"></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div>Total PR Seats</div>
+                <div class="kpi-number" id="totalPR"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTER SECTION -->
+    <div class="card p-4 mb-4">
+        <div class="section-title">Interactive Selection</div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label>Province</label>
+                <select id="provinceSelect" class="form-select"></select>
+            </div>
+
+            <div class="col-md-4">
+                <label>District</label>
+                <select id="districtSelect" class="form-select"></select>
+            </div>
+
+            <div class="col-md-4">
+                <label>Constituency</label>
+                <select id="constSelect" class="form-select"></select>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <div class="section-title">Constituencies by Region</div>
+                <canvas id="regionChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <div class="section-title">Seat Distribution (PR vs FPTP)</div>
+                <canvas id="seatChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card p-3">
+                <div class="section-title">Province-wise Voter Population</div>
+                <canvas id="voterChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// SAMPLE DATA (You can replace with real dataset)
+const data = [
+    {province:"Koshi", district:"Jhapa", constituency:"Jhapa-1", region:"Terai", voters:200000, fptp:1, pr:1},
+    {province:"Koshi", district:"Jhapa", constituency:"Jhapa-2", region:"Terai", voters:180000, fptp:1, pr:1},
+    {province:"Bagmati", district:"Kathmandu", constituency:"Kathmandu-1", region:"Hill", voters:250000, fptp:1, pr:2},
+    {province:"Bagmati", district:"Kathmandu", constituency:"Kathmandu-2", region:"Hill", voters:230000, fptp:1, pr:2},
+    {province:"Gandaki", district:"Mustang", constituency:"Mustang-1", region:"Mountain", voters:60000, fptp:1, pr:1},
+];
+
+// KPI CALCULATIONS
+document.getElementById("totalConst").innerText = data.length;
+document.getElementById("totalVoters").innerText =
+    data.reduce((sum,d)=>sum+d.voters,0).toLocaleString();
+document.getElementById("totalFPTP").innerText =
+    data.reduce((sum,d)=>sum+d.fptp,0);
+document.getElementById("totalPR").innerText =
+    data.reduce((sum,d)=>sum+d.pr,0);
+
+// DROPDOWN LOGIC
+const provinceSelect = document.getElementById("provinceSelect");
+const districtSelect = document.getElementById("districtSelect");
+const constSelect = document.getElementById("constSelect");
+
+const provinces = [...new Set(data.map(d=>d.province))];
+provinceSelect.innerHTML = provinces.map(p=>`<option>${p}</option>`);
+
+provinceSelect.addEventListener("change", updateDistricts);
+districtSelect.addEventListener("change", updateConstituencies);
+
+function updateDistricts() {
+    const selected = provinceSelect.value;
+    const districts = [...new Set(
+        data.filter(d=>d.province===selected).map(d=>d.district)
+    )];
+    districtSelect.innerHTML = districts.map(d=>`<option>${d}</option>`);
+    updateConstituencies();
+}
+
+function updateConstituencies() {
+    const selectedDistrict = districtSelect.value;
+    const constituencies = data
+        .filter(d=>d.district===selectedDistrict)
+        .map(d=>d.constituency);
+
+    constSelect.innerHTML = constituencies.map(c=>`<option>${c}</option>`);
+}
+
+updateDistricts();
+
+// REGION CHART
+const regionCounts = {};
+data.forEach(d=>{
+    regionCounts[d.region] = (regionCounts[d.region]||0)+1;
+});
+
+new Chart(document.getElementById("regionChart"), {
+    type: "doughnut",
+    data: {
+        labels: Object.keys(regionCounts),
+        datasets: [{
+            data: Object.values(regionCounts)
+        }]
+    }
+});
+
+// SEAT CHART
+new Chart(document.getElementById("seatChart"), {
+    type: "bar",
+    data: {
+        labels:["FPTP","PR"],
+        datasets:[{
+            label:"Total Seats",
+            data:[
+                data.reduce((s,d)=>s+d.fptp,0),
+                data.reduce((s,d)=>s+d.pr,0)
+            ]
+        }]
+    }
+});
+
+// VOTER CHART
+const provinceVoters = {};
+data.forEach(d=>{
+    provinceVoters[d.province] = 
+        (provinceVoters[d.province]||0)+d.voters;
+});
+
+new Chart(document.getElementById("voterChart"), {
+    type:"bar",
+    data:{
+        labels:Object.keys(provinceVoters),
+        datasets:[{
+            label:"Voters",
+            data:Object.values(provinceVoters)
+        }]
+    }
+});
+
+</script>
+
+</body>
+</html>
