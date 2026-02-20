@@ -58,128 +58,212 @@ body {
   overflow-x: hidden;
 }
 
-/* ── MASTHEAD ── */
-.masthead {
+/* ── APP SHELL ── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
   background: var(--ink);
-  color: var(--paper);
-  padding: 0;
-  border-bottom: 3px solid var(--gold2);
-}
-
-.masthead-top {
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  padding: 0 2.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow-y: auto;
 }
 
-.mh-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 1.1rem 0;
-  border-right: 1px solid rgba(255,255,255,0.08);
-  padding-right: 2rem;
-  margin-right: 2rem;
+.sb-brand {
+  padding: 1.5rem 1.4rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-.mh-seal {
-  width: 44px; height: 44px;
+.sb-seal {
+  width: 40px; height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--gold2), #8b6914);
   display: flex; align-items: center; justify-content: center;
   font-family: 'Tiro Devanagari Hindi', serif;
-  font-size: 20px; color: var(--ink); font-weight: 700;
-  box-shadow: 0 0 0 2px rgba(212,160,23,0.3);
+  font-size: 18px; color: var(--ink); font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(212,160,23,0.25);
+  margin-bottom: 10px;
 }
 
-.mh-title-main {
+.sb-title-main {
   font-family: 'Playfair Display', serif;
-  font-size: 1.25rem; font-weight: 700;
-  letter-spacing: -0.01em; line-height: 1.1;
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: -0.01em; line-height: 1.15;
   color: var(--paper);
 }
-.mh-title-sub {
+.sb-title-sub {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.58rem; letter-spacing: 0.18em;
-  color: rgba(245,240,232,0.45); text-transform: uppercase;
-  margin-top: 3px;
+  font-size: 0.52rem; letter-spacing: 0.14em;
+  color: rgba(245,240,232,0.35); text-transform: uppercase;
+  margin-top: 4px;
 }
 
-nav {
-  display: flex; align-items: center; gap: 0; flex: 1;
+/* ── SIDEBAR KPIs ── */
+.sb-stats {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.sb-stat { }
+.sb-stat-lbl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(245,240,232,0.35); margin-bottom: 2px;
+}
+.sb-stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700; color: var(--paper);
+  line-height: 1;
+}
+.sb-stat-val.deficit { color: #e88; }
+.sb-stat-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.52rem; color: rgba(245,240,232,0.3); margin-top: 2px;
+}
+
+.sb-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.54rem; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 2px;
+  text-transform: uppercase; display: inline-block;
+  margin-top: 8px;
+}
+.badge-deficit { background: rgba(192,57,43,0.2); color: #e88; border: 1px solid rgba(192,57,43,0.3); }
+.badge-fy { background: rgba(212,160,23,0.12); color: var(--gold2); border: 1px solid rgba(212,160,23,0.25); }
+
+/* ── SIDEBAR NAV ── */
+.sb-nav-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(245,240,232,0.25); padding: 1rem 1.4rem 0.4rem;
+}
+
+nav.sb-nav {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 0 0.7rem;
 }
 
 .nav-item {
-  padding: 0 1.5rem;
-  height: 100%;
-  display: flex; align-items: center;
+  padding: 0.7rem 0.9rem;
+  display: flex; align-items: center; gap: 10px;
   font-size: 0.76rem; font-weight: 500;
-  color: rgba(245,240,232,0.5);
-  cursor: pointer; transition: all 0.2s;
-  border-right: 1px solid rgba(255,255,255,0.05);
-  letter-spacing: 0.04em; white-space: nowrap;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -3px;
+  color: rgba(245,240,232,0.45);
+  cursor: pointer; transition: all 0.18s;
+  border-radius: 4px;
+  letter-spacing: 0.02em; white-space: nowrap;
+  border: 1px solid transparent;
+  position: relative;
 }
-.nav-item:hover { color: var(--paper); }
-.nav-item.active { color: var(--gold2); border-bottom-color: var(--gold2); }
+.nav-item:hover { color: var(--paper); background: rgba(255,255,255,0.05); }
+.nav-item.active { 
+  color: var(--gold2); 
+  background: rgba(212,160,23,0.08); 
+  border-color: rgba(212,160,23,0.15);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 20%; bottom: 20%;
+  width: 2px; border-radius: 2px;
+  background: var(--gold2);
+}
 
-.mh-meta {
-  display: flex; align-items: center; gap: 16px;
-  padding: 0.75rem 0;
+.nav-icon {
+  font-size: 0.9rem; width: 18px; text-align: center; flex-shrink: 0;
+  opacity: 0.7;
 }
-.mh-badge {
+.nav-item.active .nav-icon { opacity: 1; }
+
+.nav-num {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.62rem; letter-spacing: 0.1em;
-  padding: 4px 12px; border-radius: 2px;
-  text-transform: uppercase;
+  font-size: 0.55rem; color: rgba(245,240,232,0.2);
+  margin-left: auto;
 }
-.badge-deficit { background: rgba(192,57,43,0.2); color: #e88; border: 1px solid rgba(192,57,43,0.35); }
-.badge-fy { background: rgba(212,160,23,0.15); color: var(--gold2); border: 1px solid rgba(212,160,23,0.3); }
 
-/* HEADLINE ROW */
-.masthead-headline {
-  padding: 1.25rem 2.5rem 1.5rem;
+/* ── SIDEBAR MINI DEFICIT BAR ── */
+.sb-deficit-bar {
+  padding: 1rem 1.4rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: auto;
+}
+.sdb-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(245,240,232,0.3); margin-bottom: 8px;
+}
+.sdb-track {
+  height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden;
+  margin-bottom: 6px;
+}
+.sdb-fill {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--teal2), var(--crimson));
+  width: 0; transition: width 1.5s ease;
+}
+.sdb-legend {
+  display: flex; justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem;
+  color: rgba(245,240,232,0.3);
+}
+
+/* ── MAIN CONTENT AREA ── */
+.main-content {
+  margin-left: 240px;
+  flex: 1;
+  display: flex; flex-direction: column;
+}
+
+/* ── TOP HEADER BAR ── */
+.topbar {
+  background: var(--ink2);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0.8rem 2.5rem;
   display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
   flex-wrap: wrap;
 }
 .hl-text h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 2.2rem; font-weight: 900; letter-spacing: -0.03em;
+  font-size: 1.65rem; font-weight: 900; letter-spacing: -0.03em;
   color: var(--paper); line-height: 1;
 }
 .hl-text h1 em { font-style: normal; color: var(--gold2); }
 .hl-text p {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem; color: rgba(245,240,232,0.4);
-  letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px;
+  font-size: 0.6rem; color: rgba(245,240,232,0.35);
+  letter-spacing: 0.12em; text-transform: uppercase; margin-top: 5px;
 }
 
 .hl-summary {
-  display: flex; gap: 2rem; flex-wrap: wrap;
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
 }
 .hl-fig { text-align: right; }
 .hl-fig-lbl {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.58rem; color: rgba(245,240,232,0.4);
+  font-size: 0.55rem; color: rgba(245,240,232,0.35);
   letter-spacing: 0.14em; text-transform: uppercase;
 }
 .hl-fig-val {
   font-family: 'Playfair Display', serif;
-  font-size: 1.4rem; font-weight: 700; color: var(--paper);
+  font-size: 1.25rem; font-weight: 700; color: var(--paper);
   line-height: 1; margin-top: 2px;
 }
 .hl-fig-val.deficit { color: #e88; }
 .hl-fig-val.surplus { color: #6deba0; }
 .hl-fig-unit {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.6rem; color: rgba(245,240,232,0.35); margin-top: 2px;
+  font-size: 0.55rem; color: rgba(245,240,232,0.3); margin-top: 2px;
 }
 
 /* ── MAIN LAYOUT ── */
-main { max-width: 1440px; margin: 0 auto; padding: 2rem 2.5rem; }
+main { padding: 2rem 2.5rem; }
 
 .section { display: none; }
 .section.active { display: block; animation: fadeIn 0.3s ease; }
@@ -398,44 +482,174 @@ main { max-width: 1440px; margin: 0 auto; padding: 2rem 2.5rem; }
 /* ── DIVIDER ── */
 .divider { height: 1px; background: var(--rule); margin: 2rem 0; }
 
-@media(max-width:640px) {
-  .masthead-top { padding: 0 1rem; }
-  .masthead-headline { padding: 1rem; }
+@media(max-width:880px) { .g2,.g3 { grid-template-columns:1fr; } }
+
+/* Sidebar mobile */
+@media(max-width:768px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.28s ease; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .sidebar-overlay { display: block !important; }
+  .topbar { padding: 0.8rem 1rem; }
   main { padding: 1rem; }
-  .kpi-value { font-size: 1.1rem; }
-  .hl-text h1 { font-size: 1.4rem; }
 }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99;
+}
+
+.sb-toggle {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  color: var(--paper); font-size: 1.2rem; padding: 0.2rem 0.5rem;
+}
+@media(max-width:768px) { .sb-toggle { display: flex; align-items: center; } }
+
+/* ── SEARCH BAR ── */
+.search-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem; color: rgba(245,240,232,0.5);
+  cursor: text;
+}
+.search-bar input {
+  background: none; border: none; outline: none;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  color: var(--paper); width: 150px;
+}
+.search-bar input::placeholder { color: rgba(245,240,232,0.3); }
+
+/* ── ANIMATED COUNTER ── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.kpi-value { animation: countUp 0.5s ease both; }
+
+/* ── TOOLTIP ── */
+.custom-tooltip {
+  position: fixed; z-index: 999;
+  background: var(--ink); border: 1px solid rgba(245,240,232,0.12);
+  border-radius: 4px; padding: 8px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+  color: var(--paper); pointer-events: none;
+  opacity: 0; transition: opacity 0.15s;
+  max-width: 220px;
+}
+.custom-tooltip.show { opacity: 1; }
+
+/* ── FILTER PILLS ── */
+.filter-pills {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem;
+}
+.pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px;
+  cursor: pointer; transition: all 0.15s;
+  border: 1px solid var(--rule);
+  color: var(--slate); background: var(--paper2);
+}
+.pill:hover { border-color: var(--gold2); color: var(--gold2); }
+.pill.active { background: var(--gold2); color: var(--ink); border-color: var(--gold2); font-weight: 600; }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════ MASTHEAD ════════════════════════════════ -->
-<div class="masthead">
-  <div class="masthead-top">
-    <div class="mh-brand">
-      <div class="mh-seal">ने</div>
-      <div>
-        <div class="mh-title-main">सरकार नेपाल</div>
-        <div class="mh-title-sub">Ministry of Finance · Public Finance Dashboard</div>
-      </div>
-    </div>
-    <nav>
-      <div class="nav-item active" onclick="switchTab('overview')">Executive Summary</div>
-      <div class="nav-item" onclick="switchTab('revenue')">Revenue</div>
-      <div class="nav-item" onclick="switchTab('expenditure')">Expenditure</div>
-      <div class="nav-item" onclick="switchTab('flow')">Money Flow</div>
-      <div class="nav-item" onclick="switchTab('data')">Full Data</div>
-    </nav>
-    <div class="mh-meta">
-      <span class="mh-badge badge-fy">FY 2080/081</span>
-      <span class="mh-badge badge-deficit">▼ Deficit Budget</span>
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- Custom tooltip -->
+<div class="custom-tooltip" id="custom-tooltip"></div>
+
+<!-- ════════════════════════════════ APP SHELL ════════════════════════════════ -->
+<div class="app-shell">
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-seal">ने</div>
+    <div class="sb-title-main">सरकार नेपाल</div>
+    <div class="sb-title-sub">Ministry of Finance · Dashboard</div>
+    <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+      <span class="sb-badge badge-fy">FY 2080/081</span>
+      <span class="sb-badge badge-deficit">▼ Deficit</span>
     </div>
   </div>
-  <div class="masthead-headline">
+
+  <div class="sb-stats">
+    <div class="sb-stat">
+      <div class="sb-stat-lbl">Total Receipts</div>
+      <div class="sb-stat-val" id="sb-receipts">NPR 133.19 Arb</div>
+    </div>
+    <div class="sb-stat">
+      <div class="sb-stat-lbl">Total Payments</div>
+      <div class="sb-stat-val" id="sb-payments">NPR 139.24 Arb</div>
+    </div>
+    <div class="sb-stat">
+      <div class="sb-stat-lbl">Fiscal Deficit</div>
+      <div class="sb-stat-val deficit" id="sb-deficit">▼ NPR 6.05 Arb</div>
+    </div>
+  </div>
+
+  <div class="sb-nav-label">Navigation</div>
+  <nav class="sb-nav">
+    <div class="nav-item active" onclick="switchTab('overview')">
+      <span class="nav-icon">📊</span>
+      Executive Summary
+      <span class="nav-num">00</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('revenue')">
+      <span class="nav-icon">💰</span>
+      Revenue
+      <span class="nav-num">01</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('expenditure')">
+      <span class="nav-icon">📉</span>
+      Expenditure
+      <span class="nav-num">02</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('flow')">
+      <span class="nav-icon">🔄</span>
+      Money Flow
+      <span class="nav-num">03</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('data')">
+      <span class="nav-icon">🗃</span>
+      Full Data
+      <span class="nav-num">04</span>
+    </div>
+  </nav>
+
+  <div class="sb-deficit-bar">
+    <div class="sdb-label">Receipts vs Payments</div>
+    <div class="sdb-track">
+      <div class="sdb-fill" id="sdb-fill"></div>
+    </div>
+    <div class="sdb-legend">
+      <span>133.19 Arb</span>
+      <span>139.24 Arb</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════ MAIN CONTENT ════════════════ -->
+<div class="main-content">
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="sb-toggle" onclick="toggleSidebar()">☰</button>
     <div class="hl-text">
       <h1>Consolidated <em>Financial</em> Statement</h1>
       <p>Government of Nepal · Fiscal Year 2080/081 (2023/2024) · All figures in NPR</p>
     </div>
+  </div>
     <div class="hl-summary">
       <div class="hl-fig">
         <div class="hl-fig-lbl">Total Receipts</div>
@@ -454,7 +668,6 @@ main { max-width: 1440px; margin: 0 auto; padding: 2rem 2.5rem; }
       </div>
     </div>
   </div>
-</div>
 
 <!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
 <main>
@@ -742,6 +955,17 @@ main { max-width: 1440px; margin: 0 auto; padding: 2rem 2.5rem; }
         <div class="card-title">All Financial Heads</div>
         <div class="card-sub">Economic codes, descriptions, and total amounts · FY 2080/081</div>
       </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div class="filter-pills">
+          <div class="pill active" onclick="filterTable('all',this)">All</div>
+          <div class="pill" onclick="filterTable('Receipts',this)">Receipts Only</div>
+          <div class="pill" onclick="filterTable('Payments',this)">Payments Only</div>
+        </div>
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" id="table-search" placeholder="Search entries..." oninput="searchTable(this.value)">
+        </div>
+      </div>
     </div>
     <div style="overflow-x:auto;">
       <table class="data-table" id="full-table">
@@ -766,6 +990,8 @@ main { max-width: 1440px; margin: 0 auto; padding: 2rem 2.5rem; }
 </section>
 
 </main>
+</div><!-- end main-content -->
+</div><!-- end app-shell -->
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -1285,26 +1511,7 @@ function buildBalanceChart() {
 // FULL TABLE
 // ══════════════════════════════════════════════════════
 function buildTable() {
-  const tbody = document.getElementById('full-table-body');
-  const totalRef = totalReceipts;
-
-  tbody.innerHTML = DATA.map(d => {
-    const isTotal = d.code === '00000';
-    const isReceipt = d.cat === 'Receipts';
-    const rowClass = isTotal ? (isReceipt ? 'surplus-row' : 'deficit-row') : '';
-    const boldStyle = d.sub ? 'font-weight:600;' : '';
-    const bgStyle = d.sub ? 'background:rgba(15,17,23,0.02);' : '';
-    return `
-      <tr class="${rowClass}" style="${bgStyle}">
-        <td class="code">${d.code}</td>
-        <td><span class="${isReceipt ? 'type-r' : 'type-p'}">${d.cat}</span></td>
-        <td style="${boldStyle}">${d.en}</td>
-        <td style="font-family:'Tiro Devanagari Hindi',serif;font-size:.8rem">${d.np}</td>
-        <td class="mono" style="text-align:right;${boldStyle}">${d.total.toLocaleString('en-IN', {maximumFractionDigits:2})}</td>
-        <td class="mono" style="text-align:right;${boldStyle}">${(d.total/1e9).toFixed(2)}</td>
-        <td class="mono" style="text-align:right;color:var(--slate)">${((d.total/totalRef)*100).toFixed(2)}%</td>
-      </tr>`;
-  }).join('');
+  renderTableRows();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1320,6 +1527,9 @@ function switchTab(name) {
     const map = { overview:'Executive', revenue:'Revenue', expenditure:'Expenditure', flow:'Flow', data:'Full' };
     if (n.textContent.includes(map[name])) n.classList.add('active');
   });
+
+  // Close sidebar on mobile after tab switch
+  if (window.innerWidth <= 768) closeSidebar();
 
   if (!built[name]) {
     built[name] = true;
@@ -1340,9 +1550,108 @@ window.addEventListener('load', () => {
   built['overview'] = true;
 });
 
-window.addEventListener('resize', () => {
-  if (document.getElementById('tab-flow').classList.contains('active')) buildSankey();
+// ══════════════════════════════════════════════════════
+// SIDEBAR & MOBILE
+// ══════════════════════════════════════════════════════
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const overlay = document.getElementById('sb-overlay');
+  sb.classList.toggle('open');
+  overlay.style.display = sb.classList.contains('open') ? 'block' : 'none';
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').style.display = 'none';
+}
+
+// Animate the deficit bar on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const fill = document.getElementById('sdb-fill');
+    if (fill) fill.style.width = ((133.19/139.24)*100) + '%';
+  }, 600);
 });
+
+// ══════════════════════════════════════════════════════
+// TABLE SEARCH & FILTER
+// ══════════════════════════════════════════════════════
+let currentFilter = 'all';
+let currentSearch = '';
+
+function filterTable(cat, el) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-pills .pill').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderTableRows();
+}
+
+function searchTable(q) {
+  currentSearch = q.toLowerCase();
+  renderTableRows();
+}
+
+function renderTableRows() {
+  const tbody = document.getElementById('full-table-body');
+  if (!tbody) return;
+  const totalRef = totalReceipts;
+
+  const filtered = DATA.filter(d => {
+    const catMatch = currentFilter === 'all' || d.cat === currentFilter;
+    const searchMatch = !currentSearch ||
+      d.en.toLowerCase().includes(currentSearch) ||
+      d.np.includes(currentSearch) ||
+      d.code.includes(currentSearch);
+    return catMatch && searchMatch;
+  });
+
+  tbody.innerHTML = filtered.length === 0
+    ? `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--slate);font-family:'IBM Plex Mono',monospace;font-size:.72rem;">No entries found</td></tr>`
+    : filtered.map(d => {
+      const isTotal = d.code === '00000';
+      const isReceipt = d.cat === 'Receipts';
+      const rowClass = isTotal ? (isReceipt ? 'surplus-row' : 'deficit-row') : '';
+      const boldStyle = d.sub ? 'font-weight:600;' : '';
+      const bgStyle = d.sub ? 'background:rgba(15,17,23,0.02);' : '';
+      return `
+        <tr class="${rowClass}" style="${bgStyle}" onmouseenter="showTooltip(event,'${d.en.replace(/'/g,"\\'")}','${d.np}',${d.total})" onmouseleave="hideTooltip()">
+          <td class="code">${d.code}</td>
+          <td><span class="${isReceipt ? 'type-r' : 'type-p'}">${d.cat}</span></td>
+          <td style="${boldStyle}">${d.en}</td>
+          <td style="font-family:'Tiro Devanagari Hindi',serif;font-size:.8rem">${d.np}</td>
+          <td class="mono" style="text-align:right;${boldStyle}">${d.total.toLocaleString('en-IN', {maximumFractionDigits:2})}</td>
+          <td class="mono" style="text-align:right;${boldStyle}">${(d.total/1e9).toFixed(2)}</td>
+          <td class="mono" style="text-align:right;color:var(--slate)">${((d.total/totalRef)*100).toFixed(2)}%</td>
+        </tr>`;
+    }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// TOOLTIP
+// ══════════════════════════════════════════════════════
+function showTooltip(event, en, np, total) {
+  const tip = document.getElementById('custom-tooltip');
+  tip.innerHTML = `<div style="font-weight:600;margin-bottom:4px;">${en}</div><div style="color:rgba(245,240,232,0.5);margin-bottom:6px;">${np}</div><div style="color:var(--gold2);">${(total/1e9).toFixed(2)} Arb</div>`;
+  tip.style.left = (event.clientX + 14) + 'px';
+  tip.style.top  = (event.clientY - 30) + 'px';
+  tip.classList.add('show');
+}
+
+function hideTooltip() {
+  document.getElementById('custom-tooltip').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════
+// ANIMATED COUNTERS
+// ══════════════════════════════════════════════════════
+function animateCounters() {
+  const counters = document.querySelectorAll('.kpi-value');
+  counters.forEach((el, i) => {
+    el.style.animationDelay = (i * 0.08) + 's';
+  });
+}
+
+window.addEventListener('load', animateCounters);
 </script>
 </body>
 </html>
