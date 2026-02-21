@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nepal Democracy Inequality Map — Voter Weight Atlas</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <span class="eyebrow">NEPAL · ELECTORAL ATLAS · 2082</span>
+      <h1>Democracy<br/><em>Inequality</em> Map</h1>
+    </div>
+    <div class="header-right">
+      <div class="hero-stat" id="heroStat">
+        <span class="hero-label">Your vote in</span>
+        <span class="hero-place" id="heroPlace">Manang</span>
+        <span class="hero-label">is worth</span>
+        <span class="hero-multiplier" id="heroMultiplier">27×</span>
+        <span class="hero-label">a vote in</span>
+        <span class="hero-place" id="heroCompare">Ramechhap</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <main>
+
+    <!-- LEFT: MAP AREA -->
+    <section class="map-section">
+      <div class="map-container">
+        <svg id="nepalMap" viewBox="0 0 900 310" xmlns="http://www.w3.org/2000/svg">
+          <!-- Nepal provinces as stylized regions -->
+          <!-- Province blobs will be drawn by JS -->
+        </svg>
+        <div class="map-legend">
+          <div class="legend-label">Overrepresented (vote worth MORE)</div>
+          <div class="legend-bar"></div>
+          <div class="legend-label">Underrepresented (vote worth LESS)</div>
+        </div>
+      </div>
+
+      <!-- Constituency Grid Cards -->
+      <div class="constituencies-grid" id="constituencyGrid">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- RIGHT: PANEL -->
+    <aside class="info-panel">
+
+      <!-- Detail Card -->
+      <div class="detail-card" id="detailCard">
+        <div class="detail-header">
+          <span class="detail-tag" id="detailTag">HOVER A CARD</span>
+          <h2 class="detail-name" id="detailName">Select a Constituency</h2>
+        </div>
+        <div class="detail-stats">
+          <div class="stat-row">
+            <span class="stat-label">Registered Voters</span>
+            <span class="stat-value" id="dVoters">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Votes Cast (2079)</span>
+            <span class="stat-value" id="dCast">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Voter Turnout</span>
+            <span class="stat-value" id="dTurnout">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Area</span>
+            <span class="stat-value" id="dArea">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Winner (2079)</span>
+            <span class="stat-value" id="dWinner">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Winning Votes</span>
+            <span class="stat-value" id="dWinVotes">—</span>
+          </div>
+        </div>
+        <div class="vote-power-display">
+          <div class="vp-label">VOTE POWER INDEX</div>
+          <div class="vp-bar-wrap">
+            <div class="vp-bar" id="vpBar"></div>
+          </div>
+          <div class="vp-value" id="vpValue">—</div>
+          <div class="vp-explain" id="vpExplain">Hover a constituency to see its vote weight</div>
+        </div>
+      </div>
+
+      <!-- Slider Filter -->
+      <div class="slider-section">
+        <div class="slider-header">
+          <span class="slider-title">VOTE POWER FILTER</span>
+          <span class="slider-val" id="sliderVal">All</span>
+        </div>
+        <input type="range" id="powerSlider" min="0" max="27" step="0.5" value="0" />
+        <div class="slider-hints">
+          <span>Show underrepresented</span>
+          <span>Show overrepresented</span>
+        </div>
+        <button class="reset-btn" onclick="resetFilter()">Reset Filter</button>
+      </div>
+
+      <!-- Province Summary -->
+      <div class="province-summary">
+        <div class="ps-title">PROVINCE VOTER SNAPSHOT</div>
+        <div id="provinceBars"></div>
+      </div>
+
+      <!-- Key Facts -->
+      <div class="key-facts">
+        <div class="kf-title">EXTREME FACTS</div>
+        <div class="fact-ticker" id="factTicker"></div>
+      </div>
+
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

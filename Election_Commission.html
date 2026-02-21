@@ -1,540 +1,1035 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nepal Constituency Dashboard</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <title>Nepal Election Commission · 2082 Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     :root {
-      --crimson: #c0392b;
-      --deep: #1a0a0a;
-      --gold: #d4a820;
-      --cream: #fdf6ec;
-      --smoke: #f4ede0;
-      --ink: #2c1810;
-      --muted: #8b6f5e;
-      --white: #ffffff;
+      --scarlet:   #B91C1C;
+      --scarlet-l: #DC2626;
+      --scarlet-d: #7F1D1D;
+      --gold:      #CA8A04;
+      --gold-l:    #FDE68A;
+      --navy:      #0F172A;
+      --navy-m:    #1E293B;
+      --navy-l:    #334155;
+      --slate:     #64748B;
+      --mist:      #F1F5F9;
+      --paper:     #FAFAF9;
+      --white:     #FFFFFF;
+      --ink:       #0F172A;
+      --border:    #E2E8F0;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans:  'Syne', sans-serif;
+      --font-mono:  'JetBrains Mono', monospace;
+      --radius:     12px;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+      --shadow-lg:  0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
+      font-family: var(--font-sans);
+      background: var(--paper);
       color: var(--ink);
       min-height: 100vh;
+      line-height: 1.6;
     }
 
-    /* Header */
-    .dashboard-header {
-      background: var(--deep);
-      color: var(--white);
-      padding: 0;
-      position: relative;
-      overflow: hidden;
+    /* ─── SCROLLBAR ─────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--mist); }
+    ::-webkit-scrollbar-thumb { background: var(--slate); border-radius: 3px; }
+
+    /* ─── NAV ────────────────────────────────────── */
+    .top-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,23,42,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    .dashboard-header::before {
+    .nav-inner {
+      max-width: 1400px; margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex; align-items: center; gap: 0; height: 52px;
+    }
+    .nav-brand {
+      font-family: var(--font-serif);
+      font-size: 1.1rem; font-weight: 700;
+      color: #fff; letter-spacing: 0.01em;
+      margin-right: auto; white-space: nowrap;
+    }
+    .nav-brand span { color: var(--gold-l); }
+    .nav-links {
+      display: flex; gap: 0; list-style: none;
+    }
+    .nav-links a {
+      display: block; padding: 0 1rem; height: 52px; line-height: 52px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(255,255,255,0.55);
+      text-decoration: none; transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-links a.active { border-bottom: 2px solid var(--scarlet); }
+    .nav-pill {
+      background: var(--scarlet); color: #fff;
+      padding: 0.3rem 0.9rem; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-left: 1rem;
+    }
+    .hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      padding: 8px; color: #fff;
+    }
+    .hamburger svg { display: block; }
+    .mobile-menu {
+      display: none; background: var(--navy);
+      padding: 1rem 1.5rem;
+    }
+    .mobile-menu a {
+      display: block; padding: 0.6rem 0;
+      color: rgba(255,255,255,0.7); text-decoration: none;
+      font-size: 0.85rem; font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      background: var(--navy);
+      position: relative; overflow: hidden;
+      padding: 4rem 1.5rem 3.5rem;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(185,28,28,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(185,28,28,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-glow {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(185,28,28,0.15) 0%, transparent 70%);
+    }
+    .hero-inner {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 0 auto;
+      display: flex; align-items: center; gap: 3rem; flex-wrap: wrap;
+    }
+    .hero-emblem { flex-shrink: 0; }
+    .emblem-ring {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px solid rgba(202,138,4,0.4);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .emblem-ring::before {
       content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 40px,
-        rgba(192,57,43,0.06) 40px,
-        rgba(192,57,43,0.06) 80px
-      );
+      position: absolute; inset: 4px; border-radius: 50%;
+      border: 1px solid rgba(202,138,4,0.2);
     }
-    .header-inner {
-      position: relative;
-      z-index: 1;
-      padding: 2.5rem 3rem;
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      border-bottom: 3px solid var(--crimson);
+    .emblem-inner {
+      width: 56px; height: 56px;
     }
-    .flag-icon {
-      width: 64px;
-      height: auto;
+    .hero-copy { flex: 1; min-width: 280px; }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.68rem; letter-spacing: 0.18em;
+      color: var(--gold-l); text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--gold-l);
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700; color: #fff; line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    .hero-title em { color: var(--gold-l); font-style: italic; }
+    .hero-sub {
+      font-size: 0.85rem; color: rgba(255,255,255,0.5);
+      font-weight: 400; letter-spacing: 0.04em;
+    }
+    .hero-kpis {
+      display: flex; gap: 1px;
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
       flex-shrink: 0;
     }
-    .header-text h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.4rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-    .header-text h1 span { color: var(--gold); }
-    .header-text p {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.9rem;
-      margin-top: 0.4rem;
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .header-stats {
-      margin-left: auto;
-      display: flex;
-      gap: 2.5rem;
+    .kpi-box {
+      padding: 1.25rem 1.75rem;
       text-align: center;
+      background: rgba(255,255,255,0.02);
+      transition: background 0.2s;
     }
-    .stat-box { }
-    .stat-box .num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
+    .kpi-box:hover { background: rgba(255,255,255,0.05); }
+    .kpi-num {
+      font-family: var(--font-serif);
+      font-size: 2rem; font-weight: 700;
+      color: var(--gold-l); line-height: 1;
     }
-    .stat-box .lbl {
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-top: 0.3rem;
+    .kpi-lbl {
+      font-size: 0.62rem; font-weight: 600;
+      color: rgba(255,255,255,0.4); letter-spacing: 0.12em;
+      text-transform: uppercase; margin-top: 0.35rem;
     }
 
-    /* Main */
-    .main-wrap {
-      padding: 2.5rem 3rem;
-      max-width: 1600px;
-      margin: 0 auto;
+    /* ─── MAIN LAYOUT ───────────────────────────── */
+    .main {
+      max-width: 1400px; margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .col-span-2 { grid-column: span 2; }
+    .col-span-3 { grid-column: span 3; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+
+    /* ─── SECTION HEADER ────────────────────────── */
+    .section-hd {
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .section-hd-left {}
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 0.62rem; letter-spacing: 0.16em;
+      color: var(--scarlet); text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--ink); line-height: 1.2;
+    }
+    .section-sub {
+      font-size: 0.78rem; color: var(--slate); margin-top: 0.2rem;
     }
 
-    /* Section titles */
-    .section-label {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.6rem;
-      border-bottom: 2px solid var(--crimson);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .section-label .dot {
-      width: 10px; height: 10px;
-      background: var(--crimson);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    /* Cards */
-    .card-panel {
+    /* ─── CARD ───────────────────────────────────── */
+    .card {
       background: var(--white);
-      border-radius: 12px;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
-      padding: 2rem;
-      height: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .card-head {
+      padding: 1.25rem 1.5rem 0;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem; font-weight: 700; color: var(--ink);
+    }
+    .card-badge {
+      font-family: var(--font-mono);
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.08em;
+      padding: 0.2rem 0.6rem; border-radius: 20px;
+      background: var(--mist); color: var(--slate);
+      white-space: nowrap;
+    }
+    .card-body { padding: 1.25rem 1.5rem; }
+
+    /* ─── STAT CARDS (mini KPI) ─────────────────── */
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent, var(--scarlet));
+    }
+    .stat-card-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--slate); margin-bottom: 0.5rem;
+    }
+    .stat-card-value {
+      font-family: var(--font-serif);
+      font-size: 2.2rem; font-weight: 700; color: var(--ink); line-height: 1;
+    }
+    .stat-card-sub {
+      font-size: 0.72rem; color: var(--slate); margin-top: 0.4rem;
+    }
+    .stat-card-icon {
+      position: absolute; right: 1.25rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5rem; opacity: 0.07;
+    }
+    .badge-up {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.5rem;
+      border-radius: 20px; background: #DCFCE7; color: #166534;
     }
 
-    /* Province pie */
-    .province-pie-wrap {
-      display: flex;
-      gap: 2.5rem;
-      align-items: center;
-      flex-wrap: wrap;
+    /* ─── PROVINCE PIE ───────────────────────────── */
+    .pie-layout {
+      display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;
     }
-    .pie-container {
-      position: relative;
-      width: 280px;
-      height: 280px;
-      flex-shrink: 0;
+    .pie-wrap {
+      position: relative; width: 220px; height: 220px; flex-shrink: 0;
     }
-    .pie-center-text {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      pointer-events: none;
+    .pie-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      text-align: center; pointer-events: none;
     }
-    .pie-center-text .total {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1;
+    .pie-center-num {
+      font-family: var(--font-serif);
+      font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1;
     }
-    .pie-center-text .label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+    .pie-center-lbl {
+      font-size: 0.6rem; color: var(--slate);
+      text-transform: uppercase; letter-spacing: 0.1em;
     }
-    .province-legend {
-      flex: 1;
-      min-width: 220px;
+    .pie-legend { flex: 1; min-width: 200px; }
+    .pleg-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.45rem 0.5rem; border-radius: 6px;
+      cursor: default; transition: background 0.15s;
     }
-    .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--smoke);
-      cursor: default;
-      transition: background 0.15s;
-      border-radius: 6px;
-      padding-left: 0.5rem;
+    .pleg-row:hover { background: var(--mist); }
+    .pleg-dot {
+      width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
     }
-    .legend-row:hover { background: var(--smoke); }
-    .legend-swatch {
-      width: 14px; height: 14px;
-      border-radius: 3px;
-      flex-shrink: 0;
+    .pleg-name { flex: 1; font-size: 0.78rem; font-weight: 600; color: var(--ink); }
+    .pleg-seats {
+      font-family: var(--font-mono);
+      font-size: 0.85rem; font-weight: 500; color: var(--scarlet);
     }
-    .legend-name {
-      flex: 1;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .legend-count {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--crimson);
-    }
-    .legend-pct {
-      font-size: 0.72rem;
-      color: var(--muted);
-      min-width: 36px;
-      text-align: right;
+    .pleg-pct {
+      font-size: 0.68rem; color: var(--slate);
+      min-width: 34px; text-align: right;
     }
 
-    /* Party bar */
-    .party-bar-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+    /* ─── PARTY BARS ─────────────────────────────── */
+    .pbar-row {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem;
     }
-    .party-row {
-      display: flex;
-      align-items: center;
+    .pbar-name {
+      width: 190px; font-size: 0.75rem; font-weight: 600;
+      color: var(--ink); text-align: right; flex-shrink: 0;
+      line-height: 1.3;
+    }
+    .pbar-track {
+      flex: 1; height: 24px; background: var(--mist);
+      border-radius: 4px; overflow: hidden;
+    }
+    .pbar-fill {
+      height: 100%; border-radius: 4px;
+      display: flex; align-items: center; padding-left: 8px;
+      font-size: 0.68rem; font-weight: 700; color: rgba(255,255,255,0.9);
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .pbar-val {
+      font-family: var(--font-mono);
+      font-size: 0.85rem; font-weight: 500; color: var(--ink);
+      width: 28px; flex-shrink: 0; text-align: right;
+    }
+
+    /* ─── POLLING STATION DATA ───────────────────── */
+    .ps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
     }
-    .party-name {
-      width: 200px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--ink);
-      text-align: right;
-      flex-shrink: 0;
+    .ps-card {
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.1rem 1.25rem;
+      background: var(--white);
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
+      cursor: default;
     }
-    .party-bar-track {
-      flex: 1;
-      height: 28px;
-      background: var(--smoke);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
+    .ps-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .ps-card-accent {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
     }
-    .party-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      padding-left: 10px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: white;
-      transition: width 1s cubic-bezier(.4,0,.2,1);
+    .ps-card-district {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--slate); margin-bottom: 0.2rem;
     }
-    .party-seats {
-      width: 40px;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--ink);
-      flex-shrink: 0;
+    .ps-card-name {
+      font-family: var(--font-serif);
+      font-size: 1.1rem; font-weight: 700; color: var(--ink);
+      margin-bottom: 0.75rem; line-height: 1.2;
     }
-
-    /* District table / bar chart */
-    .district-section { margin-top: 2.5rem; }
-
-    .tab-btn-group {
-      display: flex;
+    .ps-stats {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
     }
-    .tab-btn {
-      padding: 0.5rem 1.25rem;
-      border: 2px solid var(--crimson);
-      background: transparent;
-      color: var(--crimson);
-      border-radius: 30px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
-      letter-spacing: 0.04em;
+    .ps-stat { text-align: center; }
+    .ps-stat-val {
+      font-family: var(--font-mono);
+      font-size: 1rem; font-weight: 500; color: var(--ink);
     }
-    .tab-btn.active, .tab-btn:hover {
-      background: var(--crimson);
-      color: white;
+    .ps-stat-lbl {
+      font-size: 0.58rem; color: var(--slate); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-top: 1px;
+    }
+    .ps-divider {
+      height: 1px; background: var(--border); margin: 0.75rem 0;
+    }
+    .ps-bar-track {
+      height: 5px; background: var(--mist); border-radius: 3px; margin-top: 0.5rem;
+    }
+    .ps-bar-fill {
+      height: 100%; border-radius: 3px;
+      transition: width 1s ease;
     }
 
-    /* District bar chart */
-    #districtChartWrap { overflow-x: auto; }
-    .district-bar-chart {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      height: 220px;
-      min-width: 1200px;
-      padding: 0 8px;
-    }
-    .d-bar-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-      cursor: pointer;
-      position: relative;
-    }
-    .d-bar-col .d-bar {
-      width: 100%;
-      min-width: 10px;
-      border-radius: 4px 4px 0 0;
-      transition: opacity 0.2s;
-      position: relative;
-    }
-    .d-bar-col:hover .d-bar { opacity: 0.75; }
-    .d-bar-col .d-val {
-      font-size: 0.62rem;
-      font-weight: 600;
-      color: var(--ink);
-      margin-top: 3px;
-    }
-    .d-bar-col .d-name {
-      font-size: 0.55rem;
-      color: var(--muted);
-      margin-top: 2px;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      transform: rotate(180deg);
-      white-space: nowrap;
-      max-height: 80px;
-      overflow: hidden;
-    }
-    /* Tooltip */
-    .d-tooltip {
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--deep);
-      color: white;
-      font-size: 0.72rem;
-      padding: 5px 10px;
-      border-radius: 6px;
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s;
-      z-index: 10;
-    }
-    .d-bar-col:hover .d-tooltip { opacity: 1; }
-
-    /* District table */
-    #districtTableWrap {
-      max-height: 480px;
-      overflow-y: auto;
-    }
+    /* ─── DISTRICT COMPARISON TABLE ─────────────── */
+    .dtable-wrap { overflow-x: auto; }
     .dtable {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
+      width: 100%; border-collapse: collapse;
+      font-size: 0.82rem;
     }
     .dtable thead th {
-      background: var(--deep);
-      color: var(--white);
-      font-size: 0.8rem;
-      font-weight: 500;
-      padding: 0.75rem 1rem;
-      text-align: left;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      background: var(--navy); color: rgba(255,255,255,0.7);
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.75rem 1rem;
+      text-align: left; white-space: nowrap;
+      position: sticky; top: 0;
     }
-    .dtable tbody tr {
-      transition: background 0.15s;
+    .dtable thead th:first-child { border-radius: 8px 0 0 0; }
+    .dtable thead th:last-child { border-radius: 0 8px 0 0; }
+    .dtable tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
+    .dtable tbody tr:hover { background: var(--mist); }
+    .dtable tbody td { padding: 0.65rem 1rem; color: var(--ink); }
+    .dtable-rank {
+      font-family: var(--font-mono);
+      font-size: 0.75rem; color: var(--slate); font-weight: 500;
     }
-    .dtable tbody tr:hover { background: var(--smoke); }
-    .dtable tbody td {
-      padding: 0.65rem 1rem;
-      font-size: 0.85rem;
-      border-bottom: 1px solid var(--smoke);
-      color: var(--ink);
+    .dtable-name { font-weight: 700; }
+    .dtable-prov {
+      display: inline-block; padding: 0.15rem 0.6rem;
+      border-radius: 20px; font-size: 0.65rem; font-weight: 700; white-space: nowrap;
     }
-    .dtable tbody td .mini-bar {
-      display: inline-block;
-      height: 8px;
-      border-radius: 4px;
-      margin-left: 8px;
-      vertical-align: middle;
+    .dtable-seats {
+      font-family: var(--font-serif);
+      font-size: 1.2rem; font-weight: 700; color: var(--scarlet);
     }
-    .province-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+    .dtable-voters {
+      font-family: var(--font-mono);
+      font-size: 0.78rem; color: var(--ink);
     }
-    .rank-num {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      color: var(--muted);
-    }
-    .seats-big {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--crimson);
+    .dtable-minibar {
+      display: inline-block; height: 6px; border-radius: 3px;
+      vertical-align: middle; margin-left: 6px;
     }
 
-    /* Search */
-    .search-input {
-      padding: 0.55rem 1rem;
-      border: 2px solid var(--smoke);
-      border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      color: var(--ink);
-      background: var(--cream);
-      outline: none;
+    /* ─── DISTRICT BAR CHART ─────────────────────── */
+    .dbar-scroll { overflow-x: auto; padding-bottom: 0.5rem; }
+    .dbar-chart {
+      display: flex; align-items: flex-end; gap: 5px;
+      height: 200px; min-width: 1100px; padding: 0 4px;
+    }
+    .dbar-col {
+      display: flex; flex-direction: column; align-items: center;
+      flex: 1; cursor: pointer; position: relative;
+    }
+    .dbar { width: 100%; min-width: 8px; border-radius: 3px 3px 0 0; transition: opacity 0.2s; }
+    .dbar-col:hover .dbar { opacity: 0.7; }
+    .dbar-val { font-size: 0.58rem; font-weight: 700; color: var(--ink); margin-top: 3px; }
+    .dbar-name {
+      font-size: 0.52rem; color: var(--slate); margin-top: 2px;
+      writing-mode: vertical-rl; text-orientation: mixed;
+      transform: rotate(180deg); white-space: nowrap; max-height: 70px; overflow: hidden;
+    }
+    .dbar-tip {
+      position: absolute; bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy); color: #fff;
+      font-size: 0.68rem; padding: 4px 8px; border-radius: 5px;
+      white-space: nowrap; pointer-events: none;
+      opacity: 0; transition: opacity 0.15s; z-index: 10;
+    }
+    .dbar-col:hover .dbar-tip { opacity: 1; }
+
+    /* ─── CONTROLS ───────────────────────────────── */
+    .controls-bar {
+      display: flex; gap: 0.75rem; align-items: center;
+      flex-wrap: wrap; margin-bottom: 1.25rem;
+    }
+    .search-box {
+      padding: 0.5rem 0.9rem; border: 1.5px solid var(--border);
+      border-radius: 8px; font-family: var(--font-sans);
+      font-size: 0.8rem; color: var(--ink); background: var(--white);
+      outline: none; transition: border-color 0.2s; min-width: 200px;
+    }
+    .search-box:focus { border-color: var(--scarlet); }
+    .filter-select {
+      padding: 0.5rem 0.9rem; border: 1.5px solid var(--border);
+      border-radius: 8px; font-family: var(--font-sans);
+      font-size: 0.8rem; color: var(--ink); background: var(--white);
+      outline: none; cursor: pointer;
       transition: border-color 0.2s;
-      width: 240px;
     }
-    .search-input:focus { border-color: var(--crimson); }
+    .filter-select:focus { border-color: var(--scarlet); }
+    .toggle-group { display: flex; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .toggle-btn {
+      padding: 0.5rem 1rem; background: none; border: none;
+      font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.05em; color: var(--slate); cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .toggle-btn.active, .toggle-btn:hover { background: var(--scarlet); color: #fff; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--smoke); }
-    ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
+    /* ─── HORIZONTAL VOTER BARS ──────────────────── */
+    .voter-bar-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .vbar-row { display: flex; align-items: center; gap: 0.75rem; }
+    .vbar-label { width: 120px; font-size: 0.72rem; font-weight: 700; color: var(--ink); flex-shrink: 0; line-height: 1.3; }
+    .vbar-track { flex: 1; height: 20px; background: var(--mist); border-radius: 3px; overflow: hidden; position: relative; }
+    .vbar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; display: flex; align-items: center; padding-left: 8px; }
+    .vbar-fill span { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.9); white-space: nowrap; }
+    .vbar-num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--slate); min-width: 60px; text-align: right; }
 
-    /* Fade-in animation */
+    /* ─── COMPARISON CHART ───────────────────────── */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .compare-item { }
+    .compare-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; }
+    .compare-name { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+    .compare-val { font-family: var(--font-mono); font-size: 0.78rem; color: var(--slate); }
+    .compare-track { height: 8px; background: var(--mist); border-radius: 4px; overflow: hidden; }
+    .compare-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+    .compare-sub { font-size: 0.65rem; color: var(--slate); margin-top: 0.2rem; }
+
+    /* ─── SUMMARY INSIGHT BOXES ──────────────────── */
+    .insight-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .insight-box {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.1rem;
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      transition: box-shadow 0.2s;
+    }
+    .insight-box:hover { box-shadow: var(--shadow-md); }
+    .insight-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .insight-content {}
+    .insight-title { font-size: 0.72rem; font-weight: 700; color: var(--ink); margin-bottom: 0.2rem; }
+    .insight-val {
+      font-family: var(--font-serif);
+      font-size: 1.4rem; font-weight: 700; color: var(--ink); line-height: 1;
+    }
+    .insight-sub { font-size: 0.65rem; color: var(--slate); margin-top: 0.2rem; }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    .footer {
+      background: var(--navy); color: rgba(255,255,255,0.4);
+      padding: 2rem 1.5rem; text-align: center;
+    }
+    .footer-inner { max-width: 1400px; margin: 0 auto; }
+    .footer p { font-size: 0.72rem; line-height: 1.8; }
+    .footer strong { color: rgba(255,255,255,0.7); }
+
+    /* ─── ANIMATIONS ─────────────────────────────── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .card-panel { animation: fadeUp 0.5s ease both; }
-    .card-panel:nth-child(2) { animation-delay: 0.1s; }
+    .fade-up { animation: fadeUp 0.5s ease both; }
+    .fade-up-1 { animation-delay: 0.05s; }
+    .fade-up-2 { animation-delay: 0.10s; }
+    .fade-up-3 { animation-delay: 0.15s; }
+    .fade-up-4 { animation-delay: 0.20s; }
+    .fade-up-5 { animation-delay: 0.25s; }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .col-span-2 { grid-column: span 1; }
+      .col-span-3 { grid-column: span 2; }
+      .hero-kpis { width: 100%; justify-content: stretch; }
+      .kpi-box { flex: 1; }
+      .pbar-name { width: 120px; font-size: 0.68rem; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .mobile-menu.open { display: block; }
+      .hero { padding: 2.5rem 1rem 2rem; }
+      .hero-inner { gap: 1.5rem; }
+      .hero-kpis { flex-wrap: wrap; }
+      .kpi-box { min-width: 80px; padding: 1rem; }
+      .kpi-num { font-size: 1.6rem; }
+      .main { padding: 1.5rem 1rem 3rem; }
+      .pie-layout { justify-content: center; }
+      .pie-wrap { width: 180px; height: 180px; }
+    }
+    @media (max-width: 400px) {
+      .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* ─── SEPARATOR ──────────────────────────────── */
+    .section-sep { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+    /* ─── TAB INDICATOR ──────────────────────────── */
+    .tab-indicator {
+      height: 3px; background: var(--scarlet);
+      transition: all 0.3s ease;
+    }
+
+    /* ─── CHART LEGEND ───────────────────────────── */
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+    .cl-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; color: var(--slate); }
+    .cl-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ─── PROVINCE FILTER PILLS ──────────────────── */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+    .pill {
+      padding: 0.3rem 0.8rem; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--white); color: var(--slate);
+      transition: all 0.15s;
+    }
+    .pill.active, .pill:hover { border-color: var(--scarlet); color: var(--scarlet); background: #FEF2F2; }
+    .pill.all.active { background: var(--scarlet); color: #fff; border-color: var(--scarlet); }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="dashboard-header">
-  <div class="header-inner">
-    <!-- Simple SVG Nepal flag -->
-    <svg class="flag-icon" viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="0,0 0,63 34,35" fill="#003893"/>
-      <polygon points="0,0 0,70 40,40" fill="none" stroke="#003893" stroke-width="2"/>
-      <polygon points="0,7 0,63 29,33" fill="#DC143C"/>
-      <polygon points="0,0 0,70 38,42" fill="none"/>
-      <!-- Simplified triangular flag -->
-      <polygon points="3,4 3,61 31,35" fill="#DC143C" stroke="#003893" stroke-width="2"/>
-      <polygon points="3,11 3,68 37,42" fill="#DC143C" stroke="#003893" stroke-width="2"/>
-    </svg>
-    <div class="header-text">
-      <h1>Nepal <span>Constituency</span> Dashboard</h1>
-      <p>House of Representatives · General Election Data · All 165 Constituencies</p>
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Election <span>Commission</span> · Nepal</div>
+    <ul class="nav-links">
+      <li><a href="#overview" class="active">Overview</a></li>
+      <li><a href="#polling">Polling Data</a></li>
+      <li><a href="#districts">Districts</a></li>
+      <li><a href="#parties">Parties</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+    </ul>
+    <span class="nav-pill">2082 B.S.</span>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#overview" onclick="closeMenu()">Overview</a>
+    <a href="#polling" onclick="closeMenu()">Polling Data</a>
+    <a href="#districts" onclick="closeMenu()">Districts</a>
+    <a href="#parties" onclick="closeMenu()">Parties</a>
+    <a href="#analysis" onclick="closeMenu()">Analysis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="overview">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-emblem">
+      <div class="emblem-ring">
+        <svg class="emblem-inner" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Simplified Nepal emblem -->
+          <circle cx="28" cy="28" r="26" fill="none" stroke="rgba(202,138,4,0.5)" stroke-width="1.5"/>
+          <!-- Nepal flag shape -->
+          <polygon points="12,10 12,32 28,22" fill="#DC2626" stroke="#003893" stroke-width="1.5"/>
+          <polygon points="12,18 12,44 32,30" fill="#DC2626" stroke="#003893" stroke-width="1.5"/>
+          <!-- Star -->
+          <circle cx="20" cy="17" r="3" fill="#FDE68A" opacity="0.9"/>
+          <!-- Moon -->
+          <path d="M16 28 Q20 24 24 28 Q20 32 16 28" fill="none" stroke="#FDE68A" stroke-width="1.2" opacity="0.9"/>
+          <text x="28" y="50" text-anchor="middle" font-size="6" fill="rgba(202,138,4,0.7)" font-family="serif">नेपाल</text>
+        </svg>
+      </div>
     </div>
-    <div class="header-stats">
-      <div class="stat-box"><div class="num">165</div><div class="lbl">Total Seats</div></div>
-      <div class="stat-box"><div class="num">7</div><div class="lbl">Provinces</div></div>
-      <div class="stat-box"><div class="num">77</div><div class="lbl">Districts</div></div>
-      <div class="stat-box"><div class="num">13</div><div class="lbl">Parties</div></div>
+    <div class="hero-copy">
+      <div class="hero-eyebrow">Election Commission of Nepal</div>
+      <h1 class="hero-title">
+        Pratinidhi Sabha <em>Election</em><br>Data Dashboard
+      </h1>
+      <p class="hero-sub">House of Representatives · General Election 2082 B.S. · All Constituencies & Polling Stations</p>
+    </div>
+    <div class="hero-kpis">
+      <div class="kpi-box">
+        <div class="kpi-num">165</div>
+        <div class="kpi-lbl">Total Seats</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-num">7</div>
+        <div class="kpi-lbl">Provinces</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-num">77</div>
+        <div class="kpi-lbl">Districts</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-num">860K+</div>
+        <div class="kpi-lbl">Voters Tracked</div>
+      </div>
     </div>
   </div>
-</header>
+</section>
 
 <!-- MAIN -->
-<div class="main-wrap">
+<main class="main">
 
-  <!-- Row 1: Province Pie + Party Bars -->
-  <div class="row g-4 mb-4">
+  <!-- ═══ SECTION 1: OVERVIEW STATS ═══ -->
+  <div class="grid-4 fade-up" style="margin-bottom:1.5rem;">
+    <div class="stat-card" style="--accent:#B91C1C;">
+      <div class="stat-card-label">Total Registered Voters</div>
+      <div class="stat-card-value">868,711</div>
+      <div class="stat-card-sub">Across all tracked constituencies</div>
+      <div class="stat-card-icon">🗳</div>
+    </div>
+    <div class="stat-card" style="--accent:#CA8A04;">
+      <div class="stat-card-label">Polling Stations</div>
+      <div class="stat-card-value">361</div>
+      <div class="stat-card-sub">Across 11 tracked constituencies</div>
+      <div class="stat-card-icon">📍</div>
+    </div>
+    <div class="stat-card" style="--accent:#0F766E;">
+      <div class="stat-card-label">Polling Centers</div>
+      <div class="stat-card-value">1,037</div>
+      <div class="stat-card-sub">Individual booths tracked</div>
+      <div class="stat-card-icon">🏫</div>
+    </div>
+    <div class="stat-card" style="--accent:#6D28D9;">
+      <div class="stat-card-label">Avg Voters / Station</div>
+      <div class="stat-card-value">2,406</div>
+      <div class="stat-card-sub">Per polling station average</div>
+      <div class="stat-card-icon">📊</div>
+    </div>
+  </div>
 
-    <!-- Province Pie -->
-    <div class="col-lg-5">
-      <div class="card-panel">
-        <div class="section-label"><span class="dot"></span>Seats by Province</div>
-        <div class="province-pie-wrap">
-          <div class="pie-container">
+  <!-- ═══ SECTION 2: PROVINCE & PARTY ═══ -->
+  <div class="section-hd mt-6 mb-6">
+    <div class="section-hd-left">
+      <div class="section-tag">// National Overview</div>
+      <h2 class="section-title">Province & Party Breakdown</h2>
+    </div>
+  </div>
+
+  <div class="grid-2 fade-up fade-up-1">
+
+    <!-- Province Donut -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Seats by Province</div>
+        <span class="card-badge">165 total seats</span>
+      </div>
+      <div class="card-body">
+        <div class="pie-layout">
+          <div class="pie-wrap">
             <canvas id="provincePie"></canvas>
-            <div class="pie-center-text">
-              <div class="total">165</div>
-              <div class="label">Seats</div>
+            <div class="pie-center">
+              <div class="pie-center-num">165</div>
+              <div class="pie-center-lbl">Seats</div>
             </div>
           </div>
-          <div class="province-legend" id="provinceLegend"></div>
+          <div class="pie-legend" id="provinceLegend"></div>
         </div>
       </div>
     </div>
 
-    <!-- Party Bar Chart -->
-    <div class="col-lg-7">
-      <div class="card-panel">
-        <div class="section-label"><span class="dot"></span>Seats Won by Parties in 2080 B.S</div>
-        <div class="party-bar-wrap" id="partyBars"></div>
+    <!-- Party Bars -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Seats Won — 2080 B.S. Election</div>
+        <span class="card-badge">13 parties</span>
+      </div>
+      <div class="card-body" id="partyBars"></div>
+    </div>
+  </div>
+
+  <div class="section-sep"></div>
+
+  <!-- ═══ SECTION 3: POLLING STATION DATA ═══ -->
+  <div id="polling">
+    <div class="section-hd">
+      <div class="section-hd-left">
+        <div class="section-tag">// Constituency-Level Data · 2082 B.S.</div>
+        <h2 class="section-title">Polling Station Report</h2>
+        <p class="section-sub">Voter registration & polling infrastructure across tracked constituencies</p>
+      </div>
+    </div>
+
+    <!-- Voter Comparison Chart -->
+    <div class="card fade-up fade-up-2 mb-6">
+      <div class="card-head">
+        <div class="card-title">Registered Voters by Constituency</div>
+        <span class="card-badge">2082 B.S. data</span>
+      </div>
+      <div class="card-body">
+        <div class="voter-bar-list" id="voterBars"></div>
+      </div>
+    </div>
+
+    <!-- Polling Station Cards -->
+    <div class="controls-bar">
+      <input class="search-box" type="text" id="psSearch" placeholder="🔍  Search constituency or district…"/>
+      <select class="filter-select" id="psDistrictFilter">
+        <option value="">All Districts</option>
+        <option value="Morang">Morang</option>
+        <option value="Rautahat">Rautahat</option>
+        <option value="Siraha">Siraha</option>
+        <option value="Sunsari">Sunsari</option>
+        <option value="Kathmandu">Kathmandu</option>
+      </select>
+      <select class="filter-select" id="psProvFilter">
+        <option value="">All Provinces</option>
+        <option value="Koshi">Koshi Province</option>
+        <option value="Madhesh">Madhesh Province</option>
+        <option value="Bagmati">Bagmati Province</option>
+      </select>
+    </div>
+
+    <div class="ps-grid" id="psGrid"></div>
+
+    <!-- Polling Stations vs Centers Comparison -->
+    <div class="card fade-up fade-up-3 mt-6">
+      <div class="card-head">
+        <div class="card-title">Stations vs. Centers Comparison</div>
+        <span class="card-badge">Infrastructure Report</span>
+      </div>
+      <div class="card-body">
+        <div style="position:relative;height:280px;">
+          <canvas id="infraChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Row 2: District Report -->
-  <div class="district-section">
-    <div class="card-panel">
-      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
-        <div class="section-label mb-0"><span class="dot"></span>Seats Distribution — 77 Districts</div>
-        <div class="d-flex gap-2 align-items-center flex-wrap">
-          <input class="search-input" type="text" id="districtSearch" placeholder="Search district..."/>
-          <div class="tab-btn-group mb-0">
-            <button class="tab-btn active" onclick="showView('chart', this)">Bar Chart</button>
-            <button class="tab-btn" onclick="showView('table', this)">Table View</button>
+  <div class="section-sep"></div>
+
+  <!-- ═══ SECTION 4: DISTRICT REPORT ═══ -->
+  <div id="districts">
+    <div class="section-hd">
+      <div class="section-hd-left">
+        <div class="section-tag">// District Intelligence</div>
+        <h2 class="section-title">All 77 Districts — Seat Distribution</h2>
+        <p class="section-sub">Explore and filter by province or name</p>
+      </div>
+    </div>
+
+    <div class="card fade-up fade-up-2">
+      <div class="card-body">
+        <div class="controls-bar">
+          <input class="search-box" type="text" id="districtSearch" placeholder="🔍  Search district or province…"/>
+          <select class="filter-select" id="provinceFilter">
+            <option value="">All Provinces</option>
+            <option value="Koshi Province">Koshi Province</option>
+            <option value="Madhesh Province">Madhesh Province</option>
+            <option value="Bagmati Province">Bagmati Province</option>
+            <option value="Gandaki Province">Gandaki Province</option>
+            <option value="Lumbini Province">Lumbini Province</option>
+            <option value="Karnali Province">Karnali Province</option>
+            <option value="Sudurpashchim Province">Sudurpashchim Province</option>
+          </select>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="showDistView('chart',this)">Chart</button>
+            <button class="toggle-btn" onclick="showDistView('table',this)">Table</button>
+          </div>
+        </div>
+
+        <div id="distChartWrap">
+          <div class="dbar-scroll">
+            <div class="dbar-chart" id="districtBars"></div>
+          </div>
+        </div>
+
+        <div id="distTableWrap" style="display:none;">
+          <div class="dtable-wrap" style="max-height:500px;overflow-y:auto;">
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>District</th>
+                  <th>Province</th>
+                  <th>Seats</th>
+                  <th>National Share</th>
+                </tr>
+              </thead>
+              <tbody id="districtTableBody"></tbody>
+            </table>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Chart view -->
-      <div id="districtChartWrap">
-        <div class="district-bar-chart" id="districtBars"></div>
+  <div class="section-sep"></div>
+
+  <!-- ═══ SECTION 5: PARTIES ═══ -->
+  <div id="parties">
+    <div class="section-hd">
+      <div class="section-hd-left">
+        <div class="section-tag">// Parliamentary Composition</div>
+        <h2 class="section-title">Party Seat Allocation</h2>
+        <p class="section-sub">House of Representatives 2080 B.S. election results</p>
       </div>
-
-      <!-- Table view -->
-      <div id="districtTableWrap" style="display:none;">
-        <table class="dtable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>District</th>
-              <th>Province</th>
-              <th>Seats</th>
-              <th>Share</th>
-            </tr>
-          </thead>
-          <tbody id="districtTableBody"></tbody>
-        </table>
+    </div>
+    <div class="grid-2 fade-up fade-up-3">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Seat Share Distribution</div>
+        </div>
+        <div class="card-body" style="position:relative;height:320px;">
+          <canvas id="partyPie"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Coalition Groupings</div>
+          <span class="card-badge">165 seats total</span>
+        </div>
+        <div class="card-body">
+          <div class="compare-grid" id="coalitionGrid"></div>
+        </div>
       </div>
     </div>
   </div>
 
-</div>
+  <div class="section-sep"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <!-- ═══ SECTION 6: ANALYSIS ═══ -->
+  <div id="analysis">
+    <div class="section-hd">
+      <div class="section-hd-left">
+        <div class="section-tag">// Data Insights</div>
+        <h2 class="section-title">Key Metrics & Analysis</h2>
+      </div>
+    </div>
+
+    <div class="insight-grid fade-up fade-up-4 mb-6">
+      <div class="insight-box">
+        <div class="insight-icon" style="background:#FEF2F2;">🗳️</div>
+        <div class="insight-content">
+          <div class="insight-title">Largest Constituency</div>
+          <div class="insight-val">Sunsari 1</div>
+          <div class="insight-sub">150,393 registered voters</div>
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-icon" style="background:#F0FDF4;">📍</div>
+        <div class="insight-content">
+          <div class="insight-title">Most Polling Stations</div>
+          <div class="insight-val">Morang 2</div>
+          <div class="insight-sub">68 stations · 154 centers</div>
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-icon" style="background:#FFFBEB;">🏆</div>
+        <div class="insight-content">
+          <div class="insight-title">Largest Party</div>
+          <div class="insight-val">NC</div>
+          <div class="insight-sub">Nepali Congress — 64 seats</div>
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-icon" style="background:#F5F3FF;">🌐</div>
+        <div class="insight-content">
+          <div class="insight-title">Most Seats — Province</div>
+          <div class="insight-val">Bagmati</div>
+          <div class="insight-sub">33 seats (20% of total)</div>
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-icon" style="background:#EFF6FF;">📊</div>
+        <div class="insight-content">
+          <div class="insight-title">Smallest Constituency</div>
+          <div class="insight-val">Siraha 4</div>
+          <div class="insight-sub">106,686 registered voters</div>
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-icon" style="background:#FFF7ED;">⚖️</div>
+        <div class="insight-content">
+          <div class="insight-title">Avg Centers / Station</div>
+          <div class="insight-val">2.87</div>
+          <div class="insight-sub">Polling centers per station</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Province Analysis Chart -->
+    <div class="grid-2 fade-up fade-up-5">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Province Voter Density</div>
+          <span class="card-badge">seats vs. tracked voters</span>
+        </div>
+        <div class="card-body" style="position:relative;height:280px;">
+          <canvas id="densityChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Top Districts by Seats</div>
+          <span class="card-badge">Top 10</span>
+        </div>
+        <div class="card-body" id="topDistList"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p>
+      <strong>Election Commission of Nepal</strong> · Pratinidhi Sabha Sadasya Nirvachan 2082 B.S.<br>
+      Data sourced from official polling station voter lists (मतदान स्थल तथा मतदान केन्द्रको विवरण).<br>
+      Tracked constituencies: Kathmandu 1–5, Morang 2 & 6, Rautahat 4, Siraha 4, Sunsari 1 & 3<br>
+      Dashboard built for analytical and informational purposes only.
+    </p>
+  </div>
+</footer>
+
 <script>
-// ===== DATA =====
+/* ═══════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════ */
+
+const PROVINCE_COLORS = {
+  "Koshi Province":        "#B91C1C",
+  "Madhesh Province":      "#B45309",
+  "Bagmati Province":      "#15803D",
+  "Gandaki Province":      "#1D4ED8",
+  "Lumbini Province":      "#7C3AED",
+  "Karnali Province":      "#0E7490",
+  "Sudurpashchim Province":"#92400E"
+};
+
 const provinceData = {
   "Bagmati Province": 33,
   "Madhesh Province": 32,
@@ -546,147 +1041,138 @@ const provinceData = {
 };
 
 const districtData = [
-  {d:"Taplejung",s:1,p:"Koshi Province"},
-  {d:"Panchthar",s:1,p:"Koshi Province"},
-  {d:"Ilam",s:2,p:"Koshi Province"},
-  {d:"Jhapa",s:5,p:"Koshi Province"},
-  {d:"Sankhuwasabha",s:1,p:"Koshi Province"},
-  {d:"Tehrathum",s:1,p:"Koshi Province"},
-  {d:"Bhojpur",s:1,p:"Koshi Province"},
-  {d:"Dhankuta",s:1,p:"Koshi Province"},
-  {d:"Morang",s:6,p:"Koshi Province"},
-  {d:"Sunsari",s:4,p:"Koshi Province"},
-  {d:"Solukhumbu",s:1,p:"Koshi Province"},
-  {d:"Khotang",s:1,p:"Koshi Province"},
-  {d:"Okhaldhunga",s:1,p:"Koshi Province"},
-  {d:"Udayapur",s:2,p:"Koshi Province"},
-  {d:"Saptari",s:4,p:"Madhesh Province"},
-  {d:"Siraha",s:4,p:"Madhesh Province"},
-  {d:"Dhanusha",s:4,p:"Madhesh Province"},
-  {d:"Mahottari",s:4,p:"Madhesh Province"},
-  {d:"Sarlahi",s:4,p:"Madhesh Province"},
-  {d:"Rautahat",s:4,p:"Madhesh Province"},
-  {d:"Bara",s:4,p:"Madhesh Province"},
-  {d:"Parsa",s:4,p:"Madhesh Province"},
-  {d:"Dolakha",s:1,p:"Bagmati Province"},
-  {d:"Ramechhap",s:1,p:"Bagmati Province"},
-  {d:"Sindhuli",s:2,p:"Bagmati Province"},
-  {d:"Rasuwa",s:1,p:"Bagmati Province"},
-  {d:"Dhading",s:2,p:"Bagmati Province"},
-  {d:"Nuwakot",s:2,p:"Bagmati Province"},
-  {d:"Kathmandu",s:10,p:"Bagmati Province"},
-  {d:"Bhaktapur",s:2,p:"Bagmati Province"},
-  {d:"Lalitpur",s:3,p:"Bagmati Province"},
-  {d:"Kavrepalanchok",s:2,p:"Bagmati Province"},
-  {d:"Sindhupalchok",s:2,p:"Bagmati Province"},
-  {d:"Makwanpur",s:2,p:"Bagmati Province"},
-  {d:"Chitwan",s:3,p:"Bagmati Province"},
-  {d:"Gorkha",s:2,p:"Gandaki Province"},
-  {d:"Manang",s:1,p:"Gandaki Province"},
-  {d:"Lamjung",s:1,p:"Gandaki Province"},
-  {d:"Kaski",s:3,p:"Gandaki Province"},
-  {d:"Tanahun",s:2,p:"Gandaki Province"},
-  {d:"Syangja",s:2,p:"Gandaki Province"},
-  {d:"Nawalpur",s:2,p:"Gandaki Province"},
-  {d:"Mustang",s:1,p:"Gandaki Province"},
-  {d:"Myagdi",s:1,p:"Gandaki Province"},
-  {d:"Baglung",s:2,p:"Gandaki Province"},
-  {d:"Parbat",s:1,p:"Gandaki Province"},
-  {d:"Gulmi",s:2,p:"Lumbini Province"},
-  {d:"Palpa",s:2,p:"Lumbini Province"},
-  {d:"Arghakhanchi",s:1,p:"Lumbini Province"},
-  {d:"Nawalparasi West",s:2,p:"Lumbini Province"},
-  {d:"Rupandehi",s:5,p:"Lumbini Province"},
-  {d:"Kapilvastu",s:3,p:"Lumbini Province"},
-  {d:"Eastern Rukum",s:1,p:"Lumbini Province"},
-  {d:"Pyuthan",s:1,p:"Lumbini Province"},
-  {d:"Rolpa",s:1,p:"Lumbini Province"},
-  {d:"Dang",s:3,p:"Lumbini Province"},
-  {d:"Banke",s:3,p:"Lumbini Province"},
-  {d:"Bardiya",s:2,p:"Lumbini Province"},
-  {d:"Western Rukum",s:1,p:"Karnali Province"},
-  {d:"Salyan",s:1,p:"Karnali Province"},
-  {d:"Dolpa",s:1,p:"Karnali Province"},
-  {d:"Jumla",s:1,p:"Karnali Province"},
-  {d:"Mugu",s:1,p:"Karnali Province"},
-  {d:"Humla",s:1,p:"Karnali Province"},
-  {d:"Kalikot",s:1,p:"Karnali Province"},
-  {d:"Dailekh",s:2,p:"Karnali Province"},
-  {d:"Surkhet",s:2,p:"Karnali Province"},
-  {d:"Jajarkot",s:1,p:"Karnali Province"},
-  {d:"Bajura",s:1,p:"Sudurpashchim Province"},
-  {d:"Bajhang",s:1,p:"Sudurpashchim Province"},
-  {d:"Doti",s:1,p:"Sudurpashchim Province"},
-  {d:"Achham",s:2,p:"Sudurpashchim Province"},
-  {d:"Kailali",s:5,p:"Sudurpashchim Province"},
-  {d:"Kanchanpur",s:3,p:"Sudurpashchim Province"},
-  {d:"Dadeldhura",s:1,p:"Sudurpashchim Province"},
-  {d:"Baitadi",s:1,p:"Sudurpashchim Province"},
+  {d:"Taplejung",s:1,p:"Koshi Province"},{d:"Panchthar",s:1,p:"Koshi Province"},
+  {d:"Ilam",s:2,p:"Koshi Province"},{d:"Jhapa",s:5,p:"Koshi Province"},
+  {d:"Sankhuwasabha",s:1,p:"Koshi Province"},{d:"Tehrathum",s:1,p:"Koshi Province"},
+  {d:"Bhojpur",s:1,p:"Koshi Province"},{d:"Dhankuta",s:1,p:"Koshi Province"},
+  {d:"Morang",s:6,p:"Koshi Province"},{d:"Sunsari",s:4,p:"Koshi Province"},
+  {d:"Solukhumbu",s:1,p:"Koshi Province"},{d:"Khotang",s:1,p:"Koshi Province"},
+  {d:"Okhaldhunga",s:1,p:"Koshi Province"},{d:"Udayapur",s:2,p:"Koshi Province"},
+  {d:"Saptari",s:4,p:"Madhesh Province"},{d:"Siraha",s:4,p:"Madhesh Province"},
+  {d:"Dhanusha",s:4,p:"Madhesh Province"},{d:"Mahottari",s:4,p:"Madhesh Province"},
+  {d:"Sarlahi",s:4,p:"Madhesh Province"},{d:"Rautahat",s:4,p:"Madhesh Province"},
+  {d:"Bara",s:4,p:"Madhesh Province"},{d:"Parsa",s:4,p:"Madhesh Province"},
+  {d:"Dolakha",s:1,p:"Bagmati Province"},{d:"Ramechhap",s:1,p:"Bagmati Province"},
+  {d:"Sindhuli",s:2,p:"Bagmati Province"},{d:"Rasuwa",s:1,p:"Bagmati Province"},
+  {d:"Dhading",s:2,p:"Bagmati Province"},{d:"Nuwakot",s:2,p:"Bagmati Province"},
+  {d:"Kathmandu",s:10,p:"Bagmati Province"},{d:"Bhaktapur",s:2,p:"Bagmati Province"},
+  {d:"Lalitpur",s:3,p:"Bagmati Province"},{d:"Kavrepalanchok",s:2,p:"Bagmati Province"},
+  {d:"Sindhupalchok",s:2,p:"Bagmati Province"},{d:"Makwanpur",s:2,p:"Bagmati Province"},
+  {d:"Chitwan",s:3,p:"Bagmati Province"},{d:"Gorkha",s:2,p:"Gandaki Province"},
+  {d:"Manang",s:1,p:"Gandaki Province"},{d:"Lamjung",s:1,p:"Gandaki Province"},
+  {d:"Kaski",s:3,p:"Gandaki Province"},{d:"Tanahun",s:2,p:"Gandaki Province"},
+  {d:"Syangja",s:2,p:"Gandaki Province"},{d:"Nawalpur",s:2,p:"Gandaki Province"},
+  {d:"Mustang",s:1,p:"Gandaki Province"},{d:"Myagdi",s:1,p:"Gandaki Province"},
+  {d:"Baglung",s:2,p:"Gandaki Province"},{d:"Parbat",s:1,p:"Gandaki Province"},
+  {d:"Gulmi",s:2,p:"Lumbini Province"},{d:"Palpa",s:2,p:"Lumbini Province"},
+  {d:"Arghakhanchi",s:1,p:"Lumbini Province"},{d:"Nawalparasi West",s:2,p:"Lumbini Province"},
+  {d:"Rupandehi",s:5,p:"Lumbini Province"},{d:"Kapilvastu",s:3,p:"Lumbini Province"},
+  {d:"Eastern Rukum",s:1,p:"Lumbini Province"},{d:"Pyuthan",s:1,p:"Lumbini Province"},
+  {d:"Rolpa",s:1,p:"Lumbini Province"},{d:"Dang",s:3,p:"Lumbini Province"},
+  {d:"Banke",s:3,p:"Lumbini Province"},{d:"Bardiya",s:2,p:"Lumbini Province"},
+  {d:"Western Rukum",s:1,p:"Karnali Province"},{d:"Salyan",s:1,p:"Karnali Province"},
+  {d:"Dolpa",s:1,p:"Karnali Province"},{d:"Jumla",s:1,p:"Karnali Province"},
+  {d:"Mugu",s:1,p:"Karnali Province"},{d:"Humla",s:1,p:"Karnali Province"},
+  {d:"Kalikot",s:1,p:"Karnali Province"},{d:"Dailekh",s:2,p:"Karnali Province"},
+  {d:"Surkhet",s:2,p:"Karnali Province"},{d:"Jajarkot",s:1,p:"Karnali Province"},
+  {d:"Bajura",s:1,p:"Sudurpashchim Province"},{d:"Bajhang",s:1,p:"Sudurpashchim Province"},
+  {d:"Doti",s:1,p:"Sudurpashchim Province"},{d:"Achham",s:2,p:"Sudurpashchim Province"},
+  {d:"Kailali",s:5,p:"Sudurpashchim Province"},{d:"Kanchanpur",s:3,p:"Sudurpashchim Province"},
+  {d:"Dadeldhura",s:1,p:"Sudurpashchim Province"},{d:"Baitadi",s:1,p:"Sudurpashchim Province"},
   {d:"Darchula",s:1,p:"Sudurpashchim Province"}
 ];
 
 const partyData = [
-  {name:"Nepali Congress", seats:64},
-  {name:"CPN (UML)", seats:42},
-  {name:"CPN (Maoist Centre)", seats:20},
-  {name:"Rastriya Swatantra Party", seats:8},
-  {name:"CPN (Unified Socialist)", seats:7},
-  {name:"Janata Samajbadi Party", seats:6},
-  {name:"Rastriya Prajatantra Party", seats:4},
-  {name:"Loktantrik Samajwadi Party", seats:4},
-  {name:"Independent", seats:4},
-  {name:"Nagarik Unmukti Party", seats:3},
-  {name:"Janamat Party", seats:1},
-  {name:"Nepal Workers Peasants Party", seats:1},
-  {name:"Rastriya Janamorcha", seats:1}
+  {name:"Nepali Congress", seats:64, color:"#1D4ED8"},
+  {name:"CPN (UML)", seats:42, color:"#B91C1C"},
+  {name:"CPN (Maoist Centre)", seats:20, color:"#DC2626"},
+  {name:"Rastriya Swatantra Party", seats:8, color:"#15803D"},
+  {name:"CPN (Unified Socialist)", seats:7, color:"#B45309"},
+  {name:"Janata Samajbadi Party", seats:6, color:"#7C3AED"},
+  {name:"Rastriya Prajatantra Party", seats:4, color:"#0E7490"},
+  {name:"Loktantrik Samajwadi Party", seats:4, color:"#CA8A04"},
+  {name:"Independent", seats:4, color:"#64748B"},
+  {name:"Nagarik Unmukti Party", seats:3, color:"#0F766E"},
+  {name:"Janamat Party", seats:1, color:"#D97706"},
+  {name:"Nepal Workers Peasants Party", seats:1, color:"#1E3A5F"},
+  {name:"Rastriya Janamorcha", seats:1, color:"#7F1D1D"}
 ];
 
-// ===== COLORS =====
-const provinceColors = [
-  "#c0392b","#e67e22","#f1c40f","#27ae60","#2980b9","#8e44ad","#16a085"
+// Polling station data from extracted PDFs
+const pollingData = [
+  {
+    id:"KTM-1", name:"Kathmandu 1", district:"Kathmandu", province:"Bagmati Province",
+    total_voters:48489, stations:22, centers:57, color:"#15803D"
+  },
+  {
+    id:"KTM-2", name:"Kathmandu 2", district:"Kathmandu", province:"Bagmati Province",
+    total_voters:88708, stations:40, centers:100, color:"#15803D"
+  },
+  {
+    id:"KTM-3", name:"Kathmandu 3", district:"Kathmandu", province:"Bagmati Province",
+    total_voters:64479, stations:29, centers:72, color:"#15803D"
+  },
+  {
+    id:"KTM-4", name:"Kathmandu 4", district:"Kathmandu", province:"Bagmati Province",
+    total_voters:76141, stations:33, centers:88, color:"#15803D"
+  },
+  {
+    id:"KTM-5", name:"Kathmandu 5", district:"Kathmandu", province:"Bagmati Province",
+    total_voters:78114, stations:31, centers:90, color:"#15803D"
+  },
+  {
+    id:"MOR-2", name:"Morang 2", district:"Morang", province:"Koshi Province",
+    total_voters:129184, stations:68, centers:154, color:"#B91C1C"
+  },
+  {
+    id:"MOR-6", name:"Morang 6", district:"Morang", province:"Koshi Province",
+    total_voters:137832, stations:39, centers:149, color:"#B91C1C"
+  },
+  {
+    id:"RAU-4", name:"Rautahat 4", district:"Rautahat", province:"Madhesh Province",
+    total_voters:110314, stations:61, centers:134, color:"#B45309"
+  },
+  {
+    id:"SIR-4", name:"Siraha 4", district:"Siraha", province:"Madhesh Province",
+    total_voters:106686, stations:60, centers:129, color:"#B45309"
+  },
+  {
+    id:"SUN-1", name:"Sunsari 1", district:"Sunsari", province:"Koshi Province",
+    total_voters:150393, stations:41, centers:161, color:"#B91C1C"
+  },
+  {
+    id:"SUN-3", name:"Sunsari 3", district:"Sunsari", province:"Koshi Province",
+    total_voters:134302, stations:44, centers:146, color:"#B91C1C"
+  }
 ];
 
-const partyColors = {
-  "Nepali Congress": "#2980b9",
-  "CPN (UML)": "#c0392b",
-  "CPN (Maoist Centre)": "#e74c3c",
-  "Rastriya Swatantra Party": "#27ae60",
-  "CPN (Unified Socialist)": "#e67e22",
-  "Janata Samajbadi Party": "#8e44ad",
-  "Rastriya Prajatantra Party": "#16a085",
-  "Loktantrik Samajwadi Party": "#f39c12",
-  "Independent": "#7f8c8d",
-  "Nagarik Unmukti Party": "#1abc9c",
-  "Janamat Party": "#d35400",
-  "Nepal Workers Peasants Party": "#2c3e50",
-  "Rastriya Janamorcha": "#c0392b"
-};
+const maxVoters = Math.max(...pollingData.map(x => x.total_voters));
+const maxStations = Math.max(...pollingData.map(x => x.stations));
 
-const provinceColorMap = {};
-Object.keys(provinceData).forEach((p,i) => provinceColorMap[p] = provinceColors[i]);
-
-// ===== PROVINCE PIE CHART =====
-const total = 165;
+/* ═══════════════════════════════════════════════
+   PROVINCE PIE
+══════════════════════════════════════════════ */
+const pieColors = Object.values(PROVINCE_COLORS);
 const pieCtx = document.getElementById('provincePie').getContext('2d');
-const provincePie = new Chart(pieCtx, {
-  type: 'doughnut',
-  data: {
+new Chart(pieCtx, {
+  type:'doughnut',
+  data:{
     labels: Object.keys(provinceData),
-    datasets: [{
+    datasets:[{
       data: Object.values(provinceData),
-      backgroundColor: provinceColors,
+      backgroundColor: pieColors,
       borderWidth: 3,
-      borderColor: '#ffffff',
+      borderColor: '#fff',
       hoverOffset: 8
     }]
   },
-  options: {
-    cutout: '65%',
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: ctx => ` ${ctx.label}: ${ctx.parsed} seats (${((ctx.parsed/total)*100).toFixed(1)}%)`
+  options:{
+    cutout:'68%',
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          label: ctx => ` ${ctx.label}: ${ctx.parsed} seats (${((ctx.parsed/165)*100).toFixed(1)}%)`
         }
       }
     }
@@ -695,107 +1181,409 @@ const provincePie = new Chart(pieCtx, {
 
 // Legend
 const legendEl = document.getElementById('provinceLegend');
-Object.entries(provinceData).forEach(([name, seats], i) => {
-  const shortName = name.replace(' Province','');
-  const pct = ((seats/total)*100).toFixed(1);
+Object.entries(provinceData).forEach(([name, seats]) => {
+  const color = PROVINCE_COLORS[name] || '#999';
+  const short = name.replace(' Province','');
+  const pct = ((seats/165)*100).toFixed(1);
   legendEl.innerHTML += `
-    <div class="legend-row">
-      <span class="legend-swatch" style="background:${provinceColors[i]}"></span>
-      <span class="legend-name">${shortName}</span>
-      <span class="legend-count">${seats}</span>
-      <span class="legend-pct">${pct}%</span>
+    <div class="pleg-row">
+      <span class="pleg-dot" style="background:${color}"></span>
+      <span class="pleg-name">${short}</span>
+      <span class="pleg-seats">${seats}</span>
+      <span class="pleg-pct">${pct}%</span>
     </div>`;
 });
 
-// ===== PARTY BARS =====
+/* ═══════════════════════════════════════════════
+   PARTY BARS
+══════════════════════════════════════════════ */
 const partyWrap = document.getElementById('partyBars');
 const maxSeats = partyData[0].seats;
-partyData.forEach(({name, seats}) => {
-  const pct = (seats / maxSeats * 100).toFixed(1);
-  const color = partyColors[name] || '#999';
-  const shortName = name.length > 24 ? name.slice(0,22)+'…' : name;
+partyData.forEach(({name, seats, color}) => {
+  const pct = (seats/maxSeats*100).toFixed(1);
+  const short = name.length > 26 ? name.slice(0,24)+'…' : name;
   partyWrap.innerHTML += `
-    <div class="party-row">
-      <div class="party-name">${shortName}</div>
-      <div class="party-bar-track">
-        <div class="party-bar-fill" style="width:0%; background:${color}" data-width="${pct}">
-          ${seats >= 10 ? seats + ' seats' : ''}
+    <div class="pbar-row">
+      <div class="pbar-name">${short}</div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:0%;background:${color}" data-w="${pct}">
+          ${seats >= 12 ? seats + ' seats' : ''}
         </div>
       </div>
-      <div class="party-seats">${seats}</div>
+      <div class="pbar-val">${seats}</div>
     </div>`;
 });
-
-// Animate bars
 setTimeout(() => {
-  document.querySelectorAll('.party-bar-fill').forEach(el => {
-    el.style.width = el.dataset.width + '%';
-  });
-}, 200);
+  document.querySelectorAll('.pbar-fill').forEach(el => el.style.width = el.dataset.w + '%');
+}, 300);
 
-// ===== DISTRICT BAR CHART =====
-const sorted = [...districtData].sort((a,b) => b.s - a.s);
-const maxD = sorted[0].s;
+/* ═══════════════════════════════════════════════
+   VOTER BARS
+══════════════════════════════════════════════ */
+const voterBarsEl = document.getElementById('voterBars');
+[...pollingData].sort((a,b) => b.total_voters - a.total_voters).forEach(c => {
+  const pct = (c.total_voters / maxVoters * 100).toFixed(1);
+  voterBarsEl.innerHTML += `
+    <div class="vbar-row">
+      <div class="vbar-label">${c.name}</div>
+      <div class="vbar-track">
+        <div class="vbar-fill" style="width:0%;background:${c.color}" data-w="${pct}">
+          <span>${pct >= 30 ? c.total_voters.toLocaleString() : ''}</span>
+        </div>
+      </div>
+      <div class="vbar-num">${c.total_voters.toLocaleString()}</div>
+    </div>`;
+});
+setTimeout(() => {
+  document.querySelectorAll('.vbar-fill').forEach(el => el.style.width = el.dataset.w + '%');
+}, 400);
 
-function buildDistrictBars(data) {
-  const wrap = document.getElementById('districtBars');
-  wrap.innerHTML = '';
-  data.forEach(({d, s, p}) => {
-    const h = Math.max(20, (s / maxD) * 180);
-    const color = provinceColorMap[p] || '#999';
-    wrap.innerHTML += `
-      <div class="d-bar-col">
-        <div class="d-tooltip">${d}<br><b>${s} seat${s>1?'s':''}</b><br>${p.replace(' Province','')}</div>
-        <div class="d-bar" style="height:${h}px; background:${color}"></div>
-        <div class="d-val">${s}</div>
-        <div class="d-name">${d}</div>
+/* ═══════════════════════════════════════════════
+   POLLING STATION CARDS
+══════════════════════════════════════════════ */
+function buildPSCards(data) {
+  const grid = document.getElementById('psGrid');
+  grid.innerHTML = '';
+  if (!data.length) {
+    grid.innerHTML = '<p style="color:var(--slate);padding:1rem;">No results found.</p>';
+    return;
+  }
+  data.forEach(c => {
+    const voterPct = (c.total_voters / maxVoters * 100).toFixed(0);
+    const statPct  = (c.stations / maxStations * 100).toFixed(0);
+    const avgPerStation = Math.round(c.total_voters / c.stations);
+    const avgPerCenter  = Math.round(c.total_voters / c.centers);
+    const shortProv = c.province.replace(' Province','');
+    grid.innerHTML += `
+      <div class="ps-card fade-up">
+        <div class="ps-card-accent" style="background:${c.color}"></div>
+        <div style="padding-left:0.75rem;">
+          <div class="ps-card-district">${c.district} · ${shortProv}</div>
+          <div class="ps-card-name">${c.name}</div>
+          <div class="ps-stats">
+            <div class="ps-stat">
+              <div class="ps-stat-val">${c.total_voters.toLocaleString()}</div>
+              <div class="ps-stat-lbl">Voters</div>
+            </div>
+            <div class="ps-stat">
+              <div class="ps-stat-val">${c.stations}</div>
+              <div class="ps-stat-lbl">Stations</div>
+            </div>
+            <div class="ps-stat">
+              <div class="ps-stat-val">${c.centers}</div>
+              <div class="ps-stat-lbl">Centers</div>
+            </div>
+          </div>
+          <div class="ps-divider"></div>
+          <div style="font-size:0.65rem;color:var(--slate);display:flex;justify-content:space-between;">
+            <span>~${avgPerStation.toLocaleString()} voters/station</span>
+            <span>~${avgPerCenter.toLocaleString()} voters/center</span>
+          </div>
+          <div class="ps-bar-track">
+            <div class="ps-bar-fill" style="width:${voterPct}%;background:${c.color};opacity:0.7;"></div>
+          </div>
+        </div>
       </div>`;
   });
 }
-buildDistrictBars(sorted);
+buildPSCards(pollingData);
 
-// ===== DISTRICT TABLE =====
-function buildDistrictTable(data) {
+// Search & Filter
+function filterPS() {
+  const q = document.getElementById('psSearch').value.toLowerCase();
+  const dist = document.getElementById('psDistrictFilter').value;
+  const prov = document.getElementById('psProvFilter').value;
+  const filtered = pollingData.filter(c => {
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.district.toLowerCase().includes(q);
+    const matchD = !dist || c.district === dist;
+    const matchP = !prov || c.province.includes(prov);
+    return matchQ && matchD && matchP;
+  });
+  buildPSCards(filtered);
+}
+document.getElementById('psSearch').addEventListener('input', filterPS);
+document.getElementById('psDistrictFilter').addEventListener('change', filterPS);
+document.getElementById('psProvFilter').addEventListener('change', filterPS);
+
+/* ═══════════════════════════════════════════════
+   INFRA CHART (Stations vs Centers)
+══════════════════════════════════════════════ */
+const infraCtx = document.getElementById('infraChart').getContext('2d');
+new Chart(infraCtx, {
+  type:'bar',
+  data:{
+    labels: pollingData.map(c => c.name),
+    datasets:[
+      {
+        label:'Polling Stations',
+        data: pollingData.map(c => c.stations),
+        backgroundColor: pollingData.map(c => c.color + 'CC'),
+        borderColor: pollingData.map(c => c.color),
+        borderWidth: 1.5, borderRadius: 4,
+      },
+      {
+        label:'Polling Centers',
+        data: pollingData.map(c => c.centers),
+        backgroundColor: pollingData.map(c => c.color + '44'),
+        borderColor: pollingData.map(c => c.color),
+        borderWidth: 1.5, borderRadius: 4,
+        borderDash: [4,2]
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{
+        labels:{ font:{family:"'Syne', sans-serif", size:11}, color:'#64748B' }
+      },
+      tooltip:{
+        callbacks:{
+          afterLabel: (ctx) => {
+            const c = pollingData[ctx.dataIndex];
+            return `Ratio: ${(c.centers/c.stations).toFixed(2)} centers/station`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{
+        ticks:{ font:{size:10}, color:'#64748B', maxRotation:35 },
+        grid:{ display:false }
+      },
+      y:{
+        ticks:{ font:{size:10}, color:'#64748B' },
+        grid:{ color:'rgba(0,0,0,0.05)' }
+      }
+    }
+  }
+});
+
+/* ═══════════════════════════════════════════════
+   DISTRICT BARS + TABLE
+══════════════════════════════════════════════ */
+let distSorted = [...districtData].sort((a,b) => b.s - a.s);
+const maxDistSeats = distSorted[0].s;
+
+function buildDistBars(data) {
+  const wrap = document.getElementById('districtBars');
+  wrap.innerHTML = '';
+  data.forEach(({d,s,p}) => {
+    const h = Math.max(16, (s/maxDistSeats)*180);
+    const color = PROVINCE_COLORS[p] || '#999';
+    wrap.innerHTML += `
+      <div class="dbar-col">
+        <div class="dbar-tip">${d} · ${s} seat${s>1?'s':''}<br>${p.replace(' Province','')}</div>
+        <div class="dbar" style="height:${h}px;background:${color}"></div>
+        <div class="dbar-val">${s}</div>
+        <div class="dbar-name">${d}</div>
+      </div>`;
+  });
+}
+
+function buildDistTable(data) {
   const tbody = document.getElementById('districtTableBody');
   tbody.innerHTML = '';
   data.forEach(({d,s,p}, i) => {
-    const color = provinceColorMap[p] || '#999';
-    const barW = Math.round((s/maxD)*100);
+    const color = PROVINCE_COLORS[p] || '#999';
+    const barW = Math.round((s/maxDistSeats)*80);
     const shortP = p.replace(' Province','');
     tbody.innerHTML += `
       <tr>
-        <td><span class="rank-num">${i+1}</span></td>
-        <td><b>${d}</b></td>
-        <td><span class="province-badge" style="background:${color}22;color:${color}">${shortP}</span></td>
-        <td><span class="seats-big">${s}</span>
-          <span class="mini-bar" style="width:${barW}px;background:${color}44;border:1.5px solid ${color}"></span>
+        <td><span class="dtable-rank">${i+1}</span></td>
+        <td class="dtable-name">${d}</td>
+        <td><span class="dtable-prov" style="background:${color}18;color:${color}">${shortP}</span></td>
+        <td>
+          <span class="dtable-seats">${s}</span>
+          <span class="dtable-minibar" style="width:${barW}px;background:${color};opacity:0.4;"></span>
         </td>
-        <td style="font-size:0.78rem;color:var(--muted)">${((s/165)*100).toFixed(1)}%</td>
+        <td style="font-family:var(--font-mono);font-size:0.72rem;color:var(--slate)">
+          ${((s/165)*100).toFixed(1)}%
+        </td>
       </tr>`;
   });
 }
-buildDistrictTable(sorted);
 
-// ===== SEARCH =====
-document.getElementById('districtSearch').addEventListener('input', function() {
-  const q = this.value.toLowerCase();
-  const filtered = sorted.filter(x => x.d.toLowerCase().includes(q) || x.p.toLowerCase().includes(q));
-  buildDistrictBars(filtered);
-  buildDistrictTable(filtered);
+buildDistBars(distSorted);
+buildDistTable(distSorted);
+
+function filterDistricts() {
+  const q = document.getElementById('districtSearch').value.toLowerCase();
+  const pf = document.getElementById('provinceFilter').value;
+  const filtered = distSorted.filter(x =>
+    (!q || x.d.toLowerCase().includes(q) || x.p.toLowerCase().includes(q)) &&
+    (!pf || x.p === pf)
+  );
+  buildDistBars(filtered);
+  buildDistTable(filtered);
+}
+document.getElementById('districtSearch').addEventListener('input', filterDistricts);
+document.getElementById('provinceFilter').addEventListener('change', filterDistricts);
+
+function showDistView(view, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('distChartWrap').style.display = view==='chart' ? '' : 'none';
+  document.getElementById('distTableWrap').style.display  = view==='table'  ? '' : 'none';
+}
+
+/* ═══════════════════════════════════════════════
+   PARTY PIE
+══════════════════════════════════════════════ */
+const partyPieCtx = document.getElementById('partyPie').getContext('2d');
+new Chart(partyPieCtx, {
+  type:'doughnut',
+  data:{
+    labels: partyData.map(p => p.name),
+    datasets:[{
+      data: partyData.map(p => p.seats),
+      backgroundColor: partyData.map(p => p.color + 'CC'),
+      borderColor: partyData.map(p => p.color),
+      borderWidth: 2, hoverOffset: 6
+    }]
+  },
+  options:{
+    cutout:'55%',
+    plugins:{
+      legend:{
+        position:'right',
+        labels:{
+          font:{family:"'Syne',sans-serif",size:10},
+          color:'#64748B', padding:10, boxWidth:10
+        }
+      },
+      tooltip:{
+        callbacks:{
+          label: ctx => ` ${ctx.label}: ${ctx.parsed} seats (${((ctx.parsed/165)*100).toFixed(1)}%)`
+        }
+      }
+    }
+  }
 });
 
-// ===== TAB TOGGLE =====
-function showView(view, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if(view === 'chart') {
-    document.getElementById('districtChartWrap').style.display = '';
-    document.getElementById('districtTableWrap').style.display = 'none';
-  } else {
-    document.getElementById('districtChartWrap').style.display = 'none';
-    document.getElementById('districtTableWrap').style.display = '';
+/* ═══════════════════════════════════════════════
+   COALITION GRID
+══════════════════════════════════════════════ */
+const coalitions = [
+  {name:"Nepali Congress", seats:64, color:"#1D4ED8"},
+  {name:"CPN (UML)", seats:42, color:"#B91C1C"},
+  {name:"CPN (Maoist)", seats:20, color:"#DC2626"},
+  {name:"RSP", seats:8, color:"#15803D"},
+  {name:"CPN (US)", seats:7, color:"#B45309"},
+  {name:"JSP", seats:6, color:"#7C3AED"},
+  {name:"RPP", seats:4, color:"#0E7490"},
+  {name:"Others", seats:14, color:"#64748B"},
+];
+const maxC = 64;
+const coalEl = document.getElementById('coalitionGrid');
+coalitions.forEach(c => {
+  const pct = (c.seats/maxC*100).toFixed(0);
+  const share = ((c.seats/165)*100).toFixed(1);
+  coalEl.innerHTML += `
+    <div class="compare-item">
+      <div class="compare-header">
+        <span class="compare-name">${c.name}</span>
+        <span class="compare-val">${c.seats} · ${share}%</span>
+      </div>
+      <div class="compare-track">
+        <div class="compare-fill" style="width:0%;background:${c.color}" data-w="${pct}"></div>
+      </div>
+    </div>`;
+});
+setTimeout(() => {
+  document.querySelectorAll('.compare-fill').forEach(el => el.style.width = el.dataset.w + '%');
+}, 500);
+
+/* ═══════════════════════════════════════════════
+   DENSITY CHART
+══════════════════════════════════════════════ */
+const koshiVoters = pollingData.filter(c => c.province === 'Koshi Province')
+  .reduce((sum,c) => sum+c.total_voters, 0);
+const madheshVoters = pollingData.filter(c => c.province === 'Madhesh Province')
+  .reduce((sum,c) => sum+c.total_voters, 0);
+const bagmatiVoters = pollingData.filter(c => c.province === 'Bagmati Province')
+  .reduce((sum,c) => sum+c.total_voters, 0);
+
+const densityCtx = document.getElementById('densityChart').getContext('2d');
+new Chart(densityCtx, {
+  type:'bar',
+  data:{
+    labels:['Koshi\n(tracked)','Madhesh\n(tracked)','Bagmati\n(tracked)'],
+    datasets:[{
+      label:'Tracked Voters',
+      data:[koshiVoters, madheshVoters, bagmatiVoters],
+      backgroundColor:['#B91C1C99','#B4530999','#15803D99'],
+      borderColor:['#B91C1C','#B45309','#15803D'],
+      borderWidth:2, borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          label: ctx => ` ${ctx.parsed.y.toLocaleString()} voters tracked`
+        }
+      }
+    },
+    scales:{
+      x:{ grid:{display:false}, ticks:{font:{size:10},color:'#64748B'} },
+      y:{
+        grid:{color:'rgba(0,0,0,0.05)'},
+        ticks:{
+          font:{size:10},color:'#64748B',
+          callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v
+        }
+      }
+    }
   }
+});
+
+/* ═══════════════════════════════════════════════
+   TOP DISTRICTS LIST
+══════════════════════════════════════════════ */
+const topEl = document.getElementById('topDistList');
+const top10 = [...districtData].sort((a,b)=>b.s-a.s).slice(0,10);
+top10.forEach(({d,s,p},i) => {
+  const color = PROVINCE_COLORS[p] || '#999';
+  const pct = (s/maxDistSeats*100).toFixed(0);
+  topEl.innerHTML += `
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;">
+      <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--slate);width:16px;">${i+1}</span>
+      <div style="flex:1;">
+        <div style="font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:2px;">${d}</div>
+        <div style="height:6px;background:var(--mist);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;"></div>
+        </div>
+      </div>
+      <span style="font-family:var(--font-serif);font-size:1.1rem;font-weight:700;color:${color};min-width:20px;">${s}</span>
+    </div>`;
+});
+
+/* ═══════════════════════════════════════════════
+   NAV: MOBILE + ACTIVE
+══════════════════════════════════════════════ */
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
 }
+function closeMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// Active nav link on scroll
+const sections = ['overview','polling','districts','parties','analysis'];
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = 'overview';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) current = id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}, {passive:true});
 </script>
 </body>
 </html>
