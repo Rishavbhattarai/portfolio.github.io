@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal Provincial GVA Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --accent: #c8401e;
+    --gold: #d4960a;
+    --muted: #7a6e5f;
+    --light: #e8e0d0;
+    --green: #2d6a4f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+  }
+
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px 60px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead::before {
+    content: 'GVA';
+    position: absolute;
+    right: -20px;
+    top: -40px;
+    font-family: 'Playfair Display', serif;
+    font-size: 240px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .masthead-tag {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    max-width: 700px;
+  }
+
+  .masthead-meta {
+    margin-top: 24px;
+    display: flex;
+    gap: 40px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(245,240,232,0.5);
+  }
+
+  .rule {
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold), transparent);
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px;
+  }
+
+  /* SUMMARY STATS */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 60px;
+    background: var(--ink);
+  }
+
+  .kpi {
+    background: var(--paper);
+    padding: 28px 24px;
+    position: relative;
+  }
+
+  .kpi-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .kpi-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .kpi-accent { border-top: 3px solid var(--accent); }
+  .kpi-gold { border-top: 3px solid var(--gold); }
+  .kpi-green { border-top: 3px solid var(--green); }
+  .kpi-blue { border-top: 3px solid #3a6ea5; }
+
+  /* SECTION HEADS */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--light);
+    padding-bottom: 12px;
+  }
+
+  .section-head h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .section-num {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+
+  section { margin-bottom: 60px; }
+
+  /* CHART AREA */
+  .chart-wrap {
+    background: white;
+    border: 1px solid var(--light);
+    padding: 32px;
+  }
+
+  .bar-chart { margin-top: 16px; }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 90px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeSlide 0.5s forwards;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .bar-label { font-size: 11px; letter-spacing: 1px; color: var(--muted); text-align: right; }
+  .bar-track { background: var(--light); height: 28px; position: relative; }
+
+  .bar-fill {
+    height: 100%;
+    background: var(--ink);
+    position: relative;
+    transition: width 1s cubic-bezier(.16,1,.3,1);
+  }
+
+  .bar-fill.koshi { background: #c8401e; }
+  .bar-fill.madhesh { background: #d4960a; }
+  .bar-fill.bagmati { background: #1a1208; }
+  .bar-fill.gandaki { background: #3a6ea5; }
+  .bar-fill.lumbini { background: #2d6a4f; }
+  .bar-fill.karnali { background: #7a4060; }
+  .bar-fill.sudurpaschim { background: #5a6e3a; }
+
+  .bar-val { font-size: 11px; font-weight: 500; color: var(--ink); }
+
+  /* GROWTH TABLE */
+  .data-table { width: 100%; border-collapse: collapse; }
+
+  .data-table thead tr {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .data-table th {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .data-table tbody tr {
+    border-bottom: 1px solid var(--light);
+    transition: background 0.15s;
+  }
+
+  .data-table tbody tr:hover { background: var(--light); }
+
+  .data-table td {
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+
+  .province-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .growth-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .growth-high { background: rgba(45,106,79,0.12); color: var(--green); }
+  .growth-mid  { background: rgba(212,150,10,0.12); color: #8a6200; }
+  .growth-low  { background: rgba(200,64,30,0.1);  color: var(--accent); }
+
+  /* TREND SPARKLINES */
+  .province-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2px;
+    background: var(--ink);
+  }
+
+  .pcard {
+    background: var(--paper);
+    padding: 24px;
+    opacity: 0;
+    animation: fadeSlide 0.5s forwards;
+  }
+
+  .pcard-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .pcard-sub { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 14px; }
+
+  .spark { display: flex; align-items: flex-end; gap: 4px; height: 40px; }
+
+  .spark-bar {
+    flex: 1;
+    background: var(--ink);
+    border-radius: 2px 2px 0 0;
+    position: relative;
+  }
+
+  .spark-years { display: flex; gap: 4px; margin-top: 4px; }
+  .spark-year { flex: 1; font-size: 8px; color: var(--muted); text-align: center; letter-spacing: 0; }
+
+  .pcard-growth {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .pcard-growth span {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* REPORT NARRATIVE */
+  .report-text {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--ink);
+    max-width: 780px;
+  }
+
+  .report-text p { margin-bottom: 16px; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    background: white;
+    margin: 24px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .callout strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 4px;
+    color: var(--accent);
+  }
+
+  footer {
+    background: var(--ink);
+    color: rgba(245,240,232,0.4);
+    text-align: center;
+    padding: 24px;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-tag">Economic Intelligence Report</div>
+  <h1>Nepal Provincial GVA & Growth Analysis</h1>
+  <div class="masthead-meta">
+    <span>FISCAL YEARS 2018/19 – 2020/21</span>
+    <span>7 PROVINCES</span>
+    <span>GROSS VALUE ADDED</span>
+  </div>
+</div>
+<div class="rule"></div>
+
+<main>
+
+  <!-- KPIs -->
+  <div class="kpi-row" id="kpis"></div>
+
+  <!-- NARRATIVE REPORT -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">§ 01</span>
+      <h2>Executive Summary</h2>
+    </div>
+    <div class="report-text" id="narrative"></div>
+  </section>
+
+  <!-- BAR CHART – Latest GVA -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">§ 02</span>
+      <h2>GVA by Province — 2020/21</h2>
+    </div>
+    <div class="chart-wrap">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:20px;">GVA IN NPR (THOUSANDS)</div>
+      <div class="bar-chart" id="barChart"></div>
+    </div>
+  </section>
+
+  <!-- DATA TABLE -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">§ 03</span>
+      <h2>Full Dataset — All Years & Provinces</h2>
+    </div>
+    <div class="chart-wrap" style="padding:0;overflow:hidden;">
+      <table class="data-table" id="dataTable"></table>
+    </div>
+  </section>
+
+  <!-- PROVINCE CARDS -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">§ 04</span>
+      <h2>Province-Level GVA Trend</h2>
+    </div>
+    <div class="province-cards" id="provinceCards"></div>
+  </section>
+
+</main>
+
+<footer>NEPAL PROVINCIAL ECONOMIC DATA · FISCAL 2018/19 – 2020/21 · GVA IN NPR THOUSANDS</footer>
+
+<script>
+const data = [
+  { province: "Koshi",        year: "2018/19", gva: 700000,  growth: 5.2 },
+  { province: "Madhesh",      year: "2018/19", gva: 850000,  growth: 5.8 },
+  { province: "Bagmati",      year: "2018/19", gva: 1200000, growth: 6.5 },
+  { province: "Gandaki",      year: "2018/19", gva: 600000,  growth: 4.8 },
+  { province: "Lumbini",      year: "2018/19", gva: 750000,  growth: 5.1 },
+  { province: "Karnali",      year: "2018/19", gva: 400000,  growth: 4.2 },
+  { province: "Sudurpaschim", year: "2018/19", gva: 450000,  growth: 4.5 },
+  { province: "Koshi",        year: "2019/20", gva: 720000,  growth: 3.8 },
+  { province: "Madhesh",      year: "2019/20", gva: 870000,  growth: 3.5 },
+  { province: "Bagmati",      year: "2019/20", gva: 1250000, growth: 4.2 },
+  { province: "Gandaki",      year: "2019/20", gva: 620000,  growth: 3.1 },
+  { province: "Lumbini",      year: "2019/20", gva: 780000,  growth: 3.6 },
+  { province: "Karnali",      year: "2019/20", gva: 420000,  growth: 2.9 },
+  { province: "Sudurpaschim", year: "2019/20", gva: 470000,  growth: 3.0 },
+  { province: "Koshi",        year: "2020/21", gva: 750000,  growth: 2.5 },
+  { province: "Madhesh",      year: "2020/21", gva: 900000,  growth: 2.8 },
+  { province: "Bagmati",      year: "2020/21", gva: 1300000, growth: 3.0 },
+  { province: "Gandaki",      year: "2020/21", gva: 650000,  growth: 2.4 },
+  { province: "Lumbini",      year: "2020/21", gva: 800000,  growth: 2.7 },
+  { province: "Karnali",      year: "2020/21", gva: 450000,  growth: 2.1 },
+  { province: "Sudurpaschim", year: "2020/21", gva: 500000,  growth: 2.3 },
+];
+
+const colors = {
+  Koshi: '#c8401e', Madhesh: '#d4960a', Bagmati: '#1a1208',
+  Gandaki: '#3a6ea5', Lumbini: '#2d6a4f', Karnali: '#7a4060', Sudurpaschim: '#5a6e3a'
+};
+
+const years = ["2018/19","2019/20","2020/21"];
+const provinces = [...new Set(data.map(d => d.province))];
+const fmt = n => (n/1000).toLocaleString() + 'K';
+
+function byProvince(p) { return data.filter(d => d.province === p); }
+function latest(p) { return byProvince(p).find(d => d.year === "2020/21"); }
+
+// KPIs
+const totalGVA = data.filter(d => d.year === "2020/21").reduce((s,d) => s+d.gva, 0);
+const avgGrowth2021 = data.filter(d => d.year === "2020/21").reduce((s,d) => s+d.growth, 0) / 7;
+const topProv = provinces.reduce((a,b) => latest(a).gva > latest(b).gva ? a : b);
+const slowestGrowth = provinces.reduce((a,b) => latest(a).growth < latest(b).growth ? a : b);
+
+const kpiData = [
+  { label: 'Total GVA (2020/21)', value: 'NPR ' + (totalGVA/1000000).toFixed(2) + 'B', sub: 'Aggregate across all 7 provinces', cls: 'kpi-accent' },
+  { label: 'Avg Growth Rate', value: avgGrowth2021.toFixed(2) + '%', sub: 'Mean growth in FY 2020/21', cls: 'kpi-gold' },
+  { label: 'Largest Economy', value: topProv, sub: 'NPR ' + fmt(latest(topProv).gva) + ' GVA', cls: 'kpi-green' },
+  { label: 'Slowest Growth', value: slowestGrowth, sub: latest(slowestGrowth).growth + '% in 2020/21', cls: 'kpi-blue' },
+];
+
+document.getElementById('kpis').innerHTML = kpiData.map(k => `
+  <div class="kpi ${k.cls}">
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-value">${k.value}</div>
+    <div class="kpi-sub">${k.sub}</div>
+  </div>
+`).join('');
+
+// Narrative
+document.getElementById('narrative').innerHTML = `
+<p>Over the three fiscal years spanning 2018/19 to 2020/21, Nepal's seven provinces recorded sustained gross value added (GVA) growth, though at a decelerating pace. Total provincial GVA reached approximately NPR 5.4 billion in 2020/21, reflecting resilient economic activity across geographically diverse regions.</p>
+<div class="callout">
+  <strong>Bagmati Dominance</strong>
+  Bagmati Province — home to the capital Kathmandu — consistently commanded the largest share of provincial GVA, contributing NPR 1.3B in 2020/21 alone, roughly 24% of the national provincial total. Its growth rate of 6.5% in 2018/19 was the highest across all provinces and years in this dataset.
+</div>
+<p>A notable trend across all provinces is the systematic deceleration of growth rates between 2018/19 and 2020/21. What began as growth ranging from 4.2%–6.5% converged toward a narrower band of 2.1%–3.0% by 2020/21, likely reflecting broader macroeconomic headwinds including the COVID-19 pandemic's economic disruptions.</p>
+<div class="callout">
+  <strong>Karnali — Smallest but Growing</strong>
+  Despite holding the smallest GVA base among all provinces, Karnali showed consistent GVA expansion from NPR 400K to NPR 450K across the period — a 12.5% cumulative increase. However, its growth rate was consistently the lowest, signalling structural challenges in the mountainous western region.
+</div>
+<p>Madhesh and Lumbini provinces occupy a mid-tier position in terms of GVA, yet both demonstrated above-average growth performance in 2018/19 (5.8% and 5.1% respectively), suggesting these Terai-belt provinces have notable economic momentum. Sudurpaschim and Karnali, representing Nepal's far-western regions, trail in both absolute GVA and growth rates, pointing to a continued east-west economic gradient within the country.</p>
+`;
+
+// Bar chart
+const latest2021 = provinces.map(p => ({ province: p, gva: latest(p).gva })).sort((a,b) => b.gva - a.gva);
+const maxGva = Math.max(...latest2021.map(d => d.gva));
+
+document.getElementById('barChart').innerHTML = latest2021.map((d,i) => `
+  <div class="bar-row" style="animation-delay:${i*0.08}s">
+    <div class="bar-label">${d.province}</div>
+    <div class="bar-track">
+      <div class="bar-fill ${d.province.toLowerCase().replace(' ','')}" style="width:${(d.gva/maxGva*100).toFixed(1)}%"></div>
+    </div>
+    <div class="bar-val">NPR ${fmt(d.gva)}</div>
+  </div>
+`).join('');
+
+// Table
+const growthClass = g => g >= 5 ? 'growth-high' : g >= 3 ? 'growth-mid' : 'growth-low';
+
+document.getElementById('dataTable').innerHTML = `
+<thead><tr>
+  <th>Province</th><th>Fiscal Year</th><th>GVA (NPR)</th><th>Growth Rate</th>
+</tr></thead>
+<tbody>
+${data.map(d => `<tr>
+  <td><span class="province-dot" style="background:${colors[d.province]}"></span>${d.province}</td>
+  <td>${d.year}</td>
+  <td>${d.gva.toLocaleString()}</td>
+  <td><span class="growth-pill ${growthClass(d.growth)}">${d.growth}%</span></td>
+</tr>`).join('')}
+</tbody>`;
+
+// Province cards
+document.getElementById('provinceCards').innerHTML = provinces.map((p, i) => {
+  const rows = byProvince(p);
+  const maxG = Math.max(...rows.map(r => r.gva));
+  const bars = rows.map(r => `<div class="spark-bar" style="height:${(r.gva/maxG*100).toFixed(0)}%;background:${colors[p]}"></div>`).join('');
+  const yearLabels = rows.map(r => `<div class="spark-year">'${r.year.slice(2,4)}</div>`).join('');
+  const growthTrend = rows.map(r => r.growth + '%').join(' → ');
+  return `
+  <div class="pcard" style="animation-delay:${i*0.1}s;border-top:3px solid ${colors[p]}">
+    <div class="pcard-name">${p}</div>
+    <div class="pcard-sub">GVA TREND · 3 YEARS</div>
+    <div class="spark">${bars}</div>
+    <div class="spark-years">${yearLabels}</div>
+    <div class="pcard-growth">Growth: <span>${latest(p).growth}%</span> in 2020/21</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px;">${growthTrend}</div>
+  </div>`;
+}).join('');
+</script>
+</body>
+</html>
