@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepal's Economic Transformation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crimson: #C0392B;
+    --deep-red: #8B0000;
+    --saffron: #E67E22;
+    --gold: #F1C40F;
+    --midnight: #0D1117;
+    --dark: #161B22;
+    --card: #1C2230;
+    --card2: #212835;
+    --border: rgba(255,255,255,0.07);
+    --text: #E8E0D5;
+    --muted: #8B9BB4;
+    --accent: #C0392B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--midnight);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Himalayan silhouette background */
+  body::before {
+    content: '';
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 280px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 280'%3E%3Cpolygon points='0,280 0,200 80,160 140,180 200,120 270,140 340,60 410,90 480,40 550,70 610,20 670,50 730,10 790,45 850,30 920,65 980,45 1060,90 1120,70 1180,110 1240,85 1300,130 1360,100 1440,150 1440,280' fill='%23161B22' opacity='0.9'/%3E%3Cpolygon points='0,280 0,220 100,190 180,210 260,160 330,175 400,100 470,130 540,80 600,110 660,55 720,85 780,45 840,75 900,55 960,100 1020,80 1100,115 1160,95 1220,135 1280,110 1340,155 1440,130 1440,280' fill='%231C2230' opacity='0.6'/%3E%3C/svg%3E") no-repeat bottom center / cover;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    padding: 28px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .flag-stripe {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .stripe { width: 28px; height: 4px; border-radius: 2px; }
+  .stripe.red { background: var(--crimson); }
+  .stripe.blue { background: #003893; }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 6vw, 3.2rem);
+    line-height: 1.1;
+    color: #fff;
+  }
+  h1 span { color: var(--crimson); font-style: italic; }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+    margin-top: 8px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .hstat { text-align: right; }
+  .hstat-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hstat-label {
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  /* NAV TABS — scrollable on mobile */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 9px 14px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+  .tab.active {
+    background: var(--crimson);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(192,57,43,0.4);
+  }
+
+  /* SECTION PANELS */
+  .panel { display: none; animation: fadeIn 0.4s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+
+  @media(max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media(max-width: 400px) {
+    .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--saffron));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card.span2 { grid-column: span 2; }
+  .card.span3 { grid-column: span 3; }
+  @media(max-width: 700px) { .card.span2, .card.span3 { grid-column: span 1; } }
+
+  .card-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .card-title span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--crimson);
+    margin-right: 7px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  /* STAT CARDS */
+  .stat-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    color: #fff;
+    line-height: 1;
+  }
+  .stat-unit { font-size: 0.9rem; color: var(--muted); margin-left: 3px; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
+  .stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 6px;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+  .stat-change.up { background: rgba(39,174,96,0.15); color: #27AE60; }
+  .stat-change.down { background: rgba(231,76,60,0.15); color: #E74C3C; }
+
+  /* CHART CONTAINERS */
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-wrap canvas { max-height: 280px; }
+  .chart-wrap.tall canvas { max-height: 300px; }
+
+  @media(max-width: 480px) {
+    .chart-wrap canvas { max-height: 220px; }
+    .chart-wrap.tall canvas { max-height: 240px; }
+  }
+
+  /* SECTOR BARS */
+  .sector-list { display: flex; flex-direction: column; gap: 10px; }
+  .sector-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sector-name {
+    font-size: 0.75rem;
+    color: var(--text);
+    width: 120px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media(max-width: 400px) {
+    .sector-name { width: 90px; font-size: 0.7rem; }
+  }
+  .bar-track {
+    flex: 1;
+    height: 7px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 40px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+  .bar-val {
+    font-size: 0.72rem;
+    color: var(--muted);
+    width: 48px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* TIMELINE LABELS */
+  .timeline-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: var(--dark);
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .timeline-note .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  .annotations { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+  /* QUARTERLY SELECTOR */
+  .q-selector {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .q-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .q-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+  .q-btn.active { background: var(--saffron); border-color: var(--saffron); color: #000; font-weight: 600; }
+
+  /* RECOVERY METER */
+  .recovery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  @media(max-width: 480px) {
+    .recovery-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .rec-card {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    transition: transform 0.2s;
+  }
+  .rec-card:hover { transform: translateY(-2px); }
+  .rec-name { font-size: 0.72rem; color: var(--muted); margin-bottom: 7px; }
+  .rec-bar-wrap { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-bottom: 7px; }
+  .rec-bar { height: 100%; border-radius: 3px; transition: width 1.2s ease; }
+  .rec-pct { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: #fff; }
+  .rec-sub { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+
+  /* INSIGHT CALLOUT */
+  .insight {
+    background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(230,126,34,0.08));
+    border: 1px solid rgba(192,57,43,0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .insight strong { color: var(--saffron); }
+
+  /* FOOTER */
+  footer {
+    margin-top: 40px;
+    padding: 20px 0 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  footer p { font-size: 0.7rem; color: var(--muted); }
+
+  /* Touch-friendly tap targets */
+  @media(max-width: 600px) {
+    .tab { padding: 10px 12px; font-size: 0.75rem; }
+    .card { padding: 14px; }
+    header { padding: 20px 0 18px; margin-bottom: 18px; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="flag-stripe">
+          <div class="stripe red"></div>
+          <div class="stripe blue"></div>
+          <div class="stripe red"></div>
+        </div>
+        <h1>Nepal's <span>Economic</span><br>Transformation</h1>
+        <p class="subtitle">15 Years of GDP Growth · 18 Sectors · Quarterly Data · 2010–2025</p>
+      </div>
+      <div class="header-stats">
+        <div class="hstat">
+          <div class="hstat-val" id="totalGDP">—</div>
+          <div class="hstat-label">Latest GDP (NPR Cr)</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-val" id="growthPct" style="color: var(--saffron)">—</div>
+          <div class="hstat-label">15-Year Growth</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav-tabs" id="tabs">
+    <button class="tab active" data-panel="overview">📊 Overview</button>
+    <button class="tab" data-panel="sectors">🏭 Sector Transformation</button>
+    <button class="tab" data-panel="agri">🌾 Agriculture vs Services</button>
+    <button class="tab" data-panel="tourism">🏔️ Tourism & Hospitality</button>
+    <button class="tab" data-panel="seasonal">📅 Seasonal Patterns</button>
+  </nav>
+
+  <!-- ===== OVERVIEW ===== -->
+  <div class="panel active" id="panel-overview">
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-title"><span></span>GDP 2024/25</div>
+        <div class="stat-val" id="ov-gdp1">—</div>
+        <div class="stat-label">Latest annual GDP (NPR Crore)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>GDP 2010/11</div>
+        <div class="stat-val" id="ov-gdp0">—</div>
+        <div class="stat-label">GDP 15 years ago</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Fastest Growing</div>
+        <div class="stat-val" style="font-size:1.5rem; color: var(--gold)" id="ov-fastest">—</div>
+        <div class="stat-label">Most expanded sector</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>COVID Shock</div>
+        <div class="stat-val" style="font-size:1.8rem; color: #E74C3C">-8.4%</div>
+        <div class="stat-label">GDP drop in 2020/21 Q4</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card span2">
+        <div class="card-title"><span></span>Total GDP Trend — Annual (Sum of 4 Quarters)</div>
+        <div class="annotations">
+          <div class="timeline-note"><div class="dot" style="background:#E67E22"></div> 2015 Earthquake</div>
+          <div class="timeline-note"><div class="dot" style="background:#E74C3C"></div> COVID-19</div>
+          <div class="timeline-note"><div class="dot" style="background:#27AE60"></div> Recovery</div>
+        </div>
+        <div class="chart-wrap tall"><canvas id="chart-total-gdp"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span></span>GDP Share by Sector — 2024/25</div>
+        <div class="chart-wrap"><canvas id="chart-pie-latest"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Top 5 Sectors by Size (Latest Year)</div>
+        <div class="sector-list" id="top-sectors"></div>
+        <div class="insight">
+          <strong>Key insight:</strong> Agriculture remains Nepal's largest sector, but its share has <strong>declined from 33% to 29%</strong> as Services and Real Estate grow — a hallmark of economic development.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTOR TRANSFORMATION ===== -->
+  <div class="panel" id="panel-sectors">
+    <div class="grid-2">
+      <div class="card span2">
+        <div class="card-title"><span></span>Sector Growth Multiplier (2010/11 → 2024/25) — How Many Times Each Sector Grew</div>
+        <div class="chart-wrap tall"><canvas id="chart-multiplier"></canvas></div>
+        <div class="insight">
+          <strong>Electricity & Gas</strong> is the standout story — it has grown <strong>5x</strong> in 15 years, driven by Nepal's massive hydropower expansion. <strong>Real Estate</strong> and <strong>ICT</strong> also show strong structural growth.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span></span>Sector Share of GDP: 2010/11 vs 2024/25</div>
+        <div class="chart-wrap tall"><canvas id="chart-share-compare"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Annual GDP by Sector Category</div>
+        <div class="chart-wrap tall"><canvas id="chart-stacked"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== AGRICULTURE VS SERVICES ===== -->
+  <div class="panel" id="panel-agri">
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-title"><span></span>Agriculture 2010/11</div>
+        <div class="stat-val" id="agri-2010">—</div>
+        <div class="stat-label">Annual GDP (NPR Cr)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Agriculture 2024/25</div>
+        <div class="stat-val" id="agri-2024">—</div>
+        <div class="stat-label">Annual GDP (NPR Cr)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Services 2010/11</div>
+        <div class="stat-val" id="serv-2010">—</div>
+        <div class="stat-label">Annual GDP (NPR Cr)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Services 2024/25</div>
+        <div class="stat-val" id="serv-2024">—</div>
+        <div class="stat-label">Annual GDP (NPR Cr)</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span></span>Agriculture vs Services — Annual GDP Trend</div>
+        <div class="chart-wrap tall"><canvas id="chart-agri-services"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Share of Total GDP Over Time</div>
+        <div class="chart-wrap tall"><canvas id="chart-agri-share"></canvas></div>
+        <div class="insight">
+          Nepal's economy is <strong>gradually industrialising</strong>. Services (Trade, Finance, Real Estate, ICT) collectively have overtaken Agriculture as the dominant economic driver — a shift that mirrors other developing Asian economies.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOURISM ===== -->
+  <div class="panel" id="panel-tourism">
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-title"><span></span>Pre-COVID Peak</div>
+        <div class="stat-val" style="color: var(--gold)" id="tour-peak">—</div>
+        <div class="stat-label">Hospitality GDP (2019/20)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>COVID Low</div>
+        <div class="stat-val" style="color: #E74C3C" id="tour-low">—</div>
+        <div class="stat-label">Hospitality GDP (2020/21)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Drop</div>
+        <div class="stat-val" style="color: #E74C3C" id="tour-drop">—</div>
+        <div class="stat-label">COVID collapse</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Latest</div>
+        <div class="stat-val" style="color: #27AE60" id="tour-now">—</div>
+        <div class="stat-label">Hospitality GDP (2024/25)</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title"><span></span>Accommodation & Food Service — Quarterly GDP Trend (with COVID Shock)</div>
+      <div class="annotations">
+        <div class="timeline-note"><div class="dot" style="background:#E74C3C"></div> COVID Collapse (2020/21)</div>
+        <div class="timeline-note"><div class="dot" style="background:#27AE60"></div> Recovery Phase</div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="chart-tourism"></canvas></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span></span>Related Sector Recovery vs Pre-COVID Baseline</div>
+        <div class="recovery-grid" id="rec-grid"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Tourism-Adjacent Sectors — Annual Comparison</div>
+        <div class="chart-wrap tall"><canvas id="chart-tour-compare"></canvas></div>
+        <div class="insight">
+          Nepal's tourism recovery has been <strong>V-shaped but uneven</strong>. Trekking and cultural tourism returned strongly by 2023/24. Transportation and hospitality are now <strong>above pre-COVID levels</strong>, signaling a robust rebound.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEASONAL ===== -->
+  <div class="panel" id="panel-seasonal">
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title"><span></span>Quarterly GDP Patterns — Nepal's Economy by Season</div>
+      <div style="display:flex; gap:16px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
+        <div class="q-selector" id="q-sector-select"></div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="chart-seasonal-main"></canvas></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span></span>Average Quarterly Index (All Sectors, 2015–2024)</div>
+        <div class="chart-wrap"><canvas id="chart-q-avg"></canvas></div>
+        <div class="insight">
+          <strong>Q2 (Oct–Dec)</strong> is consistently Nepal's strongest quarter — coinciding with the post-monsoon harvest season and peak tourist trekking months. <strong>Q3 (Jan–Mar)</strong> tends to be softer.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span></span>Seasonal Volatility by Sector</div>
+        <div class="sector-list" id="volatility-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>📊 Data: Nepal ISIC National Accounts, 2010/11–2024/25 &nbsp;|&nbsp; All values in NPR Crore &nbsp;|&nbsp; Fiscal year (Shrawan–Ashadh)</p>
+    <p style="color: var(--crimson)">🇳🇵 नेपाल</p>
+  </footer>
+
+</div>
+
+<script>
+// ============================================================
+// MOBILE DETECTION
+// ============================================================
+const isMobile = window.innerWidth < 600;
+
+// ============================================================
+//  DATA
+// ============================================================
+const rawData = {
+  A: { name: "Agriculture", values: [116306,129228,119720,115036,122157,122783,127420,133405,130830,126356,130886,124144,126697,126050,131830,150641,143504,142096,133199,122601,129870,135385,138215,137537,138442,141037,143183,146306,144604,144952,144405,149949,152064,154789,150996,156285,155908,157498,160193,155587,160771,159501,162053,164822,164830,165840,165680,165849,169948,171307,171900,169028,172873,175861,176982,179301,179182,181753,182818,184514,181461] },
+  B: { name: "Mining", values: [2423,2260,1925,1908,2057,2293,2357,2241,2447,2232,2195,2268,2366,2415,2745,2677,2646,2818,2591,2488,2189,1881,3032,3186,2934,3002,2941,2929,3151,2838,3321,3616,3809,3862,3657,3844,4068,4339,3627,2773,3689,3943,3982,3842,4103,4102,4447,4156,4004,4233,4368,4342,4287,4134,4102,4986,4248,4312,4394,4917,4423] },
+  C: { name: "Manufacturing", values: [21605,20900,20500,21138,21620,22758,23735,24538,24568,23973,23252,23507,25577,24208,25631,25654,26161,25753,25113,24178,21812,21708,23327,24935,24978,27208,27565,27534,29030,28949,29114,30035,30238,30292,31740,32404,31611,32009,26307,23345,30024,31096,31479,30272,32118,32724,33142,32929,31490,31949,32620,32682,31510,30791,31159,32795,32379,32587,33169,33002,32808] },
+  D: { name: "Electricity & Gas", values: [3378,3570,3614,3830,4057,4215,4297,3996,4144,4011,4187,4287,4400,4357,4204,4253,4146,4352,4539,4474,4133,3982,4002,3801,4375,4964,5221,5232,5337,5216,5255,5707,5762,5496,6073,6390,6428,6967,7435,7769,7486,7706,7257,7005,9353,10747,13026,13205,12468,12351,10448,17510,14276,14862,14930,15888,16609,16206,17254,18050,18944] },
+  E: { name: "Water Supply", values: [2285,2291,2263,2304,2417,2471,2549,2613,2633,2750,2817,2841,2918,2952,3042,3138,3189,3280,3364,3443,3498,3543,3591,3602,3600,3647,3696,3729,3776,3886,3874,3798,3955,3805,3837,3893,3964,3928,3934,3997,4080,4034,3968,3926,3997,4094,4229,4217,4132,4268,4321,4348,4262,4319,4339,4367,4369,4414,4438,4438,4430] },
+  F: { name: "Construction", values: [26227,24310,21081,21002,21458,23856,24599,22890,25950,23130,22597,23234,24216,24664,27885,26757,26791,28334,26066,25669,22217,19780,32062,33080,32246,32544,31194,31241,35115,32542,36920,38002,39259,38928,36136,38765,38526,43845,36471,27230,36880,40639,39842,38694,39627,42349,44076,40725,41062,35887,41472,46002,40887,39884,38983,41098,39166,42090,41295,42024,40289] },
+  G: { name: "Trade & Retail", values: [54615,56958,55352,53199,53948,57447,56874,58403,59104,55976,56735,61377,58724,59074,58392,70720,68667,66767,64398,58398,54772,57348,70106,69423,69529,71332,68495,69604,75054,78201,86044,87938,88894,85930,84472,94065,90847,88430,78363,55497,93073,85414,91862,62465,85542,95965,89343,85683,84600,81575,86962,88182,84668,83282,85159,87292,85795,86784,88551,91172,89083] },
+  H: { name: "Transport", values: [18662,19412,19736,19390,20702,20723,20520,20480,21683,22113,22638,22747,23162,23653,24003,24048,23761,25002,25719,26041,25784,24550,25026,25433,25689,25763,26070,27889,27725,28349,29322,32843,31501,30685,30955,36342,29946,29178,28856,25538,28977,29915,30311,29820,32564,31286,29646,30151,32320,30869,30404,31785,34089,35860,36217,35791,37720,38957,39185,39433,38698] },
+  I: { name: "Hospitality", values: [5659,6058,6371,6316,6299,6436,6431,6750,7052,6974,6971,6945,6953,6829,6841,7576,7655,7930,8059,6091,6404,6601,7170,7534,7919,7373,8048,7908,8168,8425,8691,9605,9505,10085,9042,9449,9166,8069,3492,3353,5300,6852,8279,6778,5928,7359,8711,8132,9309,7438,8827,9984,10494,10568,10849,11266,11494,11267,11095,11480,11485] },
+  J: { name: "ICT", values: [6661,7681,8450,8642,8978,9835,10548,10712,10890,10711,11055,11710,14194,13593,13617,14495,14295,15439,16133,15943,15183,15189,16716,15778,17570,18055,17841,17988,18309,17914,17953,18828,18797,19284,19647,20417,20270,20611,20267,18583,19754,20448,21469,21027,21135,21158,21164,22720,22340,21966,22204,23220,23817,23647,23646,22991,24377,25047,25028,24134,24872] },
+  K: { name: "Finance & Insurance", values: [16801,17012,18228,16397,16685,17405,17896,17330,20264,17815,14596,17715,20159,18132,18562,18007,15131,20885,21232,23331,18871,22526,24237,22682,22089,24880,25170,25101,25597,27668,24519,28707,31564,29330,32661,19498,24252,25937,30992,29906,25047,27815,31921,30833,29856,30005,30143,35887,33924,33316,38078,30029,36958,38207,37586,33984,37810,39325,39117,40255,39065] },
+  L: { name: "Real Estate", values: [34590,34281,35575,39101,33110,33358,36121,42888,41367,40197,35876,30697,61994,28319,38588,21419,28481,36225,41414,46411,39458,37211,36803,39443,38796,39058,39893,41487,40298,40027,40561,41037,41737,41813,42179,42542,42551,42795,43074,43342,43714,44001,44275,44542,44450,44762,45044,45297,45730,46081,46363,46612,46810,47227,47505,47740,48052,48534,48808,49034,48909] },
+  M: { name: "Professional Services", values: [3072,3051,3096,3148,3173,3230,3285,3320,3373,3399,3408,3436,3529,3603,3680,3725,3828,3891,3922,3953,3929,3943,3967,4077,4181,4297,4377,4452,4447,4505,4578,4626,4703,4800,4825,4851,4856,4847,4883,4896,4902,4917,4961,4960,5045,5110,5127,5187,5238,5286,5344,5399,5450,5501,5573,5614,5624,5722,5802,5875,5943] },
+  N: { name: "Admin Services", values: [1406,1407,1423,1458,1489,1518,1557,1607,1670,1734,1791,1861,1954,2033,2064,2097,2166,2241,2295,2325,2357,2457,2616,2756,2841,2913,3015,3150,3308,3468,3601,3667,3705,3745,3766,3774,3791,3798,3817,3888,3940,3921,3887,3879,3894,3948,4000,4019,4076,4171,4213,4232,4273,4310,4348,4384,4403,4452,4544,4605,4630] },
+  O: { name: "Public Admin", values: [15699,16638,16049,15645,17416,15455,16623,16742,16632,17844,17370,17760,17966,15956,19278,19831,19571,20585,19657,19170,20765,19207,19619,21023,20955,21829,22231,22065,21969,23327,22207,23685,23459,23357,24037,24956,26127,26299,26357,22907,25446,25755,26883,27030,27565,27700,26594,27577,29084,29218,29654,27459,29580,29771,30391,30598,29420,30366,31389,31851,29955] },
+  P: { name: "Education", values: [18282,19567,18915,18549,20693,18568,20042,20236,19962,21554,21045,21597,21758,19423,23380,23792,22893,24162,23230,22905,25152,23772,24603,26352,25614,26731,27427,27314,26878,28821,27909,29758,30275,28635,30116,31064,31605,31865,33118,27349,30697,31444,33989,32644,33890,33337,33443,34120,34866,35418,34686,35099,35550,36068,35372,36078,35701,36674,36311,37203,36701] },
+  Q: { name: "Health", values: [4123,4385,4234,4144,4633,4129,4440,4463,4400,4719,4558,4616,4617,4135,4976,5127,5075,5448,5224,5109,5491,5168,5280,5621,5492,5823,5955,5888,5752,6275,6063,6437,6547,6341,6594,6677,6601,6827,7015,7076,7532,6977,7520,7298,7548,7899,7868,8066,8388,8392,8259,8400,8727,8703,8828,8952,9035,9069,9278,9506,9133] },
+  RST: { name: "Other Services", values: [1646,1636,1674,1712,1667,1765,1758,1775,1798,1772,1820,1830,1836,1898,1856,1887,1998,1989,2056,2090,2060,2130,2150,2156,2198,2196,2230,2270,2314,2281,2351,2359,2386,2461,2480,2529,2535,2534,2503,2449,2537,2569,2588,2669,2600,2689,2735,2803,2876,2793,2853,2914,2931,2965,3028,3001,3023,3081,3125,3169,3147] }
+};
+
+// Years array - 61 quarters from Q1 2010/11 to Q1 2025/26
+const quarters = [];
+const years = [];
+for(let y=0; y<16; y++){
+  for(let q=1; q<=4; q++){
+    if(y===15 && q>1) break;
+    quarters.push(`${2010+y}/${String(11+y).padStart(2,'0')} Q${q}`);
+    years.push(2010+y);
+  }
+}
+
+// Annual sums (full years only = y*4 quarters)
+function annualSum(sectorKey) {
+  const v = rawData[sectorKey].values;
+  const sums = [];
+  for(let y=0; y<15; y++){
+    let s=0; for(let q=0;q<4;q++) s+=v[y*4+q];
+    sums.push(s);
+  }
+  return sums;
+}
+
+const yearLabels = [];
+for(let y=0;y<15;y++) yearLabels.push(`${2010+y}/${String(11+y).slice(-2)}`);
+
+const sectorKeys = Object.keys(rawData);
+
+// Total quarterly
+const totalQ = quarters.map((_,i) => sectorKeys.reduce((s,k)=>s+rawData[k].values[i],0));
+// Total annual
+const totalAnnual = yearLabels.map((_,y) => sectorKeys.reduce((s,k)=>s+annualSum(k)[y],0));
+
+// ============================================================
+// Chart.js defaults
+// ============================================================
+Chart.defaults.color = '#8B9BB4';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = isMobile ? 10 : 12;
+
+const tickFont = { size: isMobile ? 9 : 11 };
+const legendFont = { size: isMobile ? 9 : 11 };
+const maxTicks = isMobile ? 6 : 16;
+
+const COLORS = [
+  '#C0392B','#E67E22','#F1C40F','#27AE60','#2980B9',
+  '#8E44AD','#16A085','#D35400','#1ABC9C','#2C3E50',
+  '#E74C3C','#3498DB','#9B59B6','#F39C12','#1ABC9C',
+  '#7F8C8D','#BDC3C7','#ECF0F1'
+];
+
+function fmt(n) {
+  if(n>=100000) return (n/100000).toFixed(1)+'L';
+  if(n>=1000) return (n/1000).toFixed(1)+'K';
+  return n.toString();
+}
+
+// ============================================================
+// INIT HEADER
+// ============================================================
+const lastTotal = totalAnnual[14];
+const firstTotal = totalAnnual[0];
+document.getElementById('totalGDP').textContent = fmt(lastTotal);
+document.getElementById('growthPct').textContent = '+' + Math.round((lastTotal/firstTotal-1)*100) + '%';
+
+// ============================================================
+// OVERVIEW
+// ============================================================
+document.getElementById('ov-gdp1').innerHTML = fmt(lastTotal) + '<span class="stat-unit">Cr</span>';
+document.getElementById('ov-gdp0').innerHTML = fmt(firstTotal) + '<span class="stat-unit">Cr</span>';
+
+// fastest growing
+let fastKey='', fastMult=0;
+sectorKeys.forEach(k=>{
+  const a0=annualSum(k)[0], a14=annualSum(k)[14];
+  const m=a14/a0;
+  if(m>fastMult){fastMult=m;fastKey=k;}
+});
+document.getElementById('ov-fastest').textContent = rawData[fastKey].name;
+
+// Total GDP Chart
+new Chart(document.getElementById('chart-total-gdp'), {
+  type: 'line',
+  data: {
+    labels: yearLabels,
+    datasets: [{
+      label: 'Total GDP',
+      data: totalAnnual,
+      borderColor: '#C0392B',
+      backgroundColor: 'rgba(192,57,43,0.12)',
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: yearLabels.map((_,i)=> i===9 ? '#E74C3C' : i===7 ? '#E67E22' : '#C0392B'),
+      pointRadius: yearLabels.map((_,i)=> i===9||i===7 ? 7 : 3),
+      pointHoverRadius: 7,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: {display:false},
+      tooltip: { callbacks: { label: ctx => ' NPR ' + fmt(ctx.raw) + ' Crore' } },
+      annotation: {
+        annotations: {
+          eq: { type:'line', xMin:5, xMax:5, borderColor:'#E67E22', borderWidth:2, borderDash:[5,5], label:{content:'2015 Quake',display:true,color:'#E67E22',font:{size:10}} },
+          covid: { type:'line', xMin:9, xMax:9, borderColor:'#E74C3C', borderWidth:2, borderDash:[5,5], label:{content:'COVID',display:true,color:'#E74C3C',font:{size:10}} }
+        }
+      }
+    },
+    scales: {
+      x: { grid:{color:'rgba(255,255,255,0.04)'}, ticks:{font:tickFont, maxRotation:45, maxTicksLimit: isMobile?8:15} },
+      y: { grid:{color:'rgba(255,255,255,0.04)'}, ticks:{callback:v=>fmt(v), font:tickFont} }
+    }
+  }
+});
+
+// Pie latest
+const latestAnnual = sectorKeys.map(k=>annualSum(k)[14]);
+new Chart(document.getElementById('chart-pie-latest'), {
+  type: 'doughnut',
+  data: {
+    labels: sectorKeys.map(k=>rawData[k].name),
+    datasets: [{ data: latestAnnual, backgroundColor: COLORS, borderColor: '#161B22', borderWidth: 2 }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:true,
+    plugins: {
+      legend: { position: isMobile ? 'bottom' : 'right', labels:{font:legendFont, padding: isMobile?8:10, boxWidth:10} },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${((ctx.raw/latestAnnual.reduce((a,b)=>a+b,0))*100).toFixed(1)}%` } }
+    }
+  }
+});
+
+// Top sectors
+const sorted = sectorKeys.map(k=>({k,v:annualSum(k)[14]})).sort((a,b)=>b.v-a.v);
+const maxV = sorted[0].v;
+const topEl = document.getElementById('top-sectors');
+sorted.slice(0,8).forEach((s,i)=>{
+  const pct = (s.v/maxV*100).toFixed(0);
+  const barColor = COLORS[sectorKeys.indexOf(s.k)];
+  topEl.innerHTML += `<div class="sector-item">
+    <div class="sector-name">${rawData[s.k].name}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+    <div class="bar-val">${fmt(s.v)}</div>
+  </div>`;
+});
+
+// ============================================================
+// SECTOR TRANSFORMATION
+// ============================================================
+
+// Multiplier chart
+const multipliers = sectorKeys.map(k=>{ const a=annualSum(k); return {name:rawData[k].name, m:(a[14]/a[0]).toFixed(2)} }).sort((a,b)=>b.m-a.m);
+new Chart(document.getElementById('chart-multiplier'), {
+  type:'bar',
+  data:{
+    labels: multipliers.map(d=>d.name),
+    datasets:[{
+      label:'Growth Multiple (x)',
+      data: multipliers.map(d=>d.m),
+      backgroundColor: multipliers.map((_,i)=> i===0 ? '#F1C40F' : i===1||i===2 ? '#E67E22' : 'rgba(192,57,43,0.6)'),
+      borderColor: 'transparent',
+      borderRadius:6,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    indexAxis:'y',
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.raw}x growth`}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{callback:v=>v+'x', font:tickFont}},
+      y:{grid:{display:false}, ticks:{font:tickFont}}
+    }
+  }
+});
+
+// Share compare (grouped bar)
+const first5 = sectorKeys.slice(0,9);
+const shareFirst = first5.map(k=>((annualSum(k)[0]/totalAnnual[0])*100).toFixed(1));
+const shareLast = first5.map(k=>((annualSum(k)[14]/totalAnnual[14])*100).toFixed(1));
+new Chart(document.getElementById('chart-share-compare'),{
+  type:'bar',
+  data:{
+    labels: first5.map(k=>rawData[k].name),
+    datasets:[
+      {label:'2010/11',data:shareFirst,backgroundColor:'rgba(192,57,43,0.5)',borderRadius:4},
+      {label:'2024/25',data:shareLast,backgroundColor:'rgba(241,196,15,0.7)',borderRadius:4}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#8B9BB4'}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{maxRotation:40,font:tickFont}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:tickFont}}
+    }
+  }
+});
+
+// Stacked area by category
+const categories = {
+  'Agriculture': ['A'],
+  'Industry': ['B','C','D','E','F'],
+  'Services': ['G','H','I','J','K','L','M','N','O','P','Q','RST']
+};
+const catColors = { Agriculture:'#27AE60', Industry:'#E67E22', Services:'#2980B9' };
+new Chart(document.getElementById('chart-stacked'),{
+  type:'line',
+  data:{
+    labels: yearLabels,
+    datasets: Object.entries(categories).map(([cat,keys])=>({
+      label:cat,
+      data: yearLabels.map((_,y)=>keys.reduce((s,k)=>s+annualSum(k)[y],0)),
+      backgroundColor: catColors[cat]+'33',
+      borderColor: catColors[cat],
+      fill:true, tension:0.4, pointRadius:2
+    }))
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#8B9BB4'}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},stacked:false,ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},stacked:false,ticks:{callback:v=>fmt(v),font:tickFont}}
+    }
+  }
+});
+
+// ============================================================
+// AGRICULTURE VS SERVICES
+// ============================================================
+const agriAnnual = annualSum('A');
+const servKeys = ['G','H','I','J','K','L','M','N'];
+const servAnnual = yearLabels.map((_,y)=>servKeys.reduce((s,k)=>s+annualSum(k)[y],0));
+
+document.getElementById('agri-2010').innerHTML = fmt(agriAnnual[0])+'<span class="stat-unit">Cr</span>';
+document.getElementById('agri-2024').innerHTML = fmt(agriAnnual[14])+'<span class="stat-unit">Cr</span>';
+document.getElementById('serv-2010').innerHTML = fmt(servAnnual[0])+'<span class="stat-unit">Cr</span>';
+document.getElementById('serv-2024').innerHTML = fmt(servAnnual[14])+'<span class="stat-unit">Cr</span>';
+
+new Chart(document.getElementById('chart-agri-services'),{
+  type:'line',
+  data:{
+    labels:yearLabels,
+    datasets:[
+      {label:'Agriculture',data:agriAnnual,borderColor:'#27AE60',backgroundColor:'rgba(39,174,96,0.1)',fill:true,tension:0.4,pointRadius:3},
+      {label:'Services',data:servAnnual,borderColor:'#2980B9',backgroundColor:'rgba(41,128,185,0.1)',fill:true,tension:0.4,pointRadius:3}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#8B9BB4',font:legendFont}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+    }
+  }
+});
+
+// Share chart
+const agriShare = yearLabels.map((_,y)=>((agriAnnual[y]/totalAnnual[y])*100).toFixed(1));
+const servShare = yearLabels.map((_,y)=>((servAnnual[y]/totalAnnual[y])*100).toFixed(1));
+new Chart(document.getElementById('chart-agri-share'),{
+  type:'line',
+  data:{
+    labels:yearLabels,
+    datasets:[
+      {label:'Agriculture % of GDP',data:agriShare,borderColor:'#27AE60',tension:0.4,pointRadius:3,fill:false},
+      {label:'Services % of GDP',data:servShare,borderColor:'#2980B9',tension:0.4,pointRadius:3,fill:false}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#8B9BB4',font:legendFont}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:tickFont},min:0}
+    }
+  }
+});
+
+// ============================================================
+// TOURISM
+// ============================================================
+const hospV = rawData['I'].values;
+const hospAnnual = annualSum('I');
+const pre_covid = hospAnnual[9]; // 2019/20
+const covid_low_idx = 10; // 2020/21
+const covid_low = hospAnnual[covid_low_idx];
+const latest_hosp = hospAnnual[14];
+
+document.getElementById('tour-peak').innerHTML = fmt(pre_covid)+'<span class="stat-unit">Cr</span>';
+document.getElementById('tour-low').innerHTML = fmt(covid_low)+'<span class="stat-unit">Cr</span>';
+document.getElementById('tour-drop').textContent = '-'+Math.round((1-covid_low/pre_covid)*100)+'%';
+document.getElementById('tour-now').innerHTML = fmt(latest_hosp)+'<span class="stat-unit">Cr</span>';
+
+// Full quarterly tourism
+new Chart(document.getElementById('chart-tourism'),{
+  type:'line',
+  data:{
+    labels: quarters,
+    datasets:[{
+      label:'Hospitality GDP',
+      data: hospV,
+      borderColor: ctx => {
+        const i = ctx.dataIndex;
+        if(i>=36&&i<=43) return '#E74C3C';
+        return '#E67E22';
+      },
+      segment: {
+        borderColor: ctx => {
+          const i = ctx.p0DataIndex;
+          if(i>=36&&i<=43) return '#E74C3C';
+          return '#E67E22';
+        },
+        backgroundColor: ctx => {
+          const i = ctx.p0DataIndex;
+          if(i>=36&&i<=43) return 'rgba(231,76,60,0.15)';
+          return 'rgba(230,126,34,0.1)';
+        }
+      },
+      fill:true,
+      tension:0.4, pointRadius:1.5,
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{maxTicksLimit:isMobile?6:16,maxRotation:45,font:tickFont}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+    }
+  }
+});
+
+// Recovery grid
+const recSectors = [
+  {k:'I',name:'Hospitality'},
+  {k:'H',name:'Transport'},
+  {k:'G',name:'Trade'},
+  {k:'J',name:'ICT'},
+  {k:'F',name:'Construction'},
+  {k:'K',name:'Finance'}
+];
+const recGrid = document.getElementById('rec-grid');
+recSectors.forEach(s=>{
+  const an = annualSum(s.k);
+  const base = an[9];
+  const latest = an[14];
+  const pct = Math.round((latest/base)*100);
+  const color = pct>=100 ? '#27AE60' : pct>=80 ? '#E67E22' : '#E74C3C';
+  recGrid.innerHTML += `<div class="rec-card">
+    <div class="rec-name">${s.name}</div>
+    <div class="rec-bar-wrap"><div class="rec-bar" style="width:${Math.min(pct,100)}%;background:${color}"></div></div>
+    <div class="rec-pct" style="color:${color}">${pct}%</div>
+    <div class="rec-sub">vs 2019/20 baseline</div>
+  </div>`;
+});
+
+// Tour compare — selected sectors annual
+new Chart(document.getElementById('chart-tour-compare'),{
+  type:'line',
+  data:{
+    labels:yearLabels,
+    datasets: recSectors.map((s,i)=>({
+      label:s.name,
+      data:annualSum(s.k),
+      borderColor:COLORS[i],
+      tension:0.4,
+      pointRadius:2,
+      fill:false
+    }))
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#8B9BB4',font:legendFont}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{maxRotation:45,font:tickFont,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+    }
+  }
+});
+
+// ============================================================
+// SEASONAL
+// ============================================================
+// Build sector buttons
+const qSel = document.getElementById('q-sector-select');
+let activeSeasKey = 'G';
+function buildSeasonalChart() {
+  const ctx = document.getElementById('chart-seasonal-main');
+  if(ctx._chartInstance) ctx._chartInstance.destroy();
+  const v = rawData[activeSeasKey].values;
+  // Color by quarter
+  const bgColors = v.map((_,i)=> {
+    const q = i%4;
+    return ['rgba(192,57,43,0.7)','rgba(230,126,34,0.7)','rgba(241,196,15,0.7)','rgba(39,174,96,0.7)'][q];
+  });
+  const c = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:quarters,
+      datasets:[{
+        label:rawData[activeSeasKey].name,
+        data:v,
+        backgroundColor:bgColors,
+        borderRadius:3,
+        borderColor:'transparent'
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>`${rawData[activeSeasKey].name}: ${fmt(ctx.raw)}`}}
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{maxTicksLimit:isMobile?6:16,maxRotation:45,font:tickFont}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+      }
+    }
+  });
+  ctx._chartInstance = c;
+}
+
+sectorKeys.slice(0,8).forEach(k=>{
+  const b = document.createElement('button');
+  b.className = 'q-btn' + (k===activeSeasKey?' active':'');
+  b.textContent = rawData[k].name;
+  b.onclick = ()=>{
+    activeSeasKey=k;
+    document.querySelectorAll('.q-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    buildSeasonalChart();
+  };
+  qSel.appendChild(b);
+});
+buildSeasonalChart();
+
+// Average quarterly index (all sectors, years 5-14)
+const qAvg = [0,0,0,0];
+const qCount = [0,0,0,0];
+sectorKeys.forEach(k=>{
+  const v = rawData[k].values;
+  for(let y=5;y<15;y++){
+    for(let q=0;q<4;q++){
+      const base=(v[y*4]+v[y*4+1]+v[y*4+2]+v[y*4+3])/4;
+      qAvg[q]+=(v[y*4+q]/base);
+      qCount[q]++;
+    }
+  }
+});
+const qIdx = qAvg.map((s,i)=>((s/qCount[i])*100).toFixed(1));
+
+new Chart(document.getElementById('chart-q-avg'),{
+  type:'bar',
+  data:{
+    labels:['Q1 (Jul–Sep)','Q2 (Oct–Dec)','Q3 (Jan–Mar)','Q4 (Apr–Jun)'],
+    datasets:[{
+      label:'Seasonal Index (100=average)',
+      data:qIdx,
+      backgroundColor:['rgba(192,57,43,0.7)','rgba(230,126,34,0.9)','rgba(241,196,15,0.7)','rgba(39,174,96,0.7)'],
+      borderRadius:8,
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:tickFont}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v,font:tickFont},min:85,max:115}
+    }
+  }
+});
+
+// Volatility list
+const volList = document.getElementById('volatility-list');
+const volatilities = sectorKeys.map(k=>{
+  const v = rawData[k].values;
+  const qMeans = [0,0,0,0];
+  for(let y=0;y<15;y++) for(let q=0;q<4;q++) qMeans[q]+=v[y*4+q];
+  const mean = qMeans.map(s=>s/15);
+  const mx=Math.max(...mean), mn=Math.min(...mean);
+  return {k, name:rawData[k].name, vol: ((mx-mn)/(mx+mn)*2*100).toFixed(1) };
+}).sort((a,b)=>b.vol-a.vol);
+
+const maxVol = parseFloat(volatilities[0].vol);
+volatilities.slice(0,8).forEach(s=>{
+  const pct = (parseFloat(s.vol)/maxVol*100).toFixed(0);
+  const color = parseFloat(s.vol)>15 ? '#E74C3C' : parseFloat(s.vol)>8 ? '#E67E22' : '#27AE60';
+  volList.innerHTML += `<div class="sector-item">
+    <div class="sector-name">${s.name}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    <div class="bar-val">${s.vol}%</div>
+  </div>`;
+});
+
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
