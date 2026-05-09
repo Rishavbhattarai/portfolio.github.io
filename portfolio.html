@@ -4,15 +4,45 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-<html>
+<html lang="en">
 	<head>
-		<title>Portfolio</title>
+		<title>Portfolio | Rishav Bhattarai – Software Engineer & Salesforce Developer</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="Portfolio of Rishav Bhattarai: Salesforce CRM solutions, Java Spring Boot applications, cybersecurity risk tools, and interactive data visualizations." />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="css/main.css" />
-		<!-- <link rel="stylesheet" href="css/timeline.css" /> -->
-
 		<noscript><link rel="stylesheet" href="css/noscript.css" /></noscript>
+		<style>
+			body, html {
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+				font-weight: 600;
+			}
+
+			p, li {
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+				line-height: 1.6;
+			}
+
+			h2 {
+				font-weight: 700;
+				font-size: 1.8em;
+			}
+
+			h3 {
+				font-weight: 600;
+			}
+
+			h4 {
+				font-weight: 600;
+			}
+		</style>
 	</head>
 	<body class="is-preload">
 
@@ -34,12 +64,8 @@
 						<li><a href="index.html">Home</a></li>
 						<li><a href="portfolio.html">Portfolio</a></li>
 						<li><a href="aboutme.html">About Me</a></li>
-						<li><a href="contact.html">Blog</a></li>
+						<li><a href="blog.html">Writing & Research</a></li>
 					</ul>
-					<!-- <ul class="actions stacked">
-						<li><a href="#" class="button primary fit">Get Started</a></li>
-						<li><a href="#" class="button fit">Log In</a></li>
-					</ul> -->
 				</nav>
 
 				<!-- Banner -->
@@ -47,143 +73,339 @@
 					<section id="banner" class="style2">
 						<div class="inner">
 							<span class="image">
-								<img src="images/pic07.jpg" alt="" />
+								<img src="images/pic07.jpg" alt="Portfolio Banner" width="1200" height="600" />
 							</span>
 							<header class="major">
 								<h1>Portfolio</h1>
 							</header>
 							<div class="content">
-								<p>Hey everyone! I'm thrilled to share with you my portfolio, a glimpse into my journey. 
-								I'm always learning and growing, so feel free to reach out and connect!</p>
+								<p style="font-size: 1.1em; font-weight: 500;">A curated collection of my work in <strong>Salesforce CRM development</strong>, <strong>Java Spring Boot applications</strong>, <strong>cybersecurity risk tools</strong>, and <strong>interactive data visualizations</strong>. Each project represents real-world problem-solving and measurable business impact.</p>
 							</div>
 						</div>
 					</section>
+
 					<!-- Main -->
 					<div id="main">
 
-						<!-- One -->
-							<section id="one">
-								<div class="inner">
-									<header class="major">
-										<h2>Web Development</h2>
-									</header>
-									<p>I took an active involvement in the creation of the Pay Me and AwiPay digital wallet apps.
-										 I was instrumental in developing functionality that meet particular client requirements by 
-										 leveraging Java Spring Boot.  I put in place mechanisms that let users make up to three transactions 
-										 a day using linked cards, but only allowed one transaction per day for the wallet itself in order to ensure safe and controlled spending. In addition, I helped to provide a seamless and effective customer experience by contributing to the processing of transactions with third-party merchants.</p>
+						<!-- Featured: Cybersecurity Projects -->
+						<section id="cybersecurity" class="spotlights">
+							<div class="inner" style="padding-bottom: 0;">
+								<header class="major">
+									<h2>🔒 Cybersecurity & Risk Management</h2>
+									<p>Executive-grade tools that translate cybersecurity risks into financial metrics</p>
+								</header>
+							</div>
+
+							<!-- CISO Budget Defense Calculator -->
+							<section style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+								<a href="https://rishavunlv.github.io/ciso_budget.html" class="image" target="_blank">
+									<img src="images/placeholder-ciso-calc.jpg" alt="CISO Budget Defense Calculator - Cold Site vs Hot Site disaster recovery cost comparison tool" width="600" height="400" loading="lazy" />
+								</a>
+								<div class="content">
+									<div class="inner">
+										<header class="major">
+											<h3>CISO Budget Defense Calculator & Conference Paper</h3>
+											<div class="tags" style="margin: 10px 0;">
+												<span style="background: #e74c3c; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Cybersecurity</span>
+												<span style="background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Risk Management</span>
+												<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Financial Modeling</span>
+												<span style="background: #9b59b6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em;">Technical Writing</span>
+											</div>
+										</header>
+										<p><strong>Published conference paper</strong> and developed an interactive calculator designed for Chief Information Security Officers (CISOs). This analytical tool compares the total cost of ownership between <strong>Cold Site</strong> (slower recovery, lower cost) and <strong>Hot Site</strong> (faster recovery, higher cost) disaster recovery strategies.</p>
+
+										<h4>Key Features:</h4>
+										<ul>
+											<li>Real-time cost comparison with customizable parameters (RTO, RPO, downtime costs)</li>
+											<li>Executive-ready report generation with visual charts and ROI analysis</li>
+											<li>Risk quantification translating technical metrics into financial impact</li>
+											<li>Evidence-based recommendations for disaster recovery investments</li>
+										</ul>
+
+										<p><em><strong>Tech Stack:</strong> HTML5, CSS3, JavaScript, Chart.js, Bootstrap</em></p>
+
+										<ul class="actions" style="margin-top: 20px;">
+											<li><a href="https://rishavunlv.github.io/ciso_budget.html" class="button primary" target="_blank">Launch Calculator</a></li>
+											<li><a href="" class="button" target="_blank">Read Paper</a></li>
+										</ul>
+									</div>
 								</div>
 							</section>
 
-						<!-- Two -->
-							<section id="two" class="spotlights">
-								<section>
-									<a href="generic.html" class="image">
-										<img src="images/pic_09.png" alt="" data-position="center center" />
-									</a>
-									<div class="content">
-										<div class="inner">
-											<header class="major">
-												<h3>Android Development</h3>
-											</header>
-											<p>During my tenure as an Android developer, I contributed significantly to the development of the AwiPay digital wallet app. I made use of my knowledge of Kotlin and Java to add to the essential features of the program.  In addition to working on the UI, I also tested and developed the online applications and APIs that the Android application smoothly integrates with. I now have a comprehensive understanding of the whole Android app development cycle thanks to this experience, which will help to make sure AwiPay users have a reliable and easy-to-use experience.</p>
-											
-										</div>
+							<!-- Small Business ALE Tool -->
+							<section style="background: linear-gradient(135deg, #2d3436 0%, #000000 100%);">
+								<a href="realityCheck.html" class="image" target="_blank">
+									<img src="images/placeholder-ale-tool.jpg" alt="Small Business Risk Reality Check Tool - Annual Loss Expectancy calculator for cybersecurity threats" width="600" height="400" loading="lazy" />
+								</a>
+								<div class="content">
+									<div class="inner">
+										<header class="major">
+											<h3>Small Business Reality Check: Annual Loss Expectancy (ALE) Tool</h3>
+											<div class="tags" style="margin: 10px 0;">
+												<span style="background: #e67e22; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Risk Assessment</span>
+												<span style="background: #16a085; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">ALE Modeling</span>
+												<span style="background: #8e44ad; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em;">Small Business Consulting</span>
+											</div>
+										</header>
+										<p>A risk-assessment tool designed specifically for <strong>small business owners</strong> to understand the tangible financial impact of cybersecurity and operational threats. By translating low-probability, high-impact events into concrete <strong>Annual Loss Expectancy (ALE)</strong> metrics, this tool provides a crucial "reality check" that drives better security posture and informed investment decisions.</p>
+
+										<h4>Key Features:</h4>
+										<ul>
+											<li>Interactive ALE calculator with customizable threat scenarios</li>
+											<li>Visual risk matrices showing probability vs. impact</li>
+											<li>Cost-benefit analysis for security controls and insurance</li>
+											<li>Executive summary generation for stakeholder communication</li>
+										</ul>
+
+										<p><em><strong>Tech Stack:</strong> HTML5, CSS3, JavaScript, D3.js, Bootstrap</em></p>
+
+										<ul class="actions" style="margin-top: 20px;">
+											<li><a href="realityCheck.html" class="button primary" target="_blank">Try the Tool</a></li>
+											<li><a href="blog.html" class="button">Read Methodology</a></li>
+										</ul>
 									</div>
-								</section>
+								</div>
+							</section>
+						</section>
 
-								<section>
-									<a href="" class="image">
-										<img src="images/graph.jfif" alt="" data-position="25% 25%" />
-									</a>
-									<div class="content">
-										<div class="inner">
-											<header class="major">
-												<h3>Data Analysis</h3>
-											</header>
-											<p>
-												The power of data analysis intrigues me. My love is uncovering hidden patterns and gleaning 
-												insightful information from unprocessed data.  I've experimented with preprocessing and data cleaning using Python, 
-												turning unstructured datasets into formats that can be used.  This enables me to do in-depth analysis, such as identifying 
-												patterns in sales data or analyzing sports statistics to better comprehend performance.  I close the knowledge gap between 
-												data and information by using data analysis to provide insightful information that can guide choices and produce desired outcomes.
+						<!-- Data Visualization Dashboards -->
+						<section id="dashboards" class="spotlights">
+							<div class="inner" style="padding-bottom: 0;">
+								<header class="major">
+									<h2>📊 Data Visualization Dashboards</h2>
+									<p>Interactive dashboards transforming complex datasets into actionable insights</p>
+								</header>
+							</div>
 
+							<section>
+								<a href="Election_Commission.html" class="image" target="_blank">
+									<img src="images/placeholder-election-dashboard.jpg" alt="Election Dashboard - Nepal Election Commission Data Visualization" width="600" height="400" loading="lazy" />
+								</a>
+								<div class="content">
+									<div class="inner">
+										<header class="major">
+											<h3>Election Commission Data Dashboards</h3>
+											<div class="tags" style="margin: 10px 0;">
+												<span style="background: #e74c3c; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Data Visualization</span>
+												<span style="background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Interactive Maps</span>
+												<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em;">Real-time Data</span>
+											</div>
+										</header>
+										<p>A comprehensive suite of interactive dashboards visualizing Nepal's electoral data. These tools transform complex election datasets into intuitive, interactive experiences that help journalists, researchers, and citizens understand voting patterns, candidate distributions, and constituency demographics.</p>
 
+										<h4>Dashboards Include:</h4>
+										<ul>
+											<li><strong>Election 2082:</strong> Candidate listings with party affiliations and constituency details</li>
+											<li><strong>Constituency Dashboard:</strong> Interactive maps with demographic breakdowns</li>
+											<li><strong>Election 2080 Summary:</strong> Historical results and trend analysis</li>
+										</ul>
 
-											</p>
-		
-										</div>
+										<p><em><strong>Tech Stack:</strong> JavaScript, D3.js, Leaflet.js, Chart.js, HTML5, CSS3, JSON</em></p>
+
+										<ul class="actions" style="margin-top: 20px;">
+											<li><a href="Election_Commission.html" class="button primary" target="_blank">View Election Dashboards</a></li>
+											<li><a href="2082_candidates.html" class="button" target="_blank">2082 Candidates</a></li>
+										</ul>
 									</div>
-								</section>
-								<section>
-									<a href="" class="image">
-										<img src="images/panda.png" alt="" data-position="25% 25%" />
-									</a>
-									<div class="content">
-										<div class="inner">
-											<header class="major">
-												<h3>Machine Learning</h3>
-											</header>
-											<p>
-												I'm really excited about the topic of machine learning because of its capacity to generate insightful 
-												predictions and learn from data.  I've refined my data manipulation abilities using Python, painstakingly 
-												preparing and cleaning raw data to maximize its potential.  Strong machine learning models are constructed 
-												using this enhanced data as a basis. With the help of my house price prediction algorithm, consumers will be 
-												able to make well-informed real estate decisions.  In addition, I used machine learning to develop a Flask-based 
-												system that is easy to use. Using the user's input, this system suggests the ideal home depending on their tastes. 
-												I close the gap between data and practical applications by fusing machine learning, data analysis,
-												 and Flask to provide user-centric solutions that enhance user experiences and produce tangible outcomes.
-											</p>
-								
-										
-											
-										</div>
-									</div>
-								</section>
+								</div>
 							</section>
 
-							<div class="timeline">
-								<div class="containers left">
-								  <div class="contents">
-									<h3>2017 - 2022</h3>
-							  <p>Bachelors in Information Management</p>
-							 </div>
-								</div>
-								<div class="containers right">
-								  <div class="contents">
-									<h3>Feb 2022 - Nov 2022</h3>
-							  <h4>Three Monks Pvt Ltd</h4>
-							  <p>Android Development Intern</p></div>
-								</div>
-								<div class="containers left">
-								  <div class="contents">
-									<h3>Dec 2022 - Aug 2024</h3>
-									<h4>Three Monks Pvt Ltd</h4>
-									<p>Java Developer</p></div>
-								</div>
-								<div class="containers right">
-								  <div class="contents">
-									<h3>Aug 2024 - May 2026</h3>
-									<h4>University of Nevada Las Vegas </h4>
-									<p>Master's of Science Management Information System</p></div>
-								</div>
-								<div class="containers left">
-								  <div class="contents">
-									<h3>Aug 2024 - May 2026</h3>
-									<h4>University of Nevada Las Vegas - Office Of Information Technology </h4>
-									<p>Salesforce Developer</p></div>
-								</div>
-							
-							  </div>
+							<section>
+								<a href="gdp_growth.html" class="image" target="_blank">
+									<img src="images/placeholder-economic-dashboard.jpg" alt="Economic Indicators Dashboard - GDP Growth and GVA Reports" width="600" height="400" loading="lazy" />
+								</a>
+								<div class="content">
+									<div class="inner">
+										<header class="major">
+											<h3>Economic Indicators Dashboard</h3>
+											<div class="tags" style="margin: 10px 0;">
+												<span style="background: #e74c3c; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Economic Data</span>
+												<span style="background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Time Series</span>
+												<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em;">GVA Analysis</span>
+											</div>
+										</header>
+										<p>Interactive visualization of macroeconomic indicators including GDP growth trends over 15 years and Gross Value Added (GVA) sectoral analysis. These dashboards help identify economic patterns, sector contributions, and growth trajectories through dynamic charts and filtering capabilities.</p>
 
+										<h4>Features:</h4>
+										<ul>
+											<li>15-year GDP growth trends with year-over-year comparisons</li>
+											<li>Sector-wise GVA breakdown with interactive filtering</li>
+											<li>Comparative analysis tools for economic research</li>
+										</ul>
 
-					
-					  
-					
+										<p><em><strong>Tech Stack:</strong> JavaScript, Chart.js, D3.js, HTML5, CSS3, JSON</em></p>
+
+										<ul class="actions" style="margin-top: 20px;">
+											<li><a href="gdp_growth.html" class="button primary" target="_blank">View GDP Dashboard</a></li>
+											<li><a href="21_22_gva_report.html" class="button" target="_blank">GVA Report</a></li>
+										</ul>
+									</div>
+								</div>
+							</section>
+						</section>
+
+						<!-- Legacy Projects -->
+						<section id="one">
+							<div class="inner">
+								<header class="major">
+									<h2>💼 Enterprise Development Projects</h2>
+								</header>
+								<p>Production-grade applications developed in professional enterprise environments. These projects demonstrate my expertise in <strong>Java Spring Boot</strong>, <strong>RESTful API design</strong>, and <strong>full-stack development</strong>.</p>
+							</div>
+						</section>
+
+						<section id="two" class="spotlights">
+							<section>
+								<a href="portfolio.html" class="image">
+									<img src="images/pic_09.png" alt="Digital Wallet Application - Java Spring Boot Backend" width="600" height="400" loading="lazy" />
+								</a>
+								<div class="content">
+									<div class="inner">
+										<header class="major">
+											<h3>Digital Wallet Platform (PayMe & AwiPay)</h3>
+											<div class="tags" style="margin: 10px 0;">
+												<span style="background: #6db33f; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Java Spring Boot</span>
+												<span style="background: #dd0031; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Android</span>
+												<span style="background: #2496ed; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em;">REST API</span>
+											</div>
+										</header>
+										<p><strong>Enterprise-grade digital wallet application</strong> serving 100K+ users in Nepal. I developed secure transaction processing systems, implemented spending controls (3 transactions/day via linked cards, 1/day for wallet), and built the intermediary service layer between controllers and data repositories.</p>
+
+										<h4>Key Contributions:</h4>
+										<ul>
+											<li>Designed and implemented RESTful APIs for transaction processing</li>
+											<li>Built service layer encapsulating business logic and data access operations</li>
+											<li>Implemented security measures for financial data protection</li>
+											<li>Developed transaction controls and spending limits</li>
+										</ul>
+
+										<p><em><strong>Tech Stack:</strong> Java, Spring Boot, Hibernate, MySQL, REST APIs, Maven</em></p>
+									</div>
+								</div>
+							</section>
+
+							<section>
+								<a href="portfolio.html" class="image">
+									<img src="images/graph.jfif" alt="Machine Learning House Price Prediction System" width="600" height="400" loading="lazy" />
+								</a>
+								<div class="content">
+									<div class="inner">
+										<header class="major">
+											<h3>Machine Learning: House Price Prediction System</h3>
+											<div class="tags" style="margin: 10px 0;">
+												<span style="background: #3776ab; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">Python</span>
+												<span style="background: #f7931e; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; margin-right: 8px;">scikit-learn</span>
+												<span style="background: #000000; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75em;">Flask</span>
+											</div>
+										</header>
+										<p>An end-to-end machine learning system that predicts optimal house prices based on user preferences and market data. The system combines data preprocessing, feature engineering, and a trained regression model served through a user-friendly Flask web interface.</p>
+
+										<h4>Features:</h4>
+										<ul>
+											<li>Data cleaning and preprocessing pipeline</li>
+											<li>Feature engineering for price prediction accuracy</li>
+											<li>Interactive web interface for preference input</li>
+											<li>Real-time prediction results with explanations</li>
+										</ul>
+
+										<p><em><strong>Tech Stack:</strong> Python, scikit-learn, pandas, NumPy, Flask, HTML/CSS</em></p>
+									</div>
+								</div>
+							</section>
+						</section>
+
+					<!-- Career Timeline -->
+					<section id="timeline">
+						<div class="inner">
+							<header class="major">
+								<h2>💼 Work Experience</h2>
+							</header>
+
+							<!-- UNLV Salesforce Developer -->
+							<div style="margin-bottom: 40px; padding: 25px; background: #f5f5f5; border-left: 4px solid #667eea; border-radius: 4px;">
+								<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+									<h3 style="margin: 0; font-size: 1.2em;">Salesforce Developer</h3>
+									<span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">CURRENT</span>
+								</div>
+								<h4 style="margin: 8px 0; color: #333; font-weight: 600;">Office of Information Technology, UNLV</h4>
+								<p style="color: #666; font-size: 0.9em; margin: 8px 0; font-weight: 500;"><strong>Aug 2024 – Present</strong></p>
+								<ul style="margin-top: 16px; line-height: 1.7;">
+									<li>Designed and delivered Salesforce Sales and Service Cloud solutions using flows, Process Builder, Apex triggers/classes, and Lightning components to streamline workflows for 10+ university departments and improving usability for thousands of students and staff</li>
+									<li>Administered roles, profiles, permission sets, public groups, sharing rules, page layouts, record types, dashboards, and reports while leading data import/export and migration strategies using Data Loader and ETL tools to maintain secure and compliant access across UNLV OIT environments</li>
+									<li>Managed CRM records for students, employees, and internal departments by ensuring data accuracy across 10,000+ records and enabling reliable reporting to support university-wide operations</li>
+									<li>Built integrations with external systems using REST and SOAP APIs, reducing manual data entry and automating key business processes across Salesforce-driven university workflows</li>
+									<li>Implemented deployment strategies using change sets and Salesforce DX; maintained CI/CD pipelines with Git and Gearset, accelerating release cycles and reducing deployment errors across environments</li>
+								</ul>
+								<div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px;">
+									<span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Salesforce</span>
+									<span style="background: #f7931e; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Apex</span>
+									<span style="background: #2496ed; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Flow Builder</span>
+									<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">REST/SOAP APIs</span>
+									<span style="background: #000000; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Git & Gearset</span>
+									<span style="background: #764ba2; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Salesforce DX</span>
+								</div>
+							</div>
+
+							<!-- Three Monks Java Developer -->
+							<div style="margin-bottom: 40px; padding: 25px; background: #f5f5f5; border-left: 4px solid #6db33f; border-radius: 4px;">
+								<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+									<h3 style="margin: 0; font-size: 1.2em;">Java Developer</h3>
+									<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">COMPLETED</span>
+								</div>
+								<h4 style="margin: 8px 0; color: #333; font-weight: 600;">Three Monks Pvt. Ltd.</h4>
+								<p style="color: #666; font-size: 0.9em; margin: 8px 0; font-weight: 500;"><strong>Nov 2020 – Jun 2024</strong> • 3.5 years</p>
+								<ul style="margin-top: 16px; line-height: 1.7;">
+									<li>Engineered and optimized Java (Spring Boot) microservices with multithreading and concurrency controls and integrated C++ performance components for critical paths, supporting 4,000+ daily transactions and 800+ concurrent users, <strong>reducing average response time by 18%</strong></li>
+									<li>Designed and implemented 12+ secure RESTful APIs integrated with Android applications (SDK-level interactions) and Linux based backend services, <strong>improving transaction success rate by 15%</strong> and ensuring consistent data integrity</li>
+									<li>Diagnosed and resolved 30+ production issues in Linux environments using log analysis and crash debugging, leveraging Git workflows, TDD, and automated testing, <strong>reducing production defects by 25%</strong> and improving release stability</li>
+									<li>Collaborated with cross-functional teams to build and optimize Android-facing features interacting with backend microservices and Linux based systems, contributing to 8+ feature releases and <strong>improving overall application performance by 12%</strong> through efficient API designing and system tuning</li>
+								</ul>
+								<div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px;">
+									<span style="background: #6db33f; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Java Spring Boot</span>
+									<span style="background: #f7931e; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">C++</span>
+									<span style="background: #2496ed; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">REST APIs</span>
+									<span style="background: #dd0031; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Android SDK</span>
+									<span style="background: #000000; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Linux</span>
+									<span style="background: #555; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">TDD & Git</span>
+									<span style="background: #764ba2; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">Hibernate</span>
+								</div>
+							</div>
+
+							<!-- Education -->
+							<div style="margin-bottom: 30px; padding: 25px; background: #f5f5f5; border-left: 4px solid #00a1e0; border-radius: 4px;">
+								<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+									<h3 style="margin: 0; font-size: 1.2em;">MS in Management Information Systems</h3>
+									<span style="background: #00a1e0; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75em; font-weight: 600;">IN PROGRESS</span>
+								</div>
+								<h4 style="margin: 8px 0; color: #333; font-weight: 600;">University of Nevada, Las Vegas</h4>
+								<p style="color: #666; font-size: 0.9em; margin: 8px 0; font-weight: 500;"><strong>Aug 2024 – Present</strong></p>
+							</div>
+
+							<div style="padding: 25px; background: #f5f5f5; border-left: 4px solid #f7931e; border-radius: 4px;">
+								<h3 style="margin: 0 0 12px 0; font-size: 1.2em;">Bachelor's in Information Management</h3>
+								<h4 style="margin: 8px 0; color: #333; font-weight: 600;">Nepal</h4>
+								<p style="color: #666; font-size: 0.9em; margin: 8px 0; font-weight: 500;"><strong>2017 – 2022</strong></p>
+							</div>
+
+						</div>
+					</section>						<section id="cta">
+							<div class="inner">
+								<header class="major">
+									<h2>Let's Build Something Together</h2>
+								</header>
+								<p>I'm actively seeking full-time Software Engineering and Salesforce Development opportunities. My unique blend of enterprise Java development, CRM automation, and AI experimentation positions me to drive immediate impact.</p>
+								<ul class="actions" style="margin-top: 20px;">
+									<li><a href="aboutme.html" class="button primary">Learn More About Me</a></li>
+									<li><a href="mailto:bhattarai.rishav@gmail.com" class="button">Get In Touch</a></li>
+								</ul>
+							</div>
+						</section>
+
+					</div>
 
 			</div>
 
 		<!-- Scripts -->
-			<!-- Scripts -->
 			<script src="js/jquery.min.js"></script>
 			<script src="js/jquery.scrolly.min.js"></script>
 			<script src="js/jquery.scrollex.min.js"></script>
