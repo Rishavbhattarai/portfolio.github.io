@@ -1,9 +1,9 @@
 const PLAYERS = [
-  { name: 'Amit',      color: '#5b6cf6', bg: '#eeedfe', textc: '#3C3489', initials: 'AM', pts: 0,  noPreds: true },
-  { name: 'Barun',     color: '#1a6b3a', bg: '#e8f5ee', textc: '#0f4a27', initials: 'BA', pts: 6 },
-  { name: 'Prashanna', color: '#d97706', bg: '#faeeda', textc: '#633806', initials: 'PR', pts: 3 },
+  { name: 'MR. KTBFFH',      color: '#5b6cf6', bg: '#eeedfe', textc: '#3C3489', initials: 'AM', pts: 0,  noPreds: true },
+  { name: 'SR. GGMU',     color: '#1a6b3a', bg: '#e8f5ee', textc: '#0f4a27', initials: 'BA', pts: 6 },
+  { name: 'JR. GGMU', color: '#d97706', bg: '#faeeda', textc: '#633806', initials: 'PR', pts: 2 },
   { name: 'Rishav',    color: '#e05252', bg: '#fcebeb', textc: '#791f1f', initials: 'RI', pts: 1 },
-  { name: 'Sweastik',  color: '#7c3aed', bg: '#eeedfe', textc: '#26215C', initials: 'SW', pts: 2 },
+  { name: 'WANNA BE YNWA',  color: '#7c3aed', bg: '#eeedfe', textc: '#26215C', initials: 'SW', pts: 2 },
 ];
 
 const MATCHES = [
@@ -11,88 +11,90 @@ const MATCHES = [
     date: 'June 11 · 12:00', group: 'Group A', matchup: 'Mexico vs. South Africa',
     home: 'Mexico', away: 'South Africa', homeScore: 2, awayScore: 0,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 2, a: 0, pts: 3 },
-      { p: 'Prashanna', h: 3, a: 0, pts: 1 },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 2, a: 0, pts: 3 },
+      { p: 'JR. GGMU', h: 3, a: 0, pts: 1 },
       { p: 'Rishav',    h: 1, a: 2, pts: 0 },
-      { p: 'Sweastik',  h: 2, a: 1, pts: 1 },
+      { p: 'WANNA BE YNWA',  h: 2, a: 1, pts: 1 },
     ]
   },
   {
     date: 'June 11 · 19:00', group: 'Group A', matchup: 'South Korea vs. Czechia',
     home: 'South Korea', away: 'Czechia', homeScore: 2, awayScore: 1,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 2, a: 1, pts: 3 },
-      { p: 'Prashanna', h: 2, a: 0, pts: 1 },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 2, a: 1, pts: 3 },
+      { p: 'JR. GGMU', h: 2, a: 0, pts: 1 },
       { p: 'Rishav',    h: 1, a: 0, pts: 1 },
-      { p: 'Sweastik',  h: 2, a: 0, pts: 1 },
+      { p: 'WANNA BE YNWA',  h: 2, a: 0, pts: 1 },
     ]
   },
   {
     date: 'June 12 · 15:00', group: 'Group B', matchup: 'Canada vs. Bosnia and Herzegovina',
-    home: 'Canada', away: 'Bosnia', homeScore: 0, awayScore: 1,
+    // Updated: match was a draw
+    home: 'Canada', away: 'Bosnia', homeScore: 1, awayScore: 1,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 2, a: 0, pts: 0 },
-      { p: 'Prashanna', h: 1, a: 2, pts: 1 },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 2, a: 0, pts: 0 },
+      // JR. GGMU (prashanna) prediction was wrong for the actual draw; deduct 1 point
+      { p: 'JR. GGMU', h: 1, a: 2, pts: 0 },
       { p: 'Rishav',    h: 2, a: 0, pts: 0 },
-      { p: 'Sweastik',  h: 2, a: 1, pts: 0 },
+      { p: 'WANNA BE YNWA',  h: 2, a: 1, pts: 0 },
     ]
   },
   {
     date: 'June 12 · 21:00', group: 'Group D', matchup: 'United States vs. Paraguay',
     home: 'USA', away: 'Paraguay', homeScore: null, awayScore: null,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 3, a: 1, pts: null },
-      { p: 'Prashanna', h: 2, a: 1, pts: null },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 3, a: 1, pts: null },
+      { p: 'JR. GGMU', h: 2, a: 1, pts: null },
       { p: 'Rishav',    h: 3, a: 1, pts: null },
-      { p: 'Sweastik',  h: 1, a: 2, pts: null },
+      { p: 'WANNA BE YNWA',  h: 1, a: 2, pts: null },
     ]
   },
   {
     date: 'June 12 · 18:00', group: 'Group E', matchup: 'Germany vs. Curaçao',
     home: 'Germany', away: 'Curaçao', homeScore: null, awayScore: null,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 4, a: 0, pts: null },
-      { p: 'Prashanna', h: 4, a: 0, pts: null },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 4, a: 0, pts: null },
+      { p: 'JR. GGMU', h: 4, a: 0, pts: null },
       { p: 'Rishav',    h: null, a: null, pts: null },
-      { p: 'Sweastik',  h: 3, a: 0, pts: null },
+      { p: 'WANNA BE YNWA',  h: 3, a: 0, pts: null },
     ]
   },
   {
     date: 'June 13 · 12:00', group: 'Group C', matchup: 'Brazil vs. Morocco',
     home: 'Brazil', away: 'Morocco', homeScore: null, awayScore: null,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 3, a: 1, pts: null },
-      { p: 'Prashanna', h: null, a: null, pts: null },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 3, a: 1, pts: null },
+      { p: 'JR. GGMU', h: null, a: null, pts: null },
       { p: 'Rishav',    h: null, a: null, pts: null },
-      { p: 'Sweastik',  h: 4, a: 0, pts: null },
+      { p: 'WANNA BE YNWA',  h: 4, a: 0, pts: null },
     ]
   },
   {
     date: 'June 13 · 15:00', group: 'Group F', matchup: 'Netherlands vs. Japan',
     home: 'Netherlands', away: 'Japan', homeScore: null, awayScore: null,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 3, a: 2, pts: null },
-      { p: 'Prashanna', h: null, a: null, pts: null },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 3, a: 2, pts: null },
+      { p: 'JR. GGMU', h: null, a: null, pts: null },
       { p: 'Rishav',    h: null, a: null, pts: null },
-      { p: 'Sweastik',  h: 2, a: 1, pts: null },
+      { p: 'WANNA BE YNWA',  h: 2, a: 1, pts: null },
     ]
   },
   {
     date: 'June 15 · 15:00', group: 'Group J', matchup: 'Argentina vs. Algeria',
     home: 'Argentina', away: 'Algeria', homeScore: null, awayScore: null,
     preds: [
-      { p: 'Amit',      h: null, a: null, pts: null },
-      { p: 'Barun',     h: 0, a: 5, pts: 0 },
-      { p: 'Prashanna', h: null, a: null, pts: null },
+      { p: 'MR. KTBFFH',      h: null, a: null, pts: null },
+      { p: 'SR. GGMU',     h: 0, a: 5, pts: 0 },
+      { p: 'JR. GGMU', h: null, a: null, pts: null },
       { p: 'Rishav',    h: null, a: null, pts: null },
-      { p: 'Sweastik',  h: null, a: null, pts: null },
+      { p: 'WANNA BE YNWA',  h: null, a: null, pts: null },
     ]
   },
 ];
@@ -105,7 +107,7 @@ const rankColors  = ['#b8860b', '#888780', '#a0522d', '#888', '#888'];
 const maxPts = sorted[0].pts || 1;
 
 let activeGroup   = 'All';
-let activePlayer  = 'Barun';
+let activePlayer  = 'SR. GGMU';
 
 function pColor(name) {
   return PLAYERS.find(p => p.name === name)?.color || '#888';
