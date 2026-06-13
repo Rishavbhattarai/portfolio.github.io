@@ -53,11 +53,30 @@ const MATCHES = [
     date: 'June 12 · 15:00', group: 'Group B', matchup: 'Canada vs. Bosnia and Herzegovina',
     home: 'Canada', away: 'Bosnia', homeScore: 1, awayScore: 1,
     preds: [
+<<<<<<< HEAD
       { p: 'Amit',      h: null, a: null },
       { p: 'Barun',     h: 2,    a: 0    },
       { p: 'Prashanna', h: 1,    a: 2    },
       { p: 'Rishav',    h: 2,    a: 0    },
       { p: 'Sweastik',  h: 2,    a: 1    },
+=======
+      { p: 'Amit',      h: null, a: null, pts: null },
+      { p: 'Barun',     h: 2, a: 0, pts: 0 },
+      { p: 'Prashanna', h: 1, a: 2, pts: 0 },
+      { p: 'Rishav',    h: 2, a: 0, pts: 0 },
+      { p: 'Sweastik',  h: 2, a: 1, pts: 0 },
+    ]
+  },
+  {
+    date: 'June 12 · 21:00', group: 'Group D', matchup: 'United States vs. Paraguay',
+    home: 'USA', away: 'Paraguay', homeScore: null, awayScore: null,
+    preds: [
+      { p: 'Amit',      h: null, a: null, pts: null },
+      { p: 'Barun',     h: 3, a: 1, pts: null },
+      { p: 'Prashanna', h: 2, a: 1, pts: null },
+      { p: 'Rishav',    h: 3, a: 1, pts: null },
+      { p: 'Sweastik',  h: 2, a: 0, pts: null },
+>>>>>>> 68a6ad0f93c17a00e1e59a468526e1b7b2b71653
     ]
   },
   {
