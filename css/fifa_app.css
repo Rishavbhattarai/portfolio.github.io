@@ -414,6 +414,18 @@ body {
   transform: scale(0.97);
 }
 
+.pill-count {
+  font-size: 10px;
+  background: rgba(0,0,0,0.08);
+  padding: 1px 5px;
+  border-radius: 999px;
+  margin-left: 2px;
+}
+
+.pill-btn.active .pill-count {
+  background: rgba(255,255,255,0.25);
+}
+
 /* ─── Match Cards ─── */
 .match-card {
   background: var(--bg);
