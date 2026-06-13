@@ -6,12 +6,11 @@
   <meta name="theme-color" content="#1a6b3a" />
   <title>WC 2026 — Prediction Game</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
-  <link rel="stylesheet" href="./css/fifa_app.css?v=4" />
+  <link rel="stylesheet" href="./css/fifa_app.css" />
 </head>
 <body>
 
 <div class="app-shell">
-
   <header class="app-header">
     <div class="header-top">
       <div>
@@ -19,7 +18,7 @@
           <i class="ti ti-trophy" aria-hidden="true"></i>
           WC 2026 Predictions
         </div>
-        <div class="header-sub">3 matches scored · 5 upcoming</div>
+        <div class="header-sub" id="header-sub-text">Loading matches...</div>
       </div>
       <span class="header-badge">Group stage</span>
     </div>
@@ -41,13 +40,10 @@
   </header>
 
   <main class="main-content">
-
     <section id="section-standings" class="section active" aria-label="Standings">
-
-      <div class="sec-label">Tomorrow's Matches — Swipe to view</div>
+      <div class="sec-label">Upcoming Matches — Swipe to view</div>
       <div class="carousel-container">
-        <div class="carousel-track" id="upcoming-carousel">
-          </div>
+        <div class="carousel-track" id="upcoming-carousel"></div>
       </div>
 
       <div class="sec-label">Leaderboard</div>
@@ -55,16 +51,15 @@
 
       <div class="sec-label" style="margin-top:14px">Overview</div>
       <div class="stat-grid" id="overall-stats"></div>
-
     </section>
 
     <section id="section-matches" class="section" aria-label="Matches">
+      <div id="match-status-tabs" class="filter-bar"></div>   <!-- status tabs will be injected here -->
       <div class="filter-bar" id="group-tabs" role="group" aria-label="Filter by group"></div>
       <div id="match-list"></div>
     </section>
 
     <section id="section-player" class="section" aria-label="Player breakdown">
-
       <div class="sec-label">Select player</div>
       <div class="player-btns" id="player-btns" role="group" aria-label="Players"></div>
 
@@ -89,12 +84,12 @@
 
       <div class="sec-label" style="margin-bottom:8px">All predictions</div>
       <div id="player-match-preds"></div>
-
     </section>
-
   </main>
 </div>
 
-<script src="./js/fifa_app.js?v=4"></script>
+<!-- load data first, then app logic -->
+<script src="./data/data.js"></script>
+<script src="./js/fifa_app.js"></script>
 </body>
 </html>

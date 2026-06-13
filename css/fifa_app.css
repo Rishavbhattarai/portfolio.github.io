@@ -26,6 +26,7 @@
   --radius-lg: 14px;
   --radius-pill: 999px;
 
+  /* Player Colors */
   --p-amit: #5b6cf6;
   --p-barun: #1a6b3a;
   --p-prashanna: #d97706;
@@ -176,11 +177,7 @@ body {
   margin-bottom: 12px;
 }
 
-.card-inner {
-  padding: 12px 14px;
-}
-
-/* ─── Horizontal Swipe Carousel ─── */
+/* ─── Horizontal Swipe Carousel (Upcoming Matches) ─── */
 .carousel-container {
   margin: 0 -16px 16px -16px; 
   padding: 0 16px;
@@ -237,7 +234,6 @@ body {
   text-align: center;
 }
 
-/* ─── Shared Head & Predicts Styling ─── */
 .cg-head-title {
   display: flex;
   align-items: center;
@@ -253,13 +249,101 @@ body {
   border-radius: var(--radius-pill);
 }
 
-.cg-preds-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+/* ─── Interactive Prediction Inputs (New) ─── */
+.my-pred-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-md);
+}
+
+.my-pred-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 8px;
+}
+
+.my-pred-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+.lock-timer {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lock-timer.locked {
+  color: var(--text-tertiary);
+}
+
+.lock-timer.locked i {
+  color: var(--text-tertiary);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-tertiary);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+}
+
+.team-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.team-input-group.right {
+  justify-content: flex-end;
+}
+
+.team-name-small {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.score-input {
+  width: 40px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.score-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px var(--green-light);
+}
+
+.score-input:disabled {
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+.vs-badge {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 600;
 }
 
 /* ─── Leaderboard ─── */
@@ -505,18 +589,9 @@ body {
   background: var(--bg-secondary);
 }
 
-.pred-row.correct {
-  background: #e8f5ee;
-}
-
-.pred-row.partial {
-  background: #fef9e7;
-}
-
-.pred-row.wrong {
-  background: #fef2f2;
-  opacity: 0.8;
-}
+.pred-row.correct { background: #e8f5ee; }
+.pred-row.partial { background: #fef9e7; }
+.pred-row.wrong   { background: #fef2f2; opacity: 0.8; }
 
 @media (prefers-color-scheme: dark) {
   .pred-row.correct { background: #0a2a18; }
