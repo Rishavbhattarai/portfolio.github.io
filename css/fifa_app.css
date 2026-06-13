@@ -180,15 +180,43 @@ body {
   padding: 12px 14px;
 }
 
-/* ─── Current Game Card ─── */
-.current-game-card {
+/* ─── Horizontal Swipe Carousel ─── */
+.carousel-container {
+  margin: 0 -16px 16px -16px; 
+  padding: 0 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 4px;
+}
+
+.carousel-card {
+  flex: 0 0 88%; 
+  scroll-snap-align: start;
   border: 2px solid var(--green);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 14px;
+  background: var(--bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.cg-head {
+@media (min-width: 480px) {
+  .carousel-card {
+    flex: 0 0 100%; 
+  }
+}
+
+.cc-head {
   background: var(--green);
   color: #fff;
   padding: 10px 14px;
@@ -197,6 +225,19 @@ body {
   justify-content: space-between;
 }
 
+.cc-body {
+  padding: 14px;
+}
+
+.cc-matchup-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ─── Shared Head & Predicts Styling ─── */
 .cg-head-title {
   display: flex;
   align-items: center;
@@ -210,51 +251,6 @@ body {
   background: rgba(255,255,255,0.2);
   padding: 3px 9px;
   border-radius: var(--radius-pill);
-}
-
-.cg-body {
-  background: var(--bg);
-  padding: 14px;
-}
-
-.cg-matchup {
-  text-align: center;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-}
-
-.cg-score-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 14px;
-}
-
-.cg-team {
-  text-align: center;
-  flex: 1;
-}
-
-.cg-team-name {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-
-.cg-team-score {
-  font-size: 32px;
-  font-weight: 500;
-  color: var(--text-primary);
-  line-height: 1;
-}
-
-.cg-vs {
-  font-size: 13px;
-  color: var(--text-tertiary);
-  font-weight: 500;
 }
 
 .cg-preds-label {
@@ -732,9 +728,5 @@ body {
 @media (max-width: 400px) {
   .main-content {
     padding: 12px;
-  }
-
-  .cg-team-score {
-    font-size: 26px;
   }
 }

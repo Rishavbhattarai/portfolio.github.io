@@ -310,12 +310,6 @@ PLAYERS.forEach(p => {
   }, 0);
 });
 
-// Auto-detect the next unplayed match as the "current" game
-const CURRENT_MATCH_INDEX = (() => {
-  const idx = MATCHES.findIndex(m => m.homeScore === null);
-  return idx === -1 ? MATCHES.length - 1 : idx;
-})();
-
 const sorted      = [...PLAYERS].sort((a, b) => b.pts - a.pts);
 const rankLabels  = ['1st', '2nd', '3rd', '4th', '5th'];
 const rankColors  = ['#b8860b', '#888780', '#a0522d', '#888', '#888'];
@@ -346,28 +340,56 @@ function ptsBadge(pts) {
 
 // ─── BUILDERS ────────────────────────────────────────────────────────────────
 
-function buildCurrentGame() {
-  const m = MATCHES[CURRENT_MATCH_INDEX];
-  document.getElementById('cg-matchup').textContent = m.matchup;
-  document.getElementById('cg-date').textContent    = m.date;
-  document.getElementById('cg-home-name').textContent  = m.home;
-  document.getElementById('cg-away-name').textContent  = m.away;
-  document.getElementById('cg-home-score').textContent = m.homeScore !== null ? m.homeScore : '—';
-  document.getElementById('cg-away-score').textContent = m.awayScore !== null ? m.awayScore : '—';
+function buildUpcomingCarousel() {
+  const carouselTrack = document.getElementById('upcoming-carousel');
+  if (!carouselTrack) return;
 
-  const el = document.getElementById('cg-preds');
-  el.innerHTML = m.preds.map(pr => {
-    const col = pColor(pr.p);
-    if (pr.h === null) {
-      return `<div class="pred-row">
-        <div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div>
-        <span class="no-pred">No prediction</span>
+  // Filter out matches that don't have scores yet (Upcoming) and take up to 4
+  const upcomingMatches = MATCHES.filter(m => m.homeScore === null).slice(0, 4);
+
+  if (upcomingMatches.length === 0) {
+    carouselTrack.innerHTML = '<p class="no-pred" style="padding: 16px;">No upcoming matches scheduled.</p>';
+    return;
+  }
+
+  carouselTrack.innerHTML = upcomingMatches.map(m => {
+    const predsHtml = m.preds.map(pr => {
+      const col = pColor(pr.p);
+      if (pr.h === null) {
+        return `
+          <div class="pred-row">
+            <div class="pred-left">
+              <span class="pred-dot" style="background:${col}"></span>
+              <span class="pred-pname">${pr.p}</span>
+            </div>
+            <span class="no-pred">No prediction</span>
+          </div>`;
+      }
+      return `
+        <div class="pred-row">
+          <div class="pred-left">
+            <span class="pred-dot" style="background:${col}"></span>
+            <span class="pred-pname">${pr.p}</span>
+          </div>
+          <span class="pred-score">${pr.h} – ${pr.a}</span>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="carousel-card">
+        <div class="cc-head">
+          <div class="cg-head-title">
+            <i class="ti ti-clock" aria-hidden="true" style="font-size:14px"></i>
+            <span>${m.group}</span>
+          </div>
+          <span class="cg-time-badge">${m.date}</span>
+        </div>
+        <div class="cc-body">
+          <div class="cc-matchup-title">${m.matchup}</div>
+          <div class="cg-preds-label">Player Predictions</div>
+          <div class="preds-list">${predsHtml}</div>
+        </div>
       </div>`;
-    }
-    return `<div class="pred-row">
-      <div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div>
-      <span class="pred-score">${pr.h} – ${pr.a}</span>
-    </div>`;
   }).join('');
 }
 
@@ -592,7 +614,7 @@ function switchToPlayer(name) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  buildCurrentGame();
+  buildUpcomingCarousel(); 
   buildLeaderboard();
   buildOverallStats();
   buildGroupTabs();

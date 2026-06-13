@@ -6,13 +6,12 @@
   <meta name="theme-color" content="#1a6b3a" />
   <title>WC 2026 — Prediction Game</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
-  <link rel="stylesheet" href="./css/fifa_app.css?v=2" />
+  <link rel="stylesheet" href="./css/fifa_app.css?v=4" />
 </head>
 <body>
 
 <div class="app-shell">
 
-  <!-- ─── Header ─── -->
   <header class="app-header">
     <div class="header-top">
       <div>
@@ -25,7 +24,6 @@
       <span class="header-badge">Group stage</span>
     </div>
 
-    <!-- Bottom nav lives inside header (sticky) -->
     <nav class="bottom-nav" role="navigation" aria-label="Main sections">
       <button class="nav-btn active" onclick="showSection('section-standings', this)" aria-label="Standings">
         <i class="ti ti-chart-bar" aria-hidden="true"></i>
@@ -42,62 +40,34 @@
     </nav>
   </header>
 
-  <!-- ─── Main ─── -->
   <main class="main-content">
 
-    <!-- ════ STANDINGS SECTION ════ -->
     <section id="section-standings" class="section active" aria-label="Standings">
 
-      <!-- Current game -->
-      <div class="sec-label">Current game — next up</div>
-      <div class="current-game-card">
-        <div class="cg-head">
-          <div class="cg-head-title">
-            <i class="ti ti-clock" aria-hidden="true" style="font-size:14px"></i>
-            <span id="cg-matchup">—</span>
+      <div class="sec-label">Tomorrow's Matches — Swipe to view</div>
+      <div class="carousel-container">
+        <div class="carousel-track" id="upcoming-carousel">
           </div>
-          <span class="cg-time-badge" id="cg-date">—</span>
-        </div>
-        <div class="cg-body">
-          <div class="cg-score-row">
-            <div class="cg-team">
-              <div class="cg-team-name" id="cg-home-name">—</div>
-              <div class="cg-team-score" id="cg-home-score">—</div>
-            </div>
-            <div class="cg-vs">vs</div>
-            <div class="cg-team">
-              <div class="cg-team-name" id="cg-away-name">—</div>
-              <div class="cg-team-score" id="cg-away-score">—</div>
-            </div>
-          </div>
-          <div class="cg-preds-label">Predictions for this match</div>
-          <div class="preds-list" id="cg-preds"></div>
-        </div>
       </div>
 
-      <!-- Leaderboard -->
       <div class="sec-label">Leaderboard</div>
       <div class="card" id="lb-card"></div>
 
-      <!-- Overall stats -->
       <div class="sec-label" style="margin-top:14px">Overview</div>
       <div class="stat-grid" id="overall-stats"></div>
 
     </section>
 
-    <!-- ════ MATCHES SECTION ════ -->
     <section id="section-matches" class="section" aria-label="Matches">
       <div class="filter-bar" id="group-tabs" role="group" aria-label="Filter by group"></div>
       <div id="match-list"></div>
     </section>
 
-    <!-- ════ PLAYER SECTION ════ -->
     <section id="section-player" class="section" aria-label="Player breakdown">
 
       <div class="sec-label">Select player</div>
       <div class="player-btns" id="player-btns" role="group" aria-label="Players"></div>
 
-      <!-- Profile card -->
       <div class="player-profile-card">
         <div class="avatar player-profile-avatar" id="player-profile-avatar" style="width:50px;height:50px;font-size:17px">—</div>
         <div>
@@ -110,16 +80,13 @@
         </div>
       </div>
 
-      <!-- Stats grid -->
       <div class="stat-grid" id="player-stats"></div>
 
-      <!-- Accuracy bar -->
       <div class="accuracy-bar-wrap" id="player-accuracy" style="display:none">
         <span class="accuracy-label">Accuracy on scored matches</span>
         <span class="accuracy-val" id="player-accuracy-val">0%</span>
       </div>
 
-      <!-- All predictions -->
       <div class="sec-label" style="margin-bottom:8px">All predictions</div>
       <div id="player-match-preds"></div>
 
@@ -128,6 +95,6 @@
   </main>
 </div>
 
-<script src="./js/fifa_app.js?v=2"></script>
+<script src="./js/fifa_app.js?v=4"></script>
 </body>
 </html>
