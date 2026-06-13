@@ -48,7 +48,7 @@ const MATCHES = [
       { p: 'Barun',     h: 3, a: 1, pts: null },
       { p: 'Prashanna', h: 2, a: 1, pts: null },
       { p: 'Rishav',    h: 3, a: 1, pts: null },
-      { p: 'Sweastik',  h: 1, a: 2, pts: null },
+      { p: 'Sweastik',  h: 2, a: 0, pts: null },
     ]
   },
   {
