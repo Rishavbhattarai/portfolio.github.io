@@ -23,15 +23,16 @@
       <button class="nav-btn active" onclick="showSection('standings', this)">
         <i class="ti ti-chart-bar"></i> Standings
       </button>
+      <button class="nav-btn" onclick="showSection('addpred', this)">
+        <i class="ti ti-pencil-plus"></i> ADD PREDCTIONS
+      </button>
       <button class="nav-btn" onclick="showSection('matches', this)">
         <i class="ti ti-ball-football"></i> Matches
       </button>
       <button class="nav-btn" onclick="showSection('player', this)">
         <i class="ti ti-user"></i> Player
       </button>
-      <button class="nav-btn" onclick="showSection('addpred', this)">
-        <i class="ti ti-pencil-plus"></i> Add PRED
-      </button>
+
     </nav>
   </header>
 
@@ -50,21 +51,25 @@
         <i class="ti ti-refresh"></i> Refresh Data
       </button>
 
-      <!-- ---- STANDINGS ---- -->
+      <!-- ---- STANDINGS (reordered) ---- -->
       <section id="standings" class="section active">
-        <div class="sec-label">Today's Games</div>
-        <div id="todaysGamesContainer" style="margin-bottom:20px;"></div>
-
-        <div class="sec-label">Upcoming Matches — Swipe to view</div>
+        <!-- 1. Swipe tile (Upcoming matches carousel) -->
+        <div class="sec-label">Upcoming matches — swipe to view</div>
         <div class="carousel-container">
           <div class="carousel-track" id="upcomingCarousel"></div>
         </div>
 
+        <!-- 2. Leaderboard -->
         <div class="sec-label">Leaderboard</div>
         <div class="card" id="leaderboard"></div>
 
+        <!-- 3. Overview Stats -->
         <div class="sec-label">Overview</div>
         <div class="stat-grid" id="overviewStats"></div>
+
+        <!-- 4. All Upcoming Games (full list) -->
+        <div class="sec-label">All upcoming games</div>
+        <div id="allUpcomingGamesContainer"></div>
       </section>
 
       <!-- ---- MATCHES ---- -->
@@ -102,7 +107,8 @@
       <section id="addpred" class="section">
         <div class="add-pred-intro">
           <i class="ti ti-info-circle"></i>
-          <div>Enter or update your score predictions for today's matches. Predictions are saved directly to the shared Google Sheet.</div>
+          <div>खसी कप २०८२<br>
+          ⏱️ <strong>मतदान गरौँ</strong> यो प्रतिस्पर्धा जित्ने व्यक्तिले खसी, बोका वा सुँगुरको <strong>व्यवस्था कुन हटिया बजारमा गएर गर्न सकिन्छ भनेर भनिदिनेछन् !!!</strong>.</div>
         </div>
         <div class="sec-label">Today's matches</div>
         <div id="addPredContent"></div>
@@ -111,6 +117,7 @@
     </div><!-- /appContent -->
   </main>
 </div>
+
 
 <script src="../js/wclive.js?v=1.0.0"></script>
 </body>

@@ -26,7 +26,7 @@ let activePlayer = '';
 // =============================================================
 
 /** Returns the current moment expressed in America/Los_Angeles timezone
- *  as a plain (timezone-naive) Date so comparisons work correctly. */
+ * as a plain (timezone-naive) Date so comparisons work correctly. */
 function getCurrentPacificDate() {
   const now = new Date();
   const fmt = new Intl.DateTimeFormat('en-US', {
@@ -274,13 +274,16 @@ function stopAddPredTimer() {
 }
 
 // =============================================================
-// BUILD ALL UI
+// BUILD ALL UI (Standings reordered: carousel, leaderboard, overview, all upcoming)
 // =============================================================
 function buildAllUI() {
-  buildTodaysGames();
-  buildUpcomingCarousel();
-  buildLeaderboard();
-  buildOverviewStats();
+  // Standings page sections (order as requested)
+  buildUpcomingCarousel();      // 1. Swipe tile
+  buildLeaderboard();           // 2. Leaderboard
+  buildOverviewStats();         // 3. Overview
+  buildAllUpcomingGames();      // 4. All upcoming games (full list)
+
+  // Other tabs
   buildStatusTabs();
   buildGroupTabs();
   renderMatchList();
@@ -289,66 +292,7 @@ function buildAllUI() {
   buildAddPredSection();
 }
 
-// ── Standings: Today's Games ──────────────────────────────────
-function buildTodaysGames() {
-  const el = document.getElementById('todaysGamesContainer');
-  if (!el) return;
-
-  const today = MATCHES
-    .filter(m => isToday(m.dateTimeRaw))
-    .sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw));
-
-  if (!today.length) {
-    el.innerHTML = `
-      <div class="card" style="padding:16px;text-align:center;color:var(--text-tertiary);">
-        <i class="ti ti-calendar-off" style="font-size:24px;margin-bottom:8px;display:block;"></i>
-        <div style="font-size:13px;">No games scheduled for today.</div>
-      </div>`;
-    return;
-  }
-
-  el.innerHTML = today.map(m => {
-    const isPending = m.homeScore === null;
-    const timeOnly  = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
-
-    const predsHtml = m.preds.map(pr => {
-      const col = PLAYERS.find(p => p.name === pr.p)?.color || '#888';
-      if (pr.h === null) {
-        return `<div class="pred-row">
-          <div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div>
-          <span class="no-pred">TBD</span></div>`;
-      }
-      const cls = isPending ? '' : (pr.pts === 3 ? 'correct' : pr.pts === 1 ? 'partial' : 'wrong');
-      return `<div class="pred-row ${cls}">
-        <div class="pred-left">
-          <span class="pred-dot" style="background:${col}"></span>
-          <span class="pred-pname">${pr.p}</span>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <span class="pred-score">${pr.h} – ${pr.a}</span>
-          ${!isPending ? ptsBadge(pr.pts) : ''}
-        </div></div>`;
-    }).join('');
-
-    return `<div class="match-card">
-      <div class="match-head">
-        <div class="match-head-left">
-          <span class="grp-pill">${m.group}</span>
-          <span class="match-time"><i class="ti ti-clock"></i> ${timeOnly}</span>
-        </div>
-        ${!isPending
-          ? `<span class="score-badge" style="background:var(--green);color:white;">Final: ${m.homeScore} – ${m.awayScore}</span>`
-          : '<span class="pending-tag">Today</span>'}
-      </div>
-      <div class="match-body">
-        <div class="matchup-name" style="text-align:center;font-size:16px;font-weight:700;margin-bottom:12px;border-bottom:0.5px solid var(--border);padding-bottom:8px;">${m.matchup}</div>
-        <div class="sec-label" style="font-size:9px;margin-bottom:6px;">Player Predictions</div>
-        <div class="preds-list">${predsHtml}</div>
-      </div></div>`;
-  }).join('');
-}
-
-// ── Standings: Upcoming Carousel ─────────────────────────────
+// ── Standings: Upcoming Carousel (swipe tile) ─────────────────────────────
 function buildUpcomingCarousel() {
   const now  = getCurrentPacificDate();
   const list = MATCHES
@@ -381,12 +325,52 @@ function buildUpcomingCarousel() {
     </div>`).join('');
 }
 
+// ── Standings: All Upcoming Games (full list) ─────────────────────────────
+function buildAllUpcomingGames() {
+  const now = getCurrentPacificDate();
+  const upcoming = MATCHES
+    .filter(m => parseMatchDateTime(m.dateTimeRaw) > now)
+    .sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw));
+
+  const container = document.getElementById('allUpcomingGamesContainer');
+  if (!container) return;
+
+  if (!upcoming.length) {
+    container.innerHTML = '<p class="no-pred" style="text-align:center;padding:24px;">No upcoming matches scheduled.</p>';
+    return;
+  }
+
+  container.innerHTML = upcoming.map(m => {
+    const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
+    const predsHtml = m.preds.map(pr => {
+      const col = PLAYERS.find(p => p.name === pr.p)?.color || '#888';
+      if (pr.h === null)
+        return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">—</span></div>`;
+      return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span><span class="pred-score" style="margin-left:4px;">${pr.h}–${pr.a}</span></div></div>`;
+    }).join('');
+
+    return `<div class="match-card">
+      <div class="match-head">
+        <div class="match-head-left">
+          <span class="grp-pill">${m.group}</span>
+          <span class="match-time"><i class="ti ti-clock"></i> ${timeOnly}</span>
+        </div>
+        <span class="pending-tag"><i class="ti ti-clock"></i> Upcoming</span>
+      </div>
+      <div class="match-body">
+        <div class="matchup-name">${m.matchup}</div>
+        <div class="preds-list">${predsHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // ── Leaderboard ───────────────────────────────────────────────
 function buildLeaderboard() {
   const sorted  = [...PLAYERS].sort((a, b) => b.pts - a.pts);
   const maxPts  = sorted[0]?.pts || 1;
   const labels  = ['1st','2nd','3rd','4th','5th'];
-  const colors  = ['#b8860b','#888780','#a0522d','#888','#888'];
+  const colors  = ['var(--gold-dark)','#888780','#a0522d','#888','#888'];
 
   document.getElementById('leaderboard').innerHTML = sorted.map((p, i) => {
     const w = Math.round((p.pts / maxPts) * 100);
@@ -543,8 +527,8 @@ function renderPlayerDetail() {
   document.getElementById('playerPtsNum').style.color   = p.color;
 
   document.getElementById('playerStats').innerHTML = `
-    <div class="stat-box"><div class="sv" style="color:#1a6b3a">${exact}</div><div class="sl">exact scores (+3)</div></div>
-    <div class="stat-box"><div class="sv" style="color:#b8860b">${correct}</div><div class="sl">correct result (+1)</div></div>
+    <div class="stat-box"><div class="sv" style="color:var(--green)">${exact}</div><div class="sl">exact scores (+3)</div></div>
+    <div class="stat-box"><div class="sv" style="color:var(--gold-dark)">${correct}</div><div class="sl">correct result (+1)</div></div>
     <div class="stat-box"><div class="sv" style="color:#e05252">${wrong}</div><div class="sl">wrong predictions</div></div>
     <div class="stat-box"><div class="sv">${pending.length}</div><div class="sl">predictions pending</div></div>`;
 
@@ -687,11 +671,14 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
     status.className   = 'pred-save-status ok';
     status.textContent = `${h}:${a} ✓`;
 
-    buildTodaysGames();
+    // Refresh all UI sections
     buildUpcomingCarousel();
     buildLeaderboard();
     buildOverviewStats();
+    buildAllUpcomingGames();
     if (activePlayer) renderPlayerDetail();
+    // Also refresh matches tab in case it's visible
+    renderMatchList();
 
     setTimeout(async () => {
       btn.disabled  = false;
@@ -701,11 +688,12 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
         const res  = await fetch(SCRIPT_URL);
         const data = await res.json();
         parseSheetData(data);
-        buildTodaysGames();
         buildUpcomingCarousel();
         buildLeaderboard();
         buildOverviewStats();
+        buildAllUpcomingGames();
         buildAddPredSection();
+        renderMatchList();
         if (activePlayer) renderPlayerDetail();
       } catch (_) { /* silent refresh */ }
     }, 3000);
@@ -747,10 +735,11 @@ window.showSection = function(id, btn) {
     stopAddPredTimer();
   }
   if (id === 'standings') {
-    buildTodaysGames();
+    // Rebuild standings sections in case data changed while away
     buildUpcomingCarousel();
     buildLeaderboard();
     buildOverviewStats();
+    buildAllUpcomingGames();
   }
 };
 
