@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>WC 2026 – Live Prediction Game</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="../css/wclive.css?v=6.1.1">
+  <link rel="stylesheet" href="../css/wclive.css?v=7.1.2">
 </head>
 <body>
 <div class="app-shell">
 
-    <!-- ===== HEADER ===== -->
   <header class="app-header">
     <div class="header-top">
       <div>
@@ -32,54 +31,41 @@
       <button class="nav-btn" onclick="showSection('player', this)">
         <i class="ti ti-user"></i> Player
       </button>
-
     </nav>
   </header>
 
-  <!-- ===== MAIN ===== -->
   <main class="main-content">
-
-    <!-- Loading state -->
     <div id="loadingMsg" class="loading">
       <div>Loading data from Google Sheets…</div>
     </div>
 
-    <!-- App content (hidden until data loads) -->
     <div id="appContent" style="display:none;">
-
       <button class="refresh-btn" onclick="loadData()">
         <i class="ti ti-refresh"></i> Refresh Data
       </button>
 
-      <!-- ---- STANDINGS (reordered) ---- -->
+      <!-- STANDINGS -->
       <section id="standings" class="section active">
-        <!-- 1. Swipe tile (Upcoming matches carousel) -->
-        <div class="sec-label">Upcoming matches — swipe to view</div>
-        <div class="carousel-container">
+        <div class="sec-label" id="carouselLabel">हेर्नुस् त</div>
+        <div class="carousel-container" id="carouselContainer">
           <div class="carousel-track" id="upcomingCarousel"></div>
         </div>
-
-        <!-- 2. Leaderboard -->
         <div class="sec-label">Leaderboard</div>
         <div class="card" id="leaderboard"></div>
-
-        <!-- 3. Overview Stats -->
         <div class="sec-label">Overview</div>
         <div class="stat-grid" id="overviewStats"></div>
-
-        <!-- 4. All Upcoming Games (full list) -->
         <div class="sec-label">All upcoming games</div>
         <div id="allUpcomingGamesContainer"></div>
       </section>
 
-      <!-- ---- MATCHES ---- -->
+      <!-- MATCHES -->
       <section id="matches" class="section">
         <div id="statusTabs" class="filter-bar"></div>
         <div id="groupTabs"  class="filter-bar"></div>
         <div id="matchList"></div>
       </section>
 
-      <!-- ---- PLAYER ---- -->
+      <!-- PLAYER -->
       <section id="player" class="section">
         <div class="sec-label">Select player</div>
         <div id="playerBtns" class="player-btns"></div>
@@ -91,7 +77,7 @@
           </div>
           <div class="player-profile-pts" style="margin-left:auto;text-align:right;">
             <div id="playerPtsNum" class="player-profile-pts-num"></div>
-            <div class="player-profile-pts-label" style="font-size:11px;color:var(--text-tertiary);">pts total</div>
+            <div class="player-profile-pts-label">pts total</div>
           </div>
         </div>
         <div class="stat-grid" id="playerStats"></div>
@@ -103,24 +89,22 @@
         <div id="playerMatchPreds"></div>
       </section>
 
-      <!-- ---- ADD PRED (updated with date carousel) ---- -->
+      <!-- ADD PRED -->
       <section id="addpred" class="section">
         <div class="add-pred-intro">
           <i class="ti ti-info-circle"></i>
           <div>खसी कप २०८3<br>
           ⏱️ <strong>मतदान गरौँ, </strong> यो प्रतिस्पर्धा जित्ने व्यक्तिले खसी, बोका वा सुँगुरको <strong>व्यवस्था कुन हटिया बजारमा गएर गर्न सकिन्छ भनेर भनिदिनेछन् !!!</strong>.</div>
         </div>
-        <!-- Date navigation controls (injected dynamically) -->
         <div id="dateNavControls" class="date-nav"></div>
-        <div class="sec-label" id="dateCarouselLabel">Matches by date</div>
+        <div class="sec-label">Matches by date</div>
         <div id="addPredContent"></div>
       </section>
-
-    </div><!-- /appContent -->
+    </div>
   </main>
 </div>
 
 
-<script src="../js/wclive.js?v=6.1.1"></script>
+<script src="../js/wclive.js?v=7.1.2"></script>
 </body>
 </html>
