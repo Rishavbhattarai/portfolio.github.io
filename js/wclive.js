@@ -1,6 +1,7 @@
 // ============================================================
 // WC 2026 – Live Prediction Game | app.js
 // Carousel: chronological order + auto-scroll to "current" match
+// Removed total points pill from carousel – only fixture points shown
 // ============================================================
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
@@ -212,7 +213,7 @@ function buildTodayCarousel() {
   const track = document.getElementById('upcomingCarousel');
   const label = document.getElementById('carouselLabel');
   if (label) {
-    label.textContent = 'हेर्नुस् त';   // motto text (already in HTML, but ensure it)
+    label.textContent = 'हेर्नुस् त';
   }
   
   if (!allMatchesSorted.length) {
@@ -238,7 +239,6 @@ function buildTodayCarousel() {
           ${m.preds.map(pr => {
             const player = PLAYERS.find(p => p.name === pr.p);
             const col = player?.color || '#888';
-            const totalPts = player?.pts || 0;
             if (pr.h === null) {
               return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">No prediction</span></div>`;
             }
@@ -252,11 +252,11 @@ function buildTodayCarousel() {
               else { ptsText = '0'; bgColor = 'var(--bg-tertiary)'; textColor = 'var(--text-tertiary)'; }
               earnedBadge = `<span class="earned-points-badge" style="background:${bgColor}; color:${textColor}">${ptsText}</span>`;
             }
+            // REMOVED: total points pill (+totalPts) – only show earned badge for completed matches
             return `<div class="pred-row">
               <div class="pred-left">
                 <span class="pred-dot" style="background:${col}"></span>
                 <span class="pred-pname">${pr.p}</span>
-                <span class="pts-pill-carousel">+${totalPts}</span>
                 ${earnedBadge}
               </div>
               <span class="pred-score">${pr.h}–${pr.a}</span>
