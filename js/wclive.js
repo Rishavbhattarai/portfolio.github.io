@@ -278,7 +278,7 @@ function stopAddPredTimer() {
 // =============================================================
 function buildAllUI() {
   // Standings page sections (order as requested)
-  buildUpcomingCarousel();      // 1. Swipe tile
+  buildTodayCarousel();       // 1. Swipe tile (today's matches, including completed)
   buildLeaderboard();           // 2. Leaderboard
   buildOverviewStats();         // 3. Overview
   buildAllUpcomingGames();      // 4. All upcoming games (full list)
@@ -292,24 +292,31 @@ function buildAllUI() {
   buildAddPredSection();
 }
 
-// ── Standings: Upcoming Carousel (swipe tile) ─────────────────────────────
-function buildUpcomingCarousel() {
-  const now  = getCurrentPacificDate();
+// ── Standings: Today's Carousel (swipe tile – shows all matches from today) ──
+function buildTodayCarousel() {
+  // Get all matches that occur today (regardless of completion status)
   const list = MATCHES
-    .filter(m => parseMatchDateTime(m.dateTimeRaw) > now)
-    .sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw))
-    .slice(0, 4);
+    .filter(m => isToday(m.dateTimeRaw))
+    .sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw));
 
   const track = document.getElementById('upcomingCarousel');
   if (!list.length) {
-    track.innerHTML = '<p class="no-pred" style="padding:16px;">No upcoming matches</p>';
+    track.innerHTML = '<p class="no-pred" style="padding:16px;">No matches scheduled for today</p>';
     return;
   }
-  track.innerHTML = list.map(m => `
+
+  track.innerHTML = list.map(m => {
+    const isCompleted = (m.homeScore !== null && m.awayScore !== null);
+    // Show actual score if match is completed
+    const scoreHtml = isCompleted
+      ? `<span class="score-badge" style="background:var(--gold); color:var(--malachite-dark);">${m.homeScore} – ${m.awayScore}</span>`
+      : `<span class="cg-time-badge">${m.dateDisplay.includes(' - ') ? m.dateDisplay.split(' - ')[1] : m.dateDisplay}</span>`;
+
+    return `
     <div class="carousel-card">
       <div class="cc-head">
-        <div class="cg-head-title"><i class="ti ti-clock"></i> ${m.group}</div>
-        <span class="cg-time-badge">${m.dateDisplay}</span>
+        <div class="cg-head-title"><i class="ti ti-calendar"></i> ${m.group}</div>
+        ${scoreHtml}
       </div>
       <div class="cc-body">
         <div class="cc-matchup-title">${m.matchup}</div>
@@ -321,8 +328,10 @@ function buildUpcomingCarousel() {
               : `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="pred-score">${pr.h}–${pr.a}</span></div>`;
           }).join('')}
         </div>
+        ${isCompleted ? `<div class="final-tag" style="text-align:center; margin-top:8px; font-size:10px; color:var(--text-tertiary);"><i class="ti ti-check"></i> Final</div>` : ''}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ── Standings: All Upcoming Games (full list) ─────────────────────────────
@@ -672,12 +681,11 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
     status.textContent = `${h}:${a} ✓`;
 
     // Refresh all UI sections
-    buildUpcomingCarousel();
+    buildTodayCarousel();
     buildLeaderboard();
     buildOverviewStats();
     buildAllUpcomingGames();
     if (activePlayer) renderPlayerDetail();
-    // Also refresh matches tab in case it's visible
     renderMatchList();
 
     setTimeout(async () => {
@@ -688,7 +696,7 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
         const res  = await fetch(SCRIPT_URL);
         const data = await res.json();
         parseSheetData(data);
-        buildUpcomingCarousel();
+        buildTodayCarousel();
         buildLeaderboard();
         buildOverviewStats();
         buildAllUpcomingGames();
@@ -736,7 +744,7 @@ window.showSection = function(id, btn) {
   }
   if (id === 'standings') {
     // Rebuild standings sections in case data changed while away
-    buildUpcomingCarousel();
+    buildTodayCarousel();
     buildLeaderboard();
     buildOverviewStats();
     buildAllUpcomingGames();

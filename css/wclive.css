@@ -166,6 +166,7 @@ body {
   padding: 10px 14px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .cc-body { padding: 14px; }
 .cc-matchup-title {
@@ -186,7 +187,15 @@ body {
   padding: 3px 9px;
   border-radius: var(--radius-pill);
 }
-
+.score-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 0.5px solid var(--border-md);
+  color: var(--malachite-dark);
+}
 /* ---- Cards ---- */
 .card {
   background: var(--bg);
@@ -330,15 +339,6 @@ body {
   color: var(--gold-dark);
 }
 .match-time { font-size: 10px; color: var(--text-tertiary); }
-.score-badge {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
-  background: var(--bg);
-  border: 0.5px solid var(--border-md);
-  color: var(--malachite-dark);
-}
 .pending-tag {
   font-size: 10px;
   color: var(--gold-dark);
