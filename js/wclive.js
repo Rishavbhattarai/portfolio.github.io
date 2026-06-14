@@ -3,7 +3,6 @@
 // ============================================================
 
 // ── YOUR APPS SCRIPT WEB APP URL ─────────────────────────────
-// Paste the URL from: Deploy > Manage deployments > Web app URL
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
 
 // ── Player visual config ──────────────────────────────────────
@@ -183,33 +182,95 @@ function parseSheetData(rows) {
 // =============================================================
 // SAVE PREDICTION  (POST to Apps Script)
 // =============================================================
-//
-// IMPORTANT — CORS with Google Apps Script:
-// Apps Script cannot handle the browser's preflight OPTIONS request
-// when Content-Type is application/json, so we use mode:'no-cors'.
-// With no-cors the response is "opaque" (we can't read it), but the
-// write still happens on the server side. We therefore treat any
-// non-network-error as a success and verify by re-fetching data.
-//
 async function savePrediction(matchRowIndex, playerName, home, away) {
   const payload = JSON.stringify({
     action:        'savePrediction',
-    matchRowIndex,   // 0-based index into the rows[] array doGet returns
+    matchRowIndex,
     playerName,
     home,
     away
   });
 
-  // Use no-cors to avoid the preflight CORS block that Apps Script can't answer.
   await fetch(SCRIPT_URL, {
     method:  'POST',
-    mode:    'no-cors',         // response will be opaque — that's expected
+    mode:    'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body:    payload
   });
-  // With no-cors we can't read the response body.
-  // If fetch() doesn't throw, the request reached the server.
-  // We rely on the subsequent loadData() call to confirm the write.
+}
+
+// =============================================================
+// TIMER & GRACE PERIOD (5 min after kickoff)
+// =============================================================
+
+/** Get the lock deadline (match start + 5 minutes) as a Date object */
+function getMatchLockDeadline(match) {
+  const start = parseMatchDateTime(match.dateTimeRaw);
+  return new Date(start.getTime() + 5 * 60 * 1000);
+}
+
+/** Format milliseconds to MM:SS countdown */
+function formatCountdown(ms) {
+  if (ms <= 0) return "🔒 Locked";
+  const mins = Math.floor(ms / 60000);
+  const secs = Math.floor((ms % 60000) / 1000);
+  const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+  return `⏱️ ${timeStr} mins until lock`;
+}
+
+/** Update all timers and lock states in the Add PRED section */
+function updateAddPredTimers() {
+  const addPredSection = document.getElementById('addpred');
+  if (!addPredSection || !addPredSection.classList.contains('active')) return;
+
+  const now = getCurrentPacificDate();
+  const matchCards = document.querySelectorAll('#addPredContent .pred-match-card');
+
+  matchCards.forEach(card => {
+    const rowIndex = parseInt(card.getAttribute('data-rowindex'), 10);
+    const match = MATCHES.find(m => m.rowIndex === rowIndex);
+    if (!match) return;
+
+    const lockTime = getMatchLockDeadline(match);
+    const isLocked = now > lockTime;
+    const remainingMs = lockTime - now;
+
+    // Update timer display
+    const timerSpan = card.querySelector('.match-lock-timer');
+    if (timerSpan) {
+      timerSpan.textContent = isLocked ? '🔒 Locked' : formatCountdown(remainingMs);
+      timerSpan.style.color = isLocked ? '#e05252' : '';
+
+      // Add/remove urgent class when remaining time ≤ 2 minutes (120,000 ms)
+      if (!isLocked && remainingMs <= 120000) {
+        timerSpan.classList.add('urgent');
+      } else {
+        timerSpan.classList.remove('urgent');
+      }
+    }
+
+    // Enable/disable inputs and save button
+    const inputs = card.querySelectorAll('.score-input');
+    const saveBtns = card.querySelectorAll('.save-pred-btn');
+    inputs.forEach(inp => inp.disabled = isLocked);
+    saveBtns.forEach(btn => btn.disabled = isLocked);
+  });
+}
+
+let addPredTimerInterval = null;
+
+function startAddPredTimer() {
+  if (addPredTimerInterval) clearInterval(addPredTimerInterval);
+  addPredTimerInterval = setInterval(() => {
+    updateAddPredTimers();
+  }, 1000);
+}
+
+function stopAddPredTimer() {
+  if (addPredTimerInterval) {
+    clearInterval(addPredTimerInterval);
+    addPredTimerInterval = null;
+  }
 }
 
 // =============================================================
@@ -515,7 +576,7 @@ function renderPlayerDetail() {
 }
 
 // =============================================================
-// ADD PRED TAB
+// ADD PRED TAB (with timer and grace period)
 // =============================================================
 function buildAddPredSection() {
   const el = document.getElementById('addPredContent');
@@ -534,14 +595,17 @@ function buildAddPredSection() {
     return;
   }
 
+  const now = getCurrentPacificDate();
   el.innerHTML = todayMatches.map(m => {
     const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
+    const lockTime = getMatchLockDeadline(m);
+    const isInitiallyLocked = now > lockTime;
 
     const playerRows = PLAYERS.map(pl => {
       const existing = m.preds.find(pr => pr.p === pl.name);
-      const hVal     = existing?.h ?? '';
-      const aVal     = existing?.a ?? '';
-      const uid      = `pred_${m.id}_${pl.name.replace(/\s+/g, '_')}`;
+      const hVal = existing?.h ?? '';
+      const aVal = existing?.a ?? '';
+      const uid = `pred_${m.id}_${pl.name.replace(/\s+/g, '_')}`;
 
       return `<div class="pred-player-row">
         <div class="pred-player-avatar" style="background:${pl.bg};color:${pl.textc}">${pl.initials}</div>
@@ -549,12 +613,12 @@ function buildAddPredSection() {
         <div class="score-inputs">
           <input class="score-input" type="number" min="0" max="20"
                  id="${uid}_h" value="${hVal}" placeholder="–"
-                 aria-label="${pl.name} home score">
+                 aria-label="${pl.name} home score" ${isInitiallyLocked ? 'disabled' : ''}>
           <span class="score-sep">:</span>
           <input class="score-input" type="number" min="0" max="20"
                  id="${uid}_a" value="${aVal}" placeholder="–"
-                 aria-label="${pl.name} away score">
-          <button class="save-pred-btn" id="${uid}_btn"
+                 aria-label="${pl.name} away score" ${isInitiallyLocked ? 'disabled' : ''}>
+          <button class="save-pred-btn" id="${uid}_btn" ${isInitiallyLocked ? 'disabled' : ''}
                   onclick="handleSavePred(${m.rowIndex},'${pl.name}','${uid}')">
             <i class="ti ti-device-floppy"></i> Save
           </button>
@@ -563,10 +627,11 @@ function buildAddPredSection() {
       </div>`;
     }).join('');
 
-    return `<div class="pred-match-card">
+    return `<div class="pred-match-card" data-rowindex="${m.rowIndex}">
       <div class="pred-match-head">
         <div class="pred-match-title">${m.matchup}</div>
         <div class="pred-match-meta">${m.group} · ${timeOnly}</div>
+        <div class="match-lock-timer">${isInitiallyLocked ? '🔒 Locked' : '⏱️ Loading...'}</div>
       </div>
       <div class="pred-player-section">
         <div class="pred-player-label">Enter / update predictions</div>
@@ -574,6 +639,9 @@ function buildAddPredSection() {
       </div>
     </div>`;
   }).join('');
+
+  // Initial timer update
+  updateAddPredTimers();
 }
 
 window.handleSavePred = async function(matchRowIndex, playerName, uid) {
@@ -582,7 +650,6 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
   const btn    = document.getElementById(`${uid}_btn`);
   const status = document.getElementById(`${uid}_status`);
 
-  // ── Validate inputs ──
   const hRaw = hInput.value.trim();
   const aRaw = aInput.value.trim();
 
@@ -599,7 +666,6 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
     return;
   }
 
-  // ── Saving state ──
   btn.disabled  = true;
   btn.className = 'save-pred-btn saving';
   btn.innerHTML = '<i class="ti ti-loader-2"></i> Saving…';
@@ -607,35 +673,30 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
   status.textContent = '';
 
   try {
-    // POST to Apps Script (no-cors — opaque response, that's expected)
     await savePrediction(matchRowIndex, playerName, h, a);
 
-    // Optimistically update local state so all views update immediately
+    // Update local state optimistically
     const match = MATCHES.find(m => m.rowIndex === matchRowIndex);
     if (match) {
       const pred = match.preds.find(pr => pr.p === playerName);
       if (pred) { pred.h = h; pred.a = a; }
     }
 
-    // Show success
     btn.className = 'save-pred-btn saved';
     btn.innerHTML = '<i class="ti ti-check"></i> Saved';
     status.className   = 'pred-save-status ok';
     status.textContent = `${h}:${a} ✓`;
 
-    // Refresh all other panels (no network call needed — local state already updated)
     buildTodaysGames();
     buildUpcomingCarousel();
     buildLeaderboard();
     buildOverviewStats();
     if (activePlayer) renderPlayerDetail();
 
-    // After 3 s do a full data refresh to confirm the server write succeeded
     setTimeout(async () => {
       btn.disabled  = false;
       btn.className = 'save-pred-btn';
       btn.innerHTML = '<i class="ti ti-device-floppy"></i> Save';
-      // Silent background reload — keeps status text visible
       try {
         const res  = await fetch(SCRIPT_URL);
         const data = await res.json();
@@ -646,7 +707,7 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
         buildOverviewStats();
         buildAddPredSection();
         if (activePlayer) renderPlayerDetail();
-      } catch (_) { /* silent fail — local state is still correct */ }
+      } catch (_) { /* silent refresh */ }
     }, 3000);
 
   } catch (err) {
@@ -670,7 +731,7 @@ function ptsBadge(pts) {
 }
 
 // =============================================================
-// NAVIGATION
+// NAVIGATION (with timer control)
 // =============================================================
 window.showSection = function(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -679,7 +740,12 @@ window.showSection = function(id, btn) {
   btn.classList.add('active');
 
   if (id === 'matches')   renderMatchList();
-  if (id === 'addpred')   buildAddPredSection();
+  if (id === 'addpred') {
+    buildAddPredSection();
+    startAddPredTimer();
+  } else {
+    stopAddPredTimer();
+  }
   if (id === 'standings') {
     buildTodaysGames();
     buildUpcomingCarousel();
@@ -699,3 +765,6 @@ window.switchToPlayer = function(name) {
 // BOOT
 // =============================================================
 loadData();
+window.addEventListener('beforeunload', () => {
+  stopAddPredTimer();
+});
