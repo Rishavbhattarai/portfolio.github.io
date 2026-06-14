@@ -323,9 +323,18 @@ function buildTodayCarousel() {
         <div class="preds-list">
           ${m.preds.map(pr => {
             const col = PLAYERS.find(p => p.name === pr.p)?.color || '#888';
-            return pr.h === null
-              ? `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">No prediction</span></div>`
-              : `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="pred-score">${pr.h}–${pr.a}</span></div>`;
+            // Determine points earned (if match completed, otherwise no badge)
+            let pointsHtml = '';
+            if (isCompleted) {
+              // If no prediction made, they get 0 points
+              const pts = (pr.h !== null && pr.pts !== null) ? pr.pts : 0;
+              pointsHtml = ` ${ptsBadge(pts)}`;
+            }
+            if (pr.h === null) {
+              return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">No prediction${pointsHtml ? ' ' + pointsHtml : ''}</span></div>`;
+            } else {
+              return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="pred-score">${pr.h}–${pr.a}${pointsHtml}</span></div>`;
+            }
           }).join('')}
         </div>
         ${isCompleted ? `<div class="final-tag" style="text-align:center; margin-top:8px; font-size:10px; color:var(--text-tertiary);"><i class="ti ti-check"></i> Final</div>` : ''}
