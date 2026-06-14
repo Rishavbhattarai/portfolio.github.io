@@ -21,6 +21,11 @@ let activeGroup  = 'All';
 let activeStatus = 'upcoming';
 let activePlayer = '';
 
+// For date carousel in Add Predictions
+let _dateGroups = [];
+let _currentDateIdx = 0;
+let _addPredTimer = null;
+
 // =============================================================
 // DATE HELPERS
 // =============================================================
@@ -218,16 +223,16 @@ function formatCountdown(ms) {
   return `⏱️ ${timeStr} mins until lock`;
 }
 
-/** Update all timers and lock states in the Add PRED section */
+/** Update all timers and lock states in the ADD PRED section (date carousel) */
 function updateAddPredTimers() {
   const addPredSection = document.getElementById('addpred');
   if (!addPredSection || !addPredSection.classList.contains('active')) return;
 
   const now = getCurrentPacificDate();
-  const matchCards = document.querySelectorAll('#addPredContent .pred-match-card');
+  const matchItems = document.querySelectorAll('#addPredContent .pred-match-item');
 
-  matchCards.forEach(card => {
-    const rowIndex = parseInt(card.getAttribute('data-rowindex'), 10);
+  matchItems.forEach(item => {
+    const rowIndex = parseInt(item.getAttribute('data-rowindex'), 10);
     const match = MATCHES.find(m => m.rowIndex === rowIndex);
     if (!match) return;
 
@@ -236,12 +241,11 @@ function updateAddPredTimers() {
     const remainingMs = lockTime - now;
 
     // Update timer display
-    const timerSpan = card.querySelector('.match-lock-timer');
+    const timerSpan = item.querySelector('.match-lock-timer');
     if (timerSpan) {
       timerSpan.textContent = isLocked ? '🔒 Locked' : formatCountdown(remainingMs);
       timerSpan.style.color = isLocked ? '#e05252' : '';
 
-      // Urgent class when ≤ 2 minutes until lock
       if (!isLocked && remainingMs <= 120000) {
         timerSpan.classList.add('urgent');
       } else {
@@ -249,22 +253,39 @@ function updateAddPredTimers() {
       }
     }
 
-    // Enable/disable inputs and save button
-    const inputs = card.querySelectorAll('.score-input');
-    const saveBtns = card.querySelectorAll('.save-pred-btn');
+    // Enable/disable inputs and save buttons
+    const inputs = item.querySelectorAll('.score-input');
+    const saveBtns = item.querySelectorAll('.save-pred-btn');
     inputs.forEach(inp => inp.disabled = isLocked);
     saveBtns.forEach(btn => btn.disabled = isLocked);
   });
 }
+
+function startAddPredTimer() {
+  if (_addPredTimer) clearInterval(_addPredTimer);
+  _addPredTimer = setInterval(() => {
+    if (document.getElementById('addpred').classList.contains('active')) {
+      updateAddPredTimers();
+    }
+  }, 1000);
+}
+
+function stopAddPredTimer() {
+  if (_addPredTimer) {
+    clearInterval(_addPredTimer);
+    _addPredTimer = null;
+  }
+}
+
 // =============================================================
 // BUILD ALL UI (Standings reordered: carousel, leaderboard, overview, all upcoming)
 // =============================================================
 function buildAllUI() {
-  // Standings page sections (order as requested)
-  buildTodayCarousel();       // 1. Swipe tile (today's matches, including completed)
-  buildLeaderboard();           // 2. Leaderboard
-  buildOverviewStats();         // 3. Overview
-  buildAllUpcomingGames();      // 4. All upcoming games (full list)
+  // Standings page sections
+  buildTodayCarousel();
+  buildLeaderboard();
+  buildOverviewStats();
+  buildAllUpcomingGames();
 
   // Other tabs
   buildStatusTabs();
@@ -272,12 +293,11 @@ function buildAllUI() {
   renderMatchList();
   buildPlayerBtns();
   renderPlayerDetail();
-  buildAddPredSection();
+  buildAddPredSection();   // now date‑based
 }
 
 // ── Standings: Today's Carousel (swipe tile – shows all matches from today) ──
 function buildTodayCarousel() {
-  // Get all matches that occur today (regardless of completion status)
   const list = MATCHES
     .filter(m => isToday(m.dateTimeRaw))
     .sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw));
@@ -290,7 +310,6 @@ function buildTodayCarousel() {
 
   track.innerHTML = list.map(m => {
     const isCompleted = (m.homeScore !== null && m.awayScore !== null);
-    // Show actual score if match is completed
     const scoreHtml = isCompleted
       ? `<span class="score-badge" style="background:var(--gold); color:var(--malachite-dark);">${m.homeScore} – ${m.awayScore}</span>`
       : `<span class="cg-time-badge">${m.dateDisplay.includes(' - ') ? m.dateDisplay.split(' - ')[1] : m.dateDisplay}</span>`;
@@ -306,18 +325,9 @@ function buildTodayCarousel() {
         <div class="preds-list">
           ${m.preds.map(pr => {
             const col = PLAYERS.find(p => p.name === pr.p)?.color || '#888';
-            // Determine points earned (if match completed, otherwise no badge)
-            let pointsHtml = '';
-            if (isCompleted) {
-              // If no prediction made, they get 0 points
-              const pts = (pr.h !== null && pr.pts !== null) ? pr.pts : 0;
-              pointsHtml = ` ${ptsBadge(pts)}`;
-            }
-            if (pr.h === null) {
-              return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">No prediction${pointsHtml ? ' ' + pointsHtml : ''}</span></div>`;
-            } else {
-              return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="pred-score">${pr.h}–${pr.a}${pointsHtml}</span></div>`;
-            }
+            return pr.h === null
+              ? `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">No prediction</span></div>`
+              : `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="pred-score">${pr.h}–${pr.a}</span></div>`;
           }).join('')}
         </div>
         ${isCompleted ? `<div class="final-tag" style="text-align:center; margin-top:8px; font-size:10px; color:var(--text-tertiary);"><i class="ti ti-check"></i> Final</div>` : ''}
@@ -561,30 +571,39 @@ function renderPlayerDetail() {
 }
 
 // =============================================================
-// ADD PRED TAB (with timer and grace period)
+// ADD PRED TAB – DATE CAROUSEL (new implementation)
 // =============================================================
-function buildAddPredSection() {
-  const el = document.getElementById('addPredContent');
-  if (!el) return;
+function buildDateGroups() {
+  // Group matches by normalized date string (YYYY-MM-DD)
+  const groups = new Map();
+  MATCHES.forEach(m => {
+    const matchDate = parseMatchDateTime(m.dateTimeRaw);
+    const dateStr = `${matchDate.getFullYear()}-${String(matchDate.getMonth()+1).padStart(2,'0')}-${String(matchDate.getDate()).padStart(2,'0')}`;
+    if (!groups.has(dateStr)) {
+      groups.set(dateStr, {
+        dateStr,
+        formatted: matchDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        matches: []
+      });
+    }
+    groups.get(dateStr).matches.push(m);
+  });
+  // Convert to array and sort by date
+  const sorted = Array.from(groups.values()).sort((a,b) => a.dateStr.localeCompare(b.dateStr));
+  return sorted;
+}
 
-  const todayMatches = MATCHES
-    .filter(m => isToday(m.dateTimeRaw))
-    .sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw));
-
-  if (!todayMatches.length) {
-    el.innerHTML = `
-      <div class="no-games-today">
-        <i class="ti ti-calendar-off"></i>
-        <p>No games today — check back tomorrow!</p>
-      </div>`;
-    return;
-  }
+function renderDateCard(dateGroup) {
+  if (!dateGroup || !dateGroup.matches.length) return '<div class="no-games-today"><i class="ti ti-calendar-off"></i><p>No matches on this date</p></div>';
 
   const now = getCurrentPacificDate();
-  el.innerHTML = todayMatches.map(m => {
+  let matchesHtml = '';
+  dateGroup.matches.forEach(m => {
     const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
     const lockTime = getMatchLockDeadline(m);
-    const isInitiallyLocked = now > lockTime;
+    const isLocked = now > lockTime;
+    const remainingMs = lockTime - now;
+    const timerText = isLocked ? '🔒 Locked' : formatCountdown(remainingMs);
 
     const playerRows = PLAYERS.map(pl => {
       const existing = m.preds.find(pr => pr.p === pl.name);
@@ -598,12 +617,12 @@ function buildAddPredSection() {
         <div class="score-inputs">
           <input class="score-input" type="number" min="0" max="20"
                  id="${uid}_h" value="${hVal}" placeholder="–"
-                 aria-label="${pl.name} home score" ${isInitiallyLocked ? 'disabled' : ''}>
+                 aria-label="${pl.name} home score" ${isLocked ? 'disabled' : ''}>
           <span class="score-sep">:</span>
           <input class="score-input" type="number" min="0" max="20"
                  id="${uid}_a" value="${aVal}" placeholder="–"
-                 aria-label="${pl.name} away score" ${isInitiallyLocked ? 'disabled' : ''}>
-          <button class="save-pred-btn" id="${uid}_btn" ${isInitiallyLocked ? 'disabled' : ''}
+                 aria-label="${pl.name} away score" ${isLocked ? 'disabled' : ''}>
+          <button class="save-pred-btn" id="${uid}_btn" ${isLocked ? 'disabled' : ''}
                   onclick="handleSavePred(${m.rowIndex},'${pl.name}','${uid}')">
             <i class="ti ti-device-floppy"></i> Save
           </button>
@@ -612,23 +631,101 @@ function buildAddPredSection() {
       </div>`;
     }).join('');
 
-    return `<div class="pred-match-card" data-rowindex="${m.rowIndex}">
-      <div class="pred-match-head">
-        <div class="pred-match-title">${m.matchup}</div>
-        <div class="pred-match-meta">${m.group} · ${timeOnly}</div>
-        <div class="match-lock-timer">${isInitiallyLocked ? '🔒 Locked' : '⏱️ Loading...'}</div>
-      </div>
-      <div class="pred-player-section">
-        <div class="pred-player-label">Enter / update predictions</div>
-        ${playerRows}
-      </div>
-    </div>`;
-  }).join('');
+    matchesHtml += `
+      <div class="pred-match-item" data-rowindex="${m.rowIndex}">
+        <div class="match-header">
+          <div class="match-title">${m.matchup}</div>
+          <div class="match-meta">
+            <span>${m.group} · ${timeOnly}</span>
+            <span class="match-lock-timer">${timerText}</span>
+          </div>
+        </div>
+        <div class="pred-player-section">
+          <div class="pred-player-label">Enter / update predictions</div>
+          ${playerRows}
+        </div>
+      </div>`;
+  });
 
-  // Initial timer update
-  updateAddPredTimers();
+  return `<div class="date-pred-card">
+    <div class="date-card-header">⚽ Football For, ${dateGroup.formatted}</div>
+    ${matchesHtml}
+  </div>`;
 }
 
+function buildAddPredSection() {
+  const container = document.getElementById('addPredContent');
+  const navContainer = document.getElementById('dateNavControls');
+  if (!container) return;
+
+  // Group matches by date
+  _dateGroups = buildDateGroups();
+  if (!_dateGroups.length) {
+    container.innerHTML = `<div class="no-games-today"><i class="ti ti-calendar-off"></i><p>No matches scheduled.</p></div>`;
+    if (navContainer) navContainer.innerHTML = '';
+    return;
+  }
+
+  // Determine starting index: today or first upcoming date
+  const today = getCurrentPacificDate();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  let startIdx = _dateGroups.findIndex(g => g.dateStr === todayStr);
+  if (startIdx === -1) {
+    startIdx = _dateGroups.findIndex(g => g.dateStr >= todayStr);
+  }
+  if (startIdx === -1) startIdx = 0;
+  _currentDateIdx = startIdx;
+
+  // Build navigation buttons
+  navContainer.innerHTML = `
+    <button class="date-nav-btn" id="prevDateBtn" ${_currentDateIdx === 0 ? 'disabled' : ''}>
+      <i class="ti ti-chevron-left"></i> Previous
+    </button>
+    <button class="date-nav-btn" id="nextDateBtn" ${_currentDateIdx === _dateGroups.length-1 ? 'disabled' : ''}>
+      Next <i class="ti ti-chevron-right"></i>
+    </button>
+  `;
+
+  // Render current date card
+  container.innerHTML = renderDateCard(_dateGroups[_currentDateIdx]);
+
+  // Attach event listeners
+  document.getElementById('prevDateBtn')?.addEventListener('click', () => {
+    if (_currentDateIdx > 0) {
+      _currentDateIdx--;
+      container.innerHTML = renderDateCard(_dateGroups[_currentDateIdx]);
+      const prevBtn = document.getElementById('prevDateBtn');
+      const nextBtn = document.getElementById('nextDateBtn');
+      if (prevBtn) prevBtn.disabled = (_currentDateIdx === 0);
+      if (nextBtn) nextBtn.disabled = (_currentDateIdx === _dateGroups.length-1);
+    }
+  });
+
+  document.getElementById('nextDateBtn')?.addEventListener('click', () => {
+    if (_currentDateIdx < _dateGroups.length-1) {
+      _currentDateIdx++;
+      container.innerHTML = renderDateCard(_dateGroups[_currentDateIdx]);
+      const prevBtn = document.getElementById('prevDateBtn');
+      const nextBtn = document.getElementById('nextDateBtn');
+      if (prevBtn) prevBtn.disabled = (_currentDateIdx === 0);
+      if (nextBtn) nextBtn.disabled = (_currentDateIdx === _dateGroups.length-1);
+    }
+  });
+}
+
+// =============================================================
+// HELPERS
+// =============================================================
+function ptsBadge(pts) {
+  if (pts === null) return '<span class="no-pred">—</span>';
+  if (pts === 3)    return '<span class="pts-badge p3">+3</span>';
+  if (pts === 1)    return '<span class="pts-badge p1">+1</span>';
+  return '<span class="pts-badge p0">0</span>';
+}
+
+// =============================================================
+// GLOBAL SAVE HANDLER (used by ADD PRED buttons)
+// =============================================================
 window.handleSavePred = async function(matchRowIndex, playerName, uid) {
   const hInput = document.getElementById(`${uid}_h`);
   const aInput = document.getElementById(`${uid}_a`);
@@ -692,7 +789,7 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
         buildLeaderboard();
         buildOverviewStats();
         buildAllUpcomingGames();
-        buildAddPredSection();
+        buildAddPredSection();  // refresh the date carousel
         renderMatchList();
         if (activePlayer) renderPlayerDetail();
       } catch (_) { /* silent refresh */ }
@@ -707,16 +804,6 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
     status.textContent = 'Failed – retry';
   }
 };
-
-// =============================================================
-// HELPERS
-// =============================================================
-function ptsBadge(pts) {
-  if (pts === null) return '<span class="no-pred">—</span>';
-  if (pts === 3)    return '<span class="pts-badge p3">+3</span>';
-  if (pts === 1)    return '<span class="pts-badge p1">+1</span>';
-  return '<span class="pts-badge p0">0</span>';
-}
 
 // =============================================================
 // NAVIGATION (with timer control)
