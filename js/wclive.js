@@ -200,13 +200,13 @@ async function savePrediction(matchRowIndex, playerName, home, away) {
 }
 
 // =============================================================
-// TIMER & GRACE PERIOD (5 min after kickoff)
+// TIMER & LOCK (5 min BEFORE kickoff)
 // =============================================================
 
-/** Get the lock deadline (match start + 5 minutes) as a Date object */
+/** Get the lock deadline (match start - 5 minutes) */
 function getMatchLockDeadline(match) {
   const start = parseMatchDateTime(match.dateTimeRaw);
-  return new Date(start.getTime() + 5 * 60 * 1000);
+  return new Date(start.getTime() - 5 * 60 * 1000);
 }
 
 /** Format milliseconds to MM:SS countdown */
@@ -241,7 +241,7 @@ function updateAddPredTimers() {
       timerSpan.textContent = isLocked ? '🔒 Locked' : formatCountdown(remainingMs);
       timerSpan.style.color = isLocked ? '#e05252' : '';
 
-      // Add/remove urgent class when remaining time ≤ 2 minutes (120,000 ms)
+      // Urgent class when ≤ 2 minutes until lock
       if (!isLocked && remainingMs <= 120000) {
         timerSpan.classList.add('urgent');
       } else {
@@ -256,23 +256,6 @@ function updateAddPredTimers() {
     saveBtns.forEach(btn => btn.disabled = isLocked);
   });
 }
-
-let addPredTimerInterval = null;
-
-function startAddPredTimer() {
-  if (addPredTimerInterval) clearInterval(addPredTimerInterval);
-  addPredTimerInterval = setInterval(() => {
-    updateAddPredTimers();
-  }, 1000);
-}
-
-function stopAddPredTimer() {
-  if (addPredTimerInterval) {
-    clearInterval(addPredTimerInterval);
-    addPredTimerInterval = null;
-  }
-}
-
 // =============================================================
 // BUILD ALL UI (Standings reordered: carousel, leaderboard, overview, all upcoming)
 // =============================================================
