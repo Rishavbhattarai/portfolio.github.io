@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup Knockout Stats | Ultimate Dashboard</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #14141f;
+            --surface2: #1a1a2e;
+            --surface3: #1e1e35;
+            --gold: #f0c060;
+            --gold2: #d4a030;
+            --accent: #4da6ff;
+            --accent2: #3d8ce0;
+            --coral: #ff6b6b;
+            --coral2: #e05555;
+            --teal: #2eccb0;
+            --teal2: #25a090;
+            --text: #e0e0e8;
+            --text2: #b0b0be;
+            --text3: #808098;
+            --border: #2a2a3a;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(ellipse, rgba(240, 192, 96, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            right: -15%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(ellipse, rgba(77, 166, 255, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px 60px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            position: relative;
+        }
+        header h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--gold), #f7d88c, var(--gold2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        header .subtitle {
+            color: var(--text3);
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 60px;
+            color: var(--text3);
+            font-size: 1.1rem;
+        }
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .error-message {
+            background: var(--surface2);
+            border: 1px solid var(--coral);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            color: var(--coral);
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        nav.tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin: 20px 0 30px;
+            position: sticky;
+            top: 12px;
+            z-index: 10;
+            padding: 8px;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tab-btn {
+            padding: 10px 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            background: transparent;
+            color: var(--text2);
+            transition: var(--transition);
+            white-space: nowrap;
+            position: relative;
+        }
+        .tab-btn:hover {
+            color: var(--text);
+            background: var(--surface3);
+        }
+        .tab-btn.active {
+            background: var(--gold);
+            color: #1a1a0a;
+            box-shadow: 0 4px 16px rgba(240, 192, 96, 0.3);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeSlideIn 0.4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            border-color: #444;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .stat-card .card-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .stat-card .card-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .stat-card .card-label {
+            color: var(--text3);
+            font-size: 0.85rem;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .stat-card .card-sub {
+            color: var(--text2);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+        .stat-card.accent .card-value {
+            color: var(--accent);
+        }
+        .stat-card.coral .card-value {
+            color: var(--coral);
+        }
+        .stat-card.teal .card-value {
+            color: var(--teal);
+        }
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .icon {
+            font-size: 1.4rem;
+        }
+        .data-table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        table th,
+        table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        table th {
+            background: var(--surface2);
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            position: sticky;
+            top: 0;
+        }
+        table tbody tr {
+            transition: var(--transition);
+        }
+        table tbody tr:hover {
+            background: var(--surface3);
+        }
+        table .highlight {
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .badge-yellow {
+            background: #3d3000;
+            color: #f0c040;
+        }
+        .badge-red {
+            background: #350000;
+            color: #ff5555;
+        }
+        .badge-gold {
+            background: #2a2000;
+            color: #f0c060;
+        }
+        .badge-teal {
+            background: #002a20;
+            color: #2eccb0;
+        }
+        .badge-accent {
+            background: #001a30;
+            color: #4da6ff;
+        }
+        .badge-coral {
+            background: #2a0010;
+            color: #ff6b8a;
+        }
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 10px;
+            }
+            .stat-card .card-value {
+                font-size: 1.6rem;
+            }
+            nav.tab-nav {
+                gap: 3px;
+                padding: 4px;
+                border-radius: 30px;
+            }
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 0.78rem;
+            }
+        }
+        .insight-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+        .insight-card:hover {
+            border-color: #555;
+            box-shadow: var(--shadow);
+        }
+        .insight-card .insight-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+        .insight-card .insight-body {
+            color: var(--text2);
+            font-size: 0.9rem;
+        }
+        .insight-card .insight-stat {
+            font-weight: 800;
+            color: var(--gold);
+        }
+        select.dropdown {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 240px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23f0c060'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        select.dropdown:hover {
+            border-color: #555;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text3);
+            font-size: 1rem;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        .highlight-row {
+            background: rgba(240, 192, 96, 0.05);
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text3);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>⚽ World Cup Knockout Stats</h1>
+            <p class="subtitle">Every Goal · Every Card · Every Shootout · 1930–2022</p>
+        </header>
+        <div id="loading" class="loading-indicator"><div class="loading-spinner"></div>Loading data from wcdata.json...</div>
+        <div id="error" class="error-message" style="display:none;"></div>
+        <div style="text-align:center;margin-top:12px;">
+            <button id="load-file-btn" style="display:none;padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:#071422;cursor:pointer;font-weight:700;">Load wcdata.json from disk</button>
+            <input type="file" id="fileInput" accept=".json,application/json" style="display:none" />
+        </div>
+        <div id="main-content" style="display:none;">
+            <nav class="tab-nav" id="tabNav">
+                <button class="tab-btn active" data-tab="overview">📊 Overview</button>
+                <button class="tab-btn" data-tab="goals">⚽ Goals</button>
+                <button class="tab-btn" data-tab="cards">🟨 Cards</button>
+                <button class="tab-btn" data-tab="shootouts">🎯 Shootouts</button>
+                <button class="tab-btn" data-tab="extratime">⏱️ Extra Time</button>
+                <button class="tab-btn" data-tab="unknown">🔍 Hidden Gems</button>
+                <button class="tab-btn" data-tab="explorer">🏆 Explorer</button>
+                <button class="tab-btn" data-tab="records">📋 Records</button>
+            </nav>
+            <div class="tab-content active" id="tab-overview"></div>
+            <div class="tab-content" id="tab-goals"></div>
+            <div class="tab-content" id="tab-cards"></div>
+            <div class="tab-content" id="tab-shootouts"></div>
+            <div class="tab-content" id="tab-extratime"></div>
+            <div class="tab-content" id="tab-unknown"></div>
+            <div class="tab-content" id="tab-explorer"></div>
+            <div class="tab-content" id="tab-records"></div>
+        </div>
+        <footer>Data sourced from FIFA World Cup knockout history · Dashboard crafted with ⚡</footer>
+    </div>
+    <script>
+        (function() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const mainContent = document.getElementById('main-content');
+            const tabNav = document.getElementById('tabNav');
+            const tabContents = document.querySelectorAll('.tab-content');
+            let worldCupsData = [];
+            let allKnockoutMatches = [];
+            let statsCache = {};
+
+            const loadFileBtn = document.getElementById('load-file-btn');
+            const fileInput = document.getElementById('fileInput');
+
+            function showError(msg, allowFileLoad = true) {
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorEl.textContent = '❌ ' + msg;
+                if (allowFileLoad) {
+                    loadFileBtn.style.display = 'inline-block';
+                }
+            }
+
+            loadFileBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (evt) => {
+                const f = evt.target.files && evt.target.files[0];
+                if (!f) return;
+                const reader = new FileReader();
+                loadingEl.style.display = 'flex';
+                errorEl.style.display = 'none';
+                loadFileBtn.style.display = 'none';
+                reader.onload = function(e) {
+                    try {
+                        const parsed = JSON.parse(e.target.result);
+                        if (!parsed.world_cups) throw new Error('Invalid structure');
+                        worldCupsData = parsed.world_cups;
+                        processAllMatches();
+                        loadingEl.style.display = 'none';
+                        mainContent.style.display = 'block';
+                        computeAllStats();
+                        renderAllTabs();
+                        setupTabNavigation();
+                    } catch (err) {
+                        loadingEl.style.display = 'none';
+                        showError('Selected file is not valid wcdata.json: ' + err.message, false);
+                    }
+                };
+                reader.onerror = function() {
+                    loadingEl.style.display = 'none';
+                    showError('Failed to read file');
+                };
+                reader.readAsText(f);
+            });
+
+            async function loadData() {
+                try {
+                    const resp = await fetch('./wcdata.json');
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status + ' - wcdata.json not found');
+                    const data = await resp.json();
+                    if (!data.world_cups || !Array.isArray(data.world_cups)) throw new Error(
+                        'Invalid JSON structure: expected {world_cups: [...]}');
+                    worldCupsData = data.world_cups;
+                    processAllMatches();
+                    loadingEl.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    computeAllStats();
+                    renderAllTabs();
+                    setupTabNavigation();
+                } catch (e) {
+                    showError('Failed to load wcdata.json: ' + e.message +
+                        '. Make sure the file is in the same folder.');
+                }
+            }
+
+            function processAllMatches() {
+                allKnockoutMatches = [];
+                worldCupsData.forEach(wc => {
+                    if (!wc.knockout_rounds) return;
+                    wc.knockout_rounds.forEach(round => {
+                        if (!round.matches) return;
+                        round.matches.forEach(m => {
+                            const match = {
+                                year: wc.year,
+                                host: wc.host,
+                                round: round.round,
+                                team1: m.team1,
+                                team2: m.team2,
+                                score: m.score,
+                                aet: !!m.aet,
+                                penalties: m.penalties || null,
+                                penalty_shootout: m.penalty_shootout || null,
+                                replay: !!m.replay,
+                                replay_score: m.replay_score || null,
+                                scorers: m.scorers || [],
+                                replay_scorers: m.replay_scorers || [],
+                                cards: m.cards || [],
+                                isReplay: false,
+                            };
+                            allKnockoutMatches.push(match);
+                            if (m.replay && m.replay_score) {
+                                const replayMatch = {
+                                    year: wc.year,
+                                    host: wc.host,
+                                    round: round.round + ' (Replay)',
+                                    team1: m.team1,
+                                    team2: m.team2,
+                                    score: m.replay_score,
+                                    aet: false,
+                                    penalties: null,
+                                    penalty_shootout: null,
+                                    replay: false,
+                                    replay_score: null,
+                                    scorers: m.replay_scorers || [],
+                                    replay_scorers: [],
+                                    cards: [],
+                                    isReplay: true,
+                                };
+                                allKnockoutMatches.push(replayMatch);
+                            }
+                        });
+                    });
+                });
+            }
+
+            function parseScore(scoreStr) {
+                if (!scoreStr || scoreStr === 'w/o') return null;
+                const parts = scoreStr.split('-');
+                if (parts.length === 2) return { t1: parseInt(parts[0]) || 0, t2: parseInt(parts[1]) || 0 };
+                return null;
+            }
+
+            function getAllScorers(match) {
+                return match.scorers || [];
+            }
+
+            function getAllCards(match) {
+                return match.cards || [];
+            }
+
+            function computeAllStats() {
+                const validMatches = allKnockoutMatches.filter(m => m.score !== 'w/o' && m.score !== 'bye' && !m
+                    .isReplay);
+                const allScorersFlat = [];
+                const allCardsFlat = [];
+                validMatches.forEach(m => {
+                    const sc = getAllScorers(m);
+                    sc.forEach(s => allScorersFlat.push({ ...s, year: m.year, round: m.round, match: m }));
+                    const cd = getAllCards(m);
+                    cd.forEach(c => allCardsFlat.push({ ...c, year: m.year, round: m.round, match: m }));
+                });
+                statsCache.totalKnockoutMatches = validMatches.length;
+                statsCache.totalTournaments = worldCupsData.filter(w => w.knockout_rounds && w.knockout_rounds
+                    .length > 0).length;
+                statsCache.totalGoals = allScorersFlat.filter(s => !s.own_goal).length;
+                statsCache.totalOwnGoals = allScorersFlat.filter(s => s.own_goal).length;
+                statsCache.totalYellowCards = allCardsFlat.filter(c => c.card === 'yellow').length;
+                statsCache.totalRedCards = allCardsFlat.filter(c => c.card === 'red').length;
+                statsCache.totalPenaltyShootouts = validMatches.filter(m => m.penalties || m.penalty_shootout)
+                    .length;
+                statsCache.totalExtraTime = validMatches.filter(m => m.aet && !m.penalties && !m
+                    .penalty_shootout).length;
+                statsCache.totalETPlusShootouts = validMatches.filter(m => m.aet).length;
+
+                const goalByCountry = {};
+                const goalByPlayer = {};
+                allScorersFlat.filter(s => !s.own_goal).forEach(s => {
+                    const team = s.team;
+                    goalByCountry[team] = (goalByCountry[team] || 0) + 1;
+                    const playerKey = s.player + '|' + team;
+                    goalByPlayer[playerKey] = (goalByPlayer[playerKey] || 0) + 1;
+                });
+                statsCache.goalByCountry = Object.entries(goalByCountry).sort((a, b) => b[1] - a[1]);
+                statsCache.goalByPlayer = Object.entries(goalByPlayer).sort((a, b) => b[1] - a[1]).map(([k, v]) => {
+                    const [player, team] = k.split('|');
+                    return { player, team, goals: v };
+                });
+
+                const cardByCountryY = {};
+                const cardByCountryR = {};
+                const cardByPlayerY = {};
+                const cardByPlayerR = {};
+                allCardsFlat.forEach(c => {
+                    const team = c.team;
+                    if (c.card === 'yellow') {
+                        cardByCountryY[team] = (cardByCountryY[team] || 0) + 1;
+                        cardByPlayerY[c.player + '|' + team] = (cardByPlayerY[c.player + '|' + team] || 0) + 1;
+                    } else if (c.card === 'red') {
+                        cardByCountryR[team] = (cardByCountryR[team] || 0) + 1;
+                        cardByPlayerR[c.player + '|' + team] = (cardByPlayerR[c.player + '|' + team] || 0) + 1;
+                    }
+                });
+                statsCache.yellowByCountry = Object.entries(cardByCountryY).sort((a, b) => b[1] - a[1]);
+                statsCache.redByCountry = Object.entries(cardByCountryR).sort((a, b) => b[1] - a[1]);
+                statsCache.yellowByPlayer = Object.entries(cardByPlayerY).sort((a, b) => b[1] - a[1]).map(([k,
+                    v]) => {
+                    const [p, t] = k.split('|');
+                    return { player: p, team: t, cards: v };
+                });
+                statsCache.redByPlayer = Object.entries(cardByPlayerR).sort((a, b) => b[1] - a[1]).map(([k, v]) => {
+                    const [p, t] = k.split('|');
+                    return { player: p, team: t, cards: v };
+                });
+
+                const shootoutRecords = {};
+                validMatches.forEach(m => {
+                    if (m.penalties || m.penalty_shootout) {
+                        const ps = m.penalties || (m.penalty_shootout ? m.penalty_shootout.score : null);
+                        if (ps) {
+                            const [s1, s2] = ps.split('-').map(Number);
+                            const winner = s1 > s2 ? m.team1 : m.team2;
+                            const loser = s1 > s2 ? m.team2 : m.team1;
+                            [m.team1, m.team2].forEach(t => {
+                                if (!shootoutRecords[t]) shootoutRecords[t] = { won: 0, lost: 0, total: 0 };
+                            });
+                            shootoutRecords[winner].won++;
+                            shootoutRecords[loser].lost++;
+                            shootoutRecords[m.team1].total++;
+                            shootoutRecords[m.team2].total++;
+                        }
+                    }
+                });
+                statsCache.shootoutRecords = Object.entries(shootoutRecords).map(([team, rec]) => ({ team, ...rec,
+                    winRate: rec.total > 0 ? Math.round((rec.won / rec.total) * 100) : 0 })).sort((a, b) => b
+                    .total - a.total);
+                statsCache.shootoutPerfect = statsCache.shootoutRecords.filter(r => r.total >= 2 && r.lost === 0)
+                    .sort((a, b) => b.won - a.won);
+                statsCache.shootoutWinless = statsCache.shootoutRecords.filter(r => r.total >= 2 && r.won === 0)
+                    .sort((a, b) => b.lost - a.lost);
+
+                const countryKnockoutApps = {};
+                worldCupsData.forEach(wc => {
+                    if (!wc.knockout_rounds) return;
+                    const teamsInKnockout = new Set();
+                    wc.knockout_rounds.forEach(round => {
+                        if (!round.matches) return;
+                        round.matches.forEach(m => {
+                            if (m.team1 && m.team1 !== 'Bye') teamsInKnockout.add(m.team1);
+                            if (m.team2 && m.team2 !== 'Bye') teamsInKnockout.add(m.team2);
+                        });
+                    });
+                    teamsInKnockout.forEach(t => {
+                        countryKnockoutApps[t] = (countryKnockoutApps[t] || 0) + 1;
+                    });
+                });
+                statsCache.countryKnockoutApps = Object.entries(countryKnockoutApps).sort((a, b) => b[1] - a[1]);
+
+                const matchCardsCount = validMatches.map(m => {
+                    const cards = getAllCards(m);
+                    return {
+                        match: m,
+                        totalCards: cards.length,
+                        yellows: cards.filter(c => c.card === 'yellow').length,
+                        reds: cards.filter(c => c.card === 'red').length,
+                    };
+                }).sort((a, b) => b.totalCards - a.totalCards);
+                statsCache.mostCardedMatches = matchCardsCount.slice(0, 15);
+
+                const ownGoalScorers = allScorersFlat.filter(s => s.own_goal);
+                statsCache.ownGoalScorers = ownGoalScorers;
+
+                const redInFinals = allCardsFlat.filter(c => c.card === 'red' && c.match && c.match.round ===
+                    'Final');
+                statsCache.redCardsInFinals = redInFinals;
+
+                const hatTricks = [];
+                const playerMatchGoals = {};
+                allScorersFlat.filter(s => !s.own_goal).forEach(s => {
+                    const key = s.player + '|' + s.team + '|' + s.match.year + '|' + s.match.round + '|' + s
+                        .match.team1 + '|' + s.match.team2;
+                    playerMatchGoals[key] = (playerMatchGoals[key] || 0) + 1;
+                });
+                Object.entries(playerMatchGoals).forEach(([key, count]) => {
+                    if (count >= 3) {
+                        const [player, team, year, round, t1, t2] = key.split('|');
+                        hatTricks.push({
+                            player,
+                            team,
+                            year: parseInt(year),
+                            round,
+                            opponent: t1 === team ? t2 : t1,
+                            goals: count
+                        });
+                    }
+                });
+                statsCache.hatTricks = hatTricks;
+
+                const finalScorers = allScorersFlat.filter(s => s.match && s.match.round === 'Final' && !s
+                    .own_goal);
+                const finalScorerCount = {};
+                finalScorers.forEach(s => {
+                    const k = s.player + '|' + s.team;
+                    finalScorerCount[k] = (finalScorerCount[k] || 0) + 1;
+                });
+                statsCache.mostFinalGoals = Object.entries(finalScorerCount).sort((a, b) => b[1] - a[1]).map(([k,
+                    v]) => {
+                    const [p, t] = k.split('|');
+                    return { player: p, team: t, goals: v };
+                }).slice(0, 15);
+
+                const biggestWins = validMatches.map(m => {
+                    const ps = parseScore(m.score);
+                    if (!ps) return null;
+                    const diff = Math.abs(ps.t1 - ps.t2);
+                    return { match: m, diff, score: m.score };
+                }).filter(x => x !== null).sort((a, b) => b.diff - a.diff).slice(0, 15);
+                statsCache.biggestWins = biggestWins;
+
+                statsCache.playersInMultipleTournaments = {};
+                allScorersFlat.filter(s => !s.own_goal).forEach(s => {
+                    const k = s.player + '|' + s.team;
+                    if (!statsCache.playersInMultipleTournaments[k]) statsCache.playersInMultipleTournaments[
+                        k] = { player: s.player, team: s.team, tournaments: new Set(), totalGoals: 0 };
+                    statsCache.playersInMultipleTournaments[k].tournaments.add(s.year);
+                    statsCache.playersInMultipleTournaments[k].totalGoals++;
+                });
+                statsCache.multiTournamentScorers = Object.values(statsCache.playersInMultipleTournaments)
+                    .filter(v => v.tournaments.size >= 3)
+                    .sort((a, b) => b.tournaments.size - a.tournaments.size);
+            }
+
+            function renderAllTabs() {
+                renderOverview();
+                renderGoals();
+                renderCards();
+                renderShootouts();
+                renderExtraTime();
+                renderUnknown();
+                renderExplorer();
+                renderRecords();
+            }
+
+            function safeGet(obj, path, defaultVal) {
+                return path.split('.').reduce((o, k) => (o && o[k] !== undefined) ? o[k] : undefined, obj) || defaultVal;
+            }
+
+            function renderOverview() {
+                const sc = statsCache;
+                const tab = document.getElementById('tab-overview');
+                tab.innerHTML = `
+                <div class="stats-grid">
+                  <div class="stat-card"><div class="card-icon">🏟️</div><div class="card-value">${sc.totalTournaments}</div><div class="card-label">Tournaments</div><div class="card-sub">With knockout stages</div></div>
+                  <div class="stat-card accent"><div class="card-icon">⚔️</div><div class="card-value">${sc.totalKnockoutMatches}</div><div class="card-label">Knockout Matches</div><div class="card-sub">Excluding replays & byes</div></div>
+                  <div class="stat-card"><div class="card-icon">⚽</div><div class="card-value">${sc.totalGoals}</div><div class="card-label">Goals Scored</div><div class="card-sub">Plus ${sc.totalOwnGoals} own goals</div></div>
+                  <div class="stat-card coral"><div class="card-icon">🟨</div><div class="card-value">${sc.totalYellowCards}</div><div class="card-label">Yellow Cards</div><div class="card-sub">Since 1970</div></div>
+                  <div class="stat-card coral"><div class="card-icon">🟥</div><div class="card-value">${sc.totalRedCards}</div><div class="card-label">Red Cards</div><div class="card-sub">${sc.redCardsInFinals.length} in finals</div></div>
+                  <div class="stat-card teal"><div class="card-icon">🎯</div><div class="card-value">${sc.totalPenaltyShootouts}</div><div class="card-label">Penalty Shootouts</div><div class="card-sub">Introduced in 1978</div></div>
+                  <div class="stat-card accent"><div class="card-icon">⏱️</div><div class="card-value">${sc.totalETPlusShootouts}</div><div class="card-label">Extra Time Matches</div><div class="card-sub">Knockout drama</div></div>
+                  <div class="stat-card"><div class="card-icon">🎩</div><div class="card-value">${sc.hatTricks.length}</div><div class="card-label">Hat-Tricks</div><div class="card-sub">In knockout stages</div></div>
+                </div>
+                <div class="section-title"><span class="icon">🏅</span> Top Scoring Nations (Knockout)</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>#</th><th>Country</th><th>Goals</th></tr></thead>
+                  <tbody>${sc.goalByCountry.slice(0,12).map(([team,goals],i)=>`<tr class="${i<3?'highlight-row':''}"><td>${i+1}</td><td class="highlight">${team}</td><td>${goals}</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">🔥</span> Most Carded Matches Ever</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Year</th><th>Round</th><th>Match</th><th>🟨</th><th>🟥</th><th>Total</th></tr></thead>
+                  <tbody>${sc.mostCardedMatches.slice(0,8).map(m=>`<tr><td>${m.match.year}</td><td>${m.match.round}</td><td>${m.match.team1} vs ${m.match.team2}</td><td>${m.yellows}</td><td>${m.reds}</td><td class="highlight">${m.totalCards}</td></tr>`).join('')}</tbody></table>
+                </div>`;
+            }
+
+            function renderGoals() {
+                const sc = statsCache;
+                const tab = document.getElementById('tab-goals');
+                tab.innerHTML = `
+                <div class="section-title"><span class="icon">👑</span> Top Goal Scorers (Knockout Stages)</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>#</th><th>Player</th><th>Country</th><th>Goals</th></tr></thead>
+                  <tbody>${sc.goalByPlayer.slice(0,25).map((p,i)=>`<tr class="${i<5?'highlight-row':''}"><td>${i+1}</td><td class="highlight">${p.player}</td><td>${p.team}</td><td>${p.goals}</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">🎩</span> Hat-Tricks in Knockout Stages</div>
+                ${sc.hatTricks.length===0?'<div class="empty-state">No hat-tricks found in knockout data</div>':`
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Country</th><th>Year</th><th>Round</th><th>Opponent</th><th>Goals</th></tr></thead>
+                  <tbody>${sc.hatTricks.map(h=>`<tr class="highlight-row"><td class="highlight">${h.player}</td><td>${h.team}</td><td>${h.year}</td><td>${h.round}</td><td>${h.opponent}</td><td>${h.goals}</td></tr>`).join('')}</tbody></table>
+                </div>`}
+                <div class="section-title"><span class="icon">🏆</span> Most Final Goals (Career)</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Country</th><th>Final Goals</th></tr></thead>
+                  <tbody>${sc.mostFinalGoals.slice(0,12).map(p=>`<tr class="highlight-row"><td class="highlight">${p.player}</td><td>${p.team}</td><td>${p.goals}</td></tr>`).join('')}</tbody></table>
+                </div>`;
+            }
+
+            function renderCards() {
+                const sc = statsCache;
+                const tab = document.getElementById('tab-cards');
+                tab.innerHTML = `
+                <div class="two-col">
+                  <div>
+                    <div class="section-title"><span class="icon">🟨</span> Most Yellow Cards (Country)</div>
+                    <div class="data-table-wrapper">
+                      <table><thead><tr><th>#</th><th>Country</th><th>Yellows</th></tr></thead>
+                      <tbody>${sc.yellowByCountry.slice(0,12).map(([t,c],i)=>`<tr class="${i<3?'highlight-row':''}"><td>${i+1}</td><td class="highlight">${t}</td><td>${c}</td></tr>`).join('')}</tbody></table>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="section-title"><span class="icon">🟥</span> Most Red Cards (Country)</div>
+                    <div class="data-table-wrapper">
+                      <table><thead><tr><th>#</th><th>Country</th><th>Reds</th></tr></thead>
+                      <tbody>${sc.redByCountry.slice(0,12).map(([t,c],i)=>`<tr class="${i<3?'highlight-row':''}"><td>${i+1}</td><td class="highlight">${t}</td><td>${c}</td></tr>`).join('')}</tbody></table>
+                    </div>
+                  </div>
+                </div>
+                <div class="section-title"><span class="icon">👤</span> Most Yellow Cards (Player)</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Country</th><th>Yellows</th></tr></thead>
+                  <tbody>${sc.yellowByPlayer.slice(0,15).map(p=>`<tr class="highlight-row"><td class="highlight">${p.player}</td><td>${p.team}</td><td>${p.cards}</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">👤</span> Red Cards (Player)</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Country</th><th>Reds</th></tr></thead>
+                  <tbody>${sc.redByPlayer.filter(p=>p.cards>=1).slice(0,15).map(p=>`<tr class="highlight-row"><td class="highlight">${p.player}</td><td>${p.team}</td><td>${p.cards}</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">🔥</span> Most Carded Matches</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Year</th><th>Round</th><th>Match</th><th>🟨</th><th>🟥</th><th>Total</th></tr></thead>
+                  <tbody>${sc.mostCardedMatches.map(m=>`<tr><td>${m.match.year}</td><td>${m.match.round}</td><td>${m.match.team1} vs ${m.match.team2}</td><td>${m.yellows}</td><td>${m.reds}</td><td class="highlight">${m.totalCards}</td></tr>`).join('')}</tbody></table>
+                </div>`;
+            }
+
+            function renderShootouts() {
+                const sc = statsCache;
+                const tab = document.getElementById('tab-shootouts');
+                tab.innerHTML = `
+                <div class="section-title"><span class="icon">🎯</span> Penalty Shootout Records</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Country</th><th>Shootouts</th><th>Won</th><th>Lost</th><th>Win %</th></tr></thead>
+                  <tbody>${sc.shootoutRecords.filter(r=>r.total>=1).map(r=>`<tr class="${r.winRate===100&&r.total>=2?'highlight-row':''}"><td class="highlight">${r.team}</td><td>${r.total}</td><td>${r.won}</td><td>${r.lost}</td><td>${r.winRate}%</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">💯</span> Perfect Shootout Records (2+ shootouts, 0 losses)</div>
+                ${sc.shootoutPerfect.length===0?'<div class="empty-state">No country has a perfect record in 2+ shootouts</div>':`
+                <div class="stats-grid">${sc.shootoutPerfect.map(r=>`<div class="stat-card teal"><div class="card-icon">✅</div><div class="card-value">${r.won}-0</div><div class="card-label">${r.team}</div><div class="card-sub">${r.total} shootouts, ${r.winRate}% win rate</div></div>`).join('')}</div>`}
+                <div class="section-title"><span class="icon">❌</span> Winless in Shootouts (2+ shootouts)</div>
+                ${sc.shootoutWinless.length===0?'<div class="empty-state">All countries have won at least one shootout</div>':`
+                <div class="stats-grid">${sc.shootoutWinless.map(r=>`<div class="stat-card coral"><div class="card-icon">💔</div><div class="card-value">0-${r.lost}</div><div class="card-label">${r.team}</div><div class="card-sub">${r.total} shootouts, all lost</div></div>`).join('')}</div>`}`;
+            }
+
+            function renderExtraTime() {
+                const sc = statsCache;
+                const etMatches = allKnockoutMatches.filter(m => m.aet && m.score !== 'w/o' && !m.isReplay);
+                const tab = document.getElementById('tab-extratime');
+                tab.innerHTML = `
+                <div class="stats-grid">
+                  <div class="stat-card accent"><div class="card-icon">⏱️</div><div class="card-value">${sc.totalETPlusShootouts}</div><div class="card-label">Extra Time Matches</div></div>
+                  <div class="stat-card"><div class="card-icon">⚽</div><div class="card-value">${etMatches.filter(m=>m.penalties||m.penalty_shootout).length}</div><div class="card-label">Went to Penalties</div></div>
+                  <div class="stat-card teal"><div class="card-icon">✅</div><div class="card-value">${etMatches.filter(m=>!m.penalties&&!m.penalty_shootout).length}</div><div class="card-label">Decided in ET</div></div>
+                </div>
+                <div class="section-title"><span class="icon">📋</span> All Extra Time Matches</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Year</th><th>Round</th><th>Match</th><th>Score</th><th>Outcome</th></tr></thead>
+                  <tbody>${etMatches.map(m=>`<tr><td>${m.year}</td><td>${m.round}</td><td>${m.team1} vs ${m.team2}</td><td>${m.score}</td><td>${m.penalties||m.penalty_shootout?'<span class="badge badge-teal">Penalties</span>':'<span class="badge badge-accent">Decided in ET</span>'}</td></tr>`).join('')}</tbody></table>
+                </div>`;
+            }
+
+            function renderUnknown() {
+                const sc = statsCache;
+                const allScorersFlat2 = [];
+                allKnockoutMatches.filter(m => m.score !== 'w/o' && !m.isReplay).forEach(m => {
+                    getAllScorers(m).forEach(s => allScorersFlat2.push({ ...s, year: m.year, round: m.round,
+                        match: m }));
+                });
+                const ownGoalDetails = allScorersFlat2.filter(s => s.own_goal);
+                const redFinals = sc.redCardsInFinals;
+                const multiTournament = sc.multiTournamentScorers;
+                const biggestWins = sc.biggestWins;
+                const mostGoalsInMatch = allKnockoutMatches.filter(m => m.score !== 'w/o' && !m.isReplay).map(m => {
+                    const ps = parseScore(m.score);
+                    return ps ? { match: m, total: ps.t1 + ps.t2 } : null;
+                }).filter(x => x !== null).sort((a, b) => b.total - a.total).slice(0, 10);
+
+                const firstBigWin = biggestWins[0];
+                const bigDiff = (firstBigWin && firstBigWin.diff) || 0;
+                const bigMatch = firstBigWin ? firstBigWin.match : null;
+                const bigStr = bigMatch ? bigMatch.team1 + ' ' + firstBigWin.score + ' ' + bigMatch.team2 + ' (' + bigMatch
+                    .year + ')' : '—';
+
+                const tab = document.getElementById('tab-unknown');
+                tab.innerHTML = `
+                <div class="section-title"><span class="icon">🔮</span> Hidden Gems & Obscure Stats</div>
+                <div class="stats-grid">
+                  <div class="stat-card coral"><div class="card-icon">😱</div><div class="card-value">${ownGoalDetails.length}</div><div class="card-label">Own Goals in Knockouts</div><div class="card-sub">The ultimate misfortune</div></div>
+                  <div class="stat-card coral"><div class="card-icon">🟥</div><div class="card-value">${redFinals.length}</div><div class="card-label">Red Cards in Finals</div><div class="card-sub">Expelled from the biggest stage</div></div>
+                  <div class="stat-card"><div class="card-icon">🌍</div><div class="card-value">${multiTournament.length}</div><div class="card-label">Scored in 3+ Tournaments</div><div class="card-sub">Longevity kings</div></div>
+                  <div class="stat-card accent"><div class="card-icon">📊</div><div class="card-value">${bigDiff}</div><div class="card-label">Biggest Goal Difference</div><div class="card-sub">${bigStr}</div></div>
+                </div>
+                <div class="section-title"><span class="icon">🎯</span> Own Goals in Knockout History</div>
+                ${ownGoalDetails.length===0?'<div class="empty-state">No own goals recorded in knockout data</div>':`
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Team</th><th>Year</th><th>Round</th><th>Match</th></tr></thead>
+                  <tbody>${ownGoalDetails.map(og=>`<tr class="highlight-row"><td class="highlight">${og.player}</td><td>${og.team}</td><td>${og.year}</td><td>${og.round}</td><td>${og.match.team1} vs ${og.match.team2}</td></tr>`).join('')}</tbody></table>
+                </div>`}
+                <div class="section-title"><span class="icon">🟥</span> Red Cards in World Cup Finals</div>
+                ${redFinals.length===0?'<div class="empty-state">No red cards in finals (surprising!)</div>':`
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Team</th><th>Year</th><th>Minute</th></tr></thead>
+                  <tbody>${redFinals.map(r=>`<tr class="highlight-row"><td class="highlight">${r.player}</td><td>${r.team}</td><td>${r.year}</td><td>${r.minute||'N/A'}</td></tr>`).join('')}</tbody></table>
+                </div>`}
+                <div class="section-title"><span class="icon">🌟</span> Players Who Scored in 3+ Different World Cup Knockout Stages</div>
+                ${multiTournament.length===0?'<div class="empty-state">No player has scored in 3+ knockout tournaments</div>':`
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Player</th><th>Country</th><th>Tournaments</th><th>Total Goals</th></tr></thead>
+                  <tbody>${multiTournament.map(p=>`<tr class="highlight-row"><td class="highlight">${p.player}</td><td>${p.team}</td><td>${p.tournaments.size}</td><td>${p.totalGoals}</td></tr>`).join('')}</tbody></table>
+                </div>`}
+                <div class="section-title"><span class="icon">💥</span> Highest-Scoring Knockout Matches</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Year</th><th>Round</th><th>Match</th><th>Score</th><th>Total Goals</th></tr></thead>
+                  <tbody>${mostGoalsInMatch.map(m=>`<tr><td>${m.match.year}</td><td>${m.match.round}</td><td>${m.match.team1} vs ${m.match.team2}</td><td>${m.match.score}</td><td class="highlight">${m.total}</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">📏</span> Biggest Winning Margins</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>Year</th><th>Round</th><th>Winner</th><th>Score</th><th>Margin</th></tr></thead>
+                  <tbody>${biggestWins.map(b=>{const ps=parseScore(b.score);const winner=ps.t1>ps.t2?b.match.team1:b.match.team2;return`<tr><td>${b.match.year}</td><td>${b.match.round}</td><td>${winner}</td><td>${b.score}</td><td class="highlight">+${b.diff}</td></tr>`;}).join('')}</tbody></table>
+                </div>`;
+            }
+
+            function renderExplorer() {
+                const tab = document.getElementById('tab-explorer');
+                const tournaments = worldCupsData.filter(w => w.knockout_rounds && w.knockout_rounds.length > 0);
+                const options = tournaments.map((w, i) =>
+                    `<option value="${i}" ${i===tournaments.length-1?'selected':''}>${w.year} · ${w.host}</option>`
+                    ).join('');
+                tab.innerHTML = `
+                <div class="section-title"><span class="icon">🔍</span> Tournament Explorer</div>
+                <select class="dropdown" id="explorerSelect">${options}</select>
+                <div id="explorerDetail" style="margin-top:20px;"></div>`;
+                const selectEl = document.getElementById('explorerSelect');
+                const detailEl = document.getElementById('explorerDetail');
+
+                function showTournament(index) {
+                    const wc = tournaments[parseInt(index)];
+                    if (!wc) { detailEl.innerHTML = '<div class="empty-state">Select a tournament</div>'; return; }
+                    let html =
+                        `<div class="stats-grid"><div class="stat-card"><div class="card-icon">📅</div><div class="card-value">${wc.year}</div><div class="card-label">${wc.host}</div></div>`;
+                    const rounds = wc.knockout_rounds;
+                    const allMatches = [];
+                    rounds.forEach(r => { if (r.matches) r.matches.forEach(m => allMatches.push({ ...m, round: r
+                                .round })); });
+                    const totalGoals = allMatches.reduce((sum, m) => sum + getAllScorers(m).filter(s => !s.own_goal)
+                        .length, 0);
+                    const totalCards = allMatches.reduce((sum, m) => sum + getAllCards(m).length, 0);
+                    html +=
+                        `<div class="stat-card accent"><div class="card-value">${allMatches.length}</div><div class="card-label">Matches</div></div>`;
+                    html +=
+                        `<div class="stat-card"><div class="card-value">${totalGoals}</div><div class="card-label">Goals</div></div>`;
+                    html +=
+                        `<div class="stat-card coral"><div class="card-value">${totalCards}</div><div class="card-label">Cards</div></div></div>`;
+                    rounds.forEach(round => {
+                        if (!round.matches || round.matches.length === 0) return;
+                        html +=
+                            `<div class="section-title"><span class="icon">📋</span> ${round.round}</div><div class="data-table-wrapper"><table><thead><tr><th>Match</th><th>Score</th><th>Scorers</th><th>Cards</th></tr></thead><tbody>`;
+                        round.matches.forEach(m => {
+                            const sc = getAllScorers(m);
+                            const cd = getAllCards(m);
+                            const scorerStr = sc.length === 0 ? '-' : sc.map(s =>
+                                `${s.player}${s.penalty?' (P)':''}${s.own_goal?' (OG)':''} ${s.minute||''}'`
+                                ).join(', ');
+                            const cardStr = cd.length === 0 ? '-' : cd.map(c =>
+                                `${c.player} ${c.card==='red'?'🟥':'🟨'} ${c.minute||''}'`).join(', ');
+                            const scoreDisplay = m.score + (m.aet ? ' (AET)' : '') + (m.penalties ? ' [PSO ' + m
+                                .penalties + ']' : '') + (m.penalty_shootout ? ' [PSO]' : '');
+                            html +=
+                                `<tr><td><strong>${m.team1}</strong> vs <strong>${m.team2}</strong></td><td>${scoreDisplay}</td><td style="font-size:0.8rem;max-width:300px;">${scorerStr}</td><td style="font-size:0.8rem;">${cardStr}</td></tr>`;
+                        });
+                        html += `</tbody></table></div>`;
+                    });
+                    detailEl.innerHTML = html;
+                }
+                selectEl.addEventListener('change', () => showTournament(selectEl.value));
+                showTournament(tournaments.length - 1);
+            }
+
+            function renderRecords() {
+                const sc = statsCache;
+                const allScorersFlat3 = [];
+                allKnockoutMatches.filter(m => m.score !== 'w/o' && !m.isReplay).forEach(m => {
+                    getAllScorers(m).forEach(s => allScorersFlat3.push({ ...s, year: m.year, round: m.round,
+                        match: m }));
+                });
+                const fastestGoal = allScorersFlat3.filter(s => s.minute && !s.own_goal).sort((a, b) => (a.minute || 99) - (
+                    b.minute || 99))[0];
+                const latestGoal = allScorersFlat3.filter(s => s.minute && !s.own_goal).sort((a, b) => (b.minute || 0) - (a
+                    .minute || 0))[0];
+                const mostKnockoutApps = sc.countryKnockoutApps;
+                const topGoalPlayer = sc.goalByPlayer[0] || {};
+                const mostCarded = sc.mostCardedMatches[0] || { match: {}, totalCards: 0 };
+                const tab = document.getElementById('tab-records');
+                tab.innerHTML = `
+                <div class="stats-grid">
+                  <div class="stat-card"><div class="card-icon">⚡</div><div class="card-value">${(fastestGoal&&fastestGoal.minute)||'?'}'</div><div class="card-label">Fastest Knockout Goal</div><div class="card-sub">${(fastestGoal&&fastestGoal.player)||''} (${(fastestGoal&&fastestGoal.team)||''}) · ${(fastestGoal&&fastestGoal.year)||''}</div></div>
+                  <div class="stat-card accent"><div class="card-icon">🕐</div><div class="card-value">${(latestGoal&&latestGoal.minute)||'?'}'</div><div class="card-label">Latest Knockout Goal</div><div class="card-sub">${(latestGoal&&latestGoal.player)||''} (${(latestGoal&&latestGoal.team)||''}) · ${(latestGoal&&latestGoal.year)||''}</div></div>
+                  <div class="stat-card"><div class="card-icon">🏅</div><div class="card-value">${topGoalPlayer.goals||0}</div><div class="card-label">Most Goals (Player)</div><div class="card-sub">${topGoalPlayer.player||''} · ${topGoalPlayer.team||''}</div></div>
+                  <div class="stat-card coral"><div class="card-icon">🔥</div><div class="card-value">${mostCarded.totalCards}</div><div class="card-label">Most Cards in a Match</div><div class="card-sub">${(mostCarded.match.team1||'')} vs ${(mostCarded.match.team2||'')} (${mostCarded.match.year||''})</div></div>
+                </div>
+                <div class="section-title"><span class="icon">🌍</span> Most Knockout Appearances</div>
+                <div class="data-table-wrapper">
+                  <table><thead><tr><th>#</th><th>Country</th><th>Appearances</th></tr></thead>
+                  <tbody>${mostKnockoutApps.slice(0,15).map(([t,c],i)=>`<tr class="${i<5?'highlight-row':''}"><td>${i+1}</td><td class="highlight">${t}</td><td>${c}</td></tr>`).join('')}</tbody></table>
+                </div>
+                <div class="section-title"><span class="icon">🎯</span> Shootout Kings & Cursed</div>
+                <div class="two-col">
+                  <div>
+                    <h4 style="color:var(--teal);margin-bottom:8px;">✅ Best Records (min 2 shootouts)</h4>
+                    ${sc.shootoutPerfect.slice(0,5).map(r=>`<div class="insight-card"><div class="insight-title">${r.team}</div><div class="insight-body">Won <span class="insight-stat">${r.won}</span> of <span class="insight-stat">${r.total}</span> shootouts</div></div>`).join('')}
+                  </div>
+                  <div>
+                    <h4 style="color:var(--coral);margin-bottom:8px;">❌ Worst Records (min 2 shootouts)</h4>
+                    ${sc.shootoutWinless.slice(0,5).map(r=>`<div class="insight-card"><div class="insight-title">${r.team}</div><div class="insight-body">Lost all <span class="insight-stat">${r.total}</span> shootouts</div></div>`).join('')}
+                  </div>
+                </div>`;
+            }
+
+            function setupTabNavigation() {
+                const buttons = tabNav.querySelectorAll('.tab-btn');
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        buttons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        const targetId = 'tab-' + btn.dataset.tab;
+                        tabContents.forEach(tc => tc.classList.remove('active'));
+                        const target = document.getElementById(targetId);
+                        if (target) target.classList.add('active');
+                    });
+                });
+            }
+            loadData();
+        })();
+    </script>
+</body>
+</html>

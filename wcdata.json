@@ -1,0 +1,3267 @@
+{
+  "world_cups": [
+    {
+      "year": 1930,
+      "host": "Uruguay",
+      "knockout_rounds": [
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "United States",
+              "score": "6-1",
+              "scorers": [
+                {"team": "Argentina", "player": "Monti", "minute": 20},
+                {"team": "Argentina", "player": "Scopelli", "minute": 56},
+                {"team": "Argentina", "player": "Stábile", "minute": 69},
+                {"team": "Argentina", "player": "Peucelle", "minute": 80},
+                {"team": "Argentina", "player": "Stábile", "minute": 87},
+                {"team": "United States", "player": "Brown", "minute": 89}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Uruguay",
+              "team2": "Yugoslavia",
+              "score": "6-1",
+              "scorers": [
+                {"team": "Yugoslavia", "player": "Vujadinović", "minute": 4},
+                {"team": "Uruguay", "player": "Cea", "minute": 18},
+                {"team": "Uruguay", "player": "Anselmo", "minute": 20},
+                {"team": "Uruguay", "player": "Anselmo", "minute": 31},
+                {"team": "Uruguay", "player": "Iriarte", "minute": 61},
+                {"team": "Uruguay", "player": "Cea", "minute": 67},
+                {"team": "Uruguay", "player": "Cea", "minute": 72}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Uruguay",
+              "team2": "Argentina",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Uruguay", "player": "Dorado", "minute": 12},
+                {"team": "Argentina", "player": "Peucelle", "minute": 20},
+                {"team": "Argentina", "player": "Stábile", "minute": 37},
+                {"team": "Uruguay", "player": "Cea", "minute": 57},
+                {"team": "Uruguay", "player": "Iriarte", "minute": 68},
+                {"team": "Uruguay", "player": "Castro", "minute": 89}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1934,
+      "host": "Italy",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "United States",
+              "score": "7-1",
+              "scorers": [
+                {"team": "Italy", "player": "Schiavio", "minute": 18},
+                {"team": "Italy", "player": "Orsi", "minute": 20},
+                {"team": "Italy", "player": "Schiavio", "minute": 29},
+                {"team": "United States", "player": "Donelli", "minute": 57},
+                {"team": "Italy", "player": "Schiavio", "minute": 64},
+                {"team": "Italy", "player": "Orsi", "minute": 69},
+                {"team": "Italy", "player": "Ferrari", "minute": 63},
+                {"team": "Italy", "player": "Meazza", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "Brazil",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Spain", "player": "Iraragorri", "minute": 18, "penalty": true},
+                {"team": "Spain", "player": "Iraragorri", "minute": 25},
+                {"team": "Spain", "player": "Lángara", "minute": 29},
+                {"team": "Brazil", "player": "Leônidas", "minute": 55}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Romania",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Romania", "player": "Dobay", "minute": 11},
+                {"team": "Czechoslovakia", "player": "Puč", "minute": 50},
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 67}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Switzerland",
+              "team2": "Netherlands",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Switzerland", "player": "Kielholz", "minute": 7},
+                {"team": "Netherlands", "player": "Smit", "minute": 29},
+                {"team": "Switzerland", "player": "Kielholz", "minute": 43},
+                {"team": "Switzerland", "player": "Abegglen", "minute": 66},
+                {"team": "Netherlands", "player": "Vente", "minute": 69}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Austria",
+              "team2": "France",
+              "score": "3-2",
+              "aet": true,
+              "scorers": [
+                {"team": "Austria", "player": "Sindelar", "minute": 44},
+                {"team": "France", "player": "Nicolas", "minute": 18},
+                {"team": "Austria", "player": "Schall", "minute": 93},
+                {"team": "Austria", "player": "Bican", "minute": 109},
+                {"team": "France", "player": "Verriest", "minute": 116, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Hungary",
+              "team2": "Egypt",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Hungary", "player": "Teleki", "minute": 11},
+                {"team": "Hungary", "player": "Toldi", "minute": 27},
+                {"team": "Egypt", "player": "Fawzi", "minute": 31},
+                {"team": "Egypt", "player": "Fawzi", "minute": 39},
+                {"team": "Hungary", "player": "Vincze", "minute": 53},
+                {"team": "Hungary", "player": "Toldi", "minute": 61}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Argentina",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Argentina", "player": "Belis", "minute": 4},
+                {"team": "Sweden", "player": "Jonasson", "minute": 9},
+                {"team": "Argentina", "player": "Galateo", "minute": 48},
+                {"team": "Sweden", "player": "Jonasson", "minute": 67},
+                {"team": "Sweden", "player": "Kroon", "minute": 79}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "Belgium",
+              "score": "5-2",
+              "scorers": [
+                {"team": "Germany", "player": "Hohmann", "minute": 25},
+                {"team": "Belgium", "player": "Voorhoof", "minute": 29},
+                {"team": "Belgium", "player": "Voorhoof", "minute": 43},
+                {"team": "Germany", "player": "Hohmann", "minute": 49},
+                {"team": "Germany", "player": "Conen", "minute": 66},
+                {"team": "Germany", "player": "Conen", "minute": 70},
+                {"team": "Germany", "player": "Conen", "minute": 87}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Spain",
+              "score": "1-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Spain", "player": "Regueiro", "minute": 30},
+                {"team": "Italy", "player": "Ferrari", "minute": 44}
+              ],
+              "replay": true,
+              "replay_score": "1-0",
+              "replay_scorers": [
+                {"team": "Italy", "player": "Meazza", "minute": 11}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Switzerland",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Switzerland", "player": "Kielholz", "minute": 18},
+                {"team": "Czechoslovakia", "player": "Svoboda", "minute": 24},
+                {"team": "Czechoslovakia", "player": "Sobotka", "minute": 49},
+                {"team": "Switzerland", "player": "Abegglen", "minute": 78},
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 82}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Austria",
+              "team2": "Hungary",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Austria", "player": "Horvath", "minute": 8},
+                {"team": "Austria", "player": "Zischek", "minute": 51},
+                {"team": "Hungary", "player": "Sárosi", "minute": 60, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "Sweden",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Germany", "player": "Hohmann", "minute": 60},
+                {"team": "Germany", "player": "Hohmann", "minute": 63},
+                {"team": "Sweden", "player": "Dunker", "minute": 82}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Austria",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Italy", "player": "Guaita", "minute": 19}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Germany",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 19},
+                {"team": "Germany", "player": "Noack", "minute": 62},
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 71},
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 80}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Austria",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Germany", "player": "Lehner", "minute": 1},
+                {"team": "Germany", "player": "Conen", "minute": 27},
+                {"team": "Austria", "player": "Horvath", "minute": 28},
+                {"team": "Germany", "player": "Lehner", "minute": 42},
+                {"team": "Austria", "player": "Sindelar", "minute": 54}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Czechoslovakia",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Puč", "minute": 71},
+                {"team": "Italy", "player": "Orsi", "minute": 81},
+                {"team": "Italy", "player": "Schiavio", "minute": 95}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1938,
+      "host": "France",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Sweden",
+              "team2": "Bye",
+              "score": "w/o",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "Hungary",
+              "team2": "Dutch East Indies",
+              "score": "6-0",
+              "scorers": [
+                {"team": "Hungary", "player": "Kohut", "minute": 13},
+                {"team": "Hungary", "player": "Toldi", "minute": 15},
+                {"team": "Hungary", "player": "Sárosi", "minute": 28},
+                {"team": "Hungary", "player": "Zsengellér", "minute": 35},
+                {"team": "Hungary", "player": "Zsengellér", "minute": 76},
+                {"team": "Hungary", "player": "Sárosi", "minute": 89}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Switzerland",
+              "team2": "Germany",
+              "score": "1-1",
+              "aet": true,
+              "replay": true,
+              "replay_score": "4-2",
+              "scorers": [
+                {"team": "Germany", "player": "Gauchel", "minute": 29}
+              ],
+              "replay_scorers": [
+                {"team": "Switzerland", "player": "Abegglen", "minute": 31},
+                {"team": "Germany", "player": "Hahnemann", "minute": 8},
+                {"team": "Switzerland", "player": "Bickel", "minute": 63},
+                {"team": "Switzerland", "player": "Abegglen", "minute": 79},
+                {"team": "Germany", "player": "Lehner", "minute": 22},
+                {"team": "Switzerland", "player": "Aeby", "minute": 75}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Cuba",
+              "team2": "Romania",
+              "score": "3-3",
+              "aet": true,
+              "replay": true,
+              "replay_score": "2-1",
+              "scorers": [
+                {"team": "Romania", "player": "Bindea", "minute": 35},
+                {"team": "Cuba", "player": "Socorro", "minute": 44},
+                {"team": "Cuba", "player": "Fernández", "minute": 87},
+                {"team": "Romania", "player": "Barátky", "minute": 44},
+                {"team": "Romania", "player": "Dobay", "minute": 105},
+                {"team": "Cuba", "player": "Tuñas", "minute": 117}
+              ],
+              "replay_scorers": [
+                {"team": "Romania", "player": "Dobay", "minute": 35},
+                {"team": "Cuba", "player": "Socorro", "minute": 51},
+                {"team": "Cuba", "player": "Oliveira", "minute": 57}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "France",
+              "team2": "Belgium",
+              "score": "3-1",
+              "scorers": [
+                {"team": "France", "player": "Veinante", "minute": 1},
+                {"team": "Belgium", "player": "Isemborghs", "minute": 38},
+                {"team": "France", "player": "Nicolas", "minute": 16},
+                {"team": "France", "player": "Nicolas", "minute": 69}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Norway",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Italy", "player": "Ferraris", "minute": 2},
+                {"team": "Norway", "player": "Brustad", "minute": 83},
+                {"team": "Italy", "player": "Piola", "minute": 94}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Poland",
+              "score": "6-5",
+              "aet": true,
+              "scorers": [
+                {"team": "Brazil", "player": "Leônidas", "minute": 18},
+                {"team": "Poland", "player": "Scherfke", "minute": 23, "penalty": true},
+                {"team": "Brazil", "player": "Leônidas", "minute": 25},
+                {"team": "Brazil", "player": "Romeu", "minute": 55},
+                {"team": "Poland", "player": "Wilimowski", "minute": 53},
+                {"team": "Poland", "player": "Wilimowski", "minute": 59},
+                {"team": "Brazil", "player": "Perácio", "minute": 71},
+                {"team": "Poland", "player": "Wilimowski", "minute": 89},
+                {"team": "Brazil", "player": "Leônidas", "minute": 104},
+                {"team": "Poland", "player": "Wilimowski", "minute": 118},
+                {"team": "Brazil", "player": "Leônidas", "minute": 44}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Netherlands",
+              "score": "3-0",
+              "aet": true,
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Košťálek", "minute": 93},
+                {"team": "Czechoslovakia", "player": "Zeman", "minute": 111},
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 118}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Hungary",
+              "team2": "Switzerland",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Hungary", "player": "Sárosi", "minute": 40},
+                {"team": "Hungary", "player": "Zsengellér", "minute": 89}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Cuba",
+              "score": "8-0",
+              "scorers": [
+                {"team": "Sweden", "player": "Keller", "minute": 9},
+                {"team": "Sweden", "player": "Wetterström", "minute": 22},
+                {"team": "Sweden", "player": "Wetterström", "minute": 37},
+                {"team": "Sweden", "player": "Wetterström", "minute": 44},
+                {"team": "Sweden", "player": "Keller", "minute": 80},
+                {"team": "Sweden", "player": "Keller", "minute": 81},
+                {"team": "Sweden", "player": "Nyberg", "minute": 84},
+                {"team": "Sweden", "player": "Andersson", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "France",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Italy", "player": "Colaussi", "minute": 9},
+                {"team": "France", "player": "Heisserer", "minute": 10},
+                {"team": "Italy", "player": "Piola", "minute": 51},
+                {"team": "Italy", "player": "Piola", "minute": 72}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Czechoslovakia",
+              "score": "1-1",
+              "aet": true,
+              "replay": true,
+              "replay_score": "2-1",
+              "scorers": [
+                {"team": "Brazil", "player": "Leônidas", "minute": 30},
+                {"team": "Czechoslovakia", "player": "Nejedlý", "minute": 65, "penalty": true}
+              ],
+              "replay_scorers": [
+                {"team": "Czechoslovakia", "player": "Kopecký", "minute": 25},
+                {"team": "Brazil", "player": "Leônidas", "minute": 57},
+                {"team": "Brazil", "player": "Roberto", "minute": 62}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Brazil",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Italy", "player": "Colaussi", "minute": 55},
+                {"team": "Italy", "player": "Meazza", "minute": 60, "penalty": true},
+                {"team": "Brazil", "player": "Romeu", "minute": 87}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Hungary",
+              "team2": "Sweden",
+              "score": "5-1",
+              "scorers": [
+                {"team": "Sweden", "player": "Nyberg", "minute": 1},
+                {"team": "Hungary", "player": "Jacobsson", "minute": 19, "own_goal": true},
+                {"team": "Hungary", "player": "Titkos", "minute": 37},
+                {"team": "Hungary", "player": "Zsengellér", "minute": 39},
+                {"team": "Hungary", "player": "Sárosi", "minute": 65},
+                {"team": "Hungary", "player": "Zsengellér", "minute": 85}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Sweden",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Sweden", "player": "Jonasson", "minute": 28},
+                {"team": "Brazil", "player": "Romeu", "minute": 44},
+                {"team": "Brazil", "player": "Leônidas", "minute": 63},
+                {"team": "Brazil", "player": "Leônidas", "minute": 74},
+                {"team": "Sweden", "player": "Nyberg", "minute": 38},
+                {"team": "Brazil", "player": "Perácio", "minute": 80}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Hungary",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Italy", "player": "Colaussi", "minute": 6},
+                {"team": "Hungary", "player": "Titkos", "minute": 8},
+                {"team": "Italy", "player": "Piola", "minute": 16},
+                {"team": "Italy", "player": "Colaussi", "minute": 35},
+                {"team": "Hungary", "player": "Sárosi", "minute": 70},
+                {"team": "Italy", "player": "Piola", "minute": 82}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1950,
+      "host": "Brazil",
+      "knockout_rounds": []
+    },
+    {
+      "year": 1954,
+      "host": "Switzerland",
+      "knockout_rounds": [
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Austria",
+              "team2": "Switzerland",
+              "score": "7-5",
+              "scorers": [
+                {"team": "Switzerland", "player": "Ballaman", "minute": 16},
+                {"team": "Switzerland", "player": "Hügi", "minute": 17},
+                {"team": "Switzerland", "player": "Hügi", "minute": 23},
+                {"team": "Austria", "player": "Wagner", "minute": 25},
+                {"team": "Austria", "player": "Probst", "minute": 16},
+                {"team": "Austria", "player": "Probst", "minute": 19},
+                {"team": "Switzerland", "player": "Hügi", "minute": 58},
+                {"team": "Austria", "player": "Wagner", "minute": 27},
+                {"team": "Austria", "player": "Wagner", "minute": 53},
+                {"team": "Austria", "player": "Körner", "minute": 34},
+                {"team": "Austria", "player": "Ocwirk", "minute": 52},
+                {"team": "Switzerland", "player": "Ballaman", "minute": 39}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Uruguay",
+              "team2": "England",
+              "score": "4-2",
+              "scorers": [
+                {"team": "England", "player": "Lofthouse", "minute": 16},
+                {"team": "Uruguay", "player": "Borges", "minute": 5},
+                {"team": "Uruguay", "player": "Varela", "minute": 39},
+                {"team": "Uruguay", "player": "Schiaffino", "minute": 46},
+                {"team": "England", "player": "Finney", "minute": 67},
+                {"team": "Uruguay", "player": "Ambrois", "minute": 78}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Hungary",
+              "team2": "Brazil",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Hungary", "player": "Hidegkuti", "minute": 4},
+                {"team": "Hungary", "player": "Kocsis", "minute": 7},
+                {"team": "Brazil", "player": "D. Santos", "minute": 18, "penalty": true},
+                {"team": "Hungary", "player": "Lantos", "minute": 60, "penalty": true},
+                {"team": "Brazil", "player": "Julinho", "minute": 65},
+                {"team": "Hungary", "player": "Kocsis", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Yugoslavia",
+              "score": "2-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Eckel", "minute": 8},
+                {"team": "West Germany", "player": "Rahn", "minute": 85}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "West Germany",
+              "team2": "Austria",
+              "score": "6-1",
+              "scorers": [
+                {"team": "West Germany", "player": "Morlock", "minute": 31},
+                {"team": "West Germany", "player": "F. Walter", "minute": 47, "penalty": true},
+                {"team": "West Germany", "player": "O. Walter", "minute": 54},
+                {"team": "West Germany", "player": "O. Walter", "minute": 64},
+                {"team": "Austria", "player": "Probst", "minute": 51},
+                {"team": "West Germany", "player": "Rahn", "minute": 68},
+                {"team": "West Germany", "player": "F. Walter", "minute": 84, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Hungary",
+              "team2": "Uruguay",
+              "score": "4-2",
+              "aet": true,
+              "scorers": [
+                {"team": "Hungary", "player": "Czibor", "minute": 13},
+                {"team": "Hungary", "player": "Hidegkuti", "minute": 46},
+                {"team": "Uruguay", "player": "Hohberg", "minute": 75},
+                {"team": "Uruguay", "player": "Hohberg", "minute": 86},
+                {"team": "Hungary", "player": "Kocsis", "minute": 111},
+                {"team": "Hungary", "player": "Kocsis", "minute": 116}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Austria",
+              "team2": "Uruguay",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Austria", "player": "Stojaspal", "minute": 16},
+                {"team": "Uruguay", "player": "Hohberg", "minute": 22},
+                {"team": "Austria", "player": "Cruz", "minute": 59, "own_goal": true},
+                {"team": "Austria", "player": "Probst", "minute": 89}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "West Germany",
+              "team2": "Hungary",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Hungary", "player": "Puskás", "minute": 6},
+                {"team": "Hungary", "player": "Czibor", "minute": 8},
+                {"team": "West Germany", "player": "Morlock", "minute": 10},
+                {"team": "West Germany", "player": "Rahn", "minute": 18},
+                {"team": "West Germany", "player": "Rahn", "minute": 84}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1958,
+      "host": "Sweden",
+      "knockout_rounds": [
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Northern Ireland",
+              "score": "4-0",
+              "scorers": [
+                {"team": "France", "player": "Fontaine", "minute": 55},
+                {"team": "France", "player": "Fontaine", "minute": 63},
+                {"team": "France", "player": "Fontaine", "minute": 78},
+                {"team": "France", "player": "Fontaine", "minute": 89}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Yugoslavia",
+              "score": "1-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Rahn", "minute": 12}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Soviet Union",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Sweden", "player": "Hamrin", "minute": 49},
+                {"team": "Sweden", "player": "Simonsson", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Wales",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Pelé", "minute": 73}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "France",
+              "score": "5-2",
+              "scorers": [
+                {"team": "Brazil", "player": "Vavá", "minute": 2},
+                {"team": "France", "player": "Fontaine", "minute": 9},
+                {"team": "Brazil", "player": "Didi", "minute": 39},
+                {"team": "Brazil", "player": "Pelé", "minute": 52},
+                {"team": "Brazil", "player": "Pelé", "minute": 64},
+                {"team": "Brazil", "player": "Pelé", "minute": 75},
+                {"team": "France", "player": "Piantoni", "minute": 83}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "West Germany",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Sweden", "player": "Skoglund", "minute": 32},
+                {"team": "West Germany", "player": "Schäfer", "minute": 24},
+                {"team": "Sweden", "player": "Gren", "minute": 81},
+                {"team": "Sweden", "player": "Hamrin", "minute": 88}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "West Germany",
+              "score": "6-3",
+              "scorers": [
+                {"team": "France", "player": "Fontaine", "minute": 16},
+                {"team": "West Germany", "player": "Cieslarczyk", "minute": 18},
+                {"team": "France", "player": "Kopa", "minute": 27, "penalty": true},
+                {"team": "France", "player": "Fontaine", "minute": 36},
+                {"team": "France", "player": "Douis", "minute": 50},
+                {"team": "West Germany", "player": "Rahn", "minute": 52},
+                {"team": "France", "player": "Fontaine", "minute": 78},
+                {"team": "France", "player": "Fontaine", "minute": 89},
+                {"team": "West Germany", "player": "Schäfer", "minute": 84}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Sweden",
+              "score": "5-2",
+              "scorers": [
+                {"team": "Sweden", "player": "Liedholm", "minute": 4},
+                {"team": "Brazil", "player": "Vavá", "minute": 9},
+                {"team": "Brazil", "player": "Vavá", "minute": 32},
+                {"team": "Brazil", "player": "Pelé", "minute": 55},
+                {"team": "Brazil", "player": "Zagallo", "minute": 68},
+                {"team": "Sweden", "player": "Simonsson", "minute": 80},
+                {"team": "Brazil", "player": "Pelé", "minute": 90}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1962,
+      "host": "Chile",
+      "knockout_rounds": [
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Chile",
+              "team2": "Soviet Union",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Chile", "player": "L. Sánchez", "minute": 11},
+                {"team": "Soviet Union", "player": "Chislenko", "minute": 26},
+                {"team": "Chile", "player": "Rojas", "minute": 29}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Hungary",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Scherer", "minute": 13}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "England",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Brazil", "player": "Garrincha", "minute": 31},
+                {"team": "England", "player": "Hitchens", "minute": 38},
+                {"team": "Brazil", "player": "Vavá", "minute": 53},
+                {"team": "Brazil", "player": "Garrincha", "minute": 59}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Yugoslavia",
+              "team2": "West Germany",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Yugoslavia", "player": "Radaković", "minute": 85}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Chile",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Brazil", "player": "Garrincha", "minute": 9},
+                {"team": "Brazil", "player": "Garrincha", "minute": 32},
+                {"team": "Chile", "player": "Toro", "minute": 42},
+                {"team": "Brazil", "player": "Vavá", "minute": 47},
+                {"team": "Chile", "player": "L. Sánchez", "minute": 61, "penalty": true},
+                {"team": "Brazil", "player": "Vavá", "minute": 78}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Yugoslavia",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Kadraba", "minute": 48},
+                {"team": "Yugoslavia", "player": "Jerković", "minute": 69},
+                {"team": "Czechoslovakia", "player": "Scherer", "minute": 80},
+                {"team": "Czechoslovakia", "player": "Scherer", "minute": 84}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Chile",
+              "team2": "Yugoslavia",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Chile", "player": "Rojas", "minute": 90}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Czechoslovakia",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Masopust", "minute": 15},
+                {"team": "Brazil", "player": "Amarildo", "minute": 17},
+                {"team": "Brazil", "player": "Zito", "minute": 69},
+                {"team": "Brazil", "player": "Vavá", "minute": 78}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1966,
+      "host": "England",
+      "knockout_rounds": [
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "England",
+              "team2": "Argentina",
+              "score": "1-0",
+              "scorers": [
+                {"team": "England", "player": "Hurst", "minute": 78}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Uruguay",
+              "score": "4-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Haller", "minute": 11},
+                {"team": "West Germany", "player": "Beckenbauer", "minute": 70},
+                {"team": "West Germany", "player": "Haller", "minute": 83},
+                {"team": "West Germany", "player": "Seeler", "minute": 75}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Portugal",
+              "team2": "North Korea",
+              "score": "5-3",
+              "scorers": [
+                {"team": "North Korea", "player": "Pak Seung‑zin", "minute": 1},
+                {"team": "North Korea", "player": "Li Dong‑woon", "minute": 22},
+                {"team": "North Korea", "player": "Yang Seung‑kook", "minute": 25},
+                {"team": "Portugal", "player": "Eusébio", "minute": 27},
+                {"team": "Portugal", "player": "Eusébio", "minute": 43, "penalty": true},
+                {"team": "Portugal", "player": "Eusébio", "minute": 56},
+                {"team": "Portugal", "player": "Eusébio", "minute": 59, "penalty": true},
+                {"team": "Portugal", "player": "Augusto", "minute": 80}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Soviet Union",
+              "team2": "Hungary",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Soviet Union", "player": "Porkujan", "minute": 46},
+                {"team": "Hungary", "player": "Bene", "minute": 57},
+                {"team": "Soviet Union", "player": "Porkujan", "minute": 53}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "West Germany",
+              "team2": "Soviet Union",
+              "score": "2-1",
+              "scorers": [
+                {"team": "West Germany", "player": "Haller", "minute": 43},
+                {"team": "West Germany", "player": "Beckenbauer", "minute": 67},
+                {"team": "Soviet Union", "player": "Porkujan", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "England",
+              "team2": "Portugal",
+              "score": "2-1",
+              "scorers": [
+                {"team": "England", "player": "B. Charlton", "minute": 30},
+                {"team": "England", "player": "B. Charlton", "minute": 80},
+                {"team": "Portugal", "player": "Eusébio", "minute": 82, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Portugal",
+              "team2": "Soviet Union",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Portugal", "player": "Eusébio", "minute": 12, "penalty": true},
+                {"team": "Soviet Union", "player": "Malofeyev", "minute": 43},
+                {"team": "Portugal", "player": "Eusébio", "minute": 89}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "England",
+              "team2": "West Germany",
+              "score": "4-2",
+              "aet": true,
+              "scorers": [
+                {"team": "West Germany", "player": "Haller", "minute": 12},
+                {"team": "England", "player": "Hurst", "minute": 18},
+                {"team": "England", "player": "Peters", "minute": 78},
+                {"team": "West Germany", "player": "Weber", "minute": 89},
+                {"team": "England", "player": "Hurst", "minute": 101},
+                {"team": "England", "player": "Hurst", "minute": 120}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1970,
+      "host": "Mexico",
+      "knockout_rounds": [
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Uruguay",
+              "team2": "Soviet Union",
+              "score": "1-0",
+              "aet": true,
+              "scorers": [
+                {"team": "Uruguay", "player": "Espárrago", "minute": 117}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Mexico",
+              "score": "4-1",
+              "scorers": [
+                {"team": "Italy", "player": "Guzmán", "minute": 25, "own_goal": true},
+                {"team": "Mexico", "player": "González", "minute": 13},
+                {"team": "Italy", "player": "Riva", "minute": 63},
+                {"team": "Italy", "player": "Rivera", "minute": 70},
+                {"team": "Italy", "player": "Riva", "minute": 76}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Peru",
+              "score": "4-2",
+              "scorers": [
+                {"team": "Brazil", "player": "Rivellino", "minute": 11},
+                {"team": "Brazil", "player": "Tostão", "minute": 15},
+                {"team": "Peru", "player": "Gallardo", "minute": 28},
+                {"team": "Brazil", "player": "Tostão", "minute": 52},
+                {"team": "Peru", "player": "Cubillas", "minute": 70},
+                {"team": "Brazil", "player": "Jairzinho", "minute": 75}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "England",
+              "score": "3-2",
+              "aet": true,
+              "scorers": [
+                {"team": "England", "player": "Mullery", "minute": 31},
+                {"team": "England", "player": "Peters", "minute": 49},
+                {"team": "West Germany", "player": "Beckenbauer", "minute": 68},
+                {"team": "West Germany", "player": "Seeler", "minute": 82},
+                {"team": "West Germany", "player": "G. Müller", "minute": 108}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "West Germany",
+              "score": "4-3",
+              "aet": true,
+              "scorers": [
+                {"team": "Italy", "player": "Boninsegna", "minute": 8},
+                {"team": "West Germany", "player": "Schnellinger", "minute": 90},
+                {"team": "West Germany", "player": "G. Müller", "minute": 94},
+                {"team": "Italy", "player": "Burgnich", "minute": 44},
+                {"team": "Italy", "player": "Riva", "minute": 104},
+                {"team": "West Germany", "player": "G. Müller", "minute": 110},
+                {"team": "Italy", "player": "Rivera", "minute": 111}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Uruguay",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Uruguay", "player": "Cubilla", "minute": 19},
+                {"team": "Brazil", "player": "Clodoaldo", "minute": 44},
+                {"team": "Brazil", "player": "Jairzinho", "minute": 76},
+                {"team": "Brazil", "player": "Rivellino", "minute": 89}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "West Germany",
+              "team2": "Uruguay",
+              "score": "1-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Overath", "minute": 26}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Italy",
+              "score": "4-1",
+              "scorers": [
+                {"team": "Brazil", "player": "Pelé", "minute": 18},
+                {"team": "Italy", "player": "Boninsegna", "minute": 37},
+                {"team": "Brazil", "player": "Gérson", "minute": 66},
+                {"team": "Brazil", "player": "Jairzinho", "minute": 71},
+                {"team": "Brazil", "player": "Carlos Alberto", "minute": 86}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1974,
+      "host": "West Germany",
+      "knockout_rounds": [
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Poland",
+              "team2": "Brazil",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Poland", "player": "Lato", "minute": 76}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Netherlands",
+              "team2": "West Germany",
+              "score": "1-2",
+              "scorers": [
+                {"team": "Netherlands", "player": "Neeskens", "minute": 2, "penalty": true},
+                {"team": "West Germany", "player": "Breitner", "minute": 25, "penalty": true},
+                {"team": "West Germany", "player": "G. Müller", "minute": 43}
+              ],
+              "cards": [
+                {"team": "Netherlands", "player": "Van Hanegem", "minute": 23, "card": "yellow"},
+                {"team": "Netherlands", "player": "Cruyff", "minute": 45, "card": "yellow"},
+                {"team": "Netherlands", "player": "Rijsbergen", "minute": 69, "card": "yellow"},
+                {"team": "West Germany", "player": "Vogts", "minute": 4, "card": "yellow"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1978,
+      "host": "Argentina",
+      "knockout_rounds": [
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Italy",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Italy", "player": "Causio", "minute": 38},
+                {"team": "Brazil", "player": "Nelinho", "minute": 64},
+                {"team": "Brazil", "player": "Dirceu", "minute": 72}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "Netherlands",
+              "score": "3-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Argentina", "player": "Kempes", "minute": 38},
+                {"team": "Netherlands", "player": "Nanninga", "minute": 82},
+                {"team": "Argentina", "player": "Kempes", "minute": 105},
+                {"team": "Argentina", "player": "Bertoni", "minute": 115}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1982,
+      "host": "Spain",
+      "knockout_rounds": [
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Poland",
+              "team2": "Italy",
+              "score": "0-2",
+              "scorers": [
+                {"team": "Italy", "player": "Rossi", "minute": 22},
+                {"team": "Italy", "player": "Rossi", "minute": 73}
+              ],
+              "cards": [
+                {"team": "Poland", "player": "Żmuda", "minute": 21, "card": "yellow"},
+                {"team": "Italy", "player": "Antognoni", "minute": 28, "card": "yellow"},
+                {"team": "Italy", "player": "Gentile", "minute": 58, "card": "yellow"}
+              ]
+            },
+            {
+              "team1": "West Germany",
+              "team2": "France",
+              "score": "3-3",
+              "aet": true,
+              "penalties": "5-4",
+              "scorers": [
+                {"team": "West Germany", "player": "Littbarski", "minute": 17},
+                {"team": "France", "player": "Platini", "minute": 26, "penalty": true},
+                {"team": "France", "player": "Trésor", "minute": 92},
+                {"team": "France", "player": "Platini", "minute": 98, "penalty": true},
+                {"team": "West Germany", "player": "Rummenigge", "minute": 102},
+                {"team": "West Germany", "player": "Fischer", "minute": 108}
+              ],
+              "penalty_shootout": {
+                "west_germany": ["Kaltz", "Breitner", "Littbarski", "Rummenigge", "Hrubesch"],
+                "france": ["Giresse", "Platini", "Six", "Bossis"],
+                "score": "5-4"
+              },
+              "cards": [
+                {"team": "West Germany", "player": "B. Förster", "minute": 45, "card": "yellow"},
+                {"team": "France", "player": "Giresse", "minute": 35, "card": "yellow"},
+                {"team": "France", "player": "Rocheteau", "minute": 83, "card": "yellow"}
+              ]
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Poland",
+              "team2": "France",
+              "score": "3-2",
+              "scorers": [
+                {"team": "France", "player": "Girard", "minute": 13},
+                {"team": "Poland", "player": "Szarmach", "minute": 40},
+                {"team": "Poland", "player": "Majewski", "minute": 44},
+                {"team": "Poland", "player": "Kupcewicz", "minute": 46},
+                {"team": "France", "player": "Soler", "minute": 77}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "West Germany",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Italy", "player": "Rossi", "minute": 57},
+                {"team": "Italy", "player": "Tardelli", "minute": 69},
+                {"team": "Italy", "player": "Altobelli", "minute": 81},
+                {"team": "West Germany", "player": "Breitner", "minute": 83}
+              ],
+              "cards": [
+                {"team": "Italy", "player": "Conti", "minute": 31, "card": "yellow"},
+                {"team": "Italy", "player": "Oriali", "minute": 73, "card": "yellow"},
+                {"team": "West Germany", "player": "Dremmler", "minute": 61, "card": "yellow"},
+                {"team": "West Germany", "player": "B. Förster", "minute": 78, "card": "yellow"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1986,
+      "host": "Mexico",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Mexico",
+              "team2": "Bulgaria",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Mexico", "player": "Negrete", "minute": 34},
+                {"team": "Mexico", "player": "Servín", "minute": 61}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Belgium",
+              "team2": "Soviet Union",
+              "score": "4-3",
+              "aet": true,
+              "scorers": [
+                {"team": "Belgium", "player": "Scifo", "minute": 56},
+                {"team": "Soviet Union", "player": "Belanov", "minute": 27},
+                {"team": "Belgium", "player": "Ceulemans", "minute": 77},
+                {"team": "Belgium", "player": "Demol", "minute": 102},
+                {"team": "Soviet Union", "player": "Belanov", "minute": 70, "penalty": true},
+                {"team": "Soviet Union", "player": "Belanov", "minute": 111, "penalty": true},
+                {"team": "Belgium", "player": "Claesen", "minute": 110}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Uruguay",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Argentina", "player": "Pasculli", "minute": 42}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "France",
+              "team2": "Italy",
+              "score": "2-0",
+              "scorers": [
+                {"team": "France", "player": "Platini", "minute": 15},
+                {"team": "France", "player": "Stopyra", "minute": 57}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Poland",
+              "score": "4-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Sócrates", "minute": 30},
+                {"team": "Brazil", "player": "Josimar", "minute": 55},
+                {"team": "Brazil", "player": "Edinho", "minute": 79},
+                {"team": "Brazil", "player": "Careca", "minute": 83}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Morocco",
+              "score": "1-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Matthäus", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "England",
+              "team2": "Paraguay",
+              "score": "3-0",
+              "scorers": [
+                {"team": "England", "player": "Lineker", "minute": 31},
+                {"team": "England", "player": "Beardsley", "minute": 56},
+                {"team": "England", "player": "Lineker", "minute": 73}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "Denmark",
+              "score": "5-1",
+              "scorers": [
+                {"team": "Denmark", "player": "J. Olsen", "minute": 33},
+                {"team": "Spain", "player": "Butragueño", "minute": 43},
+                {"team": "Spain", "player": "Butragueño", "minute": 56},
+                {"team": "Spain", "player": "Goikoetxea", "minute": 68},
+                {"team": "Spain", "player": "Butragueño", "minute": 80},
+                {"team": "Spain", "player": "Butragueño", "minute": 89, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Belgium",
+              "team2": "Spain",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "5-4",
+              "scorers": [
+                {"team": "Spain", "player": "Señor", "minute": 85},
+                {"team": "Belgium", "player": "Ceulemans", "minute": 35}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "England",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Argentina", "player": "Maradona", "minute": 51},
+                {"team": "Argentina", "player": "Maradona", "minute": 55},
+                {"team": "England", "player": "Lineker", "minute": 81}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "France",
+              "team2": "Brazil",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "4-3",
+              "scorers": [
+                {"team": "Brazil", "player": "Careca", "minute": 17},
+                {"team": "France", "player": "Platini", "minute": 40}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Mexico",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "4-1",
+              "scorers": [],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "Belgium",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Argentina", "player": "Maradona", "minute": 51},
+                {"team": "Argentina", "player": "Maradona", "minute": 63}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "France",
+              "score": "2-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Brehme", "minute": 9},
+                {"team": "West Germany", "player": "Völler", "minute": 89}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Belgium",
+              "score": "4-2",
+              "aet": true,
+              "scorers": [
+                {"team": "France", "player": "Ferreri", "minute": 27},
+                {"team": "Belgium", "player": "Ceulemans", "minute": 11},
+                {"team": "France", "player": "Papin", "minute": 43},
+                {"team": "Belgium", "player": "Claesen", "minute": 73},
+                {"team": "France", "player": "Papin", "minute": 104},
+                {"team": "France", "player": "Genghini", "minute": 111}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "West Germany",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Argentina", "player": "Brown", "minute": 23},
+                {"team": "Argentina", "player": "Valdano", "minute": 55},
+                {"team": "West Germany", "player": "Rummenigge", "minute": 74},
+                {"team": "West Germany", "player": "Völler", "minute": 82},
+                {"team": "Argentina", "player": "Burruchaga", "minute": 83}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1990,
+      "host": "Italy",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Cameroon",
+              "team2": "Colombia",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Cameroon", "player": "Milla", "minute": 106},
+                {"team": "Cameroon", "player": "Milla", "minute": 109},
+                {"team": "Colombia", "player": "Redín", "minute": 115}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Brazil",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Argentina", "player": "Caniggia", "minute": 80}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Netherlands",
+              "score": "2-1",
+              "scorers": [
+                {"team": "West Germany", "player": "Klinsmann", "minute": 51},
+                {"team": "Netherlands", "player": "R. Koeman", "minute": 78, "penalty": true},
+                {"team": "West Germany", "player": "Brehme", "minute": 85}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Ireland",
+              "team2": "Romania",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "5-4",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Uruguay",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Italy", "player": "Schillaci", "minute": 65},
+                {"team": "Italy", "player": "Serena", "minute": 85}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Czechoslovakia",
+              "team2": "Costa Rica",
+              "score": "4-1",
+              "scorers": [
+                {"team": "Czechoslovakia", "player": "Skuhravý", "minute": 12},
+                {"team": "Costa Rica", "player": "González", "minute": 54},
+                {"team": "Czechoslovakia", "player": "Skuhravý", "minute": 63},
+                {"team": "Czechoslovakia", "player": "Kubík", "minute": 75},
+                {"team": "Czechoslovakia", "player": "Skuhravý", "minute": 82}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "England",
+              "team2": "Belgium",
+              "score": "1-0",
+              "aet": true,
+              "scorers": [
+                {"team": "England", "player": "Platt", "minute": 119}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Yugoslavia",
+              "team2": "Spain",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Spain", "player": "Salinas", "minute": 83},
+                {"team": "Yugoslavia", "player": "Stojković", "minute": 78},
+                {"team": "Yugoslavia", "player": "Stojković", "minute": 92}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "Yugoslavia",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "3-2",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Ireland",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Italy", "player": "Schillaci", "minute": 38}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "Czechoslovakia",
+              "score": "1-0",
+              "scorers": [
+                {"team": "West Germany", "player": "Matthäus", "minute": 25, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "England",
+              "team2": "Cameroon",
+              "score": "3-2",
+              "aet": true,
+              "scorers": [
+                {"team": "Cameroon", "player": "Kundé", "minute": 61},
+                {"team": "England", "player": "Platt", "minute": 25},
+                {"team": "Cameroon", "player": "Ekéké", "minute": 65},
+                {"team": "England", "player": "Lineker", "minute": 83, "penalty": true},
+                {"team": "England", "player": "Lineker", "minute": 105, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "Italy",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "4-3",
+              "scorers": [
+                {"team": "Italy", "player": "Schillaci", "minute": 17},
+                {"team": "Argentina", "player": "Caniggia", "minute": 67}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "West Germany",
+              "team2": "England",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "4-3",
+              "scorers": [
+                {"team": "West Germany", "player": "Brehme", "minute": 60},
+                {"team": "England", "player": "Lineker", "minute": 80}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "England",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Italy", "player": "Baggio", "minute": 71},
+                {"team": "England", "player": "Platt", "minute": 81},
+                {"team": "Italy", "player": "Schillaci", "minute": 86, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Argentina",
+              "team2": "West Germany",
+              "score": "0-1",
+              "scorers": [
+                {"team": "West Germany", "player": "Brehme", "minute": 85, "penalty": true}
+              ],
+              "cards": [
+                {"team": "Argentina", "player": "Monzón", "minute": 65, "card": "red"},
+                {"team": "Argentina", "player": "Dezotti", "minute": 87, "card": "red"},
+                {"team": "Argentina", "player": "Maradona", "minute": 87, "card": "yellow"},
+                {"team": "Argentina", "player": "Troglio", "minute": 84, "card": "yellow"},
+                {"team": "Argentina", "player": "Lorenzo", "minute": 44, "card": "yellow"},
+                {"team": "West Germany", "player": "Völler", "minute": 52, "card": "yellow"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1994,
+      "host": "United States",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Belgium",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Germany", "player": "Völler", "minute": 6},
+                {"team": "Belgium", "player": "Grün", "minute": 8},
+                {"team": "Germany", "player": "Klinsmann", "minute": 11},
+                {"team": "Belgium", "player": "Albert", "minute": 90},
+                {"team": "Germany", "player": "Völler", "minute": 40}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "Switzerland",
+              "score": "3-0",
+              "scorers": [
+                {"team": "Spain", "player": "Hierro", "minute": 15},
+                {"team": "Spain", "player": "Luis Enrique", "minute": 74},
+                {"team": "Spain", "player": "Beguiristain", "minute": 86}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Saudi Arabia",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Sweden", "player": "Dahlin", "minute": 6},
+                {"team": "Saudi Arabia", "player": "Al-Ghesheyan", "minute": 85},
+                {"team": "Sweden", "player": "K. Andersson", "minute": 51},
+                {"team": "Sweden", "player": "K. Andersson", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Romania",
+              "team2": "Argentina",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Romania", "player": "Dumitrescu", "minute": 11},
+                {"team": "Argentina", "player": "Batistuta", "minute": 16, "penalty": true},
+                {"team": "Romania", "player": "Dumitrescu", "minute": 18},
+                {"team": "Argentina", "player": "Balbo", "minute": 75},
+                {"team": "Romania", "player": "Hagi", "minute": 58}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Netherlands",
+              "team2": "Ireland",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Netherlands", "player": "Bergkamp", "minute": 11},
+                {"team": "Netherlands", "player": "Jonk", "minute": 41}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "United States",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Bebeto", "minute": 72}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Nigeria",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Nigeria", "player": "Amuneke", "minute": 25},
+                {"team": "Italy", "player": "R. Baggio", "minute": 88},
+                {"team": "Italy", "player": "R. Baggio", "minute": 102, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Bulgaria",
+              "team2": "Mexico",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "3-1",
+              "scorers": [
+                {"team": "Bulgaria", "player": "Stoichkov", "minute": 6},
+                {"team": "Mexico", "player": "García Aspe", "minute": 18, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Spain",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Italy", "player": "D. Baggio", "minute": 25},
+                {"team": "Spain", "player": "Caminero", "minute": 58},
+                {"team": "Italy", "player": "R. Baggio", "minute": 87}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Bulgaria",
+              "team2": "Germany",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Germany", "player": "Matthäus", "minute": 47, "penalty": true},
+                {"team": "Bulgaria", "player": "Stoichkov", "minute": 75},
+                {"team": "Bulgaria", "player": "Letchkov", "minute": 78}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Netherlands",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Brazil", "player": "Romário", "minute": 53},
+                {"team": "Brazil", "player": "Bebeto", "minute": 63},
+                {"team": "Netherlands", "player": "Bergkamp", "minute": 64},
+                {"team": "Netherlands", "player": "Winter", "minute": 76},
+                {"team": "Brazil", "player": "Branco", "minute": 81}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Romania",
+              "score": "2-2",
+              "aet": true,
+              "penalties": "5-4",
+              "scorers": [
+                {"team": "Sweden", "player": "Brolin", "minute": 79},
+                {"team": "Romania", "player": "Răducioiu", "minute": 88},
+                {"team": "Romania", "player": "Răducioiu", "minute": 101},
+                {"team": "Sweden", "player": "K. Andersson", "minute": 115}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Bulgaria",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Italy", "player": "R. Baggio", "minute": 21},
+                {"team": "Italy", "player": "R. Baggio", "minute": 25},
+                {"team": "Bulgaria", "player": "Stoichkov", "minute": 44, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Sweden",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Romário", "minute": 80}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Sweden",
+              "team2": "Bulgaria",
+              "score": "4-0",
+              "scorers": [
+                {"team": "Sweden", "player": "Brolin", "minute": 8},
+                {"team": "Sweden", "player": "Mild", "minute": 30},
+                {"team": "Sweden", "player": "Larsson", "minute": 37},
+                {"team": "Sweden", "player": "K. Andersson", "minute": 40}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Italy",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "3-2",
+              "scorers": [],
+              "penalty_shootout": {
+                "brazil": ["Márcio Santos", "Romário", "Branco", "Dunga"],
+                "italy": ["Baresi", "Albertini", "Evani", "R. Baggio"],
+                "note": "Italy missed first and last penalties"
+              },
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1998,
+      "host": "France",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "Norway",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Italy", "player": "Vieri", "minute": 18}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Chile",
+              "score": "4-1",
+              "scorers": [
+                {"team": "Brazil", "player": "César Sampaio", "minute": 11},
+                {"team": "Brazil", "player": "César Sampaio", "minute": 27},
+                {"team": "Chile", "player": "Salas", "minute": 68},
+                {"team": "Brazil", "player": "Ronaldo", "minute": 45, "penalty": true},
+                {"team": "Brazil", "player": "Ronaldo", "minute": 70}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "France",
+              "team2": "Paraguay",
+              "score": "1-0",
+              "aet": true,
+              "scorers": [
+                {"team": "France", "player": "Blanc", "minute": 114}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "Mexico",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Mexico", "player": "Hernández", "minute": 47},
+                {"team": "Germany", "player": "Klinsmann", "minute": 75},
+                {"team": "Germany", "player": "Bierhoff", "minute": 86}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Netherlands",
+              "team2": "Yugoslavia",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Netherlands", "player": "Bergkamp", "minute": 38},
+                {"team": "Netherlands", "player": "Davids", "minute": 90},
+                {"team": "Yugoslavia", "player": "Mijatović", "minute": 48}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "England",
+              "score": "2-2",
+              "aet": true,
+              "penalties": "4-3",
+              "scorers": [
+                {"team": "Argentina", "player": "Batistuta", "minute": 6, "penalty": true},
+                {"team": "England", "player": "Shearer", "minute": 10, "penalty": true},
+                {"team": "England", "player": "Owen", "minute": 16},
+                {"team": "Argentina", "player": "Zanetti", "minute": 45}
+              ],
+              "cards": [
+                {"team": "England", "player": "Beckham", "minute": 47, "card": "red"}
+              ]
+            },
+            {
+              "team1": "Croatia",
+              "team2": "Romania",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Croatia", "player": "Šuker", "minute": 45, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Denmark",
+              "team2": "Nigeria",
+              "score": "4-1",
+              "scorers": [
+                {"team": "Denmark", "player": "Møller", "minute": 3},
+                {"team": "Denmark", "player": "B. Laudrup", "minute": 12},
+                {"team": "Denmark", "player": "Sand", "minute": 59},
+                {"team": "Nigeria", "player": "Babangida", "minute": 78},
+                {"team": "Denmark", "player": "Helveg", "minute": 76}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Italy",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "4-3",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Denmark",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Denmark", "player": "Jørgensen", "minute": 2},
+                {"team": "Brazil", "player": "Bebeto", "minute": 10},
+                {"team": "Brazil", "player": "Rivaldo", "minute": 27},
+                {"team": "Denmark", "player": "B. Laudrup", "minute": 50},
+                {"team": "Brazil", "player": "Rivaldo", "minute": 59}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Netherlands",
+              "team2": "Argentina",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Netherlands", "player": "Kluivert", "minute": 12},
+                {"team": "Argentina", "player": "López", "minute": 17},
+                {"team": "Netherlands", "player": "Bergkamp", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Croatia",
+              "team2": "Germany",
+              "score": "3-0",
+              "scorers": [
+                {"team": "Croatia", "player": "Jarni", "minute": 45},
+                {"team": "Croatia", "player": "Vlaović", "minute": 80},
+                {"team": "Croatia", "player": "Šuker", "minute": 85}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Netherlands",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "4-2",
+              "scorers": [
+                {"team": "Brazil", "player": "Ronaldo", "minute": 46},
+                {"team": "Netherlands", "player": "Kluivert", "minute": 87}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "France",
+              "team2": "Croatia",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Croatia", "player": "Šuker", "minute": 46},
+                {"team": "France", "player": "Thuram", "minute": 47},
+                {"team": "France", "player": "Thuram", "minute": 70}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Netherlands",
+              "team2": "Croatia",
+              "score": "1-2",
+              "scorers": [
+                {"team": "Croatia", "player": "Prosinečki", "minute": 13},
+                {"team": "Netherlands", "player": "Zenden", "minute": 21},
+                {"team": "Croatia", "player": "Šuker", "minute": 35}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "France",
+              "score": "0-3",
+              "scorers": [
+                {"team": "France", "player": "Zidane", "minute": 27},
+                {"team": "France", "player": "Zidane", "minute": 45},
+                {"team": "France", "player": "Petit", "minute": 90}
+              ],
+              "cards": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2002,
+      "host": "South Korea/Japan",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Paraguay",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Germany", "player": "Neuville", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Denmark",
+              "team2": "England",
+              "score": "0-3",
+              "scorers": [
+                {"team": "England", "player": "Ferdinand", "minute": 5},
+                {"team": "England", "player": "Owen", "minute": 22},
+                {"team": "England", "player": "Heskey", "minute": 44}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Senegal",
+              "score": "1-2",
+              "aet": true,
+              "scorers": [
+                {"team": "Sweden", "player": "Larsson", "minute": 11},
+                {"team": "Senegal", "player": "Camara", "minute": 37},
+                {"team": "Senegal", "player": "Camara", "minute": 104}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "Ireland",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "3-2",
+              "scorers": [
+                {"team": "Spain", "player": "Morientes", "minute": 8},
+                {"team": "Ireland", "player": "Keane", "minute": 90, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Mexico",
+              "team2": "United States",
+              "score": "0-2",
+              "scorers": [
+                {"team": "United States", "player": "McBride", "minute": 8},
+                {"team": "United States", "player": "Donovan", "minute": 65}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Belgium",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Rivaldo", "minute": 67},
+                {"team": "Brazil", "player": "Ronaldo", "minute": 87}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Japan",
+              "team2": "Turkey",
+              "score": "0-1",
+              "scorers": [
+                {"team": "Turkey", "player": "Ümit Davala", "minute": 12}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "South Korea",
+              "team2": "Italy",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Italy", "player": "Vieri", "minute": 18},
+                {"team": "South Korea", "player": "Seol Ki‑hyeon", "minute": 88},
+                {"team": "South Korea", "player": "Ahn Jung‑hwan", "minute": 117}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "England",
+              "team2": "Brazil",
+              "score": "1-2",
+              "scorers": [
+                {"team": "England", "player": "Owen", "minute": 23},
+                {"team": "Brazil", "player": "Rivaldo", "minute": 45},
+                {"team": "Brazil", "player": "Ronaldinho", "minute": 50}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "United States",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Germany", "player": "Ballack", "minute": 39}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "South Korea",
+              "team2": "Spain",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "5-3",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "Turkey",
+              "team2": "Senegal",
+              "score": "1-0",
+              "aet": true,
+              "scorers": [
+                {"team": "Turkey", "player": "İlhan Mansız", "minute": 94}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "South Korea",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Germany", "player": "Ballack", "minute": 75}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Turkey",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Ronaldo", "minute": 49}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "South Korea",
+              "team2": "Turkey",
+              "score": "2-3",
+              "scorers": [
+                {"team": "Turkey", "player": "Hakan Şükür", "minute": 1},
+                {"team": "South Korea", "player": "Lee Eul‑yong", "minute": 9},
+                {"team": "Turkey", "player": "İlhan Mansız", "minute": 13},
+                {"team": "Turkey", "player": "İlhan Mansız", "minute": 32},
+                {"team": "South Korea", "player": "Song Chong‑gug", "minute": 90}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Brazil",
+              "score": "0-2",
+              "scorers": [
+                {"team": "Brazil", "player": "Ronaldo", "minute": 67},
+                {"team": "Brazil", "player": "Ronaldo", "minute": 79}
+              ],
+              "cards": [
+                {"team": "Germany", "player": "Klose", "minute": 9, "card": "yellow"},
+                {"team": "Germany", "player": "Ballack", "minute": 90, "card": "yellow"},
+                {"team": "Brazil", "player": "Roque Júnior", "minute": 6, "card": "yellow"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2006,
+      "host": "Germany",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Sweden",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Germany", "player": "Podolski", "minute": 4},
+                {"team": "Germany", "player": "Podolski", "minute": 12}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Mexico",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Mexico", "player": "Márquez", "minute": 6},
+                {"team": "Argentina", "player": "Crespo", "minute": 10},
+                {"team": "Argentina", "player": "Rodríguez", "minute": 98}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Australia",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Italy", "player": "Totti", "minute": 90, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Switzerland",
+              "team2": "Ukraine",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "0-3",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "England",
+              "team2": "Ecuador",
+              "score": "1-0",
+              "scorers": [
+                {"team": "England", "player": "Beckham", "minute": 60}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Portugal",
+              "team2": "Netherlands",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Portugal", "player": "Maniche", "minute": 23}
+              ],
+              "cards": [
+                {"team": "Netherlands", "player": "Van Bommel", "minute": 2, "card": "yellow"},
+                {"team": "Netherlands", "player": "Boulahrouz", "minute": 63, "card": "red"},
+                {"team": "Portugal", "player": "Deco", "minute": 73, "card": "red"},
+                {"team": "Portugal", "player": "Costinha", "minute": 45, "card": "red"},
+                {"team": "Netherlands", "player": "Van Bronckhorst", "minute": 90, "card": "red"}
+              ]
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Ghana",
+              "score": "3-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Ronaldo", "minute": 5},
+                {"team": "Brazil", "player": "Adriano", "minute": 45},
+                {"team": "Brazil", "player": "Zé Roberto", "minute": 84}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "France",
+              "score": "1-3",
+              "scorers": [
+                {"team": "Spain", "player": "Villa", "minute": 28, "penalty": true},
+                {"team": "France", "player": "Ribéry", "minute": 41},
+                {"team": "France", "player": "Vieira", "minute": 83},
+                {"team": "France", "player": "Zidane", "minute": 90}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Argentina",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "4-2",
+              "scorers": [
+                {"team": "Argentina", "player": "Ayala", "minute": 49},
+                {"team": "Germany", "player": "Klose", "minute": 80}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Italy",
+              "team2": "Ukraine",
+              "score": "3-0",
+              "scorers": [
+                {"team": "Italy", "player": "Zambrotta", "minute": 6},
+                {"team": "Italy", "player": "Toni", "minute": 59},
+                {"team": "Italy", "player": "Toni", "minute": 69}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Portugal",
+              "team2": "England",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "3-1",
+              "scorers": [],
+              "cards": [
+                {"team": "England", "player": "Rooney", "minute": 62, "card": "red"}
+              ]
+            },
+            {
+              "team1": "Brazil",
+              "team2": "France",
+              "score": "0-1",
+              "scorers": [
+                {"team": "France", "player": "Henry", "minute": 57}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Italy",
+              "score": "0-2",
+              "aet": true,
+              "scorers": [
+                {"team": "Italy", "player": "Grosso", "minute": 119},
+                {"team": "Italy", "player": "Del Piero", "minute": 120}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Portugal",
+              "team2": "France",
+              "score": "0-1",
+              "scorers": [
+                {"team": "France", "player": "Zidane", "minute": 33, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Portugal",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Germany", "player": "Schweinsteiger", "minute": 56},
+                {"team": "Portugal", "player": "Petit", "minute": 60, "own_goal": true},
+                {"team": "Germany", "player": "Schweinsteiger", "minute": 78},
+                {"team": "Portugal", "player": "Nuno Gomes", "minute": 88}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Italy",
+              "team2": "France",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "5-3",
+              "scorers": [
+                {"team": "France", "player": "Zidane", "minute": 7, "penalty": true},
+                {"team": "Italy", "player": "Materazzi", "minute": 19}
+              ],
+              "cards": [
+                {"team": "France", "player": "Zidane", "minute": 110, "card": "red"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2010,
+      "host": "South Africa",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Uruguay",
+              "team2": "South Korea",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Uruguay", "player": "Suárez", "minute": 8},
+                {"team": "South Korea", "player": "Lee Chung‑yong", "minute": 68},
+                {"team": "Uruguay", "player": "Suárez", "minute": 80}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "United States",
+              "team2": "Ghana",
+              "score": "1-2",
+              "aet": true,
+              "scorers": [
+                {"team": "Ghana", "player": "Prince", "minute": 5},
+                {"team": "United States", "player": "Donovan", "minute": 62, "penalty": true},
+                {"team": "Ghana", "player": "Gyan", "minute": 93}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "England",
+              "score": "4-1",
+              "scorers": [
+                {"team": "Germany", "player": "Klose", "minute": 20},
+                {"team": "England", "player": "Upson", "minute": 37},
+                {"team": "Germany", "player": "Podolski", "minute": 32},
+                {"team": "Germany", "player": "Müller", "minute": 67},
+                {"team": "Germany", "player": "Müller", "minute": 70}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Mexico",
+              "score": "3-1",
+              "scorers": [
+                {"team": "Argentina", "player": "Tévez", "minute": 26},
+                {"team": "Argentina", "player": "Higuaín", "minute": 33},
+                {"team": "Mexico", "player": "Hernández", "minute": 71},
+                {"team": "Argentina", "player": "Tévez", "minute": 52}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Netherlands",
+              "team2": "Slovakia",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Netherlands", "player": "Robben", "minute": 18},
+                {"team": "Slovakia", "player": "Vittek", "minute": 90, "penalty": true},
+                {"team": "Netherlands", "player": "Sneijder", "minute": 84}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Chile",
+              "score": "3-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Juan", "minute": 34},
+                {"team": "Brazil", "player": "Luís Fabiano", "minute": 38},
+                {"team": "Brazil", "player": "Robinho", "minute": 59}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Paraguay",
+              "team2": "Japan",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "5-3",
+              "scorers": [],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "Portugal",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Spain", "player": "Villa", "minute": 63}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Netherlands",
+              "team2": "Brazil",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Brazil", "player": "Robinho", "minute": 10},
+                {"team": "Netherlands", "player": "Sneijder", "minute": 53},
+                {"team": "Netherlands", "player": "Sneijder", "minute": 68}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Uruguay",
+              "team2": "Ghana",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "4-2",
+              "scorers": [
+                {"team": "Ghana", "player": "Muntari", "minute": 45},
+                {"team": "Uruguay", "player": "Forlán", "minute": 55}
+              ],
+              "cards": [
+                {"team": "Uruguay", "player": "Suárez", "minute": 120, "card": "red"}
+              ]
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Germany",
+              "score": "0-4",
+              "scorers": [
+                {"team": "Germany", "player": "Müller", "minute": 3},
+                {"team": "Germany", "player": "Klose", "minute": 68},
+                {"team": "Germany", "player": "Friedrich", "minute": 74},
+                {"team": "Germany", "player": "Klose", "minute": 89}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Paraguay",
+              "team2": "Spain",
+              "score": "0-1",
+              "scorers": [
+                {"team": "Spain", "player": "Villa", "minute": 83}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Uruguay",
+              "team2": "Netherlands",
+              "score": "2-3",
+              "scorers": [
+                {"team": "Netherlands", "player": "Van Bronckhorst", "minute": 18},
+                {"team": "Uruguay", "player": "Forlán", "minute": 41},
+                {"team": "Netherlands", "player": "Sneijder", "minute": 70},
+                {"team": "Netherlands", "player": "Robben", "minute": 73},
+                {"team": "Uruguay", "player": "M. Pereira", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "Spain",
+              "score": "0-1",
+              "scorers": [
+                {"team": "Spain", "player": "Puyol", "minute": 73}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Uruguay",
+              "team2": "Germany",
+              "score": "2-3",
+              "scorers": [
+                {"team": "Germany", "player": "Müller", "minute": 19},
+                {"team": "Uruguay", "player": "Cavani", "minute": 28},
+                {"team": "Uruguay", "player": "Forlán", "minute": 51},
+                {"team": "Germany", "player": "Jansen", "minute": 56},
+                {"team": "Germany", "player": "Khedira", "minute": 82}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Netherlands",
+              "team2": "Spain",
+              "score": "0-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Spain", "player": "Iniesta", "minute": 116}
+              ],
+              "cards": [
+                {"team": "Netherlands", "player": "Heitinga", "minute": 109, "card": "red"},
+                {"team": "Netherlands", "player": "Van Persie", "minute": 15, "card": "yellow"},
+                {"team": "Netherlands", "player": "Van Bommel", "minute": 22, "card": "yellow"},
+                {"team": "Netherlands", "player": "De Jong", "minute": 28, "card": "yellow"},
+                {"team": "Netherlands", "player": "Van Bronckhorst", "minute": 54, "card": "yellow"},
+                {"team": "Netherlands", "player": "Robben", "minute": 84, "card": "yellow"},
+                {"team": "Spain", "player": "Puyol", "minute": 16, "card": "yellow"},
+                {"team": "Spain", "player": "Ramos", "minute": 23, "card": "yellow"},
+                {"team": "Spain", "player": "Capdevila", "minute": 67, "card": "yellow"},
+                {"team": "Spain", "player": "Iniesta", "minute": 118, "card": "yellow"},
+                {"team": "Spain", "player": "Xavi", "minute": 120, "card": "yellow"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2014,
+      "host": "Brazil",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Chile",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "3-2",
+              "scorers": [
+                {"team": "Brazil", "player": "David Luiz", "minute": 18},
+                {"team": "Chile", "player": "Sánchez", "minute": 32}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Colombia",
+              "team2": "Uruguay",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Colombia", "player": "Rodríguez", "minute": 28},
+                {"team": "Colombia", "player": "Rodríguez", "minute": 50}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Netherlands",
+              "team2": "Mexico",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Mexico", "player": "dos Santos", "minute": 48},
+                {"team": "Netherlands", "player": "Sneijder", "minute": 88},
+                {"team": "Netherlands", "player": "Huntelaar", "minute": 90, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Costa Rica",
+              "team2": "Greece",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "5-3",
+              "scorers": [
+                {"team": "Costa Rica", "player": "Ruiz", "minute": 52},
+                {"team": "Greece", "player": "Papastathopoulos", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "France",
+              "team2": "Nigeria",
+              "score": "2-0",
+              "scorers": [
+                {"team": "France", "player": "Pogba", "minute": 79},
+                {"team": "Nigeria", "player": "Yobo", "minute": 90, "own_goal": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Germany",
+              "team2": "Algeria",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Germany", "player": "Schürrle", "minute": 92},
+                {"team": "Algeria", "player": "Djabou", "minute": 120},
+                {"team": "Germany", "player": "Özil", "minute": 120}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Switzerland",
+              "score": "1-0",
+              "aet": true,
+              "scorers": [
+                {"team": "Argentina", "player": "Di María", "minute": 118}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Belgium",
+              "team2": "United States",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "Belgium", "player": "De Bruyne", "minute": 93},
+                {"team": "Belgium", "player": "Lukaku", "minute": 105},
+                {"team": "United States", "player": "Green", "minute": 107}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Germany",
+              "score": "0-1",
+              "scorers": [
+                {"team": "Germany", "player": "Hummels", "minute": 13}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Colombia",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Brazil", "player": "Thiago Silva", "minute": 7},
+                {"team": "Brazil", "player": "David Luiz", "minute": 69},
+                {"team": "Colombia", "player": "Rodríguez", "minute": 80}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Belgium",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Argentina", "player": "Higuaín", "minute": 8}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Netherlands",
+              "team2": "Costa Rica",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "4-3",
+              "scorers": [],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Germany",
+              "score": "1-7",
+              "scorers": [
+                {"team": "Germany", "player": "Müller", "minute": 11},
+                {"team": "Germany", "player": "Klose", "minute": 23},
+                {"team": "Germany", "player": "Kroos", "minute": 24},
+                {"team": "Germany", "player": "Kroos", "minute": 26},
+                {"team": "Germany", "player": "Khedira", "minute": 29},
+                {"team": "Germany", "player": "Schürrle", "minute": 69},
+                {"team": "Germany", "player": "Schürrle", "minute": 79},
+                {"team": "Brazil", "player": "Oscar", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Argentina",
+              "team2": "Netherlands",
+              "score": "0-0",
+              "aet": true,
+              "penalties": "4-2",
+              "scorers": [],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Brazil",
+              "team2": "Netherlands",
+              "score": "0-3",
+              "scorers": [
+                {"team": "Netherlands", "player": "Van Persie", "minute": 3, "penalty": true},
+                {"team": "Netherlands", "player": "Blind", "minute": 17},
+                {"team": "Netherlands", "player": "Wijnaldum", "minute": 90}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "Germany",
+              "team2": "Argentina",
+              "score": "1-0",
+              "aet": true,
+              "scorers": [
+                {"team": "Germany", "player": "Götze", "minute": 113}
+              ],
+              "cards": [
+                {"team": "Germany", "player": "Schweinsteiger", "minute": 29, "card": "yellow"},
+                {"team": "Germany", "player": "Höwedes", "minute": 34, "card": "yellow"},
+                {"team": "Argentina", "player": "Mascherano", "minute": 64, "card": "yellow"},
+                {"team": "Argentina", "player": "Agüero", "minute": 65, "card": "yellow"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2018,
+      "host": "Russia",
+      "knockout_rounds": [
+        {
+          "round": "Round of 16",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Argentina",
+              "score": "4-3",
+              "scorers": [
+                {"team": "France", "player": "Griezmann", "minute": 13, "penalty": true},
+                {"team": "Argentina", "player": "Di María", "minute": 41},
+                {"team": "Argentina", "player": "Mercado", "minute": 48},
+                {"team": "France", "player": "Pavard", "minute": 57},
+                {"team": "France", "player": "Mbappé", "minute": 64},
+                {"team": "France", "player": "Mbappé", "minute": 68},
+                {"team": "Argentina", "player": "Agüero", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Uruguay",
+              "team2": "Portugal",
+              "score": "2-1",
+              "scorers": [
+                {"team": "Uruguay", "player": "Cavani", "minute": 7},
+                {"team": "Portugal", "player": "Pepe", "minute": 55},
+                {"team": "Uruguay", "player": "Cavani", "minute": 62}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Spain",
+              "team2": "Russia",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "3-4",
+              "scorers": [
+                {"team": "Spain", "player": "Ignashevich", "minute": 12, "own_goal": true},
+                {"team": "Russia", "player": "Dzyuba", "minute": 41, "penalty": true}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Croatia",
+              "team2": "Denmark",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "3-2",
+              "scorers": [
+                {"team": "Denmark", "player": "M. Jørgensen", "minute": 1},
+                {"team": "Croatia", "player": "Mandžukić", "minute": 4}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Mexico",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Brazil", "player": "Neymar", "minute": 51},
+                {"team": "Brazil", "player": "Firmino", "minute": 88}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Belgium",
+              "team2": "Japan",
+              "score": "3-2",
+              "scorers": [
+                {"team": "Japan", "player": "Haraguchi", "minute": 48},
+                {"team": "Japan", "player": "Inui", "minute": 52},
+                {"team": "Belgium", "player": "Vertonghen", "minute": 69},
+                {"team": "Belgium", "player": "Fellaini", "minute": 74},
+                {"team": "Belgium", "player": "Chadli", "minute": 90}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "Switzerland",
+              "score": "1-0",
+              "scorers": [
+                {"team": "Sweden", "player": "Forsberg", "minute": 66}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Colombia",
+              "team2": "England",
+              "score": "1-1",
+              "aet": true,
+              "penalties": "3-4",
+              "scorers": [
+                {"team": "Colombia", "player": "Mina", "minute": 90},
+                {"team": "England", "player": "Kane", "minute": 57, "penalty": true}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Quarter-finals",
+          "matches": [
+            {
+              "team1": "Uruguay",
+              "team2": "France",
+              "score": "0-2",
+              "scorers": [
+                {"team": "France", "player": "Varane", "minute": 40},
+                {"team": "France", "player": "Griezmann", "minute": 61}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Brazil",
+              "team2": "Belgium",
+              "score": "1-2",
+              "scorers": [
+                {"team": "Belgium", "player": "Fernandinho", "minute": 13, "own_goal": true},
+                {"team": "Belgium", "player": "De Bruyne", "minute": 31},
+                {"team": "Brazil", "player": "Renato Augusto", "minute": 76}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Russia",
+              "team2": "Croatia",
+              "score": "2-2",
+              "aet": true,
+              "penalties": "3-4",
+              "scorers": [
+                {"team": "Russia", "player": "Cheryshev", "minute": 31},
+                {"team": "Croatia", "player": "Kramarić", "minute": 39},
+                {"team": "Croatia", "player": "Vida", "minute": 101},
+                {"team": "Russia", "player": "Fernandes", "minute": 115}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Sweden",
+              "team2": "England",
+              "score": "0-2",
+              "scorers": [
+                {"team": "England", "player": "Maguire", "minute": 30},
+                {"team": "England", "player": "Alli", "minute": 58}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Semi-finals",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Belgium",
+              "score": "1-0",
+              "scorers": [
+                {"team": "France", "player": "Umtiti", "minute": 51}
+              ],
+              "cards": []
+            },
+            {
+              "team1": "Croatia",
+              "team2": "England",
+              "score": "2-1",
+              "aet": true,
+              "scorers": [
+                {"team": "England", "player": "Trippier", "minute": 5},
+                {"team": "Croatia", "player": "Perišić", "minute": 68},
+                {"team": "Croatia", "player": "Mandžukić", "minute": 109}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Third place",
+          "matches": [
+            {
+              "team1": "Belgium",
+              "team2": "England",
+              "score": "2-0",
+              "scorers": [
+                {"team": "Belgium", "player": "Meunier", "minute": 4},
+                {"team": "Belgium", "player": "E. Hazard", "minute": 82}
+              ],
+              "cards": []
+            }
+          ]
+        },
+        {
+          "round": "Final",
+          "matches": [
+            {
+              "team1": "France",
+              "team2": "Croatia",
+              "score": "4-2",
+              "scorers": [
+                {"team": "France", "player": "Mandžukić", "minute": 18, "own_goal": true},
+                {"team": "Croatia", "player": "Perišić", "minute": 28},
+                {"team": "France", "player": "Griezmann", "minute": 38, "penalty": true},
+                {"team": "France", "player": "Pogba", "minute": 59},
+                {"team": "France", "player": "Mbappé", "minute": 65},
+                {"team": "Croatia", "player": "Mandžukić", "minute": 69}
+              ],
+              "cards": []
+            }
+            ]
+          }
+        ]
+      }
+    ]
+  }
