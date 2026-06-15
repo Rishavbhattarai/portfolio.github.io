@@ -4,7 +4,7 @@
 // Removed total points pill from carousel – only fixture points shown
 // ============================================================
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWjZBnMIIo5-Rw5tWCnh9QtdZjCdJBsyedFvLtVr-hMK6Dp5NmT8ooa7Vw7Qy96ICGtw/exec';
 
 const PLAYER_COLORS = {
   'Amit':      { color: '#5b6cf6', bg: '#eeedfe', textc: '#3C3489', initials: 'AM' },
