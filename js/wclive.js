@@ -4,8 +4,9 @@
 // Removed total points pill from carousel – only fixture points shown
 // ============================================================
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWjZBnMIIo5-Rw5tWCnh9QtdZjCdJBsyedFvLtVr-hMK6Dp5NmT8ooa7Vw7Qy96ICGtw/exec';
-
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
+// Add after existing constants
+let autoRefreshInterval = null;
 const PLAYER_COLORS = {
   'Amit':      { color: '#5b6cf6', bg: '#eeedfe', textc: '#3C3489', initials: 'AM' },
   'Barun':     { color: '#1a6b3a', bg: '#e8f5ee', textc: '#0f4a27', initials: 'BA' },
@@ -59,24 +60,34 @@ function calcPoints(homeScore, awayScore, predH, predA) {
   return Math.sign(homeScore - awayScore) === Math.sign(predH - predA) ? 1 : 0;
 }
 
-async function loadData() {
+async function loadData(silent = false) {
   const loadingMsg = document.getElementById('loadingMsg');
   const appContent = document.getElementById('appContent');
-  loadingMsg.style.display = 'block';
-  appContent.style.display = 'none';
-  loadingMsg.innerHTML = '<div>Loading data from Google Sheets…</div>';
+  
+  if (!silent) {
+    loadingMsg.style.display = 'block';
+    appContent.style.display = 'none';
+    loadingMsg.innerHTML = '<div>Loading data from Google Sheets…</div>';
+  }
+  
   try {
-    const res  = await fetch(SCRIPT_URL);
+    const res = await fetch(SCRIPT_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!data || data.length === 0) throw new Error('Sheet returned no data');
+    
     parseSheetData(data);
-    loadingMsg.style.display = 'none';
-    appContent.style.display = 'block';
+    
+    if (!silent) {
+      loadingMsg.style.display = 'none';
+      appContent.style.display = 'block';
+    }
     buildAllUI();
   } catch (err) {
     console.error('loadData error:', err);
-    loadingMsg.innerHTML = `<div class="error"><strong>Failed to load data from Google Sheets</strong><br><br>${err.message}<br><br>Open console (F12) for details.</div>`;
+    if (!silent) {
+      loadingMsg.innerHTML = `<div class="error"><strong>Failed to load data</strong><br>${err.message}</div>`;
+    }
   }
 }
 
@@ -181,25 +192,74 @@ function stopAddPredTimer() {
 // ========== CAROUSEL: chronological order + scroll to current match ==========
 function buildTodayCarousel() {
   const now = getCurrentPacificDate();
-  
-  // All matches sorted by datetime ascending (oldest first)
-  const allMatchesSorted = [...MATCHES].sort((a,b) => 
+  const todayStr = now.toISOString().split('T')[0];
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+  const getMatchDateStr = (m) => parseMatchDateTime(m.dateTimeRaw).toISOString().split('T')[0];
+
+  // 1. Today & tomorrow matches
+  const todayTomorrowMatches = MATCHES.filter(m => {
+    const dStr = getMatchDateStr(m);
+    return dStr === todayStr || dStr === tomorrowStr;
+  });
+
+  // 2. Up to 2 most recent completed matches older than today
+  const olderCompleted = MATCHES.filter(m => {
+    const dStr = getMatchDateStr(m);
+    return m.homeScore !== null && m.awayScore !== null && dStr < todayStr;
+  }).sort((a,b) => parseMatchDateTime(b.dateTimeRaw) - parseMatchDateTime(a.dateTimeRaw));
+  const prevResults = olderCompleted.slice(0, 2);
+
+  // Combine & deduplicate
+  let combined = [...prevResults, ...todayTomorrowMatches];
+  const uniqueMap = new Map();
+  combined.forEach(m => uniqueMap.set(m.id, m));
+  combined = Array.from(uniqueMap.values());
+
+  // Sort chronologically
+  const allMatchesSorted = combined.sort((a,b) => 
     parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw)
   );
-  
-  // Find the index of the "current" match:
-  // - The most recent completed match (largest datetime <= now)
-  // - If none, the first upcoming match (smallest datetime > now)
+
+  const track = document.getElementById('upcomingCarousel');
+  if (!allMatchesSorted.length) {
+    track.innerHTML = '<p class="no-pred" style="padding:16px; text-align:center;">No matches scheduled for today/tomorrow and no previous results.</p>';
+    return;
+  }
+
+  // ---- Determine which card to center ----
   let currentIdx = -1;
-  for (let i = allMatchesSorted.length - 1; i >= 0; i--) {
-    const match = allMatchesSorted[i];
-    if (match.homeScore !== null && match.awayScore !== null) {
-      currentIdx = i;
-      break;
+
+  // Check for upcoming matches within the next hour
+  const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+  const upcomingWithinHour = allMatchesSorted.filter(m => {
+    const start = parseMatchDateTime(m.dateTimeRaw);
+    return start > now && start <= oneHourLater;
+  });
+
+  if (upcomingWithinHour.length > 0) {
+    // Pick the earliest upcoming match within the next hour
+    const targetMatch = upcomingWithinHour.sort((a,b) => 
+      parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw)
+    )[0];
+    currentIdx = allMatchesSorted.findIndex(m => m.id === targetMatch.id);
+  }
+
+  // Fallback: most recent completed match
+  if (currentIdx === -1) {
+    for (let i = allMatchesSorted.length - 1; i >= 0; i--) {
+      const match = allMatchesSorted[i];
+      if (match.homeScore !== null && match.awayScore !== null) {
+        currentIdx = i;
+        break;
+      }
     }
   }
+
+  // Fallback: first upcoming match
   if (currentIdx === -1) {
-    // No completed matches → first upcoming
     for (let i = 0; i < allMatchesSorted.length; i++) {
       if (parseMatchDateTime(allMatchesSorted[i].dateTimeRaw) > now) {
         currentIdx = i;
@@ -207,22 +267,14 @@ function buildTodayCarousel() {
       }
     }
   }
-  // Fallback: first match
+
+  // Final fallback: first card
   if (currentIdx === -1 && allMatchesSorted.length) currentIdx = 0;
-  
-  const track = document.getElementById('upcomingCarousel');
-  const label = document.getElementById('carouselLabel');
-  if (label) {
-    label.textContent = 'हेर्नुस् त';
-  }
-  
-  if (!allMatchesSorted.length) {
-    track.innerHTML = '<p class="no-pred" style="padding:16px;">No matches available</p>';
-    return;
-  }
-  
-  // Build HTML for all matches in chronological order
+
+  // ---- Build HTML (same as before, with date & final score styling) ----
   track.innerHTML = allMatchesSorted.map(m => {
+    const matchDate = parseMatchDateTime(m.dateTimeRaw);
+    const dateLabel = matchDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
     const isCompleted = (m.homeScore !== null && m.awayScore !== null);
     const scoreDisplay = isCompleted ? `${m.homeScore}–${m.awayScore}` : null;
@@ -230,7 +282,9 @@ function buildTodayCarousel() {
     return `
     <div class="carousel-card" data-match-id="${m.id}">
       <div class="cc-head">
-        <div class="cg-head-title"><i class="ti ti-calendar"></i> ${m.group}</div>
+        <div class="cg-head-title">
+          <i class="ti ti-calendar"></i> ${m.group} · ${dateLabel}
+        </div>
         <span class="cg-time-badge">${timeOnly}</span>
       </div>
       <div class="cc-body">
@@ -244,15 +298,12 @@ function buildTodayCarousel() {
             }
             let earnedBadge = '';
             if (isCompleted && pr.pts !== null) {
-              let ptsText = '';
-              let bgColor = '';
-              let textColor = '';
+              let ptsText = '', bgColor = '', textColor = '';
               if (pr.pts === 3) { ptsText = '+3'; bgColor = 'var(--malachite-base)'; textColor = '#fff'; }
               else if (pr.pts === 1) { ptsText = '+1'; bgColor = 'var(--gold)'; textColor = 'var(--malachite-dark)'; }
               else { ptsText = '0'; bgColor = 'var(--bg-tertiary)'; textColor = 'var(--text-tertiary)'; }
               earnedBadge = `<span class="earned-points-badge" style="background:${bgColor}; color:${textColor}">${ptsText}</span>`;
             }
-            // REMOVED: total points pill (+totalPts) – only show earned badge for completed matches
             return `<div class="pred-row">
               <div class="pred-left">
                 <span class="pred-dot" style="background:${col}"></span>
@@ -263,24 +314,23 @@ function buildTodayCarousel() {
             </div>`;
           }).join('')}
         </div>
-        ${scoreDisplay ? `<div class="final-tag" style="text-align:center; margin-top:8px; font-size:10px; color:var(--text-tertiary);"><i class="ti ti-check"></i> Final · ${scoreDisplay}</div>` : ''}
+        ${scoreDisplay ? `<div class="final-tag"><i class="ti ti-check"></i> Final · ${scoreDisplay}</div>` : ''}
       </div>
     </div>`;
   }).join('');
-  
-  // Scroll to current match after DOM update
+
+  // Scroll to center the chosen current card
   if (currentIdx >= 0) {
     setTimeout(() => {
-      const carouselContainer = document.getElementById('carouselContainer');
       const cards = document.querySelectorAll('#upcomingCarousel .carousel-card');
-      if (carouselContainer && cards[currentIdx]) {
-        const targetCard = cards[currentIdx];
-        const containerRect = carouselContainer.getBoundingClientRect();
-        const targetRect = targetCard.getBoundingClientRect();
-        const scrollLeft = targetRect.left - containerRect.left + carouselContainer.scrollLeft;
-        carouselContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      if (cards[currentIdx]) {
+        cards[currentIdx].scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
       }
-    }, 50);
+    }, 80);
   }
 }
 

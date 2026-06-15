@@ -734,3 +734,34 @@ body {
   background: var(--gold);
   color: var(--malachite-dark);
 }
+
+/* Carousel – centered cards with peek */
+.carousel-container {
+  margin: 0 -16px 16px -16px;
+  padding: 0 9%;          /* creates space to see adjacent cards */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+.carousel-track {
+  display: flex;
+  gap: 12px;
+}
+.carousel-card {
+  flex: 0 0 82%;
+  scroll-snap-align: center;   /* centers the active card */
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+}
+
+/* Final score – bold, gold, larger */
+.final-tag {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--gold);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  letter-spacing: 0.3px;
+}
