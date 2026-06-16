@@ -1,4 +1,6 @@
 // WC 2026 – Live Prediction Game | app.js (optimised)
+// Fixed timezone issues – all dates now use Pacific Time.
+// Limit of 4 matches per day in Add Prediction.
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
 
@@ -37,17 +39,25 @@ function parseMatchDateTime(str) {
   }
 }
 
-// ─── Perf: create Intl formatter once, reuse it ───────────────────────────────
+// ─── Pacific Time helpers ──────────────────────────────────────────────────────
 const _pacificFmt = new Intl.DateTimeFormat('en-US', {
   timeZone:'America/Los_Angeles',
   year:'numeric', month:'2-digit', day:'2-digit',
   hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
 });
+
 function getCurrentPacificDate() {
   const parts = _pacificFmt.formatToParts(new Date());
   const o = {};
   for (const p of parts) if (p.type !== 'literal') o[p.type] = p.value;
   return new Date(`${o.year}-${o.month}-${o.day} ${o.hour}:${o.minute}:${o.second}`);
+}
+
+function getPacificDateStr(date) {
+  const parts = _pacificFmt.formatToParts(date);
+  const o = {};
+  for (const p of parts) if (p.type !== 'literal') o[p.type] = p.value;
+  return `${o.year}-${o.month}-${o.day}`;
 }
 
 function calcPoints(homeScore, awayScore, predH, predA) {
@@ -70,7 +80,6 @@ async function loadData(silent=false) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!data||data.length===0) throw new Error('Sheet returned no data');
-    // Bust date-parse cache on fresh load so new matches are reparsed correctly
     _dtCache.clear();
     parseSheetData(data);
     if (!silent) { loadingMsg.style.display='none'; appContent.style.display='block'; }
@@ -176,10 +185,10 @@ function stopAddPredTimer() {
 // ─── Carousel ─────────────────────────────────────────────────────────────────
 function buildTodayCarousel() {
   const now = getCurrentPacificDate();
-  const todayStr = now.toISOString().split('T')[0];
+  const todayStr = getPacificDateStr(now);
   const tomorrow = new Date(now); tomorrow.setDate(now.getDate()+1);
-  const tomorrowStr = tomorrow.toISOString().split('T')[0];
-  const getDateStr = m=>parseMatchDateTime(m.dateTimeRaw).toISOString().split('T')[0];
+  const tomorrowStr = getPacificDateStr(tomorrow);
+  const getDateStr = m => getPacificDateStr(parseMatchDateTime(m.dateTimeRaw));
 
   const todayTomorrow = MATCHES.filter(m=>{ const d=getDateStr(m); return d===todayStr||d===tomorrowStr; });
   const prevResults = MATCHES
@@ -218,7 +227,6 @@ function buildTodayCarousel() {
   }
   if (currentIdx===-1&&allMatchesSorted.length) currentIdx=0;
 
-  // Build HTML – one pass, no redundant PLAYERS lookups inside map
   const playerColorMap = Object.fromEntries(PLAYERS.map(p=>[p.name,p.color]));
   track.innerHTML = allMatchesSorted.map(m=>{
     const matchDate = parseMatchDateTime(m.dateTimeRaw);
@@ -377,121 +385,240 @@ function renderPlayerDetail() {
   }).join('');
 }
 
-// ─── Add Predictions section ──────────────────────────────────────────────────
+// ─── Add Predictions section (UPDATED with Pacific time and 4-match limit) ──
 function buildAddPredSection() {
-  const now=getCurrentPacificDate();
-  const predictable=MATCHES.filter(m=>isMatchPredictable(m,now));
-  const container=document.getElementById('addPredContent');
-  if (!predictable.length) {
-    container.innerHTML='<div class="no-games-today"><i class="ti ti-lock"></i><div>No open predictions right now.</div></div>';
-    return;
-  }
-  // Group by date
-  const groups=new Map();
-  predictable.forEach(m=>{
-    const dt=parseMatchDateTime(m.dateTimeRaw);
-    const key=dt.toISOString().split('T')[0];
-    if (!groups.has(key)) groups.set(key,[]);
+  const now = getCurrentPacificDate();
+  
+  // Group ALL matches by Pacific date
+  const groups = new Map();
+  MATCHES.forEach(m => {
+    const dt = parseMatchDateTime(m.dateTimeRaw);
+    const key = getPacificDateStr(dt);
+    if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(m);
   });
-  _activeDateGroups=Array.from(groups.entries()).map(([dateStr,matches])=>({
+
+  const sortedDates = Array.from(groups.keys()).sort();
+  _activeDateGroups = sortedDates.map(dateStr => ({
     dateStr,
-    formatted:new Date(dateStr+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}),
-    matches
+    formatted: new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+    matches: groups.get(dateStr).sort((a,b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw))
   }));
-  _currentActiveDateIdx=0;
+
+  // Find first date with at least one unlockable match
+  let firstUnlockedIdx = _activeDateGroups.findIndex(g => g.matches.some(m => isMatchPredictable(m, now)));
+  if (firstUnlockedIdx === -1) firstUnlockedIdx = 0;
+  _currentActiveDateIdx = firstUnlockedIdx;
+
   renderCurrentDateCard();
 }
 
 function renderCurrentDateCard() {
-  const container=document.getElementById('addPredContent');
-  if (!_activeDateGroups.length) { container.innerHTML=''; return; }
-  const dateGroup=_activeDateGroups[_currentActiveDateIdx];
-  const totalGroups=_activeDateGroups.length;
-  const now=getCurrentPacificDate();
-  let matchesHtml='';
-  dateGroup.matches.forEach(m=>{
-    const timeOnly=m.dateTimeRaw.includes(' - ')?m.dateTimeRaw.split(' - ')[1]:m.dateTimeRaw;
-    const lockTime=getMatchLockDeadline(m);
-    const timerText=formatCountdown(lockTime-now);
-    const playerRows=PLAYERS.map(pl=>{
-      const existing=m.preds.find(pr=>pr.p===pl.name);
-      const hVal=existing?.h??''; const aVal=existing?.a??'';
-      const uid=`pred_${m.id}_${pl.name.replace(/\s+/g,'_')}`;
-      return `<div class="pred-player-row"><div class="pred-player-avatar" style="background:${pl.bg};color:${pl.textc}">${pl.initials}</div><div class="pred-player-name">${pl.name}</div><div class="score-inputs"><input class="score-input" type="number" min="0" max="20" id="${uid}_h" value="${hVal}" placeholder="–"><span class="score-sep">:</span><input class="score-input" type="number" min="0" max="20" id="${uid}_a" value="${aVal}" placeholder="–"><button class="save-pred-btn" id="${uid}_btn" onclick="handleSavePred(${m.rowIndex},'${pl.name}','${uid}')"><i class="ti ti-device-floppy"></i> Save</button></div><span class="pred-save-status" id="${uid}_status"></span></div>`;
+  const container = document.getElementById('addPredContent');
+  if (!_activeDateGroups.length) {
+    container.innerHTML = '<div class="no-games-today"><i class="ti ti-lock"></i><div>No matches scheduled.</div></div>';
+    return;
+  }
+
+  const dateGroup = _activeDateGroups[_currentActiveDateIdx];
+  const totalGroups = _activeDateGroups.length;
+  const now = getCurrentPacificDate();
+
+  // Limit to 4 matches per day (as requested)
+  const matchesToShow = dateGroup.matches.slice(0, 4);
+  const allLocked = matchesToShow.every(m => !isMatchPredictable(m, now));
+
+  let matchesHtml = '';
+  matchesToShow.forEach(m => {
+    const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
+    const lockTime = getMatchLockDeadline(m);
+    const isLocked = now > lockTime;
+    const timerText = isLocked ? '🔒 Locked' : formatCountdown(lockTime - now);
+
+    const playerRows = PLAYERS.map(pl => {
+      const existing = m.preds.find(pr => pr.p === pl.name);
+      const hVal = existing?.h ?? '';
+      const aVal = existing?.a ?? '';
+      const uid = `pred_${m.id}_${pl.name.replace(/\s+/g, '_')}`;
+      return `<div class="pred-player-row">
+        <div class="pred-player-avatar" style="background:${pl.bg};color:${pl.textc}">${pl.initials}</div>
+        <div class="pred-player-name">${pl.name}</div>
+        <div class="score-inputs">
+          <input class="score-input" type="number" min="0" max="20" id="${uid}_h" value="${hVal}" placeholder="–" ${isLocked ? 'disabled' : ''}>
+          <span class="score-sep">:</span>
+          <input class="score-input" type="number" min="0" max="20" id="${uid}_a" value="${aVal}" placeholder="–" ${isLocked ? 'disabled' : ''}>
+          <button class="save-pred-btn" id="${uid}_btn" onclick="handleSavePred(${m.rowIndex},'${pl.name}','${uid}')" ${isLocked ? 'disabled' : ''}>
+            <i class="ti ti-device-floppy"></i> Save
+          </button>
+        </div>
+        <span class="pred-save-status" id="${uid}_status"></span>
+      </div>`;
     }).join('');
-    matchesHtml+=`<div class="pred-match-item" data-rowindex="${m.rowIndex}"><div class="match-header"><div class="match-title">${m.matchup}</div><div class="match-meta"><span>${m.group} · ${timeOnly}</span><span class="match-lock-timer">${timerText}</span></div></div><div class="pred-player-section"><div class="pred-player-label">Enter / update predictions</div>${playerRows}</div></div>`;
+
+    matchesHtml += `<div class="pred-match-item" data-rowindex="${m.rowIndex}">
+      <div class="match-header">
+        <div class="match-title">${m.matchup}</div>
+        <div class="match-meta">
+          <span>${m.group} · ${timeOnly}</span>
+          <span class="match-lock-timer" style="color:${isLocked ? '#e05252' : '#800000'}">${timerText}</span>
+        </div>
+      </div>
+      <div class="pred-player-section">
+        <div class="pred-player-label">Enter / update predictions</div>
+        ${playerRows}
+      </div>
+    </div>`;
   });
-  const prevDisabled=_currentActiveDateIdx===0?'disabled':'';
-  const nextDisabled=_currentActiveDateIdx===totalGroups-1?'disabled':'';
-  container.innerHTML=`<div class="date-pred-card"><div class="date-card-header"><button class="date-nav-btn-inline" id="prevDateBtnInline" ${prevDisabled}><i class="ti ti-chevron-left"></i> Previous</button><span style="font-weight:700"> ⚽ ${dateGroup.formatted}</span><button class="date-nav-btn-inline" id="nextDateBtnInline" ${nextDisabled}>Next <i class="ti ti-chevron-right"></i></button></div>${matchesHtml}</div>`;
-  document.getElementById('prevDateBtnInline')?.addEventListener('click',()=>{ if (_currentActiveDateIdx>0){ _currentActiveDateIdx--; renderCurrentDateCard(); updateAddPredTimers(); } });
-  document.getElementById('nextDateBtnInline')?.addEventListener('click',()=>{ if (_currentActiveDateIdx<_activeDateGroups.length-1){ _currentActiveDateIdx++; renderCurrentDateCard(); updateAddPredTimers(); } });
+
+  // Next-day hint if all shown matches are locked
+  let nextHint = '';
+  if (allLocked && _currentActiveDateIdx < totalGroups - 1) {
+    const nextGroup = _activeDateGroups[_currentActiveDateIdx + 1];
+    nextHint = `<div class="next-day-hint">⏩ All matches for today are locked. Next games: <strong>${nextGroup.formatted}</strong></div>`;
+  } else if (allLocked && _currentActiveDateIdx === totalGroups - 1) {
+    nextHint = `<div class="next-day-hint">✅ All matches are locked. No more upcoming games.</div>`;
+  }
+
+  const prevDisabled = _currentActiveDateIdx === 0 ? 'disabled' : '';
+  const nextDisabled = _currentActiveDateIdx === totalGroups - 1 ? 'disabled' : '';
+
+  container.innerHTML = `<div class="date-pred-card">
+    <div class="date-card-header">
+      <button class="date-nav-btn-inline" id="prevDateBtnInline" ${prevDisabled}>
+        <i class="ti ti-chevron-left"></i> Previous
+      </button>
+      <span style="font-weight:700">⚽ ${dateGroup.formatted}</span>
+      <button class="date-nav-btn-inline" id="nextDateBtnInline" ${nextDisabled}>
+        Next <i class="ti ti-chevron-right"></i>
+      </button>
+    </div>
+    ${matchesHtml}
+    ${nextHint}
+  </div>`;
+
+  document.getElementById('prevDateBtnInline')?.addEventListener('click', () => {
+    if (_currentActiveDateIdx > 0) {
+      _currentActiveDateIdx--;
+      renderCurrentDateCard();
+      updateAddPredTimers();
+    }
+  });
+  document.getElementById('nextDateBtnInline')?.addEventListener('click', () => {
+    if (_currentActiveDateIdx < _activeDateGroups.length - 1) {
+      _currentActiveDateIdx++;
+      renderCurrentDateCard();
+      updateAddPredTimers();
+    }
+  });
+
+  updateAddPredTimers();
 }
 
 // ─── Save prediction ──────────────────────────────────────────────────────────
-window.handleSavePred=async function(matchRowIndex,playerName,uid){
-  const hInput=document.getElementById(`${uid}_h`);
-  const aInput=document.getElementById(`${uid}_a`);
-  const btn=document.getElementById(`${uid}_btn`);
-  const statusSpan=document.getElementById(`${uid}_status`);
-  if (!hInput||!aInput||!btn) return;
-  const hRaw=hInput.value.trim(); const aRaw=aInput.value.trim();
-  if (hRaw===''||aRaw===''){ statusSpan.className='pred-save-status err'; statusSpan.textContent='Fill both scores'; return; }
-  const h=parseInt(hRaw,10); const a=parseInt(aRaw,10);
-  if (isNaN(h)||isNaN(a)||h<0||a<0){ statusSpan.className='pred-save-status err'; statusSpan.textContent='Invalid scores'; return; }
-  btn.disabled=true; btn.className='save-pred-btn saving'; btn.innerHTML='<i class="ti ti-loader-2"></i> Saving…';
-  statusSpan.className='pred-save-status'; statusSpan.textContent='';
+window.handleSavePred = async function(matchRowIndex, playerName, uid) {
+  const hInput = document.getElementById(`${uid}_h`);
+  const aInput = document.getElementById(`${uid}_a`);
+  const btn = document.getElementById(`${uid}_btn`);
+  const statusSpan = document.getElementById(`${uid}_status`);
+  if (!hInput || !aInput || !btn) return;
+
+  const hRaw = hInput.value.trim();
+  const aRaw = aInput.value.trim();
+  if (hRaw === '' || aRaw === '') {
+    statusSpan.className = 'pred-save-status err';
+    statusSpan.textContent = 'Fill both scores';
+    return;
+  }
+  const h = parseInt(hRaw, 10);
+  const a = parseInt(aRaw, 10);
+  if (isNaN(h) || isNaN(a) || h < 0 || a < 0) {
+    statusSpan.className = 'pred-save-status err';
+    statusSpan.textContent = 'Invalid scores';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.className = 'save-pred-btn saving';
+  btn.innerHTML = '<i class="ti ti-loader-2"></i> Saving…';
+  statusSpan.className = 'pred-save-status';
+  statusSpan.textContent = '';
+
   try {
-    await savePrediction(matchRowIndex,playerName,h,a);
-    const match=MATCHES.find(m=>m.rowIndex===matchRowIndex);
-    if (match) { const pred=match.preds.find(pr=>pr.p===playerName); if (pred){ pred.h=h; pred.a=a; } }
-    btn.className='save-pred-btn saved'; btn.innerHTML='<i class="ti ti-check"></i> Saved';
-    statusSpan.className='pred-save-status ok'; statusSpan.textContent=`${h}:${a} ✓`;
-    // Optimistic local UI update
-    buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames();
+    await savePrediction(matchRowIndex, playerName, h, a);
+    const match = MATCHES.find(m => m.rowIndex === matchRowIndex);
+    if (match) {
+      const pred = match.preds.find(pr => pr.p === playerName);
+      if (pred) { pred.h = h; pred.a = a; }
+    }
+    btn.className = 'save-pred-btn saved';
+    btn.innerHTML = '<i class="ti ti-check"></i> Saved';
+    statusSpan.className = 'pred-save-status ok';
+    statusSpan.textContent = `${h}:${a} ✓`;
+
+    buildTodayCarousel();
+    buildLeaderboard();
+    buildOverviewStats();
+    buildAllUpcomingGames();
     if (activePlayer) renderPlayerDetail();
     renderMatchList();
-    // Re-fetch after 3s to sync with sheet
-    setTimeout(async()=>{
-      btn.disabled=false; btn.className='save-pred-btn'; btn.innerHTML='<i class="ti ti-device-floppy"></i> Save';
+
+    setTimeout(async () => {
+      btn.disabled = false;
+      btn.className = 'save-pred-btn';
+      btn.innerHTML = '<i class="ti ti-device-floppy"></i> Save';
       try {
-        const res=await fetch(SCRIPT_URL);
-        const data=await res.json();
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
         _dtCache.clear();
         parseSheetData(data);
-        buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames();
-        buildAddPredSection(); renderMatchList();
+        buildTodayCarousel();
+        buildLeaderboard();
+        buildOverviewStats();
+        buildAllUpcomingGames();
+        buildAddPredSection();
+        renderMatchList();
         if (activePlayer) renderPlayerDetail();
-      } catch(_){}
-    },3000);
-  } catch(err){
-    btn.disabled=false; btn.className='save-pred-btn'; btn.innerHTML='<i class="ti ti-device-floppy"></i> Save';
-    statusSpan.className='pred-save-status err'; statusSpan.textContent='Failed – retry';
+      } catch (_) {}
+    }, 3000);
+  } catch (err) {
+    btn.disabled = false;
+    btn.className = 'save-pred-btn';
+    btn.innerHTML = '<i class="ti ti-device-floppy"></i> Save';
+    statusSpan.className = 'pred-save-status err';
+    statusSpan.textContent = 'Failed – retry';
   }
 };
 
 // ─── Orchestration ─────────────────────────────────────────────────────────────
-function buildAllUI(){
-  buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames();
-  buildStatusTabs(); buildGroupTabs(); renderMatchList(); buildPlayerBtns(); renderPlayerDetail(); buildAddPredSection();
+function buildAllUI() {
+  buildTodayCarousel();
+  buildLeaderboard();
+  buildOverviewStats();
+  buildAllUpcomingGames();
+  buildStatusTabs();
+  buildGroupTabs();
+  renderMatchList();
+  buildPlayerBtns();
+  renderPlayerDetail();
+  buildAddPredSection();
 }
 
-window.showSection=function(id,btn){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+window.showSection = function(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (id==='matches') renderMatchList();
-  if (id==='addpred'){ buildAddPredSection(); startAddPredTimer(); } else stopAddPredTimer();
-  if (id==='standings'){ buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames(); }
+  if (id === 'matches') renderMatchList();
+  if (id === 'addpred') { buildAddPredSection(); startAddPredTimer(); } else stopAddPredTimer();
+  if (id === 'standings') { buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames(); }
 };
 
-window.switchToPlayer=function(name){
-  activePlayer=name;
-  showSection('player',document.querySelectorAll('.nav-btn')[3]);
-  buildPlayerBtns(); renderPlayerDetail();
+window.switchToPlayer = function(name) {
+  activePlayer = name;
+  showSection('player', document.querySelectorAll('.nav-btn')[3]);
+  buildPlayerBtns();
+  renderPlayerDetail();
 };
 
 loadData();
-window.addEventListener('beforeunload',()=>{ stopAddPredTimer(); });
+window.addEventListener('beforeunload', () => { stopAddPredTimer(); });
