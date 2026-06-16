@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA 26 Mobile Bracket Simulator</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px 15px 40px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+
+        header h1 { 
+            margin: 0 0 8px; 
+            color: var(--primary); 
+            font-size: 1.8rem;
+        }
+        header p { 
+            color: var(--text-muted); 
+            max-width: 600px; 
+            margin: 0 auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: 1.4rem;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .group-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .group-card h3 { 
+            margin-top: 0; 
+            margin-bottom: 12px;
+            color: var(--primary); 
+            font-size: 1.2rem;
+        }
+
+        .team-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .team-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            background-color: #2d2d2d;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .rank-select {
+            background-color: #1a1a1a;
+            color: var(--text-main);
+            border: 1px solid #444;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        hr { border: 0; height: 1px; background: var(--border-color); margin: 30px 0; }
+
+        .third-place-container { max-width: 500px; margin: 0 auto; }
+        
+        .pool-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background-color: #2d2d2d;
+            margin-bottom: 6px;
+            border-radius: 6px;
+        }
+
+        .actions { text-align: center; margin: 30px 0; }
+
+        .primary-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+        }
+        .primary-btn:hover { background-color: var(--primary-hover); }
+
+        .hidden { display: none !important; }
+
+        /* Knockout Bracket Styles */
+        .knockout-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .round-section h3 {
+            color: var(--success);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .bracket-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .match-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .match-team {
+            padding: 14px 15px; /* Large safe touch targeting */
+            cursor: pointer;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .match-team:last-child { border-bottom: none; }
+        
+        .match-team.empty {
+            color: var(--text-muted);
+            font-weight: normal;
+            font-style: italic;
+            cursor: default;
+        }
+
+        .match-team.winner {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .champion-card {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            border-radius: 12px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FIFA 26 Simulator</h1>
+        <p>Set group and 3rd place standings using the selection dropdowns, then tap your way through the dynamic knockout tree below!</p>
+    </header>
+
+    <main>
+        <h2>1. Group Stage Standings</h2>
+        <div id="groups-wrapper" class="groups-grid">
+            </div>
+
+        <hr>
+
+        <div class="third-place-container">
+            <h2>2. Best 3rd-Place Teams</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Rank the 3rd place teams from 1st down to 12th. Top 8 progress.</p>
+            <div id="third-place-pool" class="team-list">
+                </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="startKnockoutStage()" class="primary-btn">Generate Knockout Bracket</button>
+        </div>
+
+        <div id="bracket-section" class="hidden">
+            <h2>3. Knockout Stage</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Tap on a team inside a match card to advance them.</p>
+            
+            <div id="knockout-renderer" class="knockout-container">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        // Static structural data based on June 2026 Rankings
+        const INITIAL_GROUPS = {
+            A: ["Mexico (MEX)", "Korea Republic (KOR)", "Czechia (CZE)", "South Africa (RSA)"],
+            B: ["Switzerland (SUI)", "Canada (CAN)", "Qatar (QAT)", "Bosnia & Herzegovina (BIH)"],
+            C: ["Brazil (BRA)", "Morocco (MAR)", "Scotland (SCO)", "Haiti (HAI)"],
+            D: ["USA (USA)", "Türkiye (TUR)", "Australia (AUS)", "Paraguay (PAR)"],
+            E: ["Germany (GER)", "Ecuador (ECU)", "Côte d'Ivoire (CIV)", "Curaçao (CUW)"],
+            F: ["Netherlands (NED)", "Japan (JPN)", "Sweden (SWE)", "Tunisia (TUN)"],
+            G: ["Belgium (BEL)", "IR Iran (IRN)", "Egypt (EGY)", "New Zealand (NZL)"],
+            H: ["Spain (ESP)", "Uruguay (URU)", "Saudi Arabia (KSA)", "Cabo Verde (CPV)"],
+            I: ["France (FRA)", "Senegal (SEN)", "Norway (NOR)", "Iraq (IRQ)"],
+            J: ["Argentina (ARG)", "Austria (AUT)", "Algeria (ALG)", "Jordan (JOR)"],
+            K: ["Portugal (POR)", "Colombia (COL)", "Congo DR (COD)", "Uzbekistan (UZB)"],
+            L: ["England (ENG)", "Croatia (CRO)", "Panama (PAN)", "Ghana (GHA)"]
+        };
+
+        let groupStates = JSON.parse(JSON.stringify(INITIAL_GROUPS));
+        let thirdPlaceOrder = Object.keys(INITIAL_GROUPS); // Default order A-L
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGroupStageSelectors();
+            renderThirdPlacePool();
+        });
+
+        function renderGroupStageSelectors() {
+            const wrapper = document.getElementById('groups-wrapper');
+            wrapper.innerHTML = '';
+
+            Object.keys(groupStates).forEach(letter => {
+                const card = document.createElement('div');
+                card.className = 'group-card';
+                card.innerHTML = `<h3>Group ${letter}</h3>`;
+                
+                const ul = document.createElement('ul');
+                ul.className = 'team-list';
+
+                groupStates[letter].forEach((team, idx) => {
+                    const li = document.createElement('li');
+                    li.className = 'team-item';
+                    li.innerHTML = `
+                        <span>${team}</span>
+                        <select class="rank-select" onchange="changeGroupRank('${letter}', ${idx}, this.value)">
+                            ${[1,2,3,4].map(num => `<option value="${num}" ${num === idx + 1 ? 'selected' : ''}>#${num}</option>`).join('')}
+                        </select>
+                    `;
+                    ul.appendChild(li);
+                });
+                card.appendChild(ul);
+                wrapper.appendChild(card);
+            });
+        }
+
+        function changeGroupRank(groupLetter, oldIdx, targetValue) {
+            const newIdx = parseInt(targetValue) - 1;
+            const teams = groupStates[groupLetter];
+            
+            // Swap array positioning elements natively
+            const temp = teams[oldIdx];
+            teams.splice(oldIdx, 1);
+            teams.splice(newIdx, 0, temp);
+
+            renderGroupStageSelectors();
+            renderThirdPlacePool();
+        }
+
+        function renderThirdPlacePool() {
+            const poolContainer = document.getElementById('third-place-pool');
+            poolContainer.innerHTML = '';
+
+            thirdPlaceOrder.forEach((groupLetter, currentIdx) => {
+                const nativeTeamName = groupStates[groupLetter][2]; // Index 2 is the 3rd place team
+                const div = document.createElement('div');
+                div.className = 'pool-item';
+                
+                // Color formatting depending on allocation visibility limits (Top 8 green vs bottom 4 red)
+                if (currentIdx < 8) {
+                    div.style.borderLeft = '4px solid var(--success)';
+                    div.style.backgroundColor = 'rgba(16, 185, 129, 0.08)';
+                } else {
+                    div.style.borderLeft = '4px solid var(--danger)';
+                    div.style.backgroundColor = 'rgba(239, 68, 68, 0.08)';
+                }
+
+                div.innerHTML = `
+                    <span><strong>[Gp ${groupLetter}]</strong> ${nativeTeamName}</span>
+                    <select class="rank-select" onchange="changePoolRank(${currentIdx}, this.value)">
+                        ${Array.from({length: 12}, (_, i) => i + 1).map(num => `
+                            <option value="${num}" ${num === currentIdx + 1 ? 'selected' : ''}>#${num}</option>
+                        `).join('')}
+                    </select>
+                `;
+                poolContainer.appendChild(div);
+            });
+        }
+
+        function changePoolRank(oldIdx, targetValue) {
+            const newIdx = parseInt(targetValue) - 1;
+            const temp = thirdPlaceOrder[oldIdx];
+            thirdPlaceOrder.splice(oldIdx, 1);
+            thirdPlaceOrder.splice(newIdx, 0, temp);
+
+            renderThirdPlacePool();
+        }
+
+        // --- KNOCKOUT BRACKET SYSTEM MODEL ---
+        const ROUNDS = ['ro32', 'ro16', 'qf', 'sf', 'final'];
+        const ROUND_NAMES = {
+            'ro32': 'Round of 32', 'ro16': 'Round of 16',
+            'qf': 'Quarter-Finals (Ro8)', 'sf': 'Semi-Finals (Ro4)', 'final': 'Final (Ro2)'
+        };
+
+        let bracketState = {};
+
+        function startKnockoutStage() {
+            let winners = {}, runners = {};
+            Object.keys(groupStates).forEach(g => {
+                winners[g] = groupStates[g][0];
+                runners[g] = groupStates[g][1];
+            });
+
+            let thirds = [];
+            for(let i = 0; i < 8; i++) {
+                thirds.push(groupStates[thirdPlaceOrder[i]][2]);
+            }
+
+            bracketState = {
+                ro32: [
+                    [winners['A'], thirds[0]], [winners['H'], runners['A']],
+                    [winners['D'], thirds[1]], [runners['B'], runners['C']],
+                    [winners['G'], thirds[2]], [winners['I'], runners['D']],
+                    [winners['J'], thirds[3]], [runners['E'], runners['F']],
+                    [winners['B'], thirds[4]], [winners['K'], runners['G']],
+                    [winners['E'], thirds[5]], [runners['H'], runners['I']],
+                    [winners['F'], thirds[6]], [winners['L'], runners['J']],
+                    [winners['C'], thirds[7]], [runners['K'], runners['L']]
+                ],
+                ro16: Array.from({length: 8}, () => [null, null]),
+                qf: Array.from({length: 4}, () => [null, null]),
+                sf: Array.from({length: 2}, () => [null, null]),
+                final: [[null, null]],
+                champion: null,
+                winners: { ro32: [], ro16: [], qf: [], sf: [], final: [] }
+            };
+
+            renderKnockoutBracket();
+            
+            const element = document.getElementById('bracket-section');
+            element.classList.remove('hidden');
+            element.scrollIntoView({behavior: 'smooth'});
+        }
+
+        function advanceTeam(roundKey, matchIndex, teamIndex) {
+            const match = bracketState[roundKey][matchIndex];
+            const winningTeam = match[teamIndex];
+            if (!winningTeam) return;
+
+            bracketState.winners[roundKey][matchIndex] = winningTeam;
+            const currentRoundIndex = ROUNDS.indexOf(roundKey);
+            
+            if (currentRoundIndex === ROUNDS.length - 1) {
+                bracketState.champion = winningTeam;
+            } else {
+                const nextRoundKey = ROUNDS[currentRoundIndex + 1];
+                const nextMatchIndex = Math.floor(matchIndex / 2);
+                const nextTeamSlot = matchIndex % 2;
+
+                bracketState[nextRoundKey][nextMatchIndex][nextTeamSlot] = winningTeam;
+                clearDownstream(currentRoundIndex + 1, nextMatchIndex, nextTeamSlot);
+            }
+            renderKnockoutBracket();
+        }
+
+        function clearDownstream(startRoundIdx, matchIdx, slotIdx) {
+            let currentRIdx = startRoundIdx;
+            let currentMIdx = matchIdx;
+            let currentSlotIdx = slotIdx;
+
+            while (currentRIdx < ROUNDS.length) {
+                const rKey = ROUNDS[currentRIdx];
+                bracketState.winners[rKey][currentMIdx] = null;
+                
+                if (currentRIdx === ROUNDS.length - 1) {
+                    bracketState.champion = null;
+                    break;
+                }
+
+                currentRIdx++;
+                const nextMIdx = Math.floor(currentMIdx / 2);
+                currentSlotIdx = currentMIdx % 2;
+                currentMIdx = nextMIdx;
+                
+                bracketState[ROUNDS[currentRIdx]][currentMIdx][currentSlotIdx] = null;
+            }
+        }
+
+        function renderKnockoutBracket() {
+            const container = document.getElementById('knockout-renderer');
+            container.innerHTML = '';
+
+            ROUNDS.forEach(roundKey => {
+                const matches = bracketState[roundKey];
+                if (roundKey !== 'ro32' && matches.every(m => m[0] == null && m[1] == null)) return; 
+
+                let roundHtml = `<div class="round-section"><h3>${ROUND_NAMES[roundKey]}</h3><div class="bracket-grid">`;
+
+                matches.forEach((match, index) => {
+                    const t1 = match[0], t2 = match[1];
+                    const winner = bracketState.winners[roundKey][index];
+
+                    const class1 = !t1 ? 'empty' : (winner === t1 ? 'winner' : '');
+                    const class2 = !t2 ? 'empty' : (winner === t2 ? 'winner' : '');
+
+                    roundHtml += `
+                        <div class="match-card">
+                            <div class="match-team ${class1}" onclick="advanceTeam('${roundKey}', ${index}, 0)">
+                                <span>${t1 || 'TBD'}</span>
+                                ${winner === t1 ? '<span>✓</span>' : ''}
+                            </div>
+                            <div class="match-team ${class2}" onclick="advanceTeam('${roundKey}', ${index}, 1)">
+                                <span>${t2 || 'TBD'}</span>
+                                ${winner === t2 ? '<span>✓</span>' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                roundHtml += `</div></div>`;
+                container.innerHTML += roundHtml;
+            });
+
+            if (bracketState.champion) {
+                container.innerHTML += `
+                    <div class="round-section">
+                        <h3>World Champions</h3>
+                        <div class="champion-card">🏆 ${bracketState.champion} 🏆</div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
