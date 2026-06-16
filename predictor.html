@@ -2,482 +2,358 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA 26 Mobile Bracket Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIFA 26 Mobile Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border-color: #333;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 10px 15px 40px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        header {
-            text-align: center;
-            padding: 20px 0 10px;
-        }
-
-        header h1 { 
-            margin: 0 0 8px; 
-            color: var(--primary); 
-            font-size: 1.8rem;
-        }
-        header p { 
-            color: var(--text-muted); 
-            max-width: 600px; 
-            margin: 0 auto;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        h2 {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-            margin-top: 30px;
-            font-size: 1.4rem;
-        }
-
-        .groups-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
-        }
-
-        .group-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .group-card h3 { 
-            margin-top: 0; 
-            margin-bottom: 12px;
-            color: var(--primary); 
-            font-size: 1.2rem;
-        }
-
-        .team-list {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-
-        .team-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 10px;
-            margin-bottom: 6px;
-            background-color: #2d2d2d;
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-
-        .rank-select {
-            background-color: #1a1a1a;
-            color: var(--text-main);
-            border: 1px solid #444;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        hr { border: 0; height: 1px; background: var(--border-color); margin: 30px 0; }
-
-        .third-place-container { max-width: 500px; margin: 0 auto; }
-        
-        .pool-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background-color: #2d2d2d;
-            margin-bottom: 6px;
-            border-radius: 6px;
-        }
-
-        .actions { text-align: center; margin: 30px 0; }
-
-        .primary-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 320px;
-            transition: background-color 0.2s;
-            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
-        }
-        .primary-btn:hover { background-color: var(--primary-hover); }
-
-        .hidden { display: none !important; }
-
-        /* Knockout Bracket Styles */
-        .knockout-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .round-section h3 {
-            color: var(--success);
-            margin-bottom: 12px;
-            font-size: 1.2rem;
-        }
-
-        .bracket-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-        }
-
-        .match-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            border-left: 4px solid var(--primary);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .match-team {
-            padding: 14px 15px; /* Large safe touch targeting */
-            cursor: pointer;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.2s;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1rem;
-        }
-
-        .match-team:last-child { border-bottom: none; }
-        
-        .match-team.empty {
-            color: var(--text-muted);
-            font-weight: normal;
-            font-style: italic;
-            cursor: default;
-        }
-
-        .match-team.winner {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .champion-card {
-            text-align: center;
-            padding: 25px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            border-radius: 12px;
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-        }
+        /* Force hidden element utility for cross-browser reliability */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        /* Smooth scrolling for mobile tab bar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white">
 
-    <header>
-        <h1>FIFA 26 Simulator</h1>
-        <p>Set group and 3rd place standings using the selection dropdowns, then tap your way through the dynamic knockout tree below!</p>
+    <header class="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-xl">
+        <div class="px-4 pt-4 pb-2 flex items-center justify-between">
+            <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
+                FIFA 26 TRACKER
+            </h1>
+            <span class="text-xs font-bold px-2 py-1 bg-slate-800 border border-slate-700 text-emerald-400 rounded-full">
+                MOBILE COMPACT
+            </span>
+        </div>
+        
+        <nav class="flex overflow-x-auto hide-scrollbar snap-x px-2 pb-3 gap-1.5">
+            <button onclick="switchTab('groupstage')" id="btn-groupstage" class="tab-btn active snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all duration-200 shadow-md shadow-emerald-500/20">
+                Groupstage
+            </button>
+            <button onclick="switchTab('r32')" id="btn-r32" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
+                Round of 32
+            </button>
+            <button onclick="switchTab('r16')" id="btn-r16" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
+                Round of 16
+            </button>
+            <button onclick="switchTab('r8')" id="btn-r8" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
+                8
+            </button>
+            <button onclick="switchTab('r4')" id="btn-r4" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
+                4
+            </button>
+            <button onclick="switchTab('r2')" id="btn-r2" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
+                2
+            </button>
+        </nav>
     </header>
 
-    <main>
-        <h2>1. Group Stage Standings</h2>
-        <div id="groups-wrapper" class="groups-grid">
+    <main class="p-4 max-w-md mx-auto pb-12">
+
+        <section id="groupstage" class="tab-content active space-y-6">
+            <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    💡 <strong>Tournament Rules:</strong> Top 2 teams from each group automatically qualify for the <strong>Round of 32</strong> along with the 8 best 3rd-place teams.
+                </p>
+            </div>
+            
+            <div id="groups-container" class="space-y-4">
+                </div>
+        </section>
+
+        <section id="r32" class="tab-content space-y-4">
+            <div class="text-center py-1">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400">Round of 32 Matches</h2>
+                <p class="text-[11px] text-slate-500">Tap a team row to select them as the winner & advance them</p>
+            </div>
+            <div id="r32-matches" class="space-y-3">
+                </div>
+        </section>
+
+        <section id="r16" class="tab-content space-y-4">
+            <div class="text-center py-1">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400">Round of 16</h2>
+            </div>
+            <div id="r16-matches" class="space-y-3"></div>
+        </section>
+
+        <section id="r8" class="tab-content space-y-4">
+            <div class="text-center py-1">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400">Quarter-finals (8 Teams)</h2>
+            </div>
+            <div id="r8-matches" class="space-y-3"></div>
+        </section>
+
+        <section id="r4" class="tab-content space-y-4">
+            <div class="text-center py-1">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400">Semi-finals (4 Teams)</h2>
+            </div>
+            <div id="r4-matches" class="space-y-3"></div>
+        </section>
+
+        <section id="r2" class="tab-content space-y-6">
+            <div>
+                <div class="text-center py-1 mb-3">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400">World Cup Final</h2>
+                </div>
+                <div id="r2-final-match" class="space-y-3"></div>
             </div>
 
-        <hr>
-
-        <div class="third-place-container">
-            <h2>2. Best 3rd-Place Teams</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Rank the 3rd place teams from 1st down to 12th. Top 8 progress.</p>
-            <div id="third-place-pool" class="team-list">
+            <div class="pt-4 border-t border-slate-800">
+                <div class="text-center py-1 mb-3">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">Third-Place Play-off</h2>
                 </div>
-        </div>
+                <div id="r2-third-match" class="space-y-3"></div>
+            </div>
+        </section>
 
-        <div class="actions">
-            <button onclick="startKnockoutStage()" class="primary-btn">Generate Knockout Bracket</button>
-        </div>
-
-        <div id="bracket-section" class="hidden">
-            <h2>3. Knockout Stage</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Tap on a team inside a match card to advance them.</p>
-            
-            <div id="knockout-renderer" class="knockout-container">
-                </div>
-        </div>
     </main>
 
     <script>
-        // Static structural data based on June 2026 Rankings
-        const INITIAL_GROUPS = {
-            A: ["Mexico (MEX)", "Korea Republic (KOR)", "Czechia (CZE)", "South Africa (RSA)"],
-            B: ["Switzerland (SUI)", "Canada (CAN)", "Qatar (QAT)", "Bosnia & Herzegovina (BIH)"],
-            C: ["Brazil (BRA)", "Morocco (MAR)", "Scotland (SCO)", "Haiti (HAI)"],
-            D: ["USA (USA)", "Türkiye (TUR)", "Australia (AUS)", "Paraguay (PAR)"],
-            E: ["Germany (GER)", "Ecuador (ECU)", "Côte d'Ivoire (CIV)", "Curaçao (CUW)"],
+        // Official FIFA 26 Groups Setup
+        const groupsData = {
+            A: ["Mexico (MEX)", "South Africa (RSA)", "Korea Republic (KOR)", "Czechia (CZE)"],
+            B: ["Canada (CAN)", "Bosnia and Herz. (BIH)", "Qatar (QAT)", "Switzerland (SUI)"],
+            C: ["Brazil (BRA)", "Morocco (MAR)", "Haiti (HAI)", "Scotland (SCO)"],
+            D: ["USA (USA)", "Paraguay (PAR)", "Australia (AUS)", "Türkiye (TUR)"],
+            E: ["Germany (GER)", "Curaçao (CUW)", "Côte d'Ivoire (CIV)", "Ecuador (ECU)"],
             F: ["Netherlands (NED)", "Japan (JPN)", "Sweden (SWE)", "Tunisia (TUN)"],
-            G: ["Belgium (BEL)", "IR Iran (IRN)", "Egypt (EGY)", "New Zealand (NZL)"],
-            H: ["Spain (ESP)", "Uruguay (URU)", "Saudi Arabia (KSA)", "Cabo Verde (CPV)"],
-            I: ["France (FRA)", "Senegal (SEN)", "Norway (NOR)", "Iraq (IRQ)"],
-            J: ["Argentina (ARG)", "Austria (AUT)", "Algeria (ALG)", "Jordan (JOR)"],
-            K: ["Portugal (POR)", "Colombia (COL)", "Congo DR (COD)", "Uzbekistan (UZB)"],
-            L: ["England (ENG)", "Croatia (CRO)", "Panama (PAN)", "Ghana (GHA)"]
+            G: ["Belgium (BEL)", "Egypt (EGY)", "IR Iran (IRN)", "New Zealand (NZL)"],
+            H: ["Spain (ESP)", "Cabo Verde (CPV)", "Saudi Arabia (KSA)", "Uruguay (URU)"],
+            I: ["France (FRA)", "Senegal (SEN)", "Iraq (IRQ)", "Norway (NOR)"],
+            J: ["Argentina (ARG)", "Algeria (ALG)", "Austria (AUT)", "Jordan (JOR)"],
+            K: ["Portugal (POR)", "Congo DR (COD)", "Uzbekistan (UZB)", "Colombia (COL)"],
+            L: ["England (ENG)", "Croatia (CRO)", "Ghana (GHA)", "Panama (PAN)"]
         };
 
-        let groupStates = JSON.parse(JSON.stringify(INITIAL_GROUPS));
-        let thirdPlaceOrder = Object.keys(INITIAL_GROUPS); // Default order A-L
+        // Official Bracket Data Mapping Tree
+        const bracketStructure = {
+            r32: [
+                { id: 73, t1: "1A (Mexico)", t2: "3C/E/F/H/I", targetMatch: 89, targetSlot: 1 },
+                { id: 75, t1: "1C (Brazil)", t2: "2F (Japan)", targetMatch: 89, targetSlot: 2 },
+                { id: 74, t1: "1B (Canada)", t2: "3E/F/G/I/J", targetMatch: 90, targetSlot: 1 },
+                { id: 76, t1: "1D (USA)", t2: "3B/E/F/I/J", targetMatch: 90, targetSlot: 2 },
+                { id: 77, t1: "1E (Germany)", t2: "3A/B/C/D/F", targetMatch: 91, targetSlot: 1 },
+                { id: 79, t1: "1G (Belgium)", t2: "3A/E/H/I/J", targetMatch: 91, targetSlot: 2 },
+                { id: 78, t1: "1F (Netherlands)", t2: "2C (Morocco)", targetMatch: 92, targetSlot: 1 },
+                { id: 80, t1: "1H (Spain)", t2: "2J (Algeria)", targetMatch: 92, targetSlot: 2 },
+                { id: 81, t1: "1I (France)", t2: "3C/D/F/G/H", targetMatch: 93, targetSlot: 1 },
+                { id: 83, t1: "1K (Portugal)", t2: "3D/E/I/J/L", targetMatch: 93, targetSlot: 2 },
+                { id: 82, t1: "1J (Argentina)", t2: "2H (Cabo Verde)", targetMatch: 94, targetSlot: 1 },
+                { id: 84, t1: "1L (England)", t2: "3E/H/I/J/K", targetMatch: 94, targetSlot: 2 },
+                { id: 85, t1: "2A (South Africa)", t2: "2B (Bosnia)", targetMatch: 95, targetSlot: 1 },
+                { id: 87, t1: "2E (Curaçao)", t2: "2I (Senegal)", targetMatch: 95, targetSlot: 2 },
+                { id: 86, t1: "2D (Paraguay)", t2: "2G (Egypt)", targetMatch: 96, targetSlot: 1 },
+                { id: 88, t1: "2K (Congo DR)", t2: "2L (Croatia)", targetMatch: 96, targetSlot: 2 }
+            ],
+            r16: [
+                { id: 89, t1: "Winner 73", t2: "Winner 75", targetMatch: 97, targetSlot: 1 },
+                { id: 90, t1: "Winner 74", t2: "Winner 76", targetMatch: 98, targetSlot: 1 },
+                { id: 91, t1: "Winner 77", t2: "Winner 79", targetMatch: 97, targetSlot: 2 },
+                { id: 92, t1: "Winner 78", t2: "Winner 80", targetMatch: 98, targetSlot: 2 },
+                { id: 93, t1: "Winner 81", t2: "Winner 83", targetMatch: 99, targetSlot: 1 },
+                { id: 94, t1: "Winner 82", t2: "Winner 84", targetMatch: 100, targetSlot: 1 },
+                { id: 95, t1: "Winner 85", t2: "Winner 87", targetMatch: 99, targetSlot: 2 },
+                { id: 96, t1: "Winner 86", t2: "Winner 88", targetMatch: 100, targetSlot: 2 }
+            ],
+            r8: [
+                { id: 97, t1: "Winner 89", t2: "Winner 91", targetMatch: 101, targetSlot: 1 },
+                { id: 98, t1: "Winner 90", t2: "Winner 92", targetMatch: 101, targetSlot: 2 },
+                { id: 99, t1: "Winner 93", t2: "Winner 95", targetMatch: 102, targetSlot: 1 },
+                { id: 100, t1: "Winner 94", t2: "Winner 96", targetMatch: 102, targetSlot: 2 }
+            ],
+            r4: [
+                { id: 101, t1: "Winner 97", t2: "Winner 98", targetMatch: 104, targetSlot: 1, type: "semi" },
+                { id: 102, t1: "Winner 99", t2: "Winner 100", targetMatch: 104, targetSlot: 2, type: "semi" }
+            ],
+            r2: [
+                { id: 104, t1: "Winner 101", t2: "Winner 102", type: "final" },
+                { id: 103, t1: "Loser 101", t2: "Loser 102", type: "thirdPlace" }
+            ]
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderGroupStageSelectors();
-            renderThirdPlacePool();
+        // Live App State Variables
+        let matchState = {};
+
+        // Application initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            renderGroupstage();
+            initMatchState();
+            renderAllKnockoutStages();
         });
 
-        function renderGroupStageSelectors() {
-            const wrapper = document.getElementById('groups-wrapper');
-            wrapper.innerHTML = '';
-
-            Object.keys(groupStates).forEach(letter => {
-                const card = document.createElement('div');
-                card.className = 'group-card';
-                card.innerHTML = `<h3>Group ${letter}</h3>`;
-                
-                const ul = document.createElement('ul');
-                ul.className = 'team-list';
-
-                groupStates[letter].forEach((team, idx) => {
-                    const li = document.createElement('li');
-                    li.className = 'team-item';
-                    li.innerHTML = `
-                        <span>${team}</span>
-                        <select class="rank-select" onchange="changeGroupRank('${letter}', ${idx}, this.value)">
-                            ${[1,2,3,4].map(num => `<option value="${num}" ${num === idx + 1 ? 'selected' : ''}>#${num}</option>`).join('')}
-                        </select>
-                    `;
-                    ul.appendChild(li);
-                });
-                card.appendChild(ul);
-                wrapper.appendChild(card);
-            });
-        }
-
-        function changeGroupRank(groupLetter, oldIdx, targetValue) {
-            const newIdx = parseInt(targetValue) - 1;
-            const teams = groupStates[groupLetter];
-            
-            // Swap array positioning elements natively
-            const temp = teams[oldIdx];
-            teams.splice(oldIdx, 1);
-            teams.splice(newIdx, 0, temp);
-
-            renderGroupStageSelectors();
-            renderThirdPlacePool();
-        }
-
-        function renderThirdPlacePool() {
-            const poolContainer = document.getElementById('third-place-pool');
-            poolContainer.innerHTML = '';
-
-            thirdPlaceOrder.forEach((groupLetter, currentIdx) => {
-                const nativeTeamName = groupStates[groupLetter][2]; // Index 2 is the 3rd place team
-                const div = document.createElement('div');
-                div.className = 'pool-item';
-                
-                // Color formatting depending on allocation visibility limits (Top 8 green vs bottom 4 red)
-                if (currentIdx < 8) {
-                    div.style.borderLeft = '4px solid var(--success)';
-                    div.style.backgroundColor = 'rgba(16, 185, 129, 0.08)';
-                } else {
-                    div.style.borderLeft = '4px solid var(--danger)';
-                    div.style.backgroundColor = 'rgba(239, 68, 68, 0.08)';
-                }
-
-                div.innerHTML = `
-                    <span><strong>[Gp ${groupLetter}]</strong> ${nativeTeamName}</span>
-                    <select class="rank-select" onchange="changePoolRank(${currentIdx}, this.value)">
-                        ${Array.from({length: 12}, (_, i) => i + 1).map(num => `
-                            <option value="${num}" ${num === currentIdx + 1 ? 'selected' : ''}>#${num}</option>
-                        `).join('')}
-                    </select>
-                `;
-                poolContainer.appendChild(div);
-            });
-        }
-
-        function changePoolRank(oldIdx, targetValue) {
-            const newIdx = parseInt(targetValue) - 1;
-            const temp = thirdPlaceOrder[oldIdx];
-            thirdPlaceOrder.splice(oldIdx, 1);
-            thirdPlaceOrder.splice(newIdx, 0, temp);
-
-            renderThirdPlacePool();
-        }
-
-        // --- KNOCKOUT BRACKET SYSTEM MODEL ---
-        const ROUNDS = ['ro32', 'ro16', 'qf', 'sf', 'final'];
-        const ROUND_NAMES = {
-            'ro32': 'Round of 32', 'ro16': 'Round of 16',
-            'qf': 'Quarter-Finals (Ro8)', 'sf': 'Semi-Finals (Ro4)', 'final': 'Final (Ro2)'
-        };
-
-        let bracketState = {};
-
-        function startKnockoutStage() {
-            let winners = {}, runners = {};
-            Object.keys(groupStates).forEach(g => {
-                winners[g] = groupStates[g][0];
-                runners[g] = groupStates[g][1];
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+                btn.classList.add('bg-slate-800', 'text-slate-400');
             });
 
-            let thirds = [];
-            for(let i = 0; i < 8; i++) {
-                thirds.push(groupStates[thirdPlaceOrder[i]][2]);
-            }
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('bg-slate-800', 'text-slate-400');
+            activeBtn.classList.add('bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+        }
 
-            bracketState = {
-                ro32: [
-                    [winners['A'], thirds[0]], [winners['H'], runners['A']],
-                    [winners['D'], thirds[1]], [runners['B'], runners['C']],
-                    [winners['G'], thirds[2]], [winners['I'], runners['D']],
-                    [winners['J'], thirds[3]], [runners['E'], runners['F']],
-                    [winners['B'], thirds[4]], [winners['K'], runners['G']],
-                    [winners['E'], thirds[5]], [runners['H'], runners['I']],
-                    [winners['F'], thirds[6]], [winners['L'], runners['J']],
-                    [winners['C'], thirds[7]], [runners['K'], runners['L']]
-                ],
-                ro16: Array.from({length: 8}, () => [null, null]),
-                qf: Array.from({length: 4}, () => [null, null]),
-                sf: Array.from({length: 2}, () => [null, null]),
-                final: [[null, null]],
-                champion: null,
-                winners: { ro32: [], ro16: [], qf: [], sf: [], final: [] }
-            };
-
-            renderKnockoutBracket();
+        // Render Groupstage tab markup layout
+        function renderGroupstage() {
+            const container = document.getElementById("groups-container");
+            container.innerHTML = "";
             
-            const element = document.getElementById('bracket-section');
-            element.classList.remove('hidden');
-            element.scrollIntoView({behavior: 'smooth'});
-        }
-
-        function advanceTeam(roundKey, matchIndex, teamIndex) {
-            const match = bracketState[roundKey][matchIndex];
-            const winningTeam = match[teamIndex];
-            if (!winningTeam) return;
-
-            bracketState.winners[roundKey][matchIndex] = winningTeam;
-            const currentRoundIndex = ROUNDS.indexOf(roundKey);
-            
-            if (currentRoundIndex === ROUNDS.length - 1) {
-                bracketState.champion = winningTeam;
-            } else {
-                const nextRoundKey = ROUNDS[currentRoundIndex + 1];
-                const nextMatchIndex = Math.floor(matchIndex / 2);
-                const nextTeamSlot = matchIndex % 2;
-
-                bracketState[nextRoundKey][nextMatchIndex][nextTeamSlot] = winningTeam;
-                clearDownstream(currentRoundIndex + 1, nextMatchIndex, nextTeamSlot);
-            }
-            renderKnockoutBracket();
-        }
-
-        function clearDownstream(startRoundIdx, matchIdx, slotIdx) {
-            let currentRIdx = startRoundIdx;
-            let currentMIdx = matchIdx;
-            let currentSlotIdx = slotIdx;
-
-            while (currentRIdx < ROUNDS.length) {
-                const rKey = ROUNDS[currentRIdx];
-                bracketState.winners[rKey][currentMIdx] = null;
+            Object.keys(groupsData).forEach(groupLetter => {
+                const groupCard = document.createElement("div");
+                groupCard.className = "bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden shadow-md";
                 
-                if (currentRIdx === ROUNDS.length - 1) {
-                    bracketState.champion = null;
-                    break;
-                }
-
-                currentRIdx++;
-                const nextMIdx = Math.floor(currentMIdx / 2);
-                currentSlotIdx = currentMIdx % 2;
-                currentMIdx = nextMIdx;
-                
-                bracketState[ROUNDS[currentRIdx]][currentMIdx][currentSlotIdx] = null;
-            }
-        }
-
-        function renderKnockoutBracket() {
-            const container = document.getElementById('knockout-renderer');
-            container.innerHTML = '';
-
-            ROUNDS.forEach(roundKey => {
-                const matches = bracketState[roundKey];
-                if (roundKey !== 'ro32' && matches.every(m => m[0] == null && m[1] == null)) return; 
-
-                let roundHtml = `<div class="round-section"><h3>${ROUND_NAMES[roundKey]}</h3><div class="bracket-grid">`;
-
-                matches.forEach((match, index) => {
-                    const t1 = match[0], t2 = match[1];
-                    const winner = bracketState.winners[roundKey][index];
-
-                    const class1 = !t1 ? 'empty' : (winner === t1 ? 'winner' : '');
-                    const class2 = !t2 ? 'empty' : (winner === t2 ? 'winner' : '');
-
-                    roundHtml += `
-                        <div class="match-card">
-                            <div class="match-team ${class1}" onclick="advanceTeam('${roundKey}', ${index}, 0)">
-                                <span>${t1 || 'TBD'}</span>
-                                ${winner === t1 ? '<span>✓</span>' : ''}
-                            </div>
-                            <div class="match-team ${class2}" onclick="advanceTeam('${roundKey}', ${index}, 1)">
-                                <span>${t2 || 'TBD'}</span>
-                                ${winner === t2 ? '<span>✓</span>' : ''}
-                            </div>
+                let rowsHtml = groupsData[groupLetter].map((team, idx) => `
+                    <div class="flex items-center justify-between py-2 px-3 text-xs border-b border-slate-700/40 last:border-0">
+                        <span class="font-medium text-slate-300">${idx + 1}. ${team}</span>
+                        <div class="flex gap-1 text-[10px]">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 font-mono">0P</span>
                         </div>
-                    `;
-                });
-
-                roundHtml += `</div></div>`;
-                container.innerHTML += roundHtml;
-            });
-
-            if (bracketState.champion) {
-                container.innerHTML += `
-                    <div class="round-section">
-                        <h3>World Champions</h3>
-                        <div class="champion-card">🏆 ${bracketState.champion} 🏆</div>
                     </div>
+                `).join('');
+
+                groupCard.innerHTML = `
+                    <div class="bg-slate-700/40 px-3 py-2 flex justify-between items-center border-b border-slate-700">
+                        <h3 class="text-xs font-black tracking-wider text-emerald-400">GROUP ${groupLetter}</h3>
+                        <span class="text-[10px] text-slate-400 font-medium font-mono">PTS</span>
+                    </div>
+                    <div>${rowsHtml}</div>
                 `;
+                container.appendChild(groupCard);
+            });
+        }
+
+        // Initialize state engine
+        function initMatchState() {
+            Object.keys(bracketStructure).forEach(roundKey => {
+                bracketStructure[roundKey].forEach(m => {
+                    matchState[m.id] = {
+                        id: m.id,
+                        t1: m.t1,
+                        t2: m.t2,
+                        winner: null,
+                        loser: null,
+                        targetMatch: m.targetMatch || null,
+                        targetSlot: m.targetSlot || null,
+                        type: m.type || 'normal'
+                    };
+                });
+            });
+        }
+
+        // Handle structural data updates on selection click
+        function selectWinner(matchId, pickedTeamNumber) {
+            const currentMatch = matchState[matchId];
+            const chosenTeamName = pickedTeamNumber === 1 ? currentMatch.t1 : currentMatch.t2;
+            const losingTeamName = pickedTeamNumber === 1 ? currentMatch.t2 : currentMatch.t1;
+            
+            currentMatch.winner = chosenTeamName;
+            currentMatch.loser = losingTeamName;
+
+            // Direct mapping traversal rules to push to next slots
+            if (currentMatch.targetMatch) {
+                const nextMatch = matchState[currentMatch.targetMatch];
+                if (currentMatch.targetSlot === 1) {
+                    nextMatch.t1 = chosenTeamName;
+                } else {
+                    nextMatch.t2 = chosenTeamName;
+                }
+                
+                // Clear cascading dependent chain selections if user shifts answers down the line
+                clearCascadingPicks(currentMatch.targetMatch);
             }
+
+            // Specific code fork logic branch for Semi-Final losers dropping into 3rd Place Play-off
+            if (currentMatch.type === 'semi') {
+                const thirdPlaceMatch = matchState[103]; 
+                if (currentMatch.id === 101) thirdPlaceMatch.t1 = losingTeamName;
+                if (currentMatch.id === 102) thirdPlaceMatch.t2 = losingTeamName;
+                clearCascadingPicks(103);
+            }
+
+            renderAllKnockoutStages();
+        }
+
+        // Recursive cache clearer if user re-selects standard outcomes
+        function clearCascadingPicks(matchId) {
+            const match = matchState[matchId];
+            if (!match) return;
+            match.winner = null;
+            match.loser = null;
+            
+            if (match.targetMatch) {
+                const nextMatch = matchState[match.targetMatch];
+                if (match.targetSlot === 1) nextMatch.t1 = `Winner ${matchId}`;
+                else nextMatch.t2 = `Winner ${matchId}`;
+                clearCascadingPicks(match.targetMatch);
+            }
+            if (match.type === 'semi') {
+                const thirdPlaceMatch = matchState[103];
+                if (match.id === 101) thirdPlaceMatch.t1 = "Loser 101";
+                if (match.id === 102) thirdPlaceMatch.t2 = "Loser 102";
+                clearCascadingPicks(103);
+            }
+        }
+
+        // UI rendering execution loop
+        function renderAllKnockoutStages() {
+            renderRoundCardList('r32', 'r32-matches');
+            renderRoundCardList('r16', 'r16-matches');
+            renderRoundCardList('r8', 'r8-matches');
+            renderRoundCardList('r4', 'r4-matches');
+            
+            // Render specific layouts on Final/3rd spot tab screen
+            renderSingleMatchCard(104, 'r2-final-match');
+            renderSingleMatchCard(103, 'r2-third-match');
+        }
+
+        // Base list component rendering builder
+        function renderRoundCardList(roundKey, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            
+            bracketStructure[roundKey].forEach(mDef => {
+                const card = generateMatchCardDOM(mDef.id);
+                container.appendChild(card);
+            });
+        }
+
+        // Unique node interface injector wrapper helper
+        function renderSingleMatchCard(matchId, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            const card = generateMatchCardDOM(matchId);
+            container.appendChild(card);
+        }
+
+        // Match Card UI Builder Component
+        function generateMatchCardDOM(matchId) {
+            const m = matchState[matchId];
+            const matchCard = document.createElement("div");
+            matchCard.className = "bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden shadow-lg transition-all";
+
+            const isT1Winner = m.winner === m.t1 && m.winner !== null;
+            const isT2Winner = m.winner === m.t2 && m.winner !== null;
+
+            matchCard.innerHTML = `
+                <div class="bg-slate-950/60 px-3 py-1 text-[10px] font-bold text-slate-500 flex justify-between border-b border-slate-700/40">
+                    <span>MATCH ${m.id}</span>
+                    <span class="text-emerald-500/80 uppercase tracking-tight">Knockout Phase</span>
+                </div>
+                <div class="divide-y divide-slate-700/40">
+                    <button onclick="selectWinner(${m.id}, 1)" class="w-full text-left px-3 py-2.5 flex items-center justify-between text-xs transition-colors focus:outline-none ${isT1Winner ? 'bg-emerald-950/40 text-emerald-400' : 'hover:bg-slate-700/30'}" ${!m.t1 ? 'disabled' : ''}>
+                        <span class="font-semibold ${isT1Winner ? 'text-emerald-400 font-bold' : 'text-slate-200'}">${m.t1 || 'TBD'}</span>
+                        ${isT1Winner ? '<span class="text-[10px] bg-emerald-500 text-slate-950 px-1.5 py-0.2 rounded font-black">ADVANCED</span>' : ''}
+                    </button>
+                    <button onclick="selectWinner(${m.id}, 2)" class="w-full text-left px-3 py-2.5 flex items-center justify-between text-xs transition-colors focus:outline-none ${isT2Winner ? 'bg-emerald-950/40 text-emerald-400' : 'hover:bg-slate-700/30'}" ${!m.t2 ? 'disabled' : ''}>
+                        <span class="font-semibold ${isT2Winner ? 'text-emerald-400 font-bold' : 'text-slate-200'}">${m.t2 || 'TBD'}</span>
+                        ${isT2Winner ? '<span class="text-[10px] bg-emerald-500 text-slate-950 px-1.5 py-0.2 rounded font-black">ADVANCED</span>' : ''}
+                    </button>
+                </div>
+            `;
+            return matchCard;
         }
     </script>
 </body>
