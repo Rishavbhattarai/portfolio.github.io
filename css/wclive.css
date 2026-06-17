@@ -107,6 +107,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .player-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-pill);border:.5px solid var(--border-md);font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all .2s}
 .player-btn.active{background:var(--malachite-base)!important;color:var(--gold)!important;border-color:var(--malachite-base)}
 .accuracy-bar-wrap{background:var(--bg-secondary);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:500}
+/* ── Round filter (Leaderboard) ─────────────────────────────────────────── */
+.round-filter-bar{display:flex;gap:6px;margin-bottom:12px}
+.round-pill-btn{flex:1;text-align:center;padding:8px 6px;border-radius:var(--radius-pill);border:.5px solid var(--border-md);font-size:11px;font-weight:700;cursor:pointer;background:var(--bg-secondary);color:var(--text-secondary);transition:all .2s;white-space:nowrap}
+.round-pill-btn:hover{border-color:var(--malachite-base);color:var(--malachite-dark)}
+@media(prefers-color-scheme:dark){.round-pill-btn:hover{color:var(--gold)}}
+.round-pill-btn.active{background:var(--malachite-base)!important;color:var(--gold)!important;border-color:var(--malachite-base)}
+
 .refresh-btn{background:var(--malachite-base);color:var(--gold);border:none;padding:8px 16px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .refresh-btn:hover{background:var(--malachite-dark);color:var(--gold-light)}
 .loading,.error{text-align:center;padding:40px;color:var(--text-tertiary);font-weight:500}

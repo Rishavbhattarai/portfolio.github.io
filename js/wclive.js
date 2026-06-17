@@ -1,6 +1,7 @@
 // WC 2026 – Live Prediction Game | app.js (optimised)
-// Fixed timezone issues – all dates now use Pacific Time.
-// Limit of 4 matches per day in Add Prediction.
+// Fixed: leaderboard now always sums points from all matches,
+// and after saving predictions the leaderboard updates instantly.
+// Timezone: Pacific Time, with robust date parsing.
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
 
@@ -17,19 +18,59 @@ let activeGroup = 'All', activeStatus = 'upcoming', activePlayer = '';
 let _addPredTimer = null;
 let _activeDateGroups = [], _currentActiveDateIdx = 0;
 
+// ─── Round definitions (Leaderboard date-range filtering) ─────────────────────
+// Dates are inclusive, parsed as Pacific-time calendar days in 2026.
+// CRITICAL: only the first three rounds are wired up for now. RoundOf32,
+// RoundOf16, QuarterFinals, SemiFinals, Finals will be appended later using
+// the exact same {key,label,start,end} shape — just add more entries to
+// this array and everything else (buttons, filtering) keeps working.
+const ROUNDS = [
+  { key: 'all',    label: 'All Rounds', start: null,                  end: null },
+  { key: 'r1',     label: 'Round 1',    start: '2026-06-11',          end: '2026-06-17' },
+  { key: 'r2',     label: 'Round 2',    start: '2026-06-18',          end: '2026-06-23' },
+  { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-24' }
+  // { key:'ro32', label:'Round Of 32', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
+  // { key:'ro16', label:'Round Of 16', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
+  // { key:'qf',   label:'Quarter-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
+  // { key:'sf',   label:'Semi-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
+  // { key:'f',    label:'Final', start:'YYYY-MM-DD', end:'YYYY-MM-DD' }
+];
+let activeRound = 'all';
+
+// Returns true if a match's date falls inside the given round's date range.
+// `round.start`/`round.end` are 'YYYY-MM-DD' calendar-day strings;
+// `round.start === null` (the "All Rounds" entry) always matches.
+// Uses getMatchDateStr() (reads the date straight off the sheet string) —
+// NOT parseMatchDateTime()+getPacificDateStr(), which double-converts
+// through a timezone reformat and can shift early-morning matches onto the
+// wrong calendar day, silently excluding them from a round's totals.
+function matchInRound(match, round) {
+  if (!round || round.start === null) return true;
+  const dateStr = getMatchDateStr(match.dateTimeRaw);
+  return dateStr >= round.start && dateStr <= round.end;
+}
+
 // ─── Perf: memoised date parser ───────────────────────────────────────────────
 const _dtCache = new Map();
 function parseMatchDateTime(str) {
   if (!str || typeof str !== 'string') return new Date(0);
   if (_dtCache.has(str)) return _dtCache.get(str);
   try {
-    const clean = str.replace('-','').replace(/\s+/g,' ').trim();
-    const parts = clean.split(' ');
+    // Tokenize defensively: insert spaces around "-" and between a month
+    // abbreviation and digits BEFORE collapsing whitespace, so inconsistent
+    // sheet formatting ("Jun 17-14:00", "Jun17 - 14:00") can't merge the
+    // day into the time or the month into the day.
     const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-    const month  = months[parts[0].substring(0,3)];
+    const spaced = str
+      .replace(/-/g, ' ')
+      .replace(/([A-Za-z])(\d)/g, '$1 $2')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const parts = spaced.split(' ');
+    const month = months[parts[0].substring(0,3)];
     const day    = parseInt(parts[1],10);
-    const [h, m] = parts[2].split(':');
-    const d = new Date(2026, month, day, parseInt(h,10), parseInt(m,10), 0, 0);
+    const [h, m] = (parts[2]||'0:0').split(':');
+    const d = new Date(2026, month, day, parseInt(h,10)||0, parseInt(m,10)||0, 0, 0);
     _dtCache.set(str, d);
     return d;
   } catch(e) {
@@ -37,6 +78,23 @@ function parseMatchDateTime(str) {
     _dtCache.set(str, d);
     return d;
   }
+}
+
+// Extracts the 'YYYY-MM-DD' calendar date for a match. Reuses the SAME
+// Date object that parseMatchDateTime() already builds from the sheet
+// string (so there's no second, independently-fragile parse of the raw
+// text — e.g. inconsistent spacing around the "-" separator like
+// "Jun 17-14:00" or "Jun17 - 14:00" previously caused this to silently
+// extract the wrong day for that one row). Reads the components back with
+// .getFullYear()/.getMonth()/.getDate(), i.e. the exact local values the
+// Date was constructed with — NOT through getPacificDateStr(), which
+// reformats through a timezone converter and can shift early-morning
+// matches onto the previous day.
+function getMatchDateStr(str) {
+  const d = parseMatchDateTime(str);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
 // ─── Pacific Time helpers ──────────────────────────────────────────────────────
@@ -124,8 +182,20 @@ function parseSheetData(rows) {
   MATCHES.forEach(m=>{
     if (now>=parseMatchDateTime(m.dateTimeRaw)) { m.homeScore=m.homeScoreRaw; m.awayScore=m.awayScoreRaw; }
   });
-  MATCHES.forEach(m=>{ m.preds.forEach(pr=>{ pr.pts=calcPoints(m.homeScore,m.awayScore,pr.h,pr.a); }); });
-  PLAYERS.forEach(p=>{ p.pts=MATCHES.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0); });
+  // Recalculate points for all matches after setting scores
+  recalcAllPoints();
+}
+
+// ─── Recalculate points for all matches and update player totals ─────────────
+function recalcAllPoints() {
+  MATCHES.forEach(m=>{
+    m.preds.forEach(pr=>{
+      pr.pts = calcPoints(m.homeScore, m.awayScore, pr.h, pr.a);
+    });
+  });
+  PLAYERS.forEach(p=>{
+    p.pts = MATCHES.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0);
+  });
 }
 
 async function savePrediction(matchRowIndex, playerName, home, away) {
@@ -257,8 +327,36 @@ function buildTodayCarousel() {
 }
 
 // ─── Leaderboard ──────────────────────────────────────────────────────────────
+function buildRoundFilterBar() {
+  const el = document.getElementById('roundFilterBar');
+  if (!el) return;
+  el.innerHTML = ROUNDS.map(r =>
+    `<button class="round-pill-btn ${r.key===activeRound?'active':''}" onclick="setRound('${r.key}',this)">${r.label}</button>`
+  ).join('');
+}
+
+window.setRound = function(key, btn) {
+  activeRound = key;
+  document.querySelectorAll('#roundFilterBar .round-pill-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  buildLeaderboard();
+};
+
+// Computes each player's total points using only matches that fall within
+// the currently active round's date range (or all matches, for "All Rounds").
+function getLeaderboardData() {
+  const round = ROUNDS.find(r => r.key === activeRound) || ROUNDS[0];
+  const roundMatches = MATCHES.filter(m => matchInRound(m, round));
+  return PLAYERS.map(p => ({
+    ...p,
+    pts: roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0)
+  }));
+}
+
 function buildLeaderboard() {
-  const sorted=[...PLAYERS].sort((a,b)=>b.pts-a.pts);
+  buildRoundFilterBar();
+  const data=getLeaderboardData();
+  const sorted=[...data].sort((a,b)=>b.pts-a.pts);
   const maxPts=sorted[0]?.pts||1;
   const labels=['1st','2nd','3rd','4th','5th'];
   const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888'];
@@ -549,18 +647,29 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
     if (match) {
       const pred = match.preds.find(pr => pr.p === playerName);
       if (pred) { pred.h = h; pred.a = a; }
+      // Recalc points immediately (if match already has scores)
+      if (match.homeScore !== null && match.awayScore !== null) {
+        pred.pts = calcPoints(match.homeScore, match.awayScore, h, a);
+      } else {
+        pred.pts = null;
+      }
+      // Update player totals
+      recalcAllPoints(); // Recalc all players' totals from all matches
     }
     btn.className = 'save-pred-btn saved';
     btn.innerHTML = '<i class="ti ti-check"></i> Saved';
     statusSpan.className = 'pred-save-status ok';
     statusSpan.textContent = `${h}:${a} ✓`;
 
+    // Refresh all UI components immediately
     buildTodayCarousel();
     buildLeaderboard();
     buildOverviewStats();
     buildAllUpcomingGames();
     if (activePlayer) renderPlayerDetail();
     renderMatchList();
+    // Rebuild add prediction section to reflect updated predictions
+    buildAddPredSection();
 
     setTimeout(async () => {
       btn.disabled = false;
@@ -571,6 +680,7 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
         const data = await res.json();
         _dtCache.clear();
         parseSheetData(data);
+        // Rebuild all UI after fresh data
         buildTodayCarousel();
         buildLeaderboard();
         buildOverviewStats();
@@ -591,6 +701,8 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
 
 // ─── Orchestration ─────────────────────────────────────────────────────────────
 function buildAllUI() {
+  // Ensure points are recalculated before building UI
+  recalcAllPoints();
   buildTodayCarousel();
   buildLeaderboard();
   buildOverviewStats();
