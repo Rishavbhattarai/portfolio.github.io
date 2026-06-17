@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>WC 2026 – Knockout Stage</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <link rel="stylesheet" href="../css/KSlive.css">
+  <style id="stage-toggle-style">
+    /* ── Shared Stage Toggle (identical on wclive.html & KSlive.html) ──
+       Matches the live oval-pill toggle: dark rounded outer track,
+       active tab rendered as a solid gold oval pill. */
+    .stg-toggle-wrap{width:100%;max-width:520px;margin:0 auto;background:#0B1B33;padding:14px 16px;box-sizing:border-box;flex-shrink:0}
+    .stg-toggle-track{display:flex;width:100%;background:#0B1B33;border-radius:999px;padding:4px;gap:4px;position:relative;box-sizing:border-box}
+    .stg-toggle-link{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;padding:10px 4px;font-size:13px;font-weight:700;border-radius:999px;color:rgba(255,255,255,.55);transition:all .2s;white-space:nowrap;box-sizing:border-box}
+    .stg-toggle-link.stg-active{background:linear-gradient(135deg,#F4CE4E,#D4AF37);color:#0B1B33;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  </style>
+</head>
+<body>
+<div class="ks-app-shell">
+
+  <!-- Shared Stage toggle: identical block pasted into wclive.html -->
+  <div class="stg-toggle-wrap">
+    <div class="stg-toggle-track">
+      <a href="wclive.html" class="stg-toggle-link">Group Stage</a>
+      <a href="KSlive.html" class="stg-toggle-link stg-active">Knockout Stage</a>
+    </div>
+  </div>
+
+
+
+  <header class="ks-app-header">
+    <div class="ks-header-top">
+      <div>
+        <div class="ks-header-title"><i class="ti ti-trophy"></i> WC 2026 Knockout</div>
+        <div class="ks-header-sub" id="ksHeaderSub">Prototype preview · not live</div>
+      </div>
+      <span class="ks-header-badge">Knockout stage</span>
+    </div>
+    <nav class="ks-bottom-nav">
+      <button class="ks-nav-btn active" data-target="ksBracket" onclick="KS.showSection('ksBracket', this)">
+        <i class="ti ti-sitemap"></i> Bracket
+      </button>
+      <button class="ks-nav-btn" data-target="ksMatches" onclick="KS.showSection('ksMatches', this)">
+        <i class="ti ti-ball-football"></i> Matches
+      </button>
+      <button class="ks-nav-btn" data-target="ksPredictions" onclick="KS.showSection('ksPredictions', this)">
+        <i class="ti ti-pencil-plus"></i> Predictions
+      </button>
+      <button class="ks-nav-btn" data-target="ksPlayer" onclick="KS.showSection('ksPlayer', this)">
+        <i class="ti ti-user"></i> Player
+      </button>
+    </nav>
+  </header>
+
+  <main class="ks-main-content">
+
+    <div class="ks-proto-banner">
+      <i class="ti ti-flask"></i>
+      <span>Prototype — static placeholder content. Knockout data &amp; scoring aren't wired up yet.</span>
+    </div>
+
+    <!-- BRACKET -->
+    <section id="ksBracket" class="ks-section active">
+      <div class="ks-sec-label">Tournament bracket</div>
+      <div class="ks-bracket-wrap">
+        <div class="ks-bracket-round">
+          <div class="ks-round-label">Round of 16</div>
+          <div class="ks-bracket-match"><span>Team A</span><span class="ks-bracket-score">—</span></div>
+          <div class="ks-bracket-match"><span>Team B</span><span class="ks-bracket-score">—</span></div>
+          <div class="ks-bracket-match"><span>Team C</span><span class="ks-bracket-score">—</span></div>
+          <div class="ks-bracket-match"><span>Team D</span><span class="ks-bracket-score">—</span></div>
+        </div>
+        <div class="ks-bracket-round">
+          <div class="ks-round-label">Quarter-final</div>
+          <div class="ks-bracket-match ks-tbd"><span>TBD</span><span class="ks-bracket-score">—</span></div>
+          <div class="ks-bracket-match ks-tbd"><span>TBD</span><span class="ks-bracket-score">—</span></div>
+        </div>
+        <div class="ks-bracket-round">
+          <div class="ks-round-label">Semi-final</div>
+          <div class="ks-bracket-match ks-tbd"><span>TBD</span><span class="ks-bracket-score">—</span></div>
+        </div>
+        <div class="ks-bracket-round">
+          <div class="ks-round-label"><i class="ti ti-trophy"></i> Final</div>
+          <div class="ks-bracket-match ks-final ks-tbd"><span>TBD</span><span class="ks-bracket-score">—</span></div>
+        </div>
+      </div>
+
+      <div class="ks-sec-label">Leaderboard</div>
+      <div class="ks-card" id="ksLeaderboard"></div>
+
+      <div class="ks-sec-label">Overview</div>
+      <div class="ks-stat-grid" id="ksOverviewStats"></div>
+    </section>
+
+    <!-- MATCHES -->
+    <section id="ksMatches" class="ks-section">
+      <div class="ks-filter-bar" id="ksRoundTabs"></div>
+      <div id="ksMatchList"></div>
+    </section>
+
+    <!-- PREDICTIONS -->
+    <section id="ksPredictions" class="ks-section">
+      <div class="ks-add-pred-intro">
+        <i class="ti ti-info-circle"></i>
+        <div>Knockout predictions open once the Round of 16 fixtures are confirmed. This is a placeholder view of how entry will look.</div>
+      </div>
+      <div class="ks-date-pred-card">
+        <div class="ks-date-card-header"><span>Round of 16 · Match 1</span></div>
+        <div class="ks-pred-match-item">
+          <div class="ks-match-header">
+            <div class="ks-match-title">Team A vs Team B</div>
+            <div class="ks-match-meta"><span class="ks-match-lock-timer">🔒 Locked — prototype</span></div>
+          </div>
+          <div class="ks-pred-player-section">
+            <div class="ks-pred-player-label">Enter / update predictions</div>
+            <div class="ks-pred-player-row" id="ksPlayerRows"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAYER -->
+    <section id="ksPlayer" class="ks-section">
+      <div class="ks-sec-label">Select player</div>
+      <div id="ksPlayerBtns" class="ks-player-btns"></div>
+      <div class="ks-player-profile-card">
+        <div class="ks-avatar" id="ksPlayerAvatar"></div>
+        <div>
+          <div id="ksPlayerName" class="ks-player-profile-name"></div>
+          <div id="ksPlayerRank" class="ks-player-profile-rank"></div>
+        </div>
+        <div class="ks-player-profile-pts" style="margin-left:auto;text-align:right">
+          <div id="ksPlayerPtsNum" class="ks-player-profile-pts-num"></div>
+          <div class="ks-player-profile-pts-label">pts total</div>
+        </div>
+      </div>
+      <div class="ks-stat-grid" id="ksPlayerStats"></div>
+      <div class="ks-sec-label">Knockout predictions</div>
+      <div id="ksPlayerMatchPreds"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="../jsKSlive.js" defer></script>
+</body>
+</html>

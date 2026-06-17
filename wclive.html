@@ -6,9 +6,22 @@
   <title>WC 2026 – Live Prediction Game</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
   <link rel="stylesheet" href="../css/wclive.css?v=12.1.2">
+<style id="stage-toggle-style">
+    .stg-toggle-wrap{width:100%;max-width:520px;margin:0 auto;background:#115c31;padding:14px 16px;box-sizing:border-box;flex-shrink:0}
+    .stg-toggle-track{display:flex;width:100%;background:#115c31;border-radius:999px;padding:4px;gap:4px;position:relative;box-sizing:border-box}
+    .stg-toggle-link{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;padding:10px 4px;font-size:13px;font-weight:700;border-radius:999px;color:rgba(255,255,255,.55);transition:all .2s;white-space:nowrap;box-sizing:border-box}
+    .stg-toggle-link.stg-active{background:linear-gradient(135deg,#F4CE4E,#D4AF37);color:#0B1B33;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  </style>
 </head>
 <body>
 <div class="app-shell">
+
+  <div class="stg-toggle-wrap">
+    <div class="stg-toggle-track">
+      <a href="wclive.html" class="stg-toggle-link stg-active">Group Stage</a>
+      <a href="KSlive.html" class="stg-toggle-link">Knockout Stage</a>
+    </div>
+  </div>
 
   <header class="app-header">
     <div class="header-top">
