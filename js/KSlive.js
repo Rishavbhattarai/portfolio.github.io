@@ -213,9 +213,8 @@
             return;
         }
 
-        // Determine which card to center
-        const oneHourLater = new Date(now.getTime()+60*60*1000);
         let currentIdx = -1;
+        const oneHourLater = new Date(now.getTime()+60*60*1000);
         const withinHour = allMatchesSorted.filter(m=>{ const s=parseMatchDateTime(m.dateTimeRaw); return s>now&&s<=oneHourLater; });
         if (withinHour.length) {
             const target = withinHour.sort((a,b)=>parseMatchDateTime(a.dateTimeRaw)-parseMatchDateTime(b.dateTimeRaw))[0];
@@ -405,104 +404,102 @@
     };
 
     function renderPlayerDetail() {
-    const p = PLAYERS.find(x => x.name === activePlayer);
-    if (!p) return;
+        const p = PLAYERS.find(x => x.name === activePlayer);
+        if (!p) return;
 
-    const now = getCurrentPacificDate();
-    const done = MATCHES.filter(m => parseMatchDateTime(m.dateTimeRaw) <= now);
-    const myPreds = done.map(m => ({ m, pr: m.preds.find(pr => pr.p === p.name) })).filter(x => x.pr && x.pr.pts !== null);
-    const exact = myPreds.filter(x => x.pr.pts === 3).length;
-    const correct = myPreds.filter(x => x.pr.pts === 1).length;
-    const wrong = myPreds.filter(x => x.pr.pts === 0).length;
-    const pending = MATCHES.filter(m => parseMatchDateTime(m.dateTimeRaw) > now && m.preds.find(pr => pr.p === p.name)?.h !== null);
-    const accuracy = myPreds.length ? Math.round(((exact + correct) / myPreds.length) * 100) : 0;
-    const sorted = [...PLAYERS].sort((a, b) => b.pts - a.pts);
-    const rankPos = sorted.findIndex(x => x.name === p.name);
-    const rankSuffix = ['st', 'nd', 'rd', 'th', 'th', 'th'][rankPos] || 'th';
+        const now = getCurrentPacificDate();
+        const done = MATCHES.filter(m => parseMatchDateTime(m.dateTimeRaw) <= now);
+        const myPreds = done.map(m => ({ m, pr: m.preds.find(pr => pr.p === p.name) })).filter(x => x.pr && x.pr.pts !== null);
+        const exact = myPreds.filter(x => x.pr.pts === 3).length;
+        const correct = myPreds.filter(x => x.pr.pts === 1).length;
+        const wrong = myPreds.filter(x => x.pr.pts === 0).length;
+        const pending = MATCHES.filter(m => parseMatchDateTime(m.dateTimeRaw) > now && m.preds.find(pr => pr.p === p.name)?.h !== null);
+        const accuracy = myPreds.length ? Math.round(((exact + correct) / myPreds.length) * 100) : 0;
+        const sorted = [...PLAYERS].sort((a, b) => b.pts - a.pts);
+        const rankPos = sorted.findIndex(x => x.name === p.name);
+        const rankSuffix = ['st', 'nd', 'rd', 'th', 'th', 'th'][rankPos] || 'th';
 
-    // Avatar
-    const av = document.getElementById('ksPlayerAvatar');
-    if (av) { av.style.background = p.bg; av.style.color = p.textc; av.textContent = p.initials; }
+        // Avatar
+        const av = document.getElementById('ksPlayerAvatar');
+        if (av) { av.style.background = p.bg; av.style.color = p.textc; av.textContent = p.initials; }
 
-    // Name & rank
-    const nameEl = document.getElementById('ksPlayerNameText');
-    if (nameEl) nameEl.textContent = p.name;
-    const rankEl = document.getElementById('ksPlayerRankText');
-    if (rankEl) rankEl.textContent = `${rankPos + 1}${rankSuffix} place`;
+        // Name & rank — corrected IDs
+        const nameEl = document.getElementById('ksPlayerName');
+        if (nameEl) nameEl.textContent = p.name;
+        const rankEl = document.getElementById('ksPlayerRank');
+        if (rankEl) rankEl.textContent = `${rankPos + 1}${rankSuffix} place`;
 
-    // Points
-    const ptsNum = document.getElementById('ksPlayerPtsNum');
-    if (ptsNum) ptsNum.textContent = p.pts;
+        // Points
+        const ptsNum = document.getElementById('ksPlayerPtsNum');
+        if (ptsNum) ptsNum.textContent = p.pts;
 
-    // Stats grid – with icons and gold styling
-    const statsEl = document.getElementById('ksPlayerStats');
-    if (statsEl) {
-        statsEl.innerHTML = `
-            <div class="ks-stat-box exact">
-                <span class="ks-stat-icon">🏆</span>
-                <div class="ks-sv">${exact}</div>
-                <div class="ks-sl">exact scores <strong>(+3)</strong></div>
-            </div>
-            <div class="ks-stat-box correct">
-                <span class="ks-stat-icon">✅</span>
-                <div class="ks-sv">${correct}</div>
-                <div class="ks-sl">correct results <strong>(+1)</strong></div>
-            </div>
-            <div class="ks-stat-box wrong">
-                <span class="ks-stat-icon">❌</span>
-                <div class="ks-sv">${wrong}</div>
-                <div class="ks-sl">wrong predictions</div>
-            </div>
-            <div class="ks-stat-box pending">
-                <span class="ks-stat-icon">⏱️</span>
-                <div class="ks-sv">${pending.length}</div>
-                <div class="ks-sl">predictions pending</div>
-            </div>
-        `;
-    }
-
-    // Accuracy bar – golden
-    const accBar = document.getElementById('ksPlayerAccuracyBar');
-    const accVal = document.getElementById('ksPlayerAccuracyVal');
-    const accFill = document.getElementById('ksPlayerAccuracyFill');
-    if (accBar && accVal && accFill) {
-        if (myPreds.length) {
-            accBar.style.display = 'flex';
-            accVal.textContent = `${accuracy}%`;
-            accFill.style.width = `${accuracy}%`;
-        } else {
-            accBar.style.display = 'none';
+        // Stats grid – with icons and gold styling
+        const statsEl = document.getElementById('ksPlayerStats');
+        if (statsEl) {
+            statsEl.innerHTML = `
+                <div class="ks-stat-box exact">
+                    <span class="ks-stat-icon">🏆</span>
+                    <div class="ks-sv">${exact}</div>
+                    <div class="ks-sl">exact scores <strong>(+3)</strong></div>
+                </div>
+                <div class="ks-stat-box correct">
+                    <span class="ks-stat-icon">✅</span>
+                    <div class="ks-sv">${correct}</div>
+                    <div class="ks-sl">correct results <strong>(+1)</strong></div>
+                </div>
+                <div class="ks-stat-box wrong">
+                    <span class="ks-stat-icon">❌</span>
+                    <div class="ks-sv">${wrong}</div>
+                    <div class="ks-sl">wrong predictions</div>
+                </div>
+                <div class="ks-stat-box pending">
+                    <span class="ks-stat-icon">⏱️</span>
+                    <div class="ks-sv">${pending.length}</div>
+                    <div class="ks-sl">predictions pending</div>
+                </div>
+            `;
         }
-    }
 
-    // Predictions list
-    const predsEl = document.getElementById('ksPlayerMatchPreds');
-    if (predsEl) {
-        predsEl.innerHTML = MATCHES.map(m => {
-            const pr = m.preds.find(x => x.p === p.name);
-            const isPending = m.homeScore === null;
-            if (!pr || pr.h === null) {
-                return `<div class="ks-match-pred-row">
-                    <div>
+        // Accuracy bar – golden – removed fill bar logic
+        const accBar = document.getElementById('ksPlayerAccuracyBar');
+        const accVal = document.getElementById('ksPlayerAccuracyVal');
+        if (accBar && accVal) {
+            if (myPreds.length) {
+                accBar.style.display = 'flex';
+                accVal.textContent = `${accuracy}%`;
+            } else {
+                accBar.style.display = 'none';
+            }
+        }
+
+        // Predictions list
+        const predsEl = document.getElementById('ksPlayerMatchPreds');
+        if (predsEl) {
+            predsEl.innerHTML = MATCHES.map(m => {
+                const pr = m.preds.find(x => x.p === p.name);
+                const isPending = m.homeScore === null;
+                if (!pr || pr.h === null) {
+                    return `<div class="ks-match-pred-row">
+                        <div>
+                            <div class="ks-match-pred-name">${m.matchup}</div>
+                            <div class="ks-no-pred" style="font-size:12px;margin-top:2px">No prediction</div>
+                        </div>
+                    </div>`;
+                }
+                const cls = isPending ? '' : (pr.pts === 3 ? 'correct' : pr.pts === 1 ? 'partial' : 'wrong');
+                return `<div class="ks-match-pred-row ${cls}">
+                    <div style="flex:1;min-width:0">
                         <div class="ks-match-pred-name">${m.matchup}</div>
-                        <div class="ks-no-pred" style="font-size:12px;margin-top:2px">No prediction</div>
+                        <div class="ks-match-pred-score">${pr.h} – ${pr.a}${isPending ? '<span class="ks-upcoming-inline"><i class="ti ti-clock"></i></span>' : ''}</div>
+                    </div>
+                    <div class="ks-match-pred-right">
+                        ${isPending ? '<span class="ks-no-pred">TBD</span>' : ptsBadge(pr.pts)}
+                        ${!isPending ? `<div class="ks-actual-result">${m.homeScore}–${m.awayScore} actual</div>` : ''}
                     </div>
                 </div>`;
-            }
-            const cls = isPending ? '' : (pr.pts === 3 ? 'correct' : pr.pts === 1 ? 'partial' : 'wrong');
-            return `<div class="ks-match-pred-row ${cls}">
-                <div style="flex:1;min-width:0">
-                    <div class="ks-match-pred-name">${m.matchup}</div>
-                    <div class="ks-match-pred-score">${pr.h} – ${pr.a}${isPending ? '<span class="ks-upcoming-inline"><i class="ti ti-clock"></i></span>' : ''}</div>
-                </div>
-                <div class="ks-match-pred-right">
-                    ${isPending ? '<span class="ks-no-pred">TBD</span>' : ptsBadge(pr.pts)}
-                    ${!isPending ? `<div class="ks-actual-result">${m.homeScore}–${m.awayScore} actual</div>` : ''}
-                </div>
-            </div>`;
-        }).join('');
+            }).join('');
+        }
     }
-}
 
     // ─── Add Predictions section ──────────────────────────────────────────────
     function buildAddPredSection() {
@@ -793,7 +790,8 @@
     window.addEventListener('beforeunload', () => { stopAddPredTimer(); });
 
 })();
-// Inside the IIFE, after loadData is defined
+
+// Expose refresh function (optional)
 KS.refreshData = function() {
-    loadData(false);  // false = show loading message
+    loadData(false);
 };
