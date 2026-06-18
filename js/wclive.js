@@ -524,15 +524,55 @@ function renderCurrentDateCard() {
   const totalGroups = _activeDateGroups.length;
   const now = getCurrentPacificDate();
 
-  // Limit to 4 matches per day (as requested)
-  const matchesToShow = dateGroup.matches.slice(0, 4);
-  const allLocked = matchesToShow.every(m => !isMatchPredictable(m, now));
+  // 🔥 Filter out locked matches – only show those still open for predictions
+  const unlockableMatches = dateGroup.matches.filter(m => isMatchPredictable(m, now));
+  const matchesToShow = unlockableMatches.slice(0, 4);   // still limit to 4
 
+  // If no unlockable matches in this date, show a message
+  if (matchesToShow.length === 0) {
+    container.innerHTML = `
+      <div class="date-pred-card">
+        <div class="date-card-header">
+          <button class="date-nav-btn-inline" id="prevDateBtnInline" ${_currentActiveDateIdx === 0 ? 'disabled' : ''}>
+            <i class="ti ti-chevron-left"></i> Previous
+          </button>
+          <span style="font-weight:700">⚽ ${dateGroup.formatted}</span>
+          <button class="date-nav-btn-inline" id="nextDateBtnInline" ${_currentActiveDateIdx === totalGroups - 1 ? 'disabled' : ''}>
+            Next <i class="ti ti-chevron-right"></i>
+          </button>
+        </div>
+        <div class="no-games-today" style="padding: 20px; text-align: center; color: var(--text-tertiary);">
+          <i class="ti ti-lock"></i>
+          <div>All matches for this day are locked.</div>
+        </div>
+      </div>
+    `;
+    // re-bind navigation buttons
+    document.getElementById('prevDateBtnInline')?.addEventListener('click', () => {
+      if (_currentActiveDateIdx > 0) {
+        _currentActiveDateIdx--;
+        renderCurrentDateCard();
+        updateAddPredTimers();
+      }
+    });
+    document.getElementById('nextDateBtnInline')?.addEventListener('click', () => {
+      if (_currentActiveDateIdx < _activeDateGroups.length - 1) {
+        _currentActiveDateIdx++;
+        renderCurrentDateCard();
+        updateAddPredTimers();
+      }
+    });
+    return;
+  }
+
+  // Build HTML only for unlockable matches – no "locked" tiles will appear
   let matchesHtml = '';
   matchesToShow.forEach(m => {
     const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
+    // Since we already filtered, all these matches are unlockable.
+    // But we still compute lock time for the timer (it will show countdown)
     const lockTime = getMatchLockDeadline(m);
-    const isLocked = now > lockTime;
+    const isLocked = now > lockTime; // should be false for all, but keep safe
     const timerText = isLocked ? '🔒 Locked' : formatCountdown(lockTime - now);
 
     const playerRows = PLAYERS.map(pl => {
@@ -570,12 +610,15 @@ function renderCurrentDateCard() {
     </div>`;
   });
 
-  // Next-day hint if all shown matches are locked
+  // Since we filtered out locked ones, 'allLocked' is always false here.
+  // But we can check if there are any unlockable matches in next day.
   let nextHint = '';
-  if (allLocked && _currentActiveDateIdx < totalGroups - 1) {
+  const hasNextUnlockable = _currentActiveDateIdx < totalGroups - 1 &&
+    _activeDateGroups[_currentActiveDateIdx + 1].matches.some(m => isMatchPredictable(m, now));
+  if (!hasNextUnlockable && _currentActiveDateIdx < totalGroups - 1) {
     const nextGroup = _activeDateGroups[_currentActiveDateIdx + 1];
-    nextHint = `<div class="next-day-hint">⏩ All matches for today are locked. Next games: <strong>${nextGroup.formatted}</strong></div>`;
-  } else if (allLocked && _currentActiveDateIdx === totalGroups - 1) {
+    nextHint = `<div class="next-day-hint">⏩ No more unlockable matches today. Next available games: <strong>${nextGroup.formatted}</strong></div>`;
+  } else if (_currentActiveDateIdx === totalGroups - 1) {
     nextHint = `<div class="next-day-hint">✅ All matches are locked. No more upcoming games.</div>`;
   }
 

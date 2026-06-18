@@ -524,84 +524,40 @@
     }
 
     function renderCurrentDateCard() {
-        const container = document.getElementById('ksAddPredContent');
-        if (!_activeDateGroups.length) {
-            container.innerHTML = '<div class="ks-no-games-today"><i class="ti ti-lock"></i><div>No matches scheduled.</div></div>';
-            return;
-        }
-        const dateGroup = _activeDateGroups[_currentActiveDateIdx];
-        const totalGroups = _activeDateGroups.length;
-        const now = getCurrentPacificDate();
-        const matchesToShow = dateGroup.matches.slice(0, 4);
-        const allLocked = matchesToShow.every(m => !isMatchPredictable(m, now));
+    const container = document.getElementById('ksAddPredContent');
+    if (!_activeDateGroups.length) {
+        container.innerHTML = '<div class="ks-no-games-today"><i class="ti ti-lock"></i><div>No matches scheduled.</div></div>';
+        return;
+    }
 
-        let matchesHtml = '';
-        matchesToShow.forEach(m => {
-            const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
-            const lockTime = getMatchLockDeadline(m);
-            const isLocked = now > lockTime;
-            const timerText = isLocked ? '🔒 Locked' : formatCountdown(lockTime - now);
+    const dateGroup = _activeDateGroups[_currentActiveDateIdx];
+    const totalGroups = _activeDateGroups.length;
+    const now = getCurrentPacificDate();
 
-            const playerRows = PLAYERS.map(pl => {
-                const existing = m.preds.find(pr => pr.p === pl.name);
-                const hVal = existing?.h ?? '';
-                const aVal = existing?.a ?? '';
-                const uid = `kspred_${m.id}_${pl.name.replace(/\s+/g, '_')}`;
-                return `<div class="ks-pred-player">
-                    <div class="ks-pred-player-avatar" style="background:${pl.bg};color:${pl.textc}">${pl.initials}</div>
-                    <div class="ks-pred-player-name">${pl.name}</div>
-                    <div class="ks-score-inputs">
-                        <input class="ks-score-input" type="number" min="0" max="20" id="${uid}_h" value="${hVal}" placeholder="–" ${isLocked ? 'disabled' : ''}>
-                        <span class="ks-score-sep">:</span>
-                        <input class="ks-score-input" type="number" min="0" max="20" id="${uid}_a" value="${aVal}" placeholder="–" ${isLocked ? 'disabled' : ''}>
-                        <button class="ks-save-pred-btn" id="${uid}_btn" onclick="KS.handleSavePred(${m.rowIndex},'${pl.name}','${uid}')" ${isLocked ? 'disabled' : ''}>
-                            <i class="ti ti-device-floppy"></i> Save
-                        </button>
-                    </div>
-                    <span class="ks-pred-save-status" id="${uid}_status"></span>
-                </div>`;
-            }).join('');
+    // 🔥 Filter out locked matches – only show those still open for predictions
+    const unlockableMatches = dateGroup.matches.filter(m => isMatchPredictable(m, now));
+    const matchesToShow = unlockableMatches.slice(0, 4);   // still limit to 4
 
-            matchesHtml += `<div class="ks-pred-match-item" data-rowindex="${m.rowIndex}">
-                <div class="ks-match-header">
-                    <div class="ks-match-title">${m.matchup}</div>
-                    <div class="ks-match-meta">
-                        <span>${m.group} · ${timeOnly}</span>
-                        <span class="ks-match-lock-timer" style="color:${isLocked ? '#e05252' : '#800000'}">${timerText}</span>
-                    </div>
+    // If no unlockable matches on this date, show a message and keep navigation
+    if (matchesToShow.length === 0) {
+        container.innerHTML = `
+            <div class="ks-date-pred-card">
+                <div class="ks-date-card-header">
+                    <button class="ks-date-nav-btn-inline" id="ksPrevDateBtn" ${_currentActiveDateIdx === 0 ? 'disabled' : ''}>
+                        <i class="ti ti-chevron-left"></i> Previous
+                    </button>
+                    <span style="font-weight:700">⚽ ${dateGroup.formatted}</span>
+                    <button class="ks-date-nav-btn-inline" id="ksNextDateBtn" ${_currentActiveDateIdx === totalGroups - 1 ? 'disabled' : ''}>
+                        Next <i class="ti ti-chevron-right"></i>
+                    </button>
                 </div>
-                <div class="ks-pred-player-section">
-                    <div class="ks-pred-player-label">Enter / update predictions</div>
-                    ${playerRows}
+                <div class="ks-no-games-today" style="padding: 20px; text-align: center; color: var(--ks-text-tertiary, #888);">
+                    <i class="ti ti-lock"></i>
+                    <div>All matches for this day are locked.</div>
                 </div>
-            </div>`;
-        });
-
-        let nextHint = '';
-        if (allLocked && _currentActiveDateIdx < totalGroups - 1) {
-            const nextGroup = _activeDateGroups[_currentActiveDateIdx + 1];
-            nextHint = `<div class="ks-next-day-hint">⏩ All matches for today are locked. Next games: <strong>${nextGroup.formatted}</strong></div>`;
-        } else if (allLocked && _currentActiveDateIdx === totalGroups - 1) {
-            nextHint = `<div class="ks-next-day-hint">✅ All matches are locked. No more upcoming games.</div>`;
-        }
-
-        const prevDisabled = _currentActiveDateIdx === 0 ? 'disabled' : '';
-        const nextDisabled = _currentActiveDateIdx === totalGroups - 1 ? 'disabled' : '';
-
-        container.innerHTML = `<div class="ks-date-pred-card">
-            <div class="ks-date-card-header">
-                <button class="ks-date-nav-btn-inline" id="ksPrevDateBtn" ${prevDisabled}>
-                    <i class="ti ti-chevron-left"></i> Previous
-                </button>
-                <span style="font-weight:700">⚽ ${dateGroup.formatted}</span>
-                <button class="ks-date-nav-btn-inline" id="ksNextDateBtn" ${nextDisabled}>
-                    Next <i class="ti ti-chevron-right"></i>
-                </button>
             </div>
-            ${matchesHtml}
-            ${nextHint}
-        </div>`;
-
+        `;
+        // re‑bind navigation buttons
         document.getElementById('ksPrevDateBtn')?.addEventListener('click', () => {
             if (_currentActiveDateIdx > 0) {
                 _currentActiveDateIdx--;
@@ -616,10 +572,98 @@
                 updateAddPredTimers();
             }
         });
-
-        updateAddPredTimers();
+        return;
     }
 
+    // Build HTML only for unlockable matches – no locked tiles will appear
+    let matchesHtml = '';
+    matchesToShow.forEach(m => {
+        const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
+        // Since we filtered, all these matches are unlockable, but keep the timer for visual feedback
+        const lockTime = getMatchLockDeadline(m);
+        const isLocked = now > lockTime; // should be false for all, but safe
+        const timerText = isLocked ? '🔒 Locked' : formatCountdown(lockTime - now);
+
+        const playerRows = PLAYERS.map(pl => {
+            const existing = m.preds.find(pr => pr.p === pl.name);
+            const hVal = existing?.h ?? '';
+            const aVal = existing?.a ?? '';
+            const uid = `kspred_${m.id}_${pl.name.replace(/\s+/g, '_')}`;
+            return `<div class="ks-pred-player">
+                <div class="ks-pred-player-avatar" style="background:${pl.bg};color:${pl.textc}">${pl.initials}</div>
+                <div class="ks-pred-player-name">${pl.name}</div>
+                <div class="ks-score-inputs">
+                    <input class="ks-score-input" type="number" min="0" max="20" id="${uid}_h" value="${hVal}" placeholder="–" ${isLocked ? 'disabled' : ''}>
+                    <span class="ks-score-sep">:</span>
+                    <input class="ks-score-input" type="number" min="0" max="20" id="${uid}_a" value="${aVal}" placeholder="–" ${isLocked ? 'disabled' : ''}>
+                    <button class="ks-save-pred-btn" id="${uid}_btn" onclick="KS.handleSavePred(${m.rowIndex},'${pl.name}','${uid}')" ${isLocked ? 'disabled' : ''}>
+                        <i class="ti ti-device-floppy"></i> Save
+                    </button>
+                </div>
+                <span class="ks-pred-save-status" id="${uid}_status"></span>
+            </div>`;
+        }).join('');
+
+        matchesHtml += `<div class="ks-pred-match-item" data-rowindex="${m.rowIndex}">
+            <div class="ks-match-header">
+                <div class="ks-match-title">${m.matchup}</div>
+                <div class="ks-match-meta">
+                    <span>${m.group} · ${timeOnly}</span>
+                    <span class="ks-match-lock-timer" style="color:${isLocked ? '#e05252' : '#800000'}">${timerText}</span>
+                </div>
+            </div>
+            <div class="ks-pred-player-section">
+                <div class="ks-pred-player-label">Enter / update predictions</div>
+                ${playerRows}
+            </div>
+        </div>`;
+    });
+
+    // Determine if there are unlockable matches on the next date
+    let nextHint = '';
+    const hasNextUnlockable = _currentActiveDateIdx < totalGroups - 1 &&
+        _activeDateGroups[_currentActiveDateIdx + 1].matches.some(m => isMatchPredictable(m, now));
+    if (!hasNextUnlockable && _currentActiveDateIdx < totalGroups - 1) {
+        const nextGroup = _activeDateGroups[_currentActiveDateIdx + 1];
+        nextHint = `<div class="ks-next-day-hint">⏩ No more unlockable matches today. Next available games: <strong>${nextGroup.formatted}</strong></div>`;
+    } else if (_currentActiveDateIdx === totalGroups - 1) {
+        nextHint = `<div class="ks-next-day-hint">✅ All matches are locked. No more upcoming games.</div>`;
+    }
+
+    const prevDisabled = _currentActiveDateIdx === 0 ? 'disabled' : '';
+    const nextDisabled = _currentActiveDateIdx === totalGroups - 1 ? 'disabled' : '';
+
+    container.innerHTML = `<div class="ks-date-pred-card">
+        <div class="ks-date-card-header">
+            <button class="ks-date-nav-btn-inline" id="ksPrevDateBtn" ${prevDisabled}>
+                <i class="ti ti-chevron-left"></i> Previous
+            </button>
+            <span style="font-weight:700">⚽ ${dateGroup.formatted}</span>
+            <button class="ks-date-nav-btn-inline" id="ksNextDateBtn" ${nextDisabled}>
+                Next <i class="ti ti-chevron-right"></i>
+            </button>
+        </div>
+        ${matchesHtml}
+        ${nextHint}
+    </div>`;
+
+    document.getElementById('ksPrevDateBtn')?.addEventListener('click', () => {
+        if (_currentActiveDateIdx > 0) {
+            _currentActiveDateIdx--;
+            renderCurrentDateCard();
+            updateAddPredTimers();
+        }
+    });
+    document.getElementById('ksNextDateBtn')?.addEventListener('click', () => {
+        if (_currentActiveDateIdx < _activeDateGroups.length - 1) {
+            _currentActiveDateIdx++;
+            renderCurrentDateCard();
+            updateAddPredTimers();
+        }
+    });
+
+    updateAddPredTimers();
+}
     // ─── Save prediction handler ──────────────────────────────────────────────
     KS.handleSavePred = async function(matchRowIndex, playerName, uid) {
         const hInput = document.getElementById(`${uid}_h`);
