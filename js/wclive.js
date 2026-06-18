@@ -235,7 +235,7 @@ function updateAddPredTimers() {
     const timerSpan = item.querySelector('.match-lock-timer');
     if (timerSpan) {
       timerSpan.textContent = isLocked?'🔒 Locked':formatCountdown(remainingMs);
-      timerSpan.style.color = isLocked?'#e05252':'#800000';
+      timerSpan.style.color = isLocked?'#D4AF37':'#D4AF37';
       timerSpan.classList.toggle('urgent', !isLocked&&remainingMs<=120000);
     }
     const isLockedBool = isLocked;
