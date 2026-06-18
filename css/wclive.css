@@ -33,7 +33,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .section{display:none}.section.active{display:block}
 .sec-label{font-size:10px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:8px;letter-spacing:.06em}
 #carouselLabel{font-size:24px!important;font-weight:800!important;text-transform:none!important;letter-spacing:2px!important;text-align:center!important;background:linear-gradient(135deg,var(--gold-light) 0%,var(--gold) 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important;text-shadow:0 2px 4px rgba(0,0,0,.1);margin-bottom:12px!important;padding:8px 0 4px;font-family:'Segoe UI','Poppins',system-ui,-apple-system,sans-serif}
-@media(prefers-color-scheme:dark){#carouselLabel{background:linear-gradient(135deg,var(--gold) 0%,#f5e68a 100%);-webkit-background-clip:text;background-clip:text}}
+@media(prefers-color-scheme:dark){#carouselLabel{background:linear-gradient(135deg,var(--gold) 0%,#e8cb0e 100%);-webkit-background-clip:text;background-clip:text}}
 .carousel-container{margin:0 -16px 16px;padding:0 9%;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth}
 .carousel-container::-webkit-scrollbar{display:none}
 .carousel-track{display:flex;gap:12px}
