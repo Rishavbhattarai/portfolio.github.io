@@ -30,8 +30,8 @@ const ROUNDS = [
   { key: 'all',    label: 'All Rounds', start: null,                  end: null },
   { key: 'r1',     label: 'Round 1',    start: '2026-06-11',          end: '2026-06-17' },
   { key: 'r2',     label: 'Round 2',    start: '2026-06-18',          end: '2026-06-23' },
-  { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-24' }
-  // { key:'ro32', label:'Round Of 32', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
+  { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-24' },
+  { key:'ro32', label:'Round Of 32', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
   // { key:'ro16', label:'Round Of 16', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
   // { key:'qf',   label:'Quarter-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
   // { key:'sf',   label:'Semi-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
