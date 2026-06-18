@@ -183,4 +183,11 @@ body{
 .ks-match-pred-name{font-size:11px;color:var(--ks-text-secondary)}
 .ks-no-pred{font-size:11px;color:var(--ks-text-tertiary)}
 
+/* ── Round filter (Leaderboard) ─────────────────────────────────────────── */
+.ks-round-filter-bar{display:flex;gap:6px;margin-bottom:12px}
+.ks-round-pill-btn{flex:1;text-align:center;padding:8px 6px;border-radius:var(--ks-radius-pill);border:.5px solid var(--ks-border-md);font-size:11px;font-weight:700;cursor:pointer;background:var(--ks-bg-secondary);color:var(--ks-text-secondary);transition:all .2s;white-space:nowrap}
+.ks-round-pill-btn:hover{border-color:var(--ks-navy);color:var(--ks-navy)}
+@media (prefers-color-scheme:dark){.ks-round-pill-btn:hover{color:var(--ks-gold-bright)}}
+.ks-round-pill-btn.active{background:var(--ks-navy)!important;color:var(--ks-gold-bright)!important;border-color:var(--ks-navy)}
+
 .ks-loading,.ks-error{text-align:center;padding:40px;color:var(--ks-text-tertiary);font-weight:500}

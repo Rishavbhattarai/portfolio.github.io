@@ -3,14 +3,16 @@
 // and after saving predictions the leaderboard updates instantly.
 // Timezone: Pacific Time, with robust date parsing.
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpmfwqcJBkf12gD7ikyxTZt4bhby2XzWQf2zo_0dbqASEUPYevqYGI9IcxGuo9F82mmQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYWi9vSer9egRWJMRLPZJlZVJxE4l-TYENMcFWMEbFqVEjboi_A8aBxrUf3DCTxGLqBw/exec';
 
 const PLAYER_COLORS = {
   'Amit':      { color:'#5b6cf6', bg:'#eeedfe', textc:'#3C3489', initials:'AM' },
   'Barun':     { color:'#1a6b3a', bg:'#e8f5ee', textc:'#0f4a27', initials:'BA' },
   'Prashanna': { color:'#d97706', bg:'#faeeda', textc:'#633806', initials:'PR' },
   'Rishav':    { color:'#e05252', bg:'#fcebeb', textc:'#791f1f', initials:'RI' },
-  'Sweastik':  { color:'#7c3aed', bg:'#eeedfe', textc:'#26215C', initials:'SW' }
+  'Sweastik':  { color:'#7c3aed', bg:'#eeedfe', textc:'#26215C', initials:'SW' },
+  'Nikita':  { color:'#ff0766ff', bg:'#eeedfe', textc:'#26215C', initials:'NI' },
+
 };
 
 let PLAYERS = [], MATCHES = [];
@@ -150,7 +152,7 @@ async function loadData(silent=false) {
 function parseSheetData(rows) {
   if (!rows||rows.length<3) throw new Error('Not enough rows');
   const headerRow = rows[0]||[];
-  const playerIndices = [5,8,11,14,17];
+  const playerIndices = [5,8,11,14,17,20];
   const playerNames = playerIndices.map(i=>headerRow[i]?.toString().trim()).filter(Boolean);
   PLAYERS = playerNames.map(name=>({
     name,
@@ -358,7 +360,7 @@ function buildLeaderboard() {
   const data=getLeaderboardData();
   const sorted=[...data].sort((a,b)=>b.pts-a.pts);
   const maxPts=sorted[0]?.pts||1;
-  const labels=['1st','2nd','3rd','4th','5th'];
+  const labels=['1st','2nd','3rd','4th','5th','6th'];
   const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888'];
   document.getElementById('leaderboard').innerHTML=sorted.map((p,i)=>{
     const w=Math.round((p.pts/maxPts)*100);
@@ -460,7 +462,7 @@ function renderPlayerDetail() {
   const accuracy=myPreds.length?Math.round(((exact+correct)/myPreds.length)*100):0;
   const sorted=[...PLAYERS].sort((a,b)=>b.pts-a.pts);
   const rankPos=sorted.findIndex(x=>x.name===p.name);
-  const rankSuffix=['st','nd','rd','th','th'][rankPos];
+  const rankSuffix=['st','nd','rd','th','th','th'][rankPos];
   const av=document.getElementById('playerAvatar');
   av.style.background=p.bg; av.style.color=p.textc; av.textContent=p.initials;
   document.getElementById('playerName').textContent=p.name;

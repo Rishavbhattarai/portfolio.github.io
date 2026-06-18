@@ -32,7 +32,7 @@
   <header class="ks-app-header">
     <div class="ks-header-top">
       <div>
-        <div class="ks-header-title"><i class="ti ti-trophy"></i> WC 2026 Knockout</div>
+        <div class="ks-header-title"><i class="ti ti-trophy"></i> खसी, बोका वा सुँगुर कप २०८3</div>
         <div class="ks-header-sub" id="ksHeaderSub">Prototype preview · not live</div>
       </div>
       <span class="ks-header-badge">Knockout stage</span>
@@ -41,12 +41,13 @@
       <button class="ks-nav-btn active" data-target="ksBracket" onclick="KS.showSection('ksBracket', this)">
         <i class="ti ti-sitemap"></i> Bracket
       </button>
-      <button class="ks-nav-btn" data-target="ksMatches" onclick="KS.showSection('ksMatches', this)">
-        <i class="ti ti-ball-football"></i> Matches
-      </button>
       <button class="ks-nav-btn" data-target="ksPredictions" onclick="KS.showSection('ksPredictions', this)">
         <i class="ti ti-pencil-plus"></i> Predictions
       </button>
+      <button class="ks-nav-btn" data-target="ksMatches" onclick="KS.showSection('ksMatches', this)">
+        <i class="ti ti-ball-football"></i> Matches
+      </button>
+
       <button class="ks-nav-btn" data-target="ksPlayer" onclick="KS.showSection('ksPlayer', this)">
         <i class="ti ti-user"></i> Player
       </button>
@@ -87,6 +88,7 @@
       </div>
 
       <div class="ks-sec-label">Leaderboard</div>
+      <div class="ks-round-filter-bar" id="ksRoundFilterBar"></div>
       <div class="ks-card" id="ksLeaderboard"></div>
 
       <div class="ks-sec-label">Overview</div>
@@ -143,6 +145,6 @@
   </main>
 </div>
 
-<script src="../jsKSlive.js" defer></script>
+<script src="../js/KSlive.js" defer></script>
 </body>
 </html>
