@@ -37,7 +37,7 @@ const ROUNDS = [
   // { key:'sf',   label:'Semi-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
   // { key:'f',    label:'Final', start:'YYYY-MM-DD', end:'YYYY-MM-DD' }
 ];
-let activeRound = 'all';
+let activeRound = 'r2';
 
 // Returns true if a match's date falls inside the given round's date range.
 // `round.start`/`round.end` are 'YYYY-MM-DD' calendar-day strings;

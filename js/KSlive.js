@@ -29,7 +29,7 @@
         { key: 'r2',     label: 'Round 2',    start: '2026-06-18',          end: '2026-06-23' },
         { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-24' }
     ];
-    let activeRound = 'all';
+    let activeRound = 'r2';
 
     function matchInRound(match, round) {
         if (!round || round.start === null) return true;
