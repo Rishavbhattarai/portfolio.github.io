@@ -3,7 +3,7 @@
 // and after saving predictions the leaderboard updates instantly.
 // Timezone: Pacific Time, with robust date parsing.
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYWi9vSer9egRWJMRLPZJlZVJxE4l-TYENMcFWMEbFqVEjboi_A8aBxrUf3DCTxGLqBw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmmM8NImlEsIkIGFwekk_rRgSLL4oeRhlBxFcPMejOrpiXa6hwhxOQ6HMf0R2-8FEXgA/exec';
 
 const PLAYER_COLORS = {
   'Amit':      { color:'#5b6cf6', bg:'#eeedfe', textc:'#3C3489', initials:'AM' },
