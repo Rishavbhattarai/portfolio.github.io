@@ -1,8 +1,4 @@
-// WC 2026 – Live Prediction Game | app.js (optimised)
-// Fixed: leaderboard now always sums points from all matches,
-// and after saving predictions the leaderboard updates instantly.
-// Timezone: Pacific Time, with robust date parsing.
-
+// WC 2026 – Live Prediction Game | app.js (updated)
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmmM8NImlEsIkIGFwekk_rRgSLL4oeRhlBxFcPMejOrpiXa6hwhxOQ6HMf0R2-8FEXgA/exec';
 
 const PLAYER_COLORS = {
@@ -11,8 +7,7 @@ const PLAYER_COLORS = {
   'Prashanna': { color:'#d97706', bg:'#faeeda', textc:'#633806', initials:'PR' },
   'Rishav':    { color:'#e05252', bg:'#fcebeb', textc:'#791f1f', initials:'RI' },
   'Sweastik':  { color:'#7c3aed', bg:'#eeedfe', textc:'#26215C', initials:'SW' },
-  'Nikita':  { color:'#ff0766ff', bg:'#eeedfe', textc:'#26215C', initials:'NI' },
-
+  'Nikita':    { color:'#ff0766ff', bg:'#eeedfe', textc:'#26215C', initials:'NI' },
 };
 
 let PLAYERS = [], MATCHES = [];
@@ -20,48 +15,27 @@ let activeGroup = 'All', activeStatus = 'upcoming', activePlayer = '';
 let _addPredTimer = null;
 let _activeDateGroups = [], _currentActiveDateIdx = 0;
 
-// ─── Round definitions (Leaderboard date-range filtering) ─────────────────────
-// Dates are inclusive, parsed as Pacific-time calendar days in 2026.
-// CRITICAL: only the first three rounds are wired up for now. RoundOf32,
-// RoundOf16, QuarterFinals, SemiFinals, Finals will be appended later using
-// the exact same {key,label,start,end} shape — just add more entries to
-// this array and everything else (buttons, filtering) keeps working.
+// ─── Round definitions (corrected: round 3 ends June 27) ─────────────────────
 const ROUNDS = [
   { key: 'all',    label: 'All Rounds', start: null,                  end: null },
   { key: 'r1',     label: 'Round 1',    start: '2026-06-11',          end: '2026-06-17' },
   { key: 'r2',     label: 'Round 2',    start: '2026-06-18',          end: '2026-06-23' },
-  { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-24' },
-  { key:'ro32', label:'Round Of 32', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
-  // { key:'ro16', label:'Round Of 16', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
-  // { key:'qf',   label:'Quarter-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
-  // { key:'sf',   label:'Semi-finals', start:'YYYY-MM-DD', end:'YYYY-MM-DD' },
-  // { key:'f',    label:'Final', start:'YYYY-MM-DD', end:'YYYY-MM-DD' }
+  { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-27' },
+  { key: 'ro32',   label: 'Round Of 32',start: '2026-06-28',          end: '2026-06-30' },
 ];
 let activeRound = 'r2';
 
-// Returns true if a match's date falls inside the given round's date range.
-// `round.start`/`round.end` are 'YYYY-MM-DD' calendar-day strings;
-// `round.start === null` (the "All Rounds" entry) always matches.
-// Uses getMatchDateStr() (reads the date straight off the sheet string) —
-// NOT parseMatchDateTime()+getPacificDateStr(), which double-converts
-// through a timezone reformat and can shift early-morning matches onto the
-// wrong calendar day, silently excluding them from a round's totals.
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;
   const dateStr = getMatchDateStr(match.dateTimeRaw);
   return dateStr >= round.start && dateStr <= round.end;
 }
 
-// ─── Perf: memoised date parser ───────────────────────────────────────────────
 const _dtCache = new Map();
 function parseMatchDateTime(str) {
   if (!str || typeof str !== 'string') return new Date(0);
   if (_dtCache.has(str)) return _dtCache.get(str);
   try {
-    // Tokenize defensively: insert spaces around "-" and between a month
-    // abbreviation and digits BEFORE collapsing whitespace, so inconsistent
-    // sheet formatting ("Jun 17-14:00", "Jun17 - 14:00") can't merge the
-    // day into the time or the month into the day.
     const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
     const spaced = str
       .replace(/-/g, ' ')
@@ -82,16 +56,6 @@ function parseMatchDateTime(str) {
   }
 }
 
-// Extracts the 'YYYY-MM-DD' calendar date for a match. Reuses the SAME
-// Date object that parseMatchDateTime() already builds from the sheet
-// string (so there's no second, independently-fragile parse of the raw
-// text — e.g. inconsistent spacing around the "-" separator like
-// "Jun 17-14:00" or "Jun17 - 14:00" previously caused this to silently
-// extract the wrong day for that one row). Reads the components back with
-// .getFullYear()/.getMonth()/.getDate(), i.e. the exact local values the
-// Date was constructed with — NOT through getPacificDateStr(), which
-// reformats through a timezone converter and can shift early-morning
-// matches onto the previous day.
 function getMatchDateStr(str) {
   const d = parseMatchDateTime(str);
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -99,7 +63,6 @@ function getMatchDateStr(str) {
   return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
-// ─── Pacific Time helpers ──────────────────────────────────────────────────────
 const _pacificFmt = new Intl.DateTimeFormat('en-US', {
   timeZone:'America/Los_Angeles',
   year:'numeric', month:'2-digit', day:'2-digit',
@@ -126,7 +89,6 @@ function calcPoints(homeScore, awayScore, predH, predA) {
   return Math.sign(homeScore-awayScore)===Math.sign(predH-predA) ? 1 : 0;
 }
 
-// ─── Data loading ──────────────────────────────────────────────────────────────
 async function loadData(silent=false) {
   const loadingMsg = document.getElementById('loadingMsg');
   const appContent = document.getElementById('appContent');
@@ -184,11 +146,9 @@ function parseSheetData(rows) {
   MATCHES.forEach(m=>{
     if (now>=parseMatchDateTime(m.dateTimeRaw)) { m.homeScore=m.homeScoreRaw; m.awayScore=m.awayScoreRaw; }
   });
-  // Recalculate points for all matches after setting scores
   recalcAllPoints();
 }
 
-// ─── Recalculate points for all matches and update player totals ─────────────
 function recalcAllPoints() {
   MATCHES.forEach(m=>{
     m.preds.forEach(pr=>{
@@ -220,7 +180,6 @@ function isMatchPredictable(match, now=getCurrentPacificDate()) {
   return now < getMatchLockDeadline(match);
 }
 
-// ─── Add Prediction timers ─────────────────────────────────────────────────────
 function updateAddPredTimers() {
   const addPredSection = document.getElementById('addpred');
   if (!addPredSection||!addPredSection.classList.contains('active')) return;
@@ -254,7 +213,7 @@ function stopAddPredTimer() {
   if (_addPredTimer) { clearInterval(_addPredTimer); _addPredTimer=null; }
 }
 
-// ─── Carousel ─────────────────────────────────────────────────────────────────
+// ─── Carousel ──────────────────────────────────────────────────────────────────
 function buildTodayCarousel() {
   const now = getCurrentPacificDate();
   const todayStr = getPacificDateStr(now);
@@ -279,9 +238,8 @@ function buildTodayCarousel() {
     return;
   }
 
-  // Determine card to center
-  const oneHourLater = new Date(now.getTime()+60*60*1000);
   let currentIdx = -1;
+  const oneHourLater = new Date(now.getTime()+60*60*1000);
   const withinHour = allMatchesSorted.filter(m=>{ const s=parseMatchDateTime(m.dateTimeRaw); return s>now&&s<=oneHourLater; });
   if (withinHour.length) {
     const target = withinHour.sort((a,b)=>parseMatchDateTime(a.dateTimeRaw)-parseMatchDateTime(b.dateTimeRaw))[0];
@@ -344,28 +302,33 @@ window.setRound = function(key, btn) {
   buildLeaderboard();
 };
 
-// Computes each player's total points using only matches that fall within
-// the currently active round's date range (or all matches, for "All Rounds").
 function getLeaderboardData() {
   const round = ROUNDS.find(r => r.key === activeRound) || ROUNDS[0];
   const roundMatches = MATCHES.filter(m => matchInRound(m, round));
-  return PLAYERS.map(p => ({
-    ...p,
-    pts: roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0)
-  }));
+  const totalInRound = roundMatches.length;
+  const scoredInRound = roundMatches.filter(m => m.homeScore !== null && m.awayScore !== null).length;
+  const gamesLeft = totalInRound - scoredInRound;
+  return { roundMatches, gamesLeft };
 }
 
 function buildLeaderboard() {
   buildRoundFilterBar();
-  const data=getLeaderboardData();
+  const { roundMatches, gamesLeft } = getLeaderboardData();
+  const data = PLAYERS.map(p => ({
+    ...p,
+    pts: roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0)
+  }));
   const sorted=[...data].sort((a,b)=>b.pts-a.pts);
   const maxPts=sorted[0]?.pts||1;
-  const labels=['1st','2nd','3rd','4th','5th','6th'];
-  const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888'];
-  document.getElementById('leaderboard').innerHTML=sorted.map((p,i)=>{
-    const w=Math.round((p.pts/maxPts)*100);
-    return `<div class="player-row" onclick="switchToPlayer('${p.name}')"><span class="rank-badge" style="color:${colors[i]}">${labels[i]}</span><div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div></div><div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div></div>`;
-  }).join('');
+  const labels=['🥇','🥈','🥉','4th','5th','6th'];
+  const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888','#888'];
+  const el = document.getElementById('leaderboard');
+  el.innerHTML = `<div style="padding:10px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-secondary)"><span>🏟️ Games in this round: ${roundMatches.length}</span><span>⚽ Remaining: ${gamesLeft}</span></div>` +
+    sorted.map((p,i)=>{
+      const w=Math.round((p.pts/maxPts)*100);
+      const rankLabel = i < 3 ? labels[i] : `${i+1}${['th','st','nd','rd'][(i+1)%10]||'th'}`;
+      return `<div class="player-row" onclick="switchToPlayer('${p.name}')"><span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span><div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div></div><div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div></div>`;
+    }).join('');
 }
 
 // ─── Overview stats ───────────────────────────────────────────────────────────
@@ -399,42 +362,94 @@ function buildAllUpcomingGames() {
   }).join('');
 }
 
-// ─── Matches tab ──────────────────────────────────────────────────────────────
+// ─── Matches tab with collapsible rounds ─────────────────────────────────────
 function buildStatusTabs() {
-  document.getElementById('statusTabs').innerHTML=`<button class="pill-btn ${activeStatus==='upcoming'?'active':''}" onclick="setMatchStatus('upcoming',this)"><i class="ti ti-calendar-time"></i> Upcoming Games</button><button class="pill-btn ${activeStatus==='previous'?'active':''}" onclick="setMatchStatus('previous',this)"><i class="ti ti-history"></i> Previous Results</button>`;
+  const tabs = [
+    { key:'upcoming', icon:'ti-calendar-time', label:'Upcoming' },
+    { key:'previous', icon:'ti-history',       label:'Results'  },
+    { key:'all',      icon:'ti-list',           label:'All'      },
+  ];
+  document.getElementById('statusTabs').innerHTML =
+    `<div class="matches-subtab-bar">${tabs.map(t=>`<button class="matches-subtab-btn ${activeStatus===t.key?'active':''}" onclick="setMatchStatus('${t.key}',this)"><i class="ti ${t.icon}"></i> ${t.label}</button>`).join('')}</div>`;
 }
-window.setMatchStatus=function(s,btn){ activeStatus=s; document.querySelectorAll('#statusTabs .pill-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderMatchList(); };
-
-function buildGroupTabs() {
-  const groups=['All',...new Set(MATCHES.map(m=>m.group))];
-  document.getElementById('groupTabs').innerHTML=groups.map((g,i)=>`<button class="pill-btn ${i===0?'active':''}" onclick="filterGroup('${g}',this)">${g==='All'?'<i class="ti ti-list"></i> All':g}<span class="pill-count">${g==='All'?MATCHES.length:MATCHES.filter(m=>m.group===g).length}</span></button>`).join('');
-}
-window.filterGroup=function(g,btn){ activeGroup=g; document.querySelectorAll('#groupTabs .pill-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderMatchList(); };
+window.setMatchStatus=function(s,btn){
+  activeStatus=s;
+  document.querySelectorAll('#statusTabs .matches-subtab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoundDashboard();
+};
 
 function ptsBadge(pts) {
-  if (pts===null) return '<span class="no-pred">—</span>';
-  if (pts===3) return '<span class="pts-badge p3">+3</span>';
-  if (pts===1) return '<span class="pts-badge p1">+1</span>';
+  if (pts === null) return '<span class="no-pred">—</span>';
+  if (pts === 3) return '<span class="pts-badge p3">+3</span>';
+  if (pts === 1) return '<span class="pts-badge p1">+1</span>';
   return '<span class="pts-badge p0">0</span>';
 }
 
-function renderMatchList() {
-  const now=getCurrentPacificDate();
-  let filtered=activeGroup==='All'?MATCHES:MATCHES.filter(m=>m.group===activeGroup);
-  filtered=filtered.filter(m=>{ const d=parseMatchDateTime(m.dateTimeRaw); return activeStatus==='upcoming'?d>now:d<=now; });
-  const el=document.getElementById('matchList');
-  if (!filtered.length) { el.innerHTML='<p class="no-pred" style="text-align:center;padding:24px;">No matches in this category</p>'; return; }
-  const pcm=Object.fromEntries(PLAYERS.map(p=>[p.name,p.color]));
-  el.innerHTML=filtered.map(m=>{
-    const isPending=m.homeScore===null;
-    const predsHtml=m.preds.map(pr=>{
-      const col=pcm[pr.p]||'#888';
-      if (pr.h===null) return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">—</span></div>`;
-      const cls=isPending?'':(pr.pts===3?'correct':pr.pts===1?'partial':'wrong');
-      return `<div class="pred-row ${cls}"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span><span class="pred-score" style="margin-left:4px">${pr.h}–${pr.a}</span></div>${ptsBadge(isPending?null:pr.pts)}</div>`;
+// Toggle collapse/expand for round sections
+function toggleRoundSection(headerEl) {
+  const container = headerEl.nextElementSibling;
+  if (!container || !container.classList.contains('round-matches-container')) return;
+  const isCollapsed = container.classList.toggle('collapsed');
+  headerEl.classList.toggle('collapsed', isCollapsed);
+  const icon = headerEl.querySelector('.toggle-icon');
+  if (icon) {
+    icon.textContent = isCollapsed ? '▶' : '▼';
+  }
+}
+
+function renderRoundDashboard() {
+  const now = getCurrentPacificDate();
+  let filtered = MATCHES.slice();
+  if (activeStatus === 'upcoming') filtered = filtered.filter(m => parseMatchDateTime(m.dateTimeRaw) > now);
+  else if (activeStatus === 'previous') filtered = filtered.filter(m => parseMatchDateTime(m.dateTimeRaw) <= now).reverse();
+  // else 'all' keep as is
+
+  const definedRounds = ROUNDS.filter(r => r.key !== 'all' && r.start && r.start !== 'YYYY-MM-DD');
+  const usedIds = new Set();
+  const buckets = [];
+  definedRounds.forEach(r => {
+    const rMatches = filtered.filter(m => matchInRound(m, r) && !usedIds.has(m.id));
+    if (rMatches.length) {
+      rMatches.forEach(m => usedIds.add(m.id));
+      buckets.push({ label: r.label, matches: rMatches });
+    }
+  });
+  const leftover = filtered.filter(m => !usedIds.has(m.id));
+  if (leftover.length) buckets.push({ label: 'Other', matches: leftover });
+
+  const container = document.getElementById('roundDashboard');
+  if (!buckets.length) {
+    container.innerHTML = '<p class="no-pred" style="text-align:center;padding:24px;">No matches in this category</p>';
+    return;
+  }
+
+  const pcm = Object.fromEntries(PLAYERS.map(p=>[p.name,p.color]));
+  const buildMatchCard = m => {
+    const isPending = m.homeScore === null;
+    const predsHtml = m.preds.map(pr => {
+      const col = pcm[pr.p] || '#888';
+      if (pr.h === null) return `<div class="pred-row"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span></div><span class="no-pred">—</span></div>`;
+      const cls = isPending ? '' : (pr.pts === 3 ? 'correct' : pr.pts === 1 ? 'partial' : 'wrong');
+      return `<div class="pred-row ${cls}"><div class="pred-left"><span class="pred-dot" style="background:${col}"></span><span class="pred-pname">${pr.p}</span><span class="pred-score" style="margin-left:4px">${pr.h}–${pr.a}</span></div>${ptsBadge(isPending ? null : pr.pts)}</div>`;
     }).join('');
     return `<div class="match-card"><div class="match-head"><div class="match-head-left"><span class="grp-pill">${m.group}</span><span class="match-time">${m.dateDisplay}</span></div>${isPending?'<span class="pending-tag"><i class="ti ti-clock"></i> Upcoming</span>':`<span class="score-badge">${m.homeScore} – ${m.awayScore}</span>`}</div><div class="match-body"><div class="matchup-name">${m.matchup}</div><div class="preds-list">${predsHtml}</div></div></div>`;
-  }).join('');
+  };
+
+  let html = '';
+  buckets.forEach(b => {
+    const matchesHtml = b.matches.map(buildMatchCard).join('');
+    html += `
+      <div class="round-section-header" onclick="toggleRoundSection(this)">
+        <span>${b.label} <span class="round-count">(${b.matches.length} games)</span></span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="round-matches-container">
+        ${matchesHtml}
+      </div>
+    `;
+  });
+  container.innerHTML = html;
 }
 
 // ─── Player tab ───────────────────────────────────────────────────────────────
@@ -446,6 +461,19 @@ window.selectPlayer=function(name,btn){
   document.querySelectorAll('#playerBtns .player-btn').forEach(b=>{ b.classList.remove('active'); b.style.cssText=''; });
   const p=PLAYERS.find(x=>x.name===name);
   btn.classList.add('active'); btn.style.background=p.color; btn.style.borderColor=p.color; btn.style.color='#fff';
+  renderPlayerDetail();
+  populatePlayerRoundDropdown();
+};
+
+function populatePlayerRoundDropdown() {
+  const sel = document.getElementById('playerRoundSelect');
+  if (!sel) return;
+  const options = ROUNDS.map(r => `<option value="${r.key}">${r.label}</option>`);
+  sel.innerHTML = options.join('');
+  sel.value = 'all';
+}
+
+window.onPlayerRoundChange = function() {
   renderPlayerDetail();
 };
 
@@ -476,20 +504,66 @@ function renderPlayerDetail() {
     const av2=document.getElementById('playerAccuracyVal');
     av2.textContent=`${accuracy}%`; av2.style.color=p.color;
   } else accBar.style.display='none';
-  document.getElementById('playerMatchPreds').innerHTML=MATCHES.map(m=>{
-    const pr=m.preds.find(x=>x.p===p.name);
-    const isPending=m.homeScore===null;
-    if (!pr||pr.h===null) return `<div class="match-pred-row"><div><div class="match-pred-name">${m.matchup}</div><div class="no-pred" style="font-size:12px;margin-top:2px">No prediction</div></div></div>`;
-    const cls=isPending?'':(pr.pts===3?'correct':pr.pts===1?'partial':'wrong');
-    return `<div class="match-pred-row ${cls}"><div style="flex:1"><div class="match-pred-name">${m.matchup}</div><div class="match-pred-score">${pr.h} – ${pr.a}${isPending?'<span class="upcoming-inline"><i class="ti ti-clock"></i></span>':''}</div></div><div class="match-pred-right">${isPending?'<span class="no-pred">TBD</span>':ptsBadge(pr.pts)}${!isPending?`<div class="actual-result">${m.homeScore}–${m.awayScore} actual</div>`:''}</div></div>`;
+
+  // Round‑filtered predictions (dropdown)
+  const selectedRoundKey = document.getElementById('playerRoundSelect')?.value || 'all';
+  const round = ROUNDS.find(r => r.key === selectedRoundKey) || ROUNDS[0];
+  const filteredMatches = round.start === null ? MATCHES : MATCHES.filter(m => matchInRound(m, round));
+
+  const kanji = ['一','二','三','四','五'];
+  const definedRounds = ROUNDS.filter(r => r.key !== 'all' && r.start && r.start !== 'YYYY-MM-DD');
+  const usedDbzIds = new Set();
+  const dbzBuckets = [];
+  definedRounds.forEach((r,ri)=>{
+    const rMatches = filteredMatches.filter(m=>matchInRound(m,r) && !usedDbzIds.has(m.id));
+    rMatches.forEach(m=>usedDbzIds.add(m.id));
+    dbzBuckets.push({round:r, matches:rMatches, kanji:kanji[ri]||'?'});
+  });
+  const leftover2 = filteredMatches.filter(m=>!usedDbzIds.has(m.id));
+  if (leftover2.length) dbzBuckets.push({round:{label:'Other'},matches:leftover2,kanji:'？'});
+
+  const dbzHtml = dbzBuckets.filter(b=>b.matches.length).map(b=>{
+    const rExact  = b.matches.filter(m=>{ const pr=m.preds.find(x=>x.p===p.name); return pr?.pts===3; }).length;
+    const rPart   = b.matches.filter(m=>{ const pr=m.preds.find(x=>x.p===p.name); return pr?.pts===1; }).length;
+    const rWrong  = b.matches.filter(m=>{ const pr=m.preds.find(x=>x.p===p.name); return pr?.pts===0; }).length;
+    const rPts    = rExact*3 + rPart;
+    const rows = b.matches.map(m=>{
+      const pr = m.preds.find(x=>x.p===p.name);
+      const isPending = m.homeScore===null;
+      if (!pr||pr.h===null){
+        return `<div class="dbz-match-row dbz-pending"><div><div class="dbz-match-name">${m.matchup}</div><div class="dbz-match-meta"><span class="dbz-no-pred-pill"><i class="ti ti-minus" style="font-size:10px"></i> No prediction</span></div></div><div class="dbz-right-col dbz-no-pred">—</div></div>`;
+      }
+      const cls = isPending?'dbz-pending':(pr.pts===3?'dbz-correct':pr.pts===1?'dbz-partial':'dbz-wrong');
+      const badge = isPending ? `<span class="no-pred" style="font-size:11px"><i class="ti ti-clock"></i> TBD</span>` : ptsBadge(pr.pts);
+      const actual = !isPending ? `<div class="dbz-actual">${m.homeScore}–${m.awayScore} actual</div>` : '';
+      return `<div class="dbz-match-row ${cls}"><div style="min-width:0"><div class="dbz-match-name">${m.matchup}</div><div class="dbz-match-meta"><span class="dbz-pred-score" style="color:${p.color}">${pr.h} – ${pr.a}</span>${actual}</div></div><div class="dbz-right-col">${badge}</div></div>`;
+    }).join('');
+    return `<div class="dbz-round-block">
+      <div class="dbz-round-block-header">
+        <i class="ti ti-shield-star" style="font-size:14px;color:var(--gold)"></i>
+        ${b.round.label}
+        <span class="dbz-round-pts-badge">+${rPts} pts</span>
+        <span class="dbz-kanji">${b.kanji}</span>
+      </div>
+      <div class="dbz-round-body">
+        <div style="display:flex;gap:12px;padding:7px 14px;background:var(--bg-secondary);border-bottom:1px solid var(--border);font-size:11px;font-weight:700">
+          <span style="color:var(--malachite-dark)">✓✓ ${rExact} exact</span>
+          <span style="color:var(--gold-dark)">✓ ${rPart} result</span>
+          <span style="color:#e05252">✗ ${rWrong} wrong</span>
+          <span style="margin-left:auto;color:var(--text-tertiary)">${b.matches.length} games</span>
+        </div>
+        ${rows}
+      </div>
+    </div>`;
   }).join('');
+
+  document.getElementById('playerMatchPreds').innerHTML =
+    `<div class="dbz-preds-wrap">${dbzHtml||'<p class="no-pred" style="text-align:center;padding:20px">No predictions for this round</p>'}</div>`;
 }
 
-// ─── Add Predictions section (UPDATED with Pacific time and 4-match limit) ──
+// ─── Add Predictions section ─────────────────────────────────────────────────
 function buildAddPredSection() {
   const now = getCurrentPacificDate();
-  
-  // Group ALL matches by Pacific date
   const groups = new Map();
   MATCHES.forEach(m => {
     const dt = parseMatchDateTime(m.dateTimeRaw);
@@ -497,19 +571,15 @@ function buildAddPredSection() {
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(m);
   });
-
   const sortedDates = Array.from(groups.keys()).sort();
   _activeDateGroups = sortedDates.map(dateStr => ({
     dateStr,
     formatted: new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
     matches: groups.get(dateStr).sort((a,b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw))
   }));
-
-  // Find first date with at least one unlockable match
   let firstUnlockedIdx = _activeDateGroups.findIndex(g => g.matches.some(m => isMatchPredictable(m, now)));
   if (firstUnlockedIdx === -1) firstUnlockedIdx = 0;
   _currentActiveDateIdx = firstUnlockedIdx;
-
   renderCurrentDateCard();
 }
 
@@ -519,16 +589,12 @@ function renderCurrentDateCard() {
     container.innerHTML = '<div class="no-games-today"><i class="ti ti-lock"></i><div>No matches scheduled.</div></div>';
     return;
   }
-
   const dateGroup = _activeDateGroups[_currentActiveDateIdx];
   const totalGroups = _activeDateGroups.length;
   const now = getCurrentPacificDate();
-
-  // 🔥 Filter out locked matches – only show those still open for predictions
   const unlockableMatches = dateGroup.matches.filter(m => isMatchPredictable(m, now));
-  const matchesToShow = unlockableMatches.slice(0, 4);   // still limit to 4
+  const matchesToShow = unlockableMatches.slice(0, 4);
 
-  // If no unlockable matches in this date, show a message
   if (matchesToShow.length === 0) {
     container.innerHTML = `
       <div class="date-pred-card">
@@ -547,7 +613,6 @@ function renderCurrentDateCard() {
         </div>
       </div>
     `;
-    // re-bind navigation buttons
     document.getElementById('prevDateBtnInline')?.addEventListener('click', () => {
       if (_currentActiveDateIdx > 0) {
         _currentActiveDateIdx--;
@@ -565,14 +630,11 @@ function renderCurrentDateCard() {
     return;
   }
 
-  // Build HTML only for unlockable matches – no "locked" tiles will appear
   let matchesHtml = '';
   matchesToShow.forEach(m => {
     const timeOnly = m.dateTimeRaw.includes(' - ') ? m.dateTimeRaw.split(' - ')[1] : m.dateTimeRaw;
-    // Since we already filtered, all these matches are unlockable.
-    // But we still compute lock time for the timer (it will show countdown)
     const lockTime = getMatchLockDeadline(m);
-    const isLocked = now > lockTime; // should be false for all, but keep safe
+    const isLocked = now > lockTime;
     const timerText = isLocked ? '🔒 Locked' : formatCountdown(lockTime - now);
 
     const playerRows = PLAYERS.map(pl => {
@@ -610,8 +672,6 @@ function renderCurrentDateCard() {
     </div>`;
   });
 
-  // Since we filtered out locked ones, 'allLocked' is always false here.
-  // But we can check if there are any unlockable matches in next day.
   let nextHint = '';
   const hasNextUnlockable = _currentActiveDateIdx < totalGroups - 1 &&
     _activeDateGroups[_currentActiveDateIdx + 1].matches.some(m => isMatchPredictable(m, now));
@@ -653,7 +713,6 @@ function renderCurrentDateCard() {
       updateAddPredTimers();
     }
   });
-
   updateAddPredTimers();
 }
 
@@ -692,28 +751,24 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
     if (match) {
       const pred = match.preds.find(pr => pr.p === playerName);
       if (pred) { pred.h = h; pred.a = a; }
-      // Recalc points immediately (if match already has scores)
       if (match.homeScore !== null && match.awayScore !== null) {
         pred.pts = calcPoints(match.homeScore, match.awayScore, h, a);
       } else {
         pred.pts = null;
       }
-      // Update player totals
-      recalcAllPoints(); // Recalc all players' totals from all matches
+      recalcAllPoints();
     }
     btn.className = 'save-pred-btn saved';
     btn.innerHTML = '<i class="ti ti-check"></i> Saved';
     statusSpan.className = 'pred-save-status ok';
     statusSpan.textContent = `${h}:${a} ✓`;
 
-    // Refresh all UI components immediately
     buildTodayCarousel();
     buildLeaderboard();
     buildOverviewStats();
     buildAllUpcomingGames();
+    renderRoundDashboard();
     if (activePlayer) renderPlayerDetail();
-    renderMatchList();
-    // Rebuild add prediction section to reflect updated predictions
     buildAddPredSection();
 
     setTimeout(async () => {
@@ -725,14 +780,7 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
         const data = await res.json();
         _dtCache.clear();
         parseSheetData(data);
-        // Rebuild all UI after fresh data
-        buildTodayCarousel();
-        buildLeaderboard();
-        buildOverviewStats();
-        buildAllUpcomingGames();
-        buildAddPredSection();
-        renderMatchList();
-        if (activePlayer) renderPlayerDetail();
+        buildAllUI();
       } catch (_) {}
     }, 3000);
   } catch (err) {
@@ -746,16 +794,15 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
 
 // ─── Orchestration ─────────────────────────────────────────────────────────────
 function buildAllUI() {
-  // Ensure points are recalculated before building UI
   recalcAllPoints();
   buildTodayCarousel();
   buildLeaderboard();
   buildOverviewStats();
   buildAllUpcomingGames();
   buildStatusTabs();
-  buildGroupTabs();
-  renderMatchList();
+  renderRoundDashboard();
   buildPlayerBtns();
+  populatePlayerRoundDropdown();
   renderPlayerDetail();
   buildAddPredSection();
 }
@@ -765,9 +812,10 @@ window.showSection = function(id, btn) {
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (id === 'matches') renderMatchList();
+  if (id === 'matches') renderRoundDashboard();
   if (id === 'addpred') { buildAddPredSection(); startAddPredTimer(); } else stopAddPredTimer();
   if (id === 'standings') { buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames(); }
+  if (id === 'player') { populatePlayerRoundDropdown(); renderPlayerDetail(); }
 };
 
 window.switchToPlayer = function(name) {

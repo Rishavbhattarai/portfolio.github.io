@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>WC 2026 – Live Prediction Game</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="../css/wclive.css?v=18.1.2">
+  <link rel="stylesheet" href="../css/wclive.css?v=19.1.2">
 <style id="stage-toggle-style">
     .stg-toggle-wrap{width:100%;max-width:520px;margin:0 auto;background:#04371b;padding:14px 16px;box-sizing:border-box;flex-shrink:0}
     .stg-toggle-track{display:flex;width:100%;background:#217445;border-radius:999px;padding:4px;gap:4px;position:relative;box-sizing:border-box}
@@ -21,9 +21,10 @@
         <div class="header-title">&#127942; खसी, बोका, कटहर वा सुँगुर कप २०८३</div>
         <div class="header-sub" id="headerSub">Loading…</div>
       </div>
-<a href="KSlive.html" class="header-badge" style="text-decoration:none; color:inherit; cursor:pointer;">
-    निष्कासन चरण
-</a>    </div>
+      <a href="KSlive.html" class="header-badge" style="text-decoration:none; color:inherit; cursor:pointer;">
+        निष्कासन चरण
+      </a>
+    </div>
     <nav class="bottom-nav">
       <button class="nav-btn active" onclick="showSection('standings',this)">
         <i class="ti ti-chart-bar"></i> Standings
@@ -54,20 +55,19 @@
         <div class="carousel-container" id="carouselContainer">
           <div class="carousel-track" id="upcomingCarousel"></div>
         </div>
-        <div class="sec-label">Leaderboard</div>
-        <div class="round-filter-bar" id="roundFilterBar"></div>
-        <div class="card" id="leaderboard"></div>
-        <div class="sec-label">Overview</div>
+        <div class="sec-label">🏆 Leaderboard</div>
+        <div class="round-filter-bar scrollable-rounds" id="roundFilterBar"></div>
+        <div class="card fancy-leaderboard" id="leaderboard"></div>
+        <div class="sec-label">📊 Overview</div>
         <div class="stat-grid" id="overviewStats"></div>
-        <div class="sec-label">All upcoming games</div>
+        <div class="sec-label">📅 All upcoming games</div>
         <div id="allUpcomingGamesContainer"></div>
       </section>
 
       <!-- MATCHES -->
       <section id="matches" class="section">
         <div id="statusTabs" class="filter-bar"></div>
-        <div id="groupTabs"  class="filter-bar"></div>
-        <div id="matchList"></div>
+        <div id="roundDashboard"></div>
       </section>
 
       <!-- PLAYER -->
@@ -90,7 +90,10 @@
           <span>Accuracy on scored matches</span>
           <span id="playerAccuracyVal"></span>
         </div>
-        <div class="sec-label">All predictions</div>
+        <div class="sec-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span>🎯 Predictions</span>
+          <select id="playerRoundSelect" class="round-dropdown" onchange="onPlayerRoundChange()"></select>
+        </div>
         <div id="playerMatchPreds"></div>
       </section>
 
@@ -108,8 +111,6 @@
 </div>
 
 
-
-
-<script src="../js/wclive.js?v=18.1.2" defer></script>
+<script src="../js/wclive.js?v=19.1.2" defer></script>
 </body>
 </html>
