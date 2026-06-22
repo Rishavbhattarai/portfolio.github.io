@@ -50,7 +50,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .final-tag{text-align:center;margin-top:14px;font-size:16px;font-weight:700;color:var(--gold);letter-spacing:.5px;background:var(--bg-secondary);padding:8px 0;border-radius:var(--radius-sm)}
 .score-badge{font-size:14px;font-weight:600;padding:5px 14px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border-md);color:var(--malachite-dark)}
 .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow-sm)}
-/* ── Leaderboard aesthetic spacing ── */
 .fancy-leaderboard .player-row {
   display:flex;align-items:center;gap:14px;
   padding:16px 20px;
@@ -72,7 +71,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .fancy-leaderboard .pts-big{font-size:26px;font-weight:700;line-height:1;color:var(--gold-dark)}
 @media(prefers-color-scheme:dark){.fancy-leaderboard .pts-big{color:var(--gold)}}
 .fancy-leaderboard .pts-unit{font-size:12px;color:var(--text-tertiary)}
-/* ── Collapsible round sections (Matches tab) ── */
 .round-section-header{
   display:flex;align-items:center;gap:10px;
   margin:20px 0 8px;
@@ -99,7 +97,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .round-matches-container{
   overflow:hidden;
   transition:max-height .35s ease-in-out, opacity .3s;
-  max-height:2000px; /* large enough */
+  max-height:2000px;
   opacity:1;
 }
 .round-matches-container.collapsed{
@@ -112,7 +110,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   font-weight:500;font-size:11px;color:var(--text-tertiary);
   margin-left:4px;
 }
-/* rest of styles (unchanged) */
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
 .stat-box{background:var(--bg-secondary);border-radius:var(--radius-md);padding:16px;text-align:center;border:1px solid var(--border);transition:transform .2s, box-shadow .2s}
 .stat-box:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
@@ -224,15 +221,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .matches-subtab-btn{flex:1;text-align:center;padding:9px 6px;border-radius:var(--radius-pill);border:none;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all .2s;white-space:nowrap}
 .matches-subtab-btn:hover{color:var(--text-primary)}
 .matches-subtab-btn.active{background:var(--malachite-base);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.18)}
-/* round-section-header reused for collapsible, now with extra styles */
 .round-section-header .toggle-icon{font-size:18px;transition:transform .25s ease;margin-left:auto}
 .round-section-header.collapsed .toggle-icon{transform:rotate(-90deg)}
 .round-matches-container{overflow:hidden;transition:max-height .35s ease-in-out, opacity .3s;max-height:2000px;opacity:1}
 .round-matches-container.collapsed{max-height:0 !important;opacity:0;padding-top:0;margin-bottom:0}
-/* player round dropdown */
 .round-dropdown{background:var(--bg-secondary);border:1px solid var(--border-md);border-radius:var(--radius-pill);padding:8px 16px;font-weight:600;color:var(--text-primary);font-size:14px;cursor:pointer}
 .round-dropdown:focus{outline:2px solid var(--gold);outline-offset:2px}
-/* dbz styles remain unchanged */
 .dbz-preds-wrap{position:relative}
 .dbz-round-block{margin-bottom:22px;position:relative;overflow:hidden}
 .dbz-round-block-header{
@@ -285,3 +279,272 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .dbz-round-divider::before,.dbz-round-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-md),transparent)}
 .dbz-kanji{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.08;line-height:1;user-select:none;z-index:0}
 .dbz-no-pred-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text-tertiary);font-style:italic}
+
+/* ── Roast Corner styles ── */
+.roast-corner-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}
+.roast-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  border-left: 4px solid var(--gold);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 14px;
+}
+.roast-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.roast-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.roast-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.roast-title {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-primary);
+}
+.roast-player-tag {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  background: var(--bg);
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.roast-body {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-left: 44px;
+}
+@media (max-width: 480px) {
+  .roast-body {
+    padding-left: 0;
+  }
+  .roast-header {
+    flex-wrap: wrap;
+  }
+  .roast-player-tag {
+    margin-left: 0;
+  }
+}
+
+/* ─── Sub‑tabs (Player / Tournament) ─── */
+.sub-tabs-track {
+  display: flex;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  margin-bottom: 20px;
+  gap: 4px;
+}
+.sub-tab-btn {
+  flex: 1;
+  padding: 10px 4px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.sub-tab-btn.active {
+  background: var(--malachite-base);
+  color: var(--gold);
+  box-shadow: var(--shadow-sm);
+}
+.sub-tab-btn:hover:not(.active) {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+/* ─── Roast Corner (Tournament tab) ─── */
+.roast-corner-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}
+.roast-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  border-left: 4px solid var(--gold);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 14px;
+}
+.roast-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.roast-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.roast-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.roast-title {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-primary);
+}
+.roast-player-tag {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  background: var(--bg);
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.roast-body {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-left: 44px;
+}
+@media (max-width: 480px) {
+  .roast-body {
+    padding-left: 0;
+  }
+  .roast-header {
+    flex-wrap: wrap;
+  }
+  .roast-player-tag {
+    margin-left: 0;
+  }
+}
+/* ─── Tournament stats cards ─── */
+.tournament-container {
+  padding: 4px 0 20px;
+}
+.tournament-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+.tournament-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 480px) {
+  .tournament-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.tournament-stat-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  border-left: 4px solid var(--gold);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tournament-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.stat-card-icon {
+  font-size: 22px;
+}
+.stat-card-title {
+  flex: 1;
+}
+.stat-card-movie {
+  font-size: 11px;
+  background: var(--bg);
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: var(--text-tertiary);
+}
+.stat-card-player {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 2px 0;
+}
+.stat-card-quote {
+  font-style: italic;
+  font-size: 13px;
+  color: var(--gold-dark);
+  background: var(--bg);
+  padding: 4px 12px;
+  border-radius: 999px;
+  display: inline-block;
+  align-self: flex-start;
+  margin: 4px 0 6px;
+}
+.stat-card-body {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Roast corner already exists, but we keep it for consistency */
+.roast-corner-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 24px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}

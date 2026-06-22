@@ -18,7 +18,7 @@
   <header class="app-header">
     <div class="header-top">
       <div>
-        <div class="header-title">&#127942; खसी, बोका, कटहर वा सुँगुर कप २०८३</div>
+        <div class="header-title"> 🛕 खसी, बोका, कटहर वा सुँगुर कप २०८३</div>
         <div class="header-sub" id="headerSub">Loading…</div>
       </div>
       <a href="KSlive.html" class="header-badge" style="text-decoration:none; color:inherit; cursor:pointer;">
@@ -49,60 +49,90 @@
         <i class="ti ti-refresh"></i> Refresh Data
       </button>
 
-      <!-- STANDINGS -->
       <section id="standings" class="section active">
-        <div class="sec-label" id="carouselLabel">हेर्नुस् त</div>
+        <div class="sec-label" id="carouselLabel">सुनुस् त</div>
         <div class="carousel-container" id="carouselContainer">
           <div class="carousel-track" id="upcomingCarousel"></div>
         </div>
-        <div class="sec-label">🏆 Leaderboard</div>
+        <div class="sec-label">🥟 Leaderboard</div>
         <div class="round-filter-bar scrollable-rounds" id="roundFilterBar"></div>
         <div class="card fancy-leaderboard" id="leaderboard"></div>
-        <div class="sec-label">📊 Overview</div>
+        <div class="sec-label">🥩 Overview</div>
         <div class="stat-grid" id="overviewStats"></div>
-        <div class="sec-label">📅 All upcoming games</div>
+        <div class="sec-label">🪔 All upcoming games</div>
         <div id="allUpcomingGamesContainer"></div>
       </section>
 
-      <!-- MATCHES -->
       <section id="matches" class="section">
         <div id="statusTabs" class="filter-bar"></div>
         <div id="roundDashboard"></div>
       </section>
 
-      <!-- PLAYER -->
       <section id="player" class="section">
-        <div class="sec-label">Select player</div>
-        <div id="playerBtns" class="player-btns"></div>
-        <div class="player-profile-card">
-          <div class="avatar" id="playerAvatar" style="width:50px;height:50px"></div>
-          <div>
-            <div id="playerName"  class="player-profile-name"></div>
-            <div id="playerRank"  class="player-profile-rank"></div>
+        <div class="sub-tabs-track">
+          <button id="subTabPlayer" class="sub-tab-btn active" onclick="switchPlayerSubTab('player')">Player</button>
+          <button id="subTabTournament" class="sub-tab-btn" onclick="switchPlayerSubTab('tournament')">Tournament</button>
+        </div>
+
+        <div id="playerSubContent">
+          <div class="sec-label">Select player</div>
+          <div id="playerBtns" class="player-btns"></div>
+          <div class="player-profile-card">
+            <div class="avatar" id="playerAvatar" style="width:50px;height:50px"></div>
+            <div>
+              <div id="playerName"  class="player-profile-name"></div>
+              <div id="playerRank"  class="player-profile-rank"></div>
+            </div>
+            <div class="player-profile-pts" style="margin-left:auto;text-align:right">
+              <div id="playerPtsNum" class="player-profile-pts-num"></div>
+              <div class="player-profile-pts-label">pts total</div>
+            </div>
           </div>
-          <div class="player-profile-pts" style="margin-left:auto;text-align:right">
-            <div id="playerPtsNum" class="player-profile-pts-num"></div>
-            <div class="player-profile-pts-label">pts total</div>
+          <div class="stat-grid" id="playerStats"></div>
+          <div id="playerAccuracyBar" class="accuracy-bar-wrap" style="display:none">
+            <span>Accuracy on scored matches</span>
+            <span id="playerAccuracyVal"></span>
           </div>
+          <div class="sec-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span>✏️🧽 Predictions</span>
+            <select id="playerRoundSelect" class="round-dropdown" onchange="onPlayerRoundChange()"></select>
+          </div>
+          <div id="playerMatchPreds"></div>
         </div>
-        <div class="stat-grid" id="playerStats"></div>
-        <div id="playerAccuracyBar" class="accuracy-bar-wrap" style="display:none">
-          <span>Accuracy on scored matches</span>
-          <span id="playerAccuracyVal"></span>
-        </div>
-        <div class="sec-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <span>🎯 Predictions</span>
-          <select id="playerRoundSelect" class="round-dropdown" onchange="onPlayerRoundChange()"></select>
-        </div>
-        <div id="playerMatchPreds"></div>
+
+        <div id="tournamentSubContent" style="display:none;"></div>
+
+        <script>
+          function switchPlayerSubTab(tabName) {
+            const playerContent = document.getElementById('playerSubContent');
+            const tournamentContent = document.getElementById('tournamentSubContent');
+            const tabPlayer = document.getElementById('subTabPlayer');
+            const tabTournament = document.getElementById('subTabTournament');
+            
+            if (tabName === 'player') {
+              playerContent.style.display = 'block';
+              tournamentContent.style.display = 'none';
+              tabPlayer.classList.add('active');
+              tabTournament.classList.remove('active');
+            } else {
+              playerContent.style.display = 'none';
+              tournamentContent.style.display = 'block';
+              tabPlayer.classList.remove('active');
+              tabTournament.classList.add('active');
+              // renderTournamentStats is defined in wclive.js
+              if (typeof renderTournamentStats === 'function') {
+                renderTournamentStats();
+              }
+            }
+          }
+        </script>
       </section>
 
-      <!-- ADD PRED -->
       <section id="addpred" class="section">
         <div class="add-pred-intro">
-          <i class="ti ti-info-circle"></i>
-          <div>खसी कप २०८3<br>
-          ⏱️ <strong>मतदान गरौँ, </strong> यो प्रतिस्पर्धा जित्ने व्यक्तिले खसी, बोका वा सुँगुरको <strong>व्यवस्था कुन हटिया बजारमा गएर गर्न सकिन्छ भनेर भनिदिनेछन् !!!</strong>.</div>
+          <div>
+           <strong>🚰 भर् जन्म घाँस तिर मन् दिई धन कमायो <br>
+                              नाम क्यै रहोस् पछि भनेर कुवा खनायो ।</strong><br></div>
         </div>
         <div id="addPredContent"></div>
       </section>

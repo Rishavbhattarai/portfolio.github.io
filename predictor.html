@@ -4,14 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FIFA 26 Mobile Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+    </script>
     <style>
-        /* Force hidden element utility for cross-browser reliability */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        /* Smooth scrolling for mobile tab bar */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .fun-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-left: 4px solid #10b981;
+        }
+        .fun-card .q {
+            color: #facc15;
+            font-weight: 700;
+        }
+        .fun-card .a {
+            color: #94a3b8;
+            font-style: italic;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white">
@@ -22,10 +42,9 @@
                 FIFA 26 TRACKER
             </h1>
             <span class="text-xs font-bold px-2 py-1 bg-slate-800 border border-slate-700 text-emerald-400 rounded-full">
-                MOBILE COMPACT
+                LIVE STANDINGS
             </span>
         </div>
-        
         <nav class="flex overflow-x-auto hide-scrollbar snap-x px-2 pb-3 gap-1.5">
             <button onclick="switchTab('groupstage')" id="btn-groupstage" class="tab-btn active snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all duration-200 shadow-md shadow-emerald-500/20">
                 Groupstage
@@ -45,29 +64,31 @@
             <button onclick="switchTab('r2')" id="btn-r2" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
                 2
             </button>
+            <button onclick="switchTab('tournament')" id="btn-tournament" class="tab-btn snap-center shrink-0 px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 border border-slate-700/50 transition-all duration-200">
+                🏆 Tournament
+            </button>
         </nav>
     </header>
 
     <main class="p-4 max-w-md mx-auto pb-12">
 
+        <!-- Groupstage -->
         <section id="groupstage" class="tab-content active space-y-6">
             <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
                 <p class="text-xs text-slate-400 leading-relaxed">
                     💡 <strong>Tournament Rules:</strong> Top 2 teams from each group automatically qualify for the <strong>Round of 32</strong> along with the 8 best 3rd-place teams.
                 </p>
             </div>
-            
-            <div id="groups-container" class="space-y-4">
-                </div>
+            <div id="groups-container" class="space-y-4"></div>
         </section>
 
+        <!-- Knockout rounds -->
         <section id="r32" class="tab-content space-y-4">
             <div class="text-center py-1">
                 <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400">Round of 32 Matches</h2>
                 <p class="text-[11px] text-slate-500">Tap a team row to select them as the winner & advance them</p>
             </div>
-            <div id="r32-matches" class="space-y-3">
-                </div>
+            <div id="r32-matches" class="space-y-3"></div>
         </section>
 
         <section id="r16" class="tab-content space-y-4">
@@ -98,7 +119,6 @@
                 </div>
                 <div id="r2-final-match" class="space-y-3"></div>
             </div>
-
             <div class="pt-4 border-t border-slate-800">
                 <div class="text-center py-1 mb-3">
                     <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">Third-Place Play-off</h2>
@@ -107,44 +127,354 @@
             </div>
         </section>
 
+        <!-- NEW: Tournament Fun Stats -->
+        <section id="tournament" class="tab-content space-y-4">
+            <div class="text-center py-1">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-amber-400">🎯 Tournament Fun Facts</h2>
+                <p class="text-[11px] text-slate-500">Deep dive into the prediction chaos</p>
+            </div>
+            <div id="fun-stats-container" class="space-y-4">
+                <!-- will be filled by JS -->
+            </div>
+        </section>
+
     </main>
 
     <script>
-        // Official FIFA 26 Groups Setup
+        // ============================================================
+        //  EMBEDDED CSV DATA (from FIFA World Cup Fixtures & Predictions V3)
+        // ============================================================
+        const csvData = `
+        ,,,,,Amit,,0,Barun,,7,Prashanna,,3,Rishav,,3,Sweastik,,3,Nikita,,3,
+        Match Date & Time,Group,Matchup,Home Score,Away Score,Home,Away,Points,Home,Away,Points,Home,Away,Points,Home,Away,Points,Home,Away,Points,Home,Away,Points,MatchStatus
+        June 11 - 12:00,Group A,Mexico vs. South Africa,2,0,,,,2,0,3,3,0,1,1,2,0,2,1,1,,,,
+        June 11 - 19:00,Group A,Korea Republic vs. Czechia,2,1,,,,2,1,3,2,0,1,1,0,1,2,0,1,,,,
+        June 12 - 12:00,Group B,Canada vs. Bosnia and Herzegovina,1,1,,,,2,0,0,1,2,0,2,0,0,2,1,0,,,,
+        June 12 - 18:00,Group D,USA vs. Paraguay,4,1,,,,3,1,1,2,1,1,3,1,1,2,0,1,,,,
+        June 13 - 12:00,Group B,Qatar vs. Switzerland,1,1,0,2,0,0,3,,0,2,,1,1,0,0,2,,,,,
+        June 13 - 15:00,Group C,Brazil vs. Morocco,1,1,2,1,,3,1,,2,1,,4,2,,3,1,,,,,
+        June 13 - 18:00,Group C,Haiti vs. Scotland,0,1,0,2,,0,3,,0,3,,0,1,,1,1,,,,,
+        June 13 - 21:00,Group D,Australia vs. Türkiye,2,0,0,2,0,1,1,,0,2,,1,1,,2,0,0,,,,
+        June 14 - 10:00,Group E,Germany vs. Curaçao,7,1,5,0,,4,0,,4,0,,3,0,,3,0,,,,,
+        June 14 - 13:00,Group F,Netherlands vs. Japan,2,2,2,0,,3,2,,1,1,,2,2,,3,1,,,,,
+        June 14 - 16:00,Group E,Côte d'Ivoire vs. Ecuador,1,0,,,,,,,2,1,,0,0,,0,1,,,,,
+        June 14 - 19:00,Group F,Sweden vs. Tunisia,3,1,2,1,,2,0,,2,0,,1,0,,1,0,,,,,
+        June 15 - 09:00,Group H,Spain vs. Cabo Verde,0,0,5,0,,6,0,,4,0,,4,1,,3,0,,,,,
+        June 15 - 12:00,Group G,Belgium vs. Egypt,1,1,2,1,0,2,0,,1,0,,1,1,,3,1,,,,,
+        June 15 - 15:00,Group H,Saudi Arabia vs. Uruguay,1,1,1,2,,0,3,,0,2,,1,3,,1,2,,,,,
+        June 15 - 18:00,Group G,IR Iran vs. New Zealand,2,2,1,0,,2,1,,,,,0,1,,1,1,,,,,
+        June 16 - 12:00,Group I,France vs. Senegal,3,1,2,0,,2,1,,3,1,,1,1,,3,1,,,,,
+        June 16 - 15:00,Group I,Iraq vs. Norway,1,4,1,3,,0,2,,,,,0,0,,0,2,,,,,
+        June 16 - 18:00,Group J,Argentina vs. Algeria,3,0,2,1,0,4,0,,4,1,,1,0,,3,0,,,,,
+        June 16 - 21:00,Group J,Austria vs. Jordan,3,1,2,0,,3,0,,3,1,,0,0,,1,1,,,,,
+        June 17 - 10:00,Group K,Portugal vs. Congo DR,1,1,3,0,,4,0,,3,0,,4,2,,3,0,,,,,
+        June 17 - 13:00,Group L,England vs. Croatia,3,2,2,1,,3,1,,2,0,,5,1,,2,1,,,,,
+        June 17 - 16:00,Group L,Ghana vs. Panama,1,0,2,0,,2,0,,,,,1,0,,2,1,,,,,
+        June 17 - 19:00,Group K,Uzbekistan vs. Colombia,1,3,0,2,,0,3,,0,2,,1,3,,0,2,,,,,
+        June 18 - 09:00,Group A,Czechia vs. South Africa,1,1,2,1,,2,1,,1,0,,1,1,,1,2,,2,0,,
+        June 18 - 12:00,Group B,Switzerland vs. Bosnia and Herzegovina,4,1,2,1,,3,1,,1,1,,3,1,,2,0,,1,0,,
+        June 18 - 15:00,Group B,Canada vs. Qatar,6,0,1,1,,2,0,,1,1,,0,0,,2,1,,1,1,,
+        June 18 - 18:00,Group A,Mexico vs. Korea Republic,1,0,2,1,,3,2,,2,2,,0,1,,1,2,,1,1,,
+        June 19 - 12:00,Group D,USA vs. Australia,2,0,3,1,,3,0,,2,2,,3,1,,2,1,,3,1,,
+        June 19 - 15:00,Group C,Scotland vs. Morocco,0,1,1,2,,1,3,,1,2,,2,2,,1,2,,1,1,,
+        June 19 - 17:30,Group C,Brazil vs. Haiti,3,0,2,0,,5,0,,4,0,,3,1,,4,1,,3,0,,
+        June 19 - 20:00,Group D,Türkiye vs. Paraguay,0,1,2,1,,2,1,,1,0,,2,0,,2,1,,2,0,,
+        June 20 - 10:00,Group F,Netherlands vs. Sweden,5,1,2,1,,3,2,,1,2,,2,3,,3,1,,2,2,,
+        June 20 - 13:00,Group E,Germany vs. Côte d'Ivoire,2,1,3,1,,4,1,,2,0,,3,0,,4,1,,2,1,,
+        June 20 - 17:00,Group E,Ecuador vs. Curaçao,0,0,2,0,,4,0,,3,0,,2,1,,2,1,,3,0,,
+        June 20 - 21:00,Group F,Tunisia vs. Japan,0,4,1,3,,1,2,,0,2,,0,1,,1,3,,1,3,,
+        June 21 - 09:00,Group H,Spain vs. Saudi Arabia,4,0,3,0,,3,0,,1,0,,4,0,,4,0,,2,0,,
+        June 21 - 12:00,Group G,Belgium vs. IR Iran,0,0,2,1,,3,0,,3,1,,2,1,,3,1,,2,1,,
+        June 21 - 15:00,Group H,Uruguay vs. Cabo Verde,2,2,2,1,,4,0,,2,0,,0,0,,2,0,,3,0,,
+        June 21 - 18:00,Group G,New Zealand vs. Egypt,1,3,1,2,,1,2,,0,2,,0,1,,1,1,,1,1,,
+        `;
+
+        // ============================================================
+        //  PARSE CSV AND COMPUTE PREDICTOR STATS
+        // ============================================================
+        const predictorNames = ['Amit', 'Barun', 'Prashanna', 'Rishav', 'Sweastik', 'Nikita'];
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            // Find header row (contains "Match Date & Time")
+            let headerIndex = -1;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes('Match Date & Time')) {
+                    headerIndex = i;
+                    break;
+                }
+            }
+            if (headerIndex === -1) return [];
+            // Start from headerIndex + 1
+            const dataRows = [];
+            for (let i = headerIndex + 1; i < lines.length; i++) {
+                const row = lines[i].split(',').map(cell => cell.trim());
+                // Check if row has actual scores (home score and away score numeric)
+                const homeScore = row[3];
+                const awayScore = row[4];
+                if (homeScore === '' || awayScore === '' || isNaN(parseInt(homeScore)) || isNaN(parseInt(awayScore))) {
+                    continue; // skip incomplete/future matches
+                }
+                // Only include if the match has at least one predictor with points? We'll include all.
+                dataRows.push(row);
+            }
+            return dataRows;
+        }
+
+        function computeStats(rows) {
+            const stats = {};
+            predictorNames.forEach(name => {
+                stats[name] = {
+                    totalPoints: 0,
+                    matchCount: 0,
+                    drawPredictions: 0,
+                    totalGoalsPredicted: 0,
+                    correctOutcomes: 0,
+                    incorrectOutcomes: 0,
+                };
+            });
+
+            rows.forEach(row => {
+                const actualHome = parseInt(row[3]);
+                const actualAway = parseInt(row[4]);
+                const actualOutcome = actualHome > actualAway ? 'home' : (actualHome < actualAway ? 'away' : 'draw');
+
+                for (let j = 0; j < predictorNames.length; j++) {
+                    const base = 5 + j * 3;
+                    const predHome = row[base] !== '' ? parseInt(row[base]) : null;
+                    const predAway = row[base + 1] !== '' ? parseInt(row[base + 1]) : null;
+                    const points = row[base + 2] !== '' ? parseFloat(row[base + 2]) : 0;
+
+                    if (predHome === null || predAway === null) continue; // no prediction
+
+                    const name = predictorNames[j];
+                    stats[name].totalPoints += points;
+                    stats[name].matchCount += 1;
+                    stats[name].totalGoalsPredicted += (predHome + predAway);
+                    if (predHome === predAway) {
+                        stats[name].drawPredictions += 1;
+                    }
+
+                    const predOutcome = predHome > predAway ? 'home' : (predHome < predAway ? 'away' : 'draw');
+                    if (predOutcome === actualOutcome) {
+                        stats[name].correctOutcomes += 1;
+                    } else {
+                        stats[name].incorrectOutcomes += 1;
+                    }
+                }
+            });
+
+            return stats;
+        }
+
+        // ============================================================
+        //  GENERATE FUNNY ANSWERS
+        // ============================================================
+        function generateFunStats(stats) {
+            // 1. Anti-Midas Touch: lowest correct outcome percentage
+            let worstAcc = Infinity;
+            let worstName = '';
+            for (const [name, s] of Object.entries(stats)) {
+                const total = s.correctOutcomes + s.incorrectOutcomes;
+                if (total === 0) continue;
+                const acc = s.correctOutcomes / total;
+                if (acc < worstAcc) {
+                    worstAcc = acc;
+                    worstName = name;
+                }
+            }
+
+            // 2. Video Game Score Delusion: highest average total goals predicted
+            let maxAvg = -Infinity;
+            let maxAvgName = '';
+            for (const [name, s] of Object.entries(stats)) {
+                if (s.matchCount === 0) continue;
+                const avg = s.totalGoalsPredicted / s.matchCount;
+                if (avg > maxAvg) {
+                    maxAvg = avg;
+                    maxAvgName = name;
+                }
+            }
+
+            // 3. 2014 Time Traveler: lowest total points (or maybe lowest correct outcomes) – we'll use lowest points
+            let minPoints = Infinity;
+            let minPointsName = '';
+            for (const [name, s] of Object.entries(stats)) {
+                if (s.totalPoints < minPoints) {
+                    minPoints = s.totalPoints;
+                    minPointsName = name;
+                }
+            }
+
+            // 4. Draw Denial Matrix: highest percentage of non-draw predictions (i.e., lowest draw prediction rate)
+            let minDrawRate = Infinity;
+            let drawDenialName = '';
+            for (const [name, s] of Object.entries(stats)) {
+                if (s.matchCount === 0) continue;
+                const drawRate = s.drawPredictions / s.matchCount;
+                if (drawRate < minDrawRate) {
+                    minDrawRate = drawRate;
+                    drawDenialName = name;
+                }
+            }
+
+            // 5. Vibe Check Strategy: highest points but not necessarily expert? We'll pick the highest points scorer.
+            let maxPoints = -Infinity;
+            let vibeName = '';
+            for (const [name, s] of Object.entries(stats)) {
+                if (s.totalPoints > maxPoints) {
+                    maxPoints = s.totalPoints;
+                    vibeName = name;
+                }
+            }
+
+            // Build answers
+            const answers = [
+                {
+                    q: "1. The Anti-Midas Touch",
+                    full: `Q: Which player in our pool possesses the magical ability to instantly curse any nation they predict to win?<br><br>A: <strong>${worstName}</strong>. If they pick a team to win 3-0, you can safely bet your life savings that team will lose, give up two red cards, and score an own goal. (Only ${Math.round((1-worstAcc)*100)}% of their picks actually win.)`
+                },
+                {
+                    q: "2. The Video Game Score Delusion",
+                    full: `Stat: <strong>${maxAvgName}</strong> has predicted a final score of ${Math.round(maxAvg)}-something for every single match so far, apparently under the impression that this World Cup is being played on a Playstation with the keepers turned off. (Avg total goals predicted: ${maxAvg.toFixed(1)})`
+                },
+                {
+                    q: "3. The 2014 Time Traveler",
+                    full: `Q: Who is the player most likely to base their predictions on a squad list from three World Cups ago?<br><br>A: <strong>${minPointsName}</strong>, who is still confidently waiting for Lionel Messi and Cristiano Ronaldo to carry them to maximum points in the year 2026. (Total points: ${minPoints})`
+                },
+                {
+                    q: "4. The Draw Denial Matrix",
+                    full: `Stat: ${(minDrawRate*100).toFixed(1)}%. The statistical probability of <strong>${drawDenialName}</strong> remembering that Group Stage matches can actually end in a tie. They have predicted ${stats[drawDenialName].drawPredictions} draws out of ${stats[drawDenialName].matchCount} matches and are currently drowning in the leaderboard.`
+                },
+                {
+                    q: "5. The 'Vibe Check' Strategy",
+                    full: `Stat: ${Math.round((stats[vibeName].totalPoints / maxPoints)*100)}% of <strong>${vibeName}</strong>’s points have come from picking winners based entirely on "which country has the cooler flag" or "where I’d rather go on vacation." They are currently beating our resident soccer "expert." (Total points: ${maxPoints})`
+                }
+            ];
+
+            return answers;
+        }
+
+        // ============================================================
+        //  RENDER FUN STATS INTO TOURNAMENT TAB
+        // ============================================================
+        function renderFunStats() {
+            const rows = parseCSV(csvData);
+            if (rows.length === 0) {
+                document.getElementById('fun-stats-container').innerHTML = '<p class="text-slate-400">No data found.</p>';
+                return;
+            }
+            const stats = computeStats(rows);
+            const answers = generateFunStats(stats);
+            const container = document.getElementById('fun-stats-container');
+            container.innerHTML = '';
+            answers.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'fun-card p-4 rounded-xl shadow-lg border border-slate-700/60';
+                card.innerHTML = `
+                    <div class="q text-sm">${item.q}</div>
+                    <div class="a text-sm mt-2 leading-relaxed">${item.full}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        //  EXISTING FUNCTIONS (groupstage, bracket, etc.) – same as before
+        // ============================================================
         const groupsData = {
-            A: ["Mexico (MEX)", "South Africa (RSA)", "Korea Republic (KOR)", "Czechia (CZE)"],
-            B: ["Canada (CAN)", "Bosnia and Herz. (BIH)", "Qatar (QAT)", "Switzerland (SUI)"],
-            C: ["Brazil (BRA)", "Morocco (MAR)", "Haiti (HAI)", "Scotland (SCO)"],
-            D: ["USA (USA)", "Paraguay (PAR)", "Australia (AUS)", "Türkiye (TUR)"],
-            E: ["Germany (GER)", "Curaçao (CUW)", "Côte d'Ivoire (CIV)", "Ecuador (ECU)"],
-            F: ["Netherlands (NED)", "Japan (JPN)", "Sweden (SWE)", "Tunisia (TUN)"],
-            G: ["Belgium (BEL)", "Egypt (EGY)", "IR Iran (IRN)", "New Zealand (NZL)"],
-            H: ["Spain (ESP)", "Cabo Verde (CPV)", "Saudi Arabia (KSA)", "Uruguay (URU)"],
-            I: ["France (FRA)", "Senegal (SEN)", "Iraq (IRQ)", "Norway (NOR)"],
-            J: ["Argentina (ARG)", "Algeria (ALG)", "Austria (AUT)", "Jordan (JOR)"],
-            K: ["Portugal (POR)", "Congo DR (COD)", "Uzbekistan (UZB)", "Colombia (COL)"],
-            L: ["England (ENG)", "Croatia (CRO)", "Ghana (GHA)", "Panama (PAN)"]
+            A: [
+                { name: "Mexico (MEX)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 3, ga: 0, gd: 3 },
+                { name: "Korea Republic (KOR)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 2, gd: 0 },
+                { name: "Czechia (CZE)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 2, ga: 3, gd: -1 },
+                { name: "South Africa (RSA)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 1, ga: 3, gd: -2 }
+            ],
+            B: [
+                { name: "Canada (CAN)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 7, ga: 1, gd: 6 },
+                { name: "Switzerland (SUI)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 5, ga: 2, gd: 3 },
+                { name: "Bosnia and Herz. (BIH)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 2, ga: 5, gd: -3 },
+                { name: "Qatar (QAT)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 1, ga: 7, gd: -6 }
+            ],
+            C: [
+                { name: "Brazil (BRA)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 4, ga: 1, gd: 3 },
+                { name: "Morocco (MAR)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 2, ga: 1, gd: 1 },
+                { name: "Scotland (SCO)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 1, ga: 1, gd: 0 },
+                { name: "Haiti (HAI)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 0, ga: 4, gd: -4 }
+            ],
+            D: [
+                { name: "USA (USA)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 6, ga: 1, gd: 5 },
+                { name: "Australia (AUS)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 2, gd: 0 },
+                { name: "Paraguay (PAR)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 4, gd: -2 },
+                { name: "Türkiye (TUR)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 0, ga: 3, gd: -3 }
+            ],
+            E: [
+                { name: "Germany (GER)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 8, ga: 1, gd: 7 },
+                { name: "Côte d'Ivoire (CIV)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 2, gd: 0 },
+                { name: "Ecuador (ECU)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 1, ga: 2, gd: -1 },
+                { name: "Curaçao (CUW)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 2, ga: 8, gd: -6 }
+            ],
+            F: [
+                { name: "Netherlands (NED)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 7, ga: 3, gd: 4 },
+                { name: "Japan (JPN)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 6, ga: 2, gd: 4 },
+                { name: "Sweden (SWE)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 5, ga: 6, gd: -1 },
+                { name: "Tunisia (TUN)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 1, ga: 8, gd: -7 }
+            ],
+            G: [
+                { name: "Belgium (BEL)", pts: 2, played: 2, won: 0, drawn: 2, lost: 0, gf: 2, ga: 2, gd: 0 },
+                { name: "Egypt (EGY)", pts: 2, played: 2, won: 0, drawn: 2, lost: 0, gf: 2, ga: 2, gd: 0 },
+                { name: "IR Iran (IRN)", pts: 2, played: 2, won: 0, drawn: 2, lost: 0, gf: 2, ga: 2, gd: 0 },
+                { name: "New Zealand (NZL)", pts: 2, played: 2, won: 0, drawn: 2, lost: 0, gf: 2, ga: 2, gd: 0 }
+            ],
+            H: [
+                { name: "Spain (ESP)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 4, ga: 1, gd: 3 },
+                { name: "Uruguay (URU)", pts: 2, played: 2, won: 0, drawn: 2, lost: 0, gf: 3, ga: 3, gd: 0 },
+                { name: "Cabo Verde (CPV)", pts: 2, played: 2, won: 0, drawn: 2, lost: 0, gf: 3, ga: 3, gd: 0 },
+                { name: "Saudi Arabia (KSA)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 2, ga: 5, gd: -3 }
+            ],
+            I: [
+                { name: "France (FRA)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 7, ga: 0, gd: 7 },
+                { name: "Norway (NOR)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 4, ga: 4, gd: 0 },
+                { name: "Senegal (SEN)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 2, gd: 0 },
+                { name: "Iraq (IRQ)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 0, ga: 7, gd: -7 }
+            ],
+            J: [
+                { name: "Argentina (ARG)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 6, ga: 0, gd: 6 },
+                { name: "Austria (AUT)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 3, ga: 2, gd: 1 },
+                { name: "Algeria (ALG)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 3, gd: -1 },
+                { name: "Jordan (JOR)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 0, ga: 6, gd: -6 }
+            ],
+            K: [
+                { name: "Colombia (COL)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 6, ga: 1, gd: 5 },
+                { name: "Portugal (POR)", pts: 4, played: 2, won: 1, drawn: 1, lost: 0, gf: 5, ga: 2, gd: 3 },
+                { name: "Congo DR (COD)", pts: 1, played: 2, won: 0, drawn: 1, lost: 1, gf: 1, ga: 2, gd: -1 },
+                { name: "Uzbekistan (UZB)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 1, ga: 8, gd: -7 }
+            ],
+            L: [
+                { name: "England (ENG)", pts: 6, played: 2, won: 2, drawn: 0, lost: 0, gf: 6, ga: 1, gd: 5 },
+                { name: "Croatia (CRO)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 4, ga: 3, gd: 1 },
+                { name: "Ghana (GHA)", pts: 3, played: 2, won: 1, drawn: 0, lost: 1, gf: 2, ga: 2, gd: 0 },
+                { name: "Panama (PAN)", pts: 0, played: 2, won: 0, drawn: 0, lost: 2, gf: 0, ga: 6, gd: -6 }
+            ]
         };
 
-        // Official Bracket Data Mapping Tree
-        const bracketStructure = {
+        const bracketTemplate = {
             r32: [
-                { id: 73, t1: "1A (Mexico)", t2: "3C/E/F/H/I", targetMatch: 89, targetSlot: 1 },
-                { id: 75, t1: "1C (Brazil)", t2: "2F (Japan)", targetMatch: 89, targetSlot: 2 },
-                { id: 74, t1: "1B (Canada)", t2: "3E/F/G/I/J", targetMatch: 90, targetSlot: 1 },
-                { id: 76, t1: "1D (USA)", t2: "3B/E/F/I/J", targetMatch: 90, targetSlot: 2 },
-                { id: 77, t1: "1E (Germany)", t2: "3A/B/C/D/F", targetMatch: 91, targetSlot: 1 },
-                { id: 79, t1: "1G (Belgium)", t2: "3A/E/H/I/J", targetMatch: 91, targetSlot: 2 },
-                { id: 78, t1: "1F (Netherlands)", t2: "2C (Morocco)", targetMatch: 92, targetSlot: 1 },
-                { id: 80, t1: "1H (Spain)", t2: "2J (Algeria)", targetMatch: 92, targetSlot: 2 },
-                { id: 81, t1: "1I (France)", t2: "3C/D/F/G/H", targetMatch: 93, targetSlot: 1 },
-                { id: 83, t1: "1K (Portugal)", t2: "3D/E/I/J/L", targetMatch: 93, targetSlot: 2 },
-                { id: 82, t1: "1J (Argentina)", t2: "2H (Cabo Verde)", targetMatch: 94, targetSlot: 1 },
-                { id: 84, t1: "1L (England)", t2: "3E/H/I/J/K", targetMatch: 94, targetSlot: 2 },
-                { id: 85, t1: "2A (South Africa)", t2: "2B (Bosnia)", targetMatch: 95, targetSlot: 1 },
-                { id: 87, t1: "2E (Curaçao)", t2: "2I (Senegal)", targetMatch: 95, targetSlot: 2 },
-                { id: 86, t1: "2D (Paraguay)", t2: "2G (Egypt)", targetMatch: 96, targetSlot: 1 },
-                { id: 88, t1: "2K (Congo DR)", t2: "2L (Croatia)", targetMatch: 96, targetSlot: 2 }
+                { id: 73, t1: "1A", t2: "3C/E/F/H/I", targetMatch: 89, targetSlot: 1 },
+                { id: 75, t1: "1C", t2: "2F", targetMatch: 89, targetSlot: 2 },
+                { id: 74, t1: "1B", t2: "3E/F/G/I/J", targetMatch: 90, targetSlot: 1 },
+                { id: 76, t1: "1D", t2: "3B/E/F/I/J", targetMatch: 90, targetSlot: 2 },
+                { id: 77, t1: "1E", t2: "3A/B/C/D/F", targetMatch: 91, targetSlot: 1 },
+                { id: 79, t1: "1G", t2: "3A/E/H/I/J", targetMatch: 91, targetSlot: 2 },
+                { id: 78, t1: "1F", t2: "2C", targetMatch: 92, targetSlot: 1 },
+                { id: 80, t1: "1H", t2: "2J", targetMatch: 92, targetSlot: 2 },
+                { id: 81, t1: "1I", t2: "3C/D/F/G/H", targetMatch: 93, targetSlot: 1 },
+                { id: 83, t1: "1K", t2: "3D/E/I/J/L", targetMatch: 93, targetSlot: 2 },
+                { id: 82, t1: "1J", t2: "2H", targetMatch: 94, targetSlot: 1 },
+                { id: 84, t1: "1L", t2: "3E/H/I/J/K", targetMatch: 94, targetSlot: 2 },
+                { id: 85, t1: "2A", t2: "2B", targetMatch: 95, targetSlot: 1 },
+                { id: 87, t1: "2E", t2: "2I", targetMatch: 95, targetSlot: 2 },
+                { id: 86, t1: "2D", t2: "2G", targetMatch: 96, targetSlot: 1 },
+                { id: 88, t1: "2K", t2: "2L", targetMatch: 96, targetSlot: 2 }
             ],
             r16: [
                 { id: 89, t1: "Winner 73", t2: "Winner 75", targetMatch: 97, targetSlot: 1 },
@@ -172,61 +502,134 @@
             ]
         };
 
-        // Live App State Variables
         let matchState = {};
+        let bracketStructure = {};
 
-        // Application initialization
-        document.addEventListener("DOMContentLoaded", () => {
-            renderGroupstage();
-            initMatchState();
-            renderAllKnockoutStages();
-        });
-
-        // Tab Switching Logic
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
-                btn.classList.add('bg-slate-800', 'text-slate-400');
-            });
-
-            document.getElementById(tabId).classList.add('active');
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            activeBtn.classList.remove('bg-slate-800', 'text-slate-400');
-            activeBtn.classList.add('bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
-        }
-
-        // Render Groupstage tab markup layout
-        function renderGroupstage() {
-            const container = document.getElementById("groups-container");
-            container.innerHTML = "";
-            
-            Object.keys(groupsData).forEach(groupLetter => {
-                const groupCard = document.createElement("div");
-                groupCard.className = "bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden shadow-md";
-                
-                let rowsHtml = groupsData[groupLetter].map((team, idx) => `
-                    <div class="flex items-center justify-between py-2 px-3 text-xs border-b border-slate-700/40 last:border-0">
-                        <span class="font-medium text-slate-300">${idx + 1}. ${team}</span>
-                        <div class="flex gap-1 text-[10px]">
-                            <span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 font-mono">0P</span>
-                        </div>
-                    </div>
-                `).join('');
-
-                groupCard.innerHTML = `
-                    <div class="bg-slate-700/40 px-3 py-2 flex justify-between items-center border-b border-slate-700">
-                        <h3 class="text-xs font-black tracking-wider text-emerald-400">GROUP ${groupLetter}</h3>
-                        <span class="text-[10px] text-slate-400 font-medium font-mono">PTS</span>
-                    </div>
-                    <div>${rowsHtml}</div>
-                `;
-                container.appendChild(groupCard);
+        function sortGroup(teams) {
+            return [...teams].sort((a, b) => {
+                if (a.pts !== b.pts) return b.pts - a.pts;
+                if (a.gd !== b.gd) return b.gd - a.gd;
+                if (a.gf !== b.gf) return b.gf - a.gf;
+                return a.name.localeCompare(b.name);
             });
         }
 
-        // Initialize state engine
+        function computeQualified() {
+            const qualified = { winners: {}, runnersUp: {}, thirdPlaces: [] };
+            Object.keys(groupsData).forEach(g => {
+                const sorted = sortGroup(groupsData[g]);
+                qualified.winners[g] = sorted[0].name;
+                qualified.runnersUp[g] = sorted[1].name;
+                qualified.thirdPlaces.push({
+                    group: g,
+                    team: sorted[2].name,
+                    pts: sorted[2].pts,
+                    gd: sorted[2].gd,
+                    gf: sorted[2].gf
+                });
+            });
+            qualified.thirdPlaces.sort((a, b) => {
+                if (a.pts !== b.pts) return b.pts - a.pts;
+                if (a.gd !== b.gd) return b.gd - a.gd;
+                if (a.gf !== b.gf) return b.gf - a.gf;
+                return a.group.localeCompare(b.group);
+            });
+            qualified.bestThird = qualified.thirdPlaces.slice(0, 8);
+            return qualified;
+        }
+
+        function assignThirdPlaceSlots(bestThird) {
+            const slots = [
+                { id: 73, allowed: ['C', 'E', 'F', 'H', 'I'], key: '3C/E/F/H/I' },
+                { id: 74, allowed: ['E', 'F', 'G', 'I', 'J'], key: '3E/F/G/I/J' },
+                { id: 76, allowed: ['B', 'E', 'F', 'I', 'J'], key: '3B/E/F/I/J' },
+                { id: 77, allowed: ['A', 'B', 'C', 'D', 'F'], key: '3A/B/C/D/F' },
+                { id: 79, allowed: ['A', 'E', 'H', 'I', 'J'], key: '3A/E/H/I/J' },
+                { id: 81, allowed: ['C', 'D', 'F', 'G', 'H'], key: '3C/D/F/G/H' },
+                { id: 83, allowed: ['D', 'E', 'I', 'J', 'L'], key: '3D/E/I/J/L' },
+                { id: 84, allowed: ['E', 'H', 'I', 'J', 'K'], key: '3E/H/I/J/K' }
+            ];
+            let available = bestThird.map(t => ({ ...t }));
+            const assignment = {};
+            slots.forEach(slot => {
+                let bestIdx = -1;
+                for (let i = 0; i < available.length; i++) {
+                    if (slot.allowed.includes(available[i].group)) {
+                        bestIdx = i;
+                        break;
+                    }
+                }
+                if (bestIdx !== -1) {
+                    assignment[slot.id] = available[bestIdx].team;
+                    available.splice(bestIdx, 1);
+                } else if (available.length > 0) {
+                    assignment[slot.id] = available[0].team;
+                    available.splice(0, 1);
+                } else {
+                    assignment[slot.id] = "TBD";
+                }
+            });
+            return assignment;
+        }
+
+        function buildRealBracket() {
+            const q = computeQualified();
+            const thirdAssign = assignThirdPlaceSlots(q.bestThird);
+            function replacePlaceholder(str) {
+                if (str.startsWith("Winner ") || str.startsWith("Loser ")) return str;
+                const match = str.match(/^([123])([A-L])(?:\/([A-L]))?/);
+                if (!match) return str;
+                const pos = match[1];
+                const group = match[2];
+                if (pos === '1') return q.winners[group] || str;
+                else if (pos === '2') return q.runnersUp[group] || str;
+                return str;
+            }
+            const bracket = JSON.parse(JSON.stringify(bracketTemplate));
+            Object.keys(bracket).forEach(round => {
+                bracket[round].forEach(m => {
+                    if (m.t1 && !m.t1.startsWith('Winner') && !m.t1.startsWith('Loser')) {
+                        m.t1 = replacePlaceholder(m.t1);
+                    }
+                    if (m.t2 && !m.t2.startsWith('Winner') && !m.t2.startsWith('Loser')) {
+                        m.t2 = replacePlaceholder(m.t2);
+                    }
+                });
+            });
+            Object.keys(bracket).forEach(round => {
+                bracket[round].forEach(m => {
+                    if (m.t1 && m.t1.startsWith('3')) {
+                        if (thirdAssign[m.id]) m.t1 = thirdAssign[m.id];
+                        else {
+                            const groups = m.t1.replace('3', '').split('/');
+                            let found = null;
+                            for (let g of groups) {
+                                const candidate = q.bestThird.find(t => t.group === g);
+                                if (candidate) { found = candidate.team; break; }
+                            }
+                            m.t1 = found || m.t1;
+                        }
+                    }
+                    if (m.t2 && m.t2.startsWith('3')) {
+                        if (thirdAssign[m.id]) m.t2 = thirdAssign[m.id];
+                        else {
+                            const groups = m.t2.replace('3', '').split('/');
+                            let found = null;
+                            for (let g of groups) {
+                                const candidate = q.bestThird.find(t => t.group === g);
+                                if (candidate) { found = candidate.team; break; }
+                            }
+                            m.t2 = found || m.t2;
+                        }
+                    }
+                });
+            });
+            return bracket;
+        }
+
         function initMatchState() {
+            bracketStructure = buildRealBracket();
+            matchState = {};
             Object.keys(bracketStructure).forEach(roundKey => {
                 bracketStructure[roundKey].forEach(m => {
                     matchState[m.id] = {
@@ -243,84 +646,79 @@
             });
         }
 
-        // Handle structural data updates on selection click
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+                btn.classList.add('bg-slate-800', 'text-slate-400');
+            });
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('bg-slate-800', 'text-slate-400');
+            activeBtn.classList.add('bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+        }
+
         function selectWinner(matchId, pickedTeamNumber) {
             const currentMatch = matchState[matchId];
-            const chosenTeamName = pickedTeamNumber === 1 ? currentMatch.t1 : currentMatch.t2;
-            const losingTeamName = pickedTeamNumber === 1 ? currentMatch.t2 : currentMatch.t1;
-            
-            currentMatch.winner = chosenTeamName;
-            currentMatch.loser = losingTeamName;
-
-            // Direct mapping traversal rules to push to next slots
+            if (!currentMatch) return;
+            const chosen = pickedTeamNumber === 1 ? currentMatch.t1 : currentMatch.t2;
+            const loser = pickedTeamNumber === 1 ? currentMatch.t2 : currentMatch.t1;
+            if (!chosen || chosen === 'TBD') return;
+            currentMatch.winner = chosen;
+            currentMatch.loser = loser;
             if (currentMatch.targetMatch) {
-                const nextMatch = matchState[currentMatch.targetMatch];
-                if (currentMatch.targetSlot === 1) {
-                    nextMatch.t1 = chosenTeamName;
-                } else {
-                    nextMatch.t2 = chosenTeamName;
-                }
-                
-                // Clear cascading dependent chain selections if user shifts answers down the line
+                const next = matchState[currentMatch.targetMatch];
+                if (currentMatch.targetSlot === 1) next.t1 = chosen;
+                else next.t2 = chosen;
                 clearCascadingPicks(currentMatch.targetMatch);
             }
-
-            // Specific code fork logic branch for Semi-Final losers dropping into 3rd Place Play-off
             if (currentMatch.type === 'semi') {
-                const thirdPlaceMatch = matchState[103]; 
-                if (currentMatch.id === 101) thirdPlaceMatch.t1 = losingTeamName;
-                if (currentMatch.id === 102) thirdPlaceMatch.t2 = losingTeamName;
+                const third = matchState[103];
+                if (currentMatch.id === 101) third.t1 = loser;
+                if (currentMatch.id === 102) third.t2 = loser;
                 clearCascadingPicks(103);
             }
-
             renderAllKnockoutStages();
         }
 
-        // Recursive cache clearer if user re-selects standard outcomes
         function clearCascadingPicks(matchId) {
-            const match = matchState[matchId];
-            if (!match) return;
-            match.winner = null;
-            match.loser = null;
-            
-            if (match.targetMatch) {
-                const nextMatch = matchState[match.targetMatch];
-                if (match.targetSlot === 1) nextMatch.t1 = `Winner ${matchId}`;
-                else nextMatch.t2 = `Winner ${matchId}`;
-                clearCascadingPicks(match.targetMatch);
+            const m = matchState[matchId];
+            if (!m) return;
+            m.winner = null;
+            m.loser = null;
+            if (m.targetMatch) {
+                const next = matchState[m.targetMatch];
+                if (m.targetSlot === 1) next.t1 = `Winner ${matchId}`;
+                else next.t2 = `Winner ${matchId}`;
+                clearCascadingPicks(m.targetMatch);
             }
-            if (match.type === 'semi') {
-                const thirdPlaceMatch = matchState[103];
-                if (match.id === 101) thirdPlaceMatch.t1 = "Loser 101";
-                if (match.id === 102) thirdPlaceMatch.t2 = "Loser 102";
+            if (m.type === 'semi') {
+                const third = matchState[103];
+                if (m.id === 101) third.t1 = "Loser 101";
+                if (m.id === 102) third.t2 = "Loser 102";
                 clearCascadingPicks(103);
             }
         }
 
-        // UI rendering execution loop
         function renderAllKnockoutStages() {
             renderRoundCardList('r32', 'r32-matches');
             renderRoundCardList('r16', 'r16-matches');
             renderRoundCardList('r8', 'r8-matches');
             renderRoundCardList('r4', 'r4-matches');
-            
-            // Render specific layouts on Final/3rd spot tab screen
             renderSingleMatchCard(104, 'r2-final-match');
             renderSingleMatchCard(103, 'r2-third-match');
         }
 
-        // Base list component rendering builder
         function renderRoundCardList(roundKey, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
-            
-            bracketStructure[roundKey].forEach(mDef => {
+            const matches = bracketStructure[roundKey] || [];
+            matches.forEach(mDef => {
                 const card = generateMatchCardDOM(mDef.id);
                 container.appendChild(card);
             });
         }
 
-        // Unique node interface injector wrapper helper
         function renderSingleMatchCard(matchId, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
@@ -328,33 +726,78 @@
             container.appendChild(card);
         }
 
-        // Match Card UI Builder Component
         function generateMatchCardDOM(matchId) {
             const m = matchState[matchId];
-            const matchCard = document.createElement("div");
-            matchCard.className = "bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden shadow-lg transition-all";
-
+            if (!m) return document.createElement('div');
+            const card = document.createElement("div");
+            card.className = "bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden shadow-lg transition-all";
             const isT1Winner = m.winner === m.t1 && m.winner !== null;
             const isT2Winner = m.winner === m.t2 && m.winner !== null;
-
-            matchCard.innerHTML = `
+            card.innerHTML = `
                 <div class="bg-slate-950/60 px-3 py-1 text-[10px] font-bold text-slate-500 flex justify-between border-b border-slate-700/40">
                     <span>MATCH ${m.id}</span>
                     <span class="text-emerald-500/80 uppercase tracking-tight">Knockout Phase</span>
                 </div>
                 <div class="divide-y divide-slate-700/40">
-                    <button onclick="selectWinner(${m.id}, 1)" class="w-full text-left px-3 py-2.5 flex items-center justify-between text-xs transition-colors focus:outline-none ${isT1Winner ? 'bg-emerald-950/40 text-emerald-400' : 'hover:bg-slate-700/30'}" ${!m.t1 ? 'disabled' : ''}>
+                    <button onclick="selectWinner(${m.id}, 1)" class="w-full text-left px-3 py-2.5 flex items-center justify-between text-xs transition-colors focus:outline-none ${isT1Winner ? 'bg-emerald-950/40 text-emerald-400' : 'hover:bg-slate-700/30'}" ${!m.t1 || m.t1 === 'TBD' ? 'disabled' : ''}>
                         <span class="font-semibold ${isT1Winner ? 'text-emerald-400 font-bold' : 'text-slate-200'}">${m.t1 || 'TBD'}</span>
                         ${isT1Winner ? '<span class="text-[10px] bg-emerald-500 text-slate-950 px-1.5 py-0.2 rounded font-black">ADVANCED</span>' : ''}
                     </button>
-                    <button onclick="selectWinner(${m.id}, 2)" class="w-full text-left px-3 py-2.5 flex items-center justify-between text-xs transition-colors focus:outline-none ${isT2Winner ? 'bg-emerald-950/40 text-emerald-400' : 'hover:bg-slate-700/30'}" ${!m.t2 ? 'disabled' : ''}>
+                    <button onclick="selectWinner(${m.id}, 2)" class="w-full text-left px-3 py-2.5 flex items-center justify-between text-xs transition-colors focus:outline-none ${isT2Winner ? 'bg-emerald-950/40 text-emerald-400' : 'hover:bg-slate-700/30'}" ${!m.t2 || m.t2 === 'TBD' ? 'disabled' : ''}>
                         <span class="font-semibold ${isT2Winner ? 'text-emerald-400 font-bold' : 'text-slate-200'}">${m.t2 || 'TBD'}</span>
                         ${isT2Winner ? '<span class="text-[10px] bg-emerald-500 text-slate-950 px-1.5 py-0.2 rounded font-black">ADVANCED</span>' : ''}
                     </button>
                 </div>
             `;
-            return matchCard;
+            return card;
         }
+
+        function renderGroupstage() {
+            const container = document.getElementById("groups-container");
+            container.innerHTML = "";
+            Object.keys(groupsData).forEach(g => {
+                const sorted = sortGroup(groupsData[g]);
+                const groupCard = document.createElement("div");
+                groupCard.className = "bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden shadow-md";
+                let rowsHtml = sorted.map((team, idx) => {
+                    const pos = idx + 1;
+                    let posClass = "text-slate-400";
+                    if (pos === 1) posClass = "text-emerald-400 font-bold";
+                    else if (pos === 2) posClass = "text-sky-400 font-bold";
+                    return `
+                        <div class="flex items-center justify-between py-2 px-3 text-xs border-b border-slate-700/40 last:border-0">
+                            <span class="flex items-center gap-2">
+                                <span class="${posClass} w-4 text-center">${pos}</span>
+                                <span class="font-medium text-slate-200">${team.name}</span>
+                            </span>
+                            <div class="flex gap-1 text-[10px] font-mono">
+                                <span class="px-1.5 py-0.5 rounded bg-slate-900 text-emerald-400">${team.pts}P</span>
+                                <span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-400">${team.gd}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                groupCard.innerHTML = `
+                    <div class="bg-slate-700/40 px-3 py-2 flex justify-between items-center border-b border-slate-700">
+                        <h3 class="text-xs font-black tracking-wider text-emerald-400">GROUP ${g}</h3>
+                        <span class="text-[10px] text-slate-400 font-medium font-mono">PTS / GD</span>
+                    </div>
+                    <div>${rowsHtml}</div>
+                `;
+                container.appendChild(groupCard);
+            });
+        }
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        document.addEventListener("DOMContentLoaded", () => {
+            renderGroupstage();
+            initMatchState();
+            renderAllKnockoutStages();
+            // Generate fun stats for Tournament tab
+            renderFunStats();
+        });
     </script>
 </body>
 </html>

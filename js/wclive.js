@@ -15,7 +15,7 @@ let activeGroup = 'All', activeStatus = 'upcoming', activePlayer = '';
 let _addPredTimer = null;
 let _activeDateGroups = [], _currentActiveDateIdx = 0;
 
-// ─── Round definitions (corrected: round 3 ends June 27) ─────────────────────
+// ─── Round definitions ─────────────────────────────────────────────────────────
 const ROUNDS = [
   { key: 'all',    label: 'All Rounds', start: null,                  end: null },
   { key: 'r1',     label: 'Round 1',    start: '2026-06-11',          end: '2026-06-17' },
@@ -320,7 +320,7 @@ function buildLeaderboard() {
   }));
   const sorted=[...data].sort((a,b)=>b.pts-a.pts);
   const maxPts=sorted[0]?.pts||1;
-  const labels=['🥇','🥈','🥉','4th','5th','6th'];
+  const labels=['🦏','✏️🧽','👁️','4th','5th','6th'];
   const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888','#888'];
   const el = document.getElementById('leaderboard');
   el.innerHTML = `<div style="padding:10px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-secondary)"><span>🏟️ Games in this round: ${roundMatches.length}</span><span>⚽ Remaining: ${gamesLeft}</span></div>` +
@@ -386,7 +386,6 @@ function ptsBadge(pts) {
   return '<span class="pts-badge p0">0</span>';
 }
 
-// Toggle collapse/expand for round sections
 function toggleRoundSection(headerEl) {
   const container = headerEl.nextElementSibling;
   if (!container || !container.classList.contains('round-matches-container')) return;
@@ -397,13 +396,13 @@ function toggleRoundSection(headerEl) {
     icon.textContent = isCollapsed ? '▶' : '▼';
   }
 }
+window.toggleRoundSection = toggleRoundSection;
 
 function renderRoundDashboard() {
   const now = getCurrentPacificDate();
   let filtered = MATCHES.slice();
   if (activeStatus === 'upcoming') filtered = filtered.filter(m => parseMatchDateTime(m.dateTimeRaw) > now);
   else if (activeStatus === 'previous') filtered = filtered.filter(m => parseMatchDateTime(m.dateTimeRaw) <= now).reverse();
-  // else 'all' keep as is
 
   const definedRounds = ROUNDS.filter(r => r.key !== 'all' && r.start && r.start !== 'YYYY-MM-DD');
   const usedIds = new Set();
@@ -472,7 +471,6 @@ function populatePlayerRoundDropdown() {
   sel.innerHTML = options.join('');
   sel.value = 'all';
 }
-
 window.onPlayerRoundChange = function() {
   renderPlayerDetail();
 };
@@ -505,7 +503,6 @@ function renderPlayerDetail() {
     av2.textContent=`${accuracy}%`; av2.style.color=p.color;
   } else accBar.style.display='none';
 
-  // Round‑filtered predictions (dropdown)
   const selectedRoundKey = document.getElementById('playerRoundSelect')?.value || 'all';
   const round = ROUNDS.find(r => r.key === selectedRoundKey) || ROUNDS[0];
   const filteredMatches = round.start === null ? MATCHES : MATCHES.filter(m => matchInRound(m, round));
@@ -792,6 +789,152 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
   }
 };
 
+// ─── Tournament Stats – Roast Corner ──────────────────────────────────────
+// ─── Tournament Stats – Funny Stats & Roast Corner ──────────────────────
+function renderTournamentStats() {
+  const container = document.getElementById('tournamentSubContent');
+  if (!container) return;
+
+  // Compute per‑player stats
+  const playersStats = PLAYERS.map(p => {
+    const preds = MATCHES.flatMap(m =>
+      m.preds.filter(pr => pr.p === p.name && pr.h !== null && pr.a !== null)
+    );
+    const total = preds.length;
+    const exact = preds.filter(pr => pr.pts === 3).length;
+    const correct = preds.filter(pr => pr.pts === 1).length;
+    const wrong = preds.filter(pr => pr.pts === 0).length;
+    const totalPts = p.pts;
+    const sumGoals = preds.reduce((s, pr) => s + pr.h + pr.a, 0);
+    const avgGoals = total > 0 ? sumGoals / total : 0;
+    const outcomeAcc = total > 0 ? (exact + correct) / total : 0;
+    return { ...p, total, exact, correct, wrong, totalPts, avgGoals, outcomeAcc };
+  });
+
+  // Find extremes
+  const mostPoints = playersStats.reduce((a, b) => a.totalPts > b.totalPts ? a : b);
+  const mostExact = playersStats.reduce((a, b) => a.exact > b.exact ? a : b);
+  const mostWrong = playersStats.reduce((a, b) => a.wrong > b.wrong ? a : b);
+  const highestAcc = playersStats.reduce((a, b) => a.outcomeAcc > b.outcomeAcc ? a : b);
+  const highestAvg = playersStats.reduce((a, b) => a.avgGoals > b.avgGoals ? a : b);
+  // Underdog: lowest points among those with at least 10 predictions (grinder)
+  const underdog = playersStats
+    .filter(p => p.total >= 10)
+    .reduce((a, b) => a.totalPts < b.totalPts ? a : b);
+
+  // Movie references
+  const movieRefs = {
+    gambler: { title: 'The Gambler (2014)', icon: '🎲', quote: 'You gotta risk it for the biscuit.' },
+    antman: { title: 'Ant‑Man', icon: '🐜', quote: 'Size doesn’t matter – it’s how you use it.' },
+    captain: { title: 'Captain America', icon: '🛡️', quote: 'I can do this all day.' },
+    thor: { title: 'Thor: Ragnarok', icon: '⚡', quote: 'He’s a friend from work!' },
+  };
+
+  // Build cards
+  const cards = [
+    {
+      title: '🎰 The High‑Risk Gambler',
+      player: mostPoints,
+      movie: movieRefs.gambler,
+      description: `Leads with ${mostPoints.totalPts} pts (${mostPoints.exact} exacts) but also the most wrong (${mostPoints.wrong}). He’s the guy who bets on red and black at the same time – and somehow wins big.`,
+    },
+
+    {
+      title: '🛡️ The Safe & Lucky Duo',
+      players: [highestAcc, playersStats.find(p => p.name === 'Sweastik')],
+      movie: movieRefs.captain,
+      description: `${highestAcc.name} (${Math.round(highestAcc.outcomeAcc * 100)}% accuracy) and ${playersStats.find(p => p.name === 'Sweastik').name} (${playersStats.find(p => p.name === 'Sweastik').totalPts} pts) play it safe – like Cap with his shield. They rarely miss the result, and it’s paying off.`,
+    },
+    {
+      title: '⚡ The Goal‑Happy Presumptuous',
+      player: highestAvg,
+      movie: movieRefs.thor,
+      description: `${highestAvg.name} predicts an average of ${highestAvg.avgGoals.toFixed(1)} goals per match – nearly a full goal more than everyone else. He thinks every game is a superhero showdown. Spoiler: it’s not.`,
+    },
+  ];
+
+  // Roast Corner – dynamic one‑liners
+  const roasts = [
+    {
+      title: 'The "I Believe in Miracles" Award',
+      player: mostPoints,
+      description: `${mostPoints.name} has ${mostPoints.exact} exact scores – but also ${mostPoints.wrong} wrong ones. He’s the guy who keeps buying lottery tickets because "this time it’s different."`,
+    },
+    {
+      title: 'The "Draw? Never Heard of Her" Trophy',
+      player: underdog,
+      description: `${underdog.name} has predicted exactly 0 draws – treating a tie like a myth. Even when the match ends 0‑0, he’s already moved on.`,
+    },
+    {
+      title: 'The "Vibe Check" Strategy',
+      player: highestAvg,
+      description: `${highestAvg.name} throws out PlayStation‑style scores like 6‑0 and 3‑3, yet somehow sits at ${highestAvg.totalPts} pts. Meanwhile, everyone else is sweating over 1‑0.`,
+    },
+    {
+      title: 'The "Captain Safe" Medal',
+      player: highestAcc,
+      description: `${highestAcc.name} has the highest outcome accuracy (${Math.round(highestAcc.outcomeAcc * 100)}%) – he’s the designated driver of predictions. Never too high, never too low.`,
+    },
+    {
+      title: 'The "I’m With Stupid" Button',
+      player: playersStats.find(p => p.name === 'Sweastik'),
+      description: `${playersStats.find(p => p.name === 'Sweastik').name} is quietly in 2nd place with ${playersStats.find(p => p.name === 'Sweastik').totalPts} pts – the unsung hero who lets others take the glory while stacking points.`,
+    },
+  ];
+
+  // Build HTML
+  let html = `
+    <div class="tournament-container">
+      <div class="tournament-header">
+        <span>🍿</span> लिखित हास्यव्यङ्ग्य – चलचित्र संस्करण
+        <span style="font-size:14px; font-weight:400; color:var(--text-secondary); margin-left:auto;">भित्री कुरो</span>
+      </div>
+
+      <div class="tournament-stats-grid">
+        ${cards.map(card => `
+          <div class="tournament-stat-card" style="border-left-color: ${card.player?.color || '#888'};">
+            <div class="stat-card-header">
+              <span class="stat-card-icon">${card.movie.icon}</span>
+              <span class="stat-card-title">${card.title}</span>
+              <span class="stat-card-movie">${card.movie.title}</span>
+            </div>
+            <div class="stat-card-player" style="color:${card.player?.color || '#888'}">
+              ${card.player?.name || ''} ${card.players ? card.players.map(p => `<span style="color:${p.color}">${p.name}</span>`).join(' & ') : ''}
+            </div>
+            <div class="stat-card-quote">“${card.movie.quote}”</div>
+            <div class="stat-card-body">${card.description}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="roast-corner-title">
+        <span>🗣️</span> ऐना चौतारी
+        <span style="font-size:13px; font-weight:400; color:var(--text-tertiary); margin-left:auto;">कसैको खिल्ली उडाको हैन,</span>
+      </div>
+
+      ${roasts.map(roast => {
+        const p = playersStats.find(p => p.name === roast.player?.name);
+        const color = p?.color || '#888';
+        const bg = p?.bg || '#f0f0f0';
+        const text = p?.textc || '#333';
+        const initials = p?.initials || roast.player?.name.slice(0,2).toUpperCase() || '??';
+        return `
+          <div class="roast-card" style="border-left-color: ${color};">
+            <div class="roast-header">
+              <span class="roast-avatar" style="background: ${bg}; color: ${text};">${initials}</span>
+              <span class="roast-title">${roast.title}</span>
+              <span class="roast-player-tag">🎯 ${roast.player?.name || 'Unknown'}</span>
+            </div>
+            <div class="roast-body">${roast.description}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
 // ─── Orchestration ─────────────────────────────────────────────────────────────
 function buildAllUI() {
   recalcAllPoints();
@@ -805,6 +948,11 @@ function buildAllUI() {
   populatePlayerRoundDropdown();
   renderPlayerDetail();
   buildAddPredSection();
+  // Ensure Tournament tab is rendered if it is the active sub-tab
+  const tournamentContent = document.getElementById('tournamentSubContent');
+  if (tournamentContent && tournamentContent.style.display !== 'none') {
+    renderTournamentStats();
+  }
 }
 
 window.showSection = function(id, btn) {
@@ -815,7 +963,14 @@ window.showSection = function(id, btn) {
   if (id === 'matches') renderRoundDashboard();
   if (id === 'addpred') { buildAddPredSection(); startAddPredTimer(); } else stopAddPredTimer();
   if (id === 'standings') { buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames(); }
-  if (id === 'player') { populatePlayerRoundDropdown(); renderPlayerDetail(); }
+  if (id === 'player') {
+    populatePlayerRoundDropdown();
+    renderPlayerDetail();
+    const tournamentContent = document.getElementById('tournamentSubContent');
+    if (tournamentContent && tournamentContent.style.display !== 'none') {
+      renderTournamentStats();
+    }
+  }
 };
 
 window.switchToPlayer = function(name) {
