@@ -17,97 +17,133 @@
   </style>
 </head>
 <body>
-    <div class="ks-app-shell">
-        <header class="ks-app-header">
-            <div class="ks-header-top">
-                <div>
-                    <div class="ks-header-title"><i class="ti ti-trophy"></i> खसी, बोका, कटहर वा सुँगुर कप २०८३</div>
-                    <div class="ks-header-sub" id="ksHeaderSub">Loading…</div>
-                </div>
-<a href="wclive.html" class="header-badge">समूह चरण</a>            </div>
-            <nav class="ks-bottom-nav">
-                <button class="ks-nav-btn active" onclick="KS.showSection('ksStandings',this)">
-                    <i class="ti ti-chart-bar"></i> Standings
-                </button>
-                <button class="ks-nav-btn" onclick="KS.showSection('ksAddPred',this)">
-                    <i class="ti ti-pencil-plus"></i> Add Predictions
-                </button>
-                <button class="ks-nav-btn" onclick="KS.showSection('ksMatches',this)">
-                    <i class="ti ti-ball-football"></i> Matches
-                </button>
-                <button class="ks-nav-btn" onclick="KS.showSection('ksPlayer',this)">
-                    <i class="ti ti-user"></i> Player
-                </button>
-            </nav>
-        </header>
-
-        <main class="ks-main-content">
-            <div id="ksLoadingMsg" class="ks-loading"><div>Loading data from Google Sheets…</div></div>
-
-            <div id="ksAppContent" style="display:none">
-
-                <!-- STANDINGS -->
-                <section id="ksStandings" class="ks-section active">
-                    <div class="ks-sec-label" id="ksCarouselLabel">हेर्नुस् त</div>
-                    <div class="ks-carousel-container" id="ksCarouselContainer">
-                        <div class="ks-carousel-track" id="ksUpcomingCarousel"></div>
-                    </div>
-                    <div class="ks-sec-label">Leaderboard</div>
-                    <div class="ks-round-filter-bar" id="ksRoundFilterBar"></div>
-                    <div class="ks-card" id="ksLeaderboard"></div>
-                    <div class="ks-sec-label">Overview</div>
-                    <div class="ks-stat-grid" id="ksOverviewStats"></div>
-                    <div class="ks-sec-label">All upcoming games</div>
-                    <div id="ksAllUpcomingGames"></div>
-                </section>
-
-                <!-- ADD PREDICTIONS -->
-                <section id="ksAddPred" class="ks-section">
-                    <div class="ks-add-pred-intro">
-                        <i class="ti ti-info-circle"></i>
-                        <div>
-                            <strong>भर् जन्म घाँस तिर मन् दिई धन कमायो <br>
-                              नाम क्यै रहोस् पछि भनेर कुवा खनायो ।</strong><br>
-     
-                        </div>
-                    </div>
-                    <div id="ksAddPredContent"></div>
-                </section>
-
-                <!-- MATCHES -->
-                <section id="ksMatches" class="ks-section">
-                    <div class="ks-filter-bar" id="ksStatusTabs"></div>
-                    <div class="ks-filter-bar" id="ksGroupTabs"></div>
-                    <div id="ksMatchList"></div>
-                </section>
-
-                <!-- PLAYER -->
-                <section id="ksPlayer" class="ks-section">
-                    <div class="ks-sec-label">Select player</div>
-                    <div id="ksPlayerBtns" class="ks-player-btns"></div>
-                    <div class="ks-player-profile-card">
-                        <div class="ks-avatar" id="ksPlayerAvatar" style="width:50px;height:50px"></div>
-                        <div>
-                            <div id="ksPlayerName" class="ks-player-profile-name"></div>
-                            <div id="ksPlayerRank" class="ks-player-profile-rank"></div>
-                        </div>
-                        <div class="ks-player-profile-pts" style="margin-left:auto;text-align:right">
-                            <div id="ksPlayerPtsNum" class="ks-player-profile-pts-num"></div>
-                            <div class="ks-player-profile-pts-label">pts total</div>
-                        </div>
-                    </div>
-                    <div class="ks-stat-grid" id="ksPlayerStats"></div>
-                    <div id="ksPlayerAccuracyBar" class="ks-accuracy-bar-wrap" style="display:none">
-                        <span>Accuracy on scored matches</span>
-                        <span id="ksPlayerAccuracyVal"></span>
-                    </div>
-                    <div class="ks-sec-label">All predictions</div>
-                    <div id="ksPlayerMatchPreds"></div>
-                </section>
-
-            </div><!-- /ksAppContent -->
-        </main>
+<div class="app-shell">
+  <header class="app-header">
+    <div class="header-top">
+      <div>
+        <div class="header-title"> 🛕 खसी, बोका, कटहर वा सुँगुर कप २०८३</div>
+        <div class="header-sub" id="headerSub">Loading…</div>
+      </div>
+      <a href="wclive.html" class="header-badge" style="text-decoration:none; color:inherit; cursor:pointer;">
+        समूह चरण
+      </a>
     </div>
+    <nav class="bottom-nav">
+      <button class="nav-btn active" onclick="showSection('standings',this)">
+        <i class="ti ti-chart-bar"></i> Standings
+      </button>
+      <button class="nav-btn" onclick="showSection('addpred',this)">
+        <i class="ti ti-pencil-plus"></i> ADD PREDCTIONS
+      </button>
+      <button class="nav-btn" onclick="showSection('matches',this)">
+        <i class="ti ti-ball-football"></i> Matches
+      </button>
+      <button class="nav-btn" onclick="showSection('player',this)">
+        <i class="ti ti-user"></i> तथ्याङ्क
+      </button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div id="loadingMsg" class="loading"><div>Loading data from Google Sheets…</div></div>
+
+    <div id="appContent" style="display:none">
+      <button class="refresh-btn" onclick="loadData()">
+        <i class="ti ti-refresh"></i> Refresh Data
+      </button>
+
+      <section id="standings" class="section active">
+        <div class="sec-label" id="carouselLabel">सुनुस् त</div>
+        <div class="carousel-container" id="carouselContainer">
+          <div class="carousel-track" id="upcomingCarousel"></div>
+        </div>
+        <div class="sec-label">🥟 Leaderboard</div>
+        <div class="round-filter-bar scrollable-rounds" id="roundFilterBar"></div>
+        <div class="card fancy-leaderboard" id="leaderboard"></div>
+        <div class="sec-label">🥩 Overview</div>
+        <div class="stat-grid" id="overviewStats"></div>
+        <div class="sec-label">🪔 All upcoming games</div>
+        <div id="allUpcomingGamesContainer"></div>
+      </section>
+
+      <section id="matches" class="section">
+        <div id="statusTabs" class="filter-bar"></div>
+        <div id="roundDashboard"></div>
+      </section>
+
+      <section id="player" class="section">
+        <div class="sub-tabs-track">
+          <button id="subTabPlayer" class="sub-tab-btn active" onclick="switchPlayerSubTab('player')">Player</button>
+          <button id="subTabTournament" class="sub-tab-btn" onclick="switchPlayerSubTab('tournament')">Tournament</button>
+        </div>
+
+        <div id="playerSubContent">
+          <div class="sec-label">Select player</div>
+          <div id="playerBtns" class="player-btns"></div>
+          <div class="player-profile-card">
+            <div class="avatar" id="playerAvatar" style="width:50px;height:50px"></div>
+            <div>
+              <div id="playerName"  class="player-profile-name"></div>
+              <div id="playerRank"  class="player-profile-rank"></div>
+            </div>
+            <div class="player-profile-pts" style="margin-left:auto;text-align:right">
+              <div id="playerPtsNum" class="player-profile-pts-num"></div>
+              <div class="player-profile-pts-label">pts total</div>
+            </div>
+          </div>
+          <div class="stat-grid" id="playerStats"></div>
+          <div id="playerAccuracyBar" class="accuracy-bar-wrap" style="display:none">
+            <span>Accuracy on scored matches</span>
+            <span id="playerAccuracyVal"></span>
+          </div>
+          <div class="sec-label" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span>✏️🧽 Predictions</span>
+            <select id="playerRoundSelect" class="round-dropdown" onchange="onPlayerRoundChange()"></select>
+          </div>
+          <div id="playerMatchPreds"></div>
+        </div>
+
+        <div id="tournamentSubContent" style="display:none;"></div>
+
+        <script>
+          function switchPlayerSubTab(tabName) {
+            const playerContent = document.getElementById('playerSubContent');
+            const tournamentContent = document.getElementById('tournamentSubContent');
+            const tabPlayer = document.getElementById('subTabPlayer');
+            const tabTournament = document.getElementById('subTabTournament');
+            
+            if (tabName === 'player') {
+              playerContent.style.display = 'block';
+              tournamentContent.style.display = 'none';
+              tabPlayer.classList.add('active');
+              tabTournament.classList.remove('active');
+            } else {
+              playerContent.style.display = 'none';
+              tournamentContent.style.display = 'block';
+              tabPlayer.classList.remove('active');
+              tabTournament.classList.add('active');
+              // renderTournamentStats is defined in wclive.js
+              if (typeof renderTournamentStats === 'function') {
+                renderTournamentStats();
+              }
+            }
+          }
+        </script>
+      </section>
+
+      <section id="addpred" class="section">
+        <div class="add-pred-intro">
+          <div>
+           <strong>🚰 भर् जन्म घाँस तिर मन् दिई धन कमायो <br>
+                              नाम क्यै रहोस् पछि भनेर कुवा खनायो ।</strong><br></div>
+        </div>
+        <div id="addPredContent"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+
 <script src="../js/KSlive.js?v=17.1.2"></script>
   
 </body>

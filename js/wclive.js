@@ -1,6 +1,5 @@
 // WC 2026 – Live Prediction Game | app.js (updated)
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmmM8NImlEsIkIGFwekk_rRgSLL4oeRhlBxFcPMejOrpiXa6hwhxOQ6HMf0R2-8FEXgA/exec';
-
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzDixFKGR37tpIZ7QrppJmBVMMnbTOUALuBx_9FOXZZ3fz7fryeQ3S8p5goswlbPDUmXQ/exec';
 const PLAYER_COLORS = {
   'Amit':      { color:'#5b6cf6', bg:'#eeedfe', textc:'#3C3489', initials:'AM' },
   'Barun':     { color:'#1a6b3a', bg:'#e8f5ee', textc:'#0f4a27', initials:'BA' },
@@ -8,6 +7,7 @@ const PLAYER_COLORS = {
   'Rishav':    { color:'#e05252', bg:'#fcebeb', textc:'#791f1f', initials:'RI' },
   'Sweastik':  { color:'#7c3aed', bg:'#eeedfe', textc:'#26215C', initials:'SW' },
   'Nikita':    { color:'#ff0766ff', bg:'#eeedfe', textc:'#26215C', initials:'NI' },
+  'Saugat':    { color:'#ff7f50', bg:'#fff0e6', textc:'#7a3e2b', initials:'SA' },
 };
 
 let PLAYERS = [], MATCHES = [];
@@ -114,7 +114,7 @@ async function loadData(silent=false) {
 function parseSheetData(rows) {
   if (!rows||rows.length<3) throw new Error('Not enough rows');
   const headerRow = rows[0]||[];
-  const playerIndices = [5,8,11,14,17,20];
+  const playerIndices = [5,8,11,14,17,20,23];
   const playerNames = playerIndices.map(i=>headerRow[i]?.toString().trim()).filter(Boolean);
   PLAYERS = playerNames.map(name=>({
     name,
@@ -635,6 +635,7 @@ function renderCurrentDateCard() {
     const timerText = isLocked ? '🔒 Locked' : formatCountdown(lockTime - now);
 
     const playerRows = PLAYERS.map(pl => {
+      if (pl.name === 'Saugat') return '';
       const existing = m.preds.find(pr => pr.p === pl.name);
       const hVal = existing?.h ?? '';
       const aVal = existing?.a ?? '';
