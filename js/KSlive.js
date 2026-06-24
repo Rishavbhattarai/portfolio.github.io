@@ -23,7 +23,7 @@ const ROUNDS = [
   { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-27' },
   { key: 'ro32',   label: 'Round Of 32',start: '2026-06-28',          end: '2026-06-30' },
 ];
-let activeRound = 'r2';
+let activeRound = 'r3';
 
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;
