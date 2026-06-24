@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Salesforce Dev1 Certification Hub</title>
+    <style>
+        :root {
+            --primary: #009EDB;
+            --primary-dark: #0076a8;
+            --secondary: #16325c;
+            --success: #2e7d32;
+            --success-bg: #edf7ed;
+            --error: #d32f2f;
+            --error-bg: #fdeded;
+            --neutral-light: #f3f2f1;
+            --neutral-dark: #2b2826;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: var(--neutral-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 12px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 640px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-top: 8px;
+        }
+
+        /* Screen States Management */
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+
+        /* Typography */
+        h1 { color: var(--secondary); font-size: 22px; text-align: center; margin-bottom: 4px; }
+        .meta-subtitle { text-align: center; color: #514f4d; font-size: 13px; margin-bottom: 24px; }
+        h2 { color: var(--secondary); font-size: 18px; margin-bottom: 16px; font-weight: 600; }
+
+        /* Chapter Menu Grid Layout */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .menu-card {
+            background: #fafafb;
+            border: 1px solid #dddbda;
+            border-radius: 8px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        .menu-card:active, .menu-card:hover {
+            border-color: var(--primary);
+            background-color: #f0f9fe;
+        }
+        .menu-card-title { font-weight: bold; color: var(--secondary); font-size: 15px; margin-bottom: 4px;}
+        .menu-card-meta { font-size: 12px; color: #747474; }
+
+        /* Top Progress Metrics */
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+        .progress-bar-bg {
+            flex-grow: 1;
+            height: 8px;
+            background-color: var(--neutral-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .progress-counter { font-size: 13px; font-weight: bold; color: var(--secondary); white-space: nowrap; }
+
+        /* Card Structures */
+        .chapter-tag {
+            display: inline-block;
+            background-color: #e0f2fe;
+            color: var(--primary-dark);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .question-box { font-size: 16px; font-weight: 600; color: var(--secondary); margin-bottom: 18px; line-height: 1.4; }
+        
+        /* Options Touch Targets */
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
+        .option-item {
+            background-color: var(--white);
+            border: 1px solid #c9c7c5;
+            border-radius: 8px;
+            padding: 14px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1.4;
+            transition: background-color 0.2s ease;
+            min-height: 48px; /* Ideal mobile hit footprint */
+            display: flex;
+            align-items: center;
+        }
+        .option-item:active { background-color: #f3f2f1; }
+        
+        /* Interactive Response Styling */
+        .option-item.correct {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success) !important;
+            color: var(--success);
+            font-weight: 600;
+        }
+        .option-item.incorrect {
+            background-color: var(--error-bg) !important;
+            border-color: var(--error) !important;
+            color: var(--error);
+        }
+
+        /* Explanations Section */
+        .explanation-panel {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 8px;
+            display: none;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .explanation-panel.show { display: block; }
+        .explanation-panel.is-correct { background-color: var(--success-bg); border-left: 4px solid var(--success); }
+        .explanation-panel.is-wrong { background-color: var(--error-bg); border-left: 4px solid var(--error); }
+        .explanation-title { font-weight: bold; margin-bottom: 4px; font-size: 14px; }
+
+        /* Universal Action Buttons */
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 16px;
+            min-height: 48px;
+        }
+        .btn:active { background-color: var(--primary-dark); }
+        .btn-secondary { background-color: var(--secondary); }
+        .btn-secondary:active { background-color: #0b1a30; }
+
+        /* Summary Dashboard */
+        .score-display { text-align: center; font-size: 48px; font-weight: 800; color: var(--primary); margin: 16px 0; }
+        .feedback-text { text-align: center; font-size: 15px; margin-bottom: 24px; color: var(--secondary); padding: 0 8px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="screen-dashboard" class="screen active">
+            <h1 id="app-title">Salesforce Developer I</h1>
+            <p class="meta-subtitle">Certification Study Companion</p>
+            <h2>Select Study Block:</h2>
+            
+            <div class="menu-grid" id="menu-target">
+                </div>
+        </div>
+
+        <div id="screen-quiz" class="screen">
+            <div class="progress-header">
+                <div class="progress-bar-bg">
+                    <div id="progress-fill" class="progress-bar-fill"></div>
+                </div>
+                <div id="progress-counter" class="progress-counter">0/0</div>
+            </div>
+
+            <div>
+                <div id="card-chapter" class="chapter-tag">Chapter Context</div>
+                <div id="card-question" class="question-box">Question string loading contextually?</div>
+                <div id="card-options" class="options-list"></div>
+            </div>
+
+            <div id="explanation-box" class="explanation-panel">
+                <div id="explanation-heading" class="explanation-title">Explanation Breakdown</div>
+                <p id="explanation-body">Context string...</p>
+            </div>
+
+            <button class="btn" id="btn-next" style="display: none;">Next Question</button>
+        </div>
+
+        <div id="screen-results" class="screen">
+            <h1>Session Completed!</h1>
+            <div id="final-score" class="score-display">0%</div>
+            <p id="final-feedback" class="feedback-text">Feedback context details go here...</p>
+            
+            <button class="btn" id="btn-restart">Retry Shuffled Deck</button>
+            <button class="btn btn-secondary" id="btn-home">Main Menu</button>
+        </div>
+    </div>
+
+    <script>
+        // STATIC REPOSITORY DATA
+        const quizDatabase = {
+          "book_title": "Salesforce Developer I Certification",
+          "chapters": [
+            {
+              "chapter_number": 1,
+              "chapter_title": "Salesforce Fundamentals and Architecture",
+              "questions": [
+                {
+                  "q_id": "1.1",
+                  "q": "What does the 'Model' in Salesforce MVC represent?",
+                  "opts": ["User Interface", "Data layer (objects, fields, database)", "Business logic (Apex, Flow)", "Security layer"],
+                  "ans_idx": 1,
+                  "exp": "In the MVC pattern, the Model represents the data layer. In Salesforce, this includes objects, fields, relationships, and the underlying database that stores the organization's data."
+                },
+                {
+                  "q_id": "1.2",
+                  "q": "In a multi-tenant environment, how is tenant data protected from other tenants?",
+                  "opts": ["Physical separation of servers per tenant", "Logical isolation within shared infrastructure", "No separation is needed in cloud environments", "Each tenant gets a dedicated database instance"],
+                  "ans_idx": 1,
+                  "exp": "Salesforce uses logical isolation, not physical separation. All tenants share the same hardware, databases, and infrastructure, but each tenant's data is logically separated and protected."
+                },
+                {
+                  "q_id": "1.3",
+                  "q": "Which of the following is NOT an implication of multi-tenancy in Salesforce?",
+                  "opts": ["Shared hardware and database resources", "Each organization gets its own dedicated physical server", "Centralized upgrades pushed by Salesforce", "Logical data isolation between tenants"],
+                  "ans_idx": 1,
+                  "exp": "Multi-tenancy specifically means sharing resources, not dedicating physical servers per tenant."
+                },
+                {
+                  "q_id": "1.4",
+                  "q": "What is the primary purpose of Salesforce Developer Edition?",
+                  "opts": ["Production deployment for small businesses", "Learning, prototyping, and developing proof-of-concepts", "Customer data storage and CRM operations", "Billing and subscription management"],
+                  "ans_idx": 1,
+                  "exp": "Developer Edition is a free, fully functional version of Salesforce designed for individual developers to safely build, experiment, and test applications without affecting live data."
+                },
+                {
+                  "q_id": "1.5",
+                  "q": "The 'View' component in Salesforce MVC corresponds to:",
+                  "opts": ["Apex classes and triggers", "Lightning pages, Visualforce, and page layouts", "Database tables and custom objects", "API endpoints and integrations"],
+                  "ans_idx": 1,
+                  "exp": "The View is the presentation layer — what users see and interact with. In Salesforce, this includes Lightning pages, Visualforce pages, and page layouts."
+                }
+              ]
+            },
+            {
+              "chapter_number": 2,
+              "chapter_title": "Objects and Data Management",
+              "questions": [
+                {
+                  "q_id": "2.1",
+                  "q": "Which standard object stores information about potential customers before they are qualified?",
+                  "opts": ["Account", "Contact", "Lead", "Opportunity"],
+                  "ans_idx": 2,
+                  "exp": "The Lead object stores information about prospects who have not yet been qualified. Once qualified, a Lead converts to an Account, Contact, and optionally an Opportunity."
+                },
+                {
+                  "q_id": "2.2",
+                  "q": "What is the standard API naming convention for custom objects in Salesforce?",
+                  "opts": ["ObjectName", "ObjectName__c", "Custom_ObjectName", "API_ObjectName__c"],
+                  "ans_idx": 1,
+                  "exp": "Custom object API names always end with '__c' (double underscore c) to distinguish custom metadata definitions from core standard platform objects."
+                },
+                {
+                  "q_id": "2.3",
+                  "q": "In a Master-Detail relationship, what happens to child records when the parent record is deleted?",
+                  "opts": ["Nothing happens to child records", "All child records are automatically deleted (cascade delete)", "Child records become orphaned (parent field cleared)", "Only the master-detail field is cleared, records remain"],
+                  "ans_idx": 1,
+                  "exp": "Master-Detail relationships enforce strict coupling. When the master is deleted, all detail child records are automatically cascade-deleted."
+                }
+              ]
+            },
+            {
+              "chapter_number": 3,
+              "chapter_title": "Salesforce Automatization Tools",
+              "questions": [
+                {
+                  "q_id": "3.1",
+                  "q": "What is the primary purpose of Record Types in Salesforce?",
+                  "opts": ["To store additional data fields", "To offer different business processes, page layouts, and picklist values per profile or use case", "To replace page layouts entirely", "To automate email sending based on record criteria"],
+                  "ans_idx": 1,
+                  "exp": "Record Types allow you to segment a single object for different business processes, offering specialized available picklist values and layouts per profile."
+                },
+                {
+                  "q_id": "3.3",
+                  "q": "Which Salesforce automation tool is considered 'declarative programming' (point-and-click, no code)?",
+                  "opts": ["Apex Triggers", "Visualforce pages", "Flow", "Lightning Web Components"],
+                  "ans_idx": 2,
+                  "exp": "Flow is Salesforce's primary declarative visual engine. It allows administrators to configure sophisticated logical processes without writing programmatic code."
+                }
+              ]
+            },
+            {
+              "chapter_number": 4,
+              "chapter_title": "Apex Programming",
+              "questions": [
+                {
+                  "q_id": "4.1",
+                  "q": "Apex is best described as what type of programming language?",
+                  "opts": ["Weakly-typed scripting language", "Strongly-typed, object-oriented programming language", "Purely functional programming language", "Markup and styling language"],
+                  "ans_idx": 1,
+                  "exp": "Apex is a strongly-typed, object-oriented programming language that compiles to bytecode and runs natively on multi-tenant Salesforce architecture servers."
+                },
+                {
+                  "q_id": "4.5",
+                  "q": "What is a key characteristic of a Set collection in Apex?",
+                  "opts": ["Ordered collection that allows duplicate elements", "Unordered collection that contains only unique elements", "Key-value pairs where keys must be unique", "Indexed by integer positions like an array"],
+                  "ans_idx": 1,
+                  "exp": "A Set is an unordered collection of entirely unique elements. Adding duplicate indices will be silently ignored without error constraints."
+                }
+              ]
+            }
+          ]
+        };
+
+        // Application State
+        let activeDeck = [];
+        let currentCardIndex = 0;
+        let sessionScore = 0;
+        let cardAnswered = false;
+        let lastSelectedChapter = 'all';
+
+        // Interface Screen Hooks
+        const screenDashboard = document.getElementById('screen-dashboard');
+        const screenQuiz = document.getElementById('screen-quiz');
+        const screenResults = document.getElementById('screen-results');
+        const menuTarget = document.getElementById('menu-target');
+
+        // Fisher-Yates Randomization Shuffler
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize Dynamic Menu Buttons
+        function buildMainMenu() {
+            document.getElementById('app-title').innerText = quizDatabase.book_title;
+            menuTarget.innerHTML = '';
+
+            // 1. Add "All Combined" Option card
+            let totalQCount = 0;
+            quizDatabase.chapters.forEach(c => totalQCount += c.questions.length);
+
+            const allCard = document.createElement('div');
+            allCard.className = 'menu-card';
+            allCard.innerHTML = `
+                <div class="menu-card-title">All Chapters Combined</div>
+                <div class="menu-card-meta">Full Deck simulation &bull; ${totalQCount} Total Cards</div>
+            `;
+            allCard.onclick = () => initQuizSession('all');
+            menuTarget.appendChild(allCard);
+
+            // 2. Map structural sub-chapters
+            quizDatabase.chapters.forEach(ch => {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                card.innerHTML = `
+                    <div class="menu-card-title">Chapter ${ch.chapter_number}: ${ch.chapter_title}</div>
+                    <div class="menu-card-meta">${ch.questions.length} Practice Cards</div>
+                `;
+                card.onclick = () => initQuizSession(ch.chapter_number);
+                menuTarget.appendChild(card);
+            });
+        }
+
+        function switchView(target) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            target.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize Selected Quiz Session Context
+        function initQuizSession(chapterId) {
+            lastSelectedChapter = chapterId;
+            activeDeck = [];
+            sessionScore = 0;
+            currentCardIndex = 0;
+
+            quizDatabase.chapters.forEach(ch => {
+                if (chapterId === 'all' || ch.chapter_number.toString() === chapterId.toString()) {
+                    ch.questions.forEach(q => {
+                        activeDeck.push({
+                            ...q,
+                            chapterText: `Chapter ${ch.chapter_number}: ${ch.chapter_title}`
+                        });
+                    });
+                }
+            });
+
+            // Always Shuffle target question deck dynamically
+            shuffleArray(activeDeck);
+            switchView(screenQuiz);
+            renderCard();
+        }
+
+        // Render Active Question
+        function renderCard() {
+            cardAnswered = false;
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('explanation-box').className = 'explanation-panel';
+
+            const card = activeDeck[currentCardIndex];
+
+            // Progress tracking updates
+            const progressiveCounter = currentCardIndex + 1;
+            const percentageComplete = (progressiveCounter / activeDeck.length) * 100;
+            document.getElementById('progress-fill').style.width = `${percentageComplete}%`;
+            document.getElementById('progress-counter').innerText = `${progressiveCounter}/${activeDeck.length}`;
+
+            // Insert textual data configurations
+            document.getElementById('card-chapter').innerText = card.chapterText;
+            document.getElementById('card-question').innerText = card.q;
+
+            // Gather options mapping, cache original data structures, then shuffle choices
+            const choiceDeck = card.opts.map((opt, idx) => ({ text: opt, originIdx: idx }));
+            shuffleArray(choiceDeck);
+
+            const optionsContainer = document.getElementById('card-options');
+            optionsContainer.innerHTML = '';
+
+            choiceDeck.forEach(choice => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option-item';
+                optionEl.innerText = choice.text;
+
+                optionEl.onclick = () => {
+                    if (cardAnswered) return;
+                    processSelection(optionEl, choice.originIdx, card);
+                };
+
+                optionsContainer.appendChild(optionEl);
+            });
+        }
+
+        // Process Choice Selections
+        function processSelection(selectedEl, chosenIdx, questionObj) {
+            cardAnswered = true;
+            const actualCorrectIdx = questionObj.ans_idx;
+            const isCorrect = (chosenIdx === actualCorrectIdx);
+
+            if (isCorrect) {
+                sessionScore++;
+                selectedEl.classList.add('correct');
+            } else {
+                selectedEl.classList.add('incorrect');
+                // Auto-highlight correct choice instantly
+                Array.from(document.getElementById('card-options').children).forEach(el => {
+                    if (el.innerText === questionObj.opts[actualCorrectIdx]) {
+                        el.classList.add('correct');
+                    }
+                });
+            }
+
+            // Expose structural verification explanation values
+            const expBox = document.getElementById('explanation-box');
+            expBox.className = `explanation-panel show ${isCorrect ? 'is-correct' : 'is-wrong'}`;
+            document.getElementById('explanation-heading').innerText = isCorrect ? "✓ Correct Choice" : "✗ Incorrect Selection";
+            document.getElementById('explanation-body').innerText = questionObj.exp;
+
+            document.getElementById('btn-next').style.display = 'block';
+        }
+
+        // Navigation Loop Controls
+        document.getElementById('btn-next').onclick = () => {
+            currentCardIndex++;
+            if (currentCardIndex < activeDeck.length) {
+                renderCard();
+            } else {
+                renderResultsPanel();
+            }
+        };
+
+        function renderResultsPanel() {
+            switchView(screenResults);
+            const scorePercent = Math.round((sessionScore / activeDeck.length) * 100);
+            document.getElementById('final-score').innerText = `${scorePercent}%`;
+            
+            let feedbackSummary = `Review your incorrect answers and try again. Practice makes perfect! (${sessionScore}/${activeDeck.length} correct)`;
+            if (scorePercent >= 85) {
+                feedbackSummary = `Excellent performance! You've shown exceptional mastery of these topics. (${sessionScore}/${activeDeck.length} correct)`;
+            } else if (scorePercent >= 70) {
+                feedbackSummary = `Good job! You have a solid grasp of the core concepts, but keep polishing. (${sessionScore}/${activeDeck.length} correct)`;
+            }
+
+            document.getElementById('final-feedback').innerText = feedbackSummary;
+        }
+
+        // Restart Loops
+        document.getElementById('btn-restart').onclick = () => initQuizSession(lastSelectedChapter);
+        document.getElementById('btn-home').onclick = () => switchView(screenDashboard);
+
+        // Run application menu initialization
+        buildMainMenu();
+    </script>
+</body>
+</html>
