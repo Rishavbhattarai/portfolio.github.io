@@ -590,7 +590,7 @@ function renderCurrentDateCard() {
   const totalGroups = _activeDateGroups.length;
   const now = getCurrentPacificDate();
   const unlockableMatches = dateGroup.matches.filter(m => isMatchPredictable(m, now));
-  const matchesToShow = unlockableMatches.slice(0, 4);
+  const matchesToShow = unlockableMatches.slice(0, 6);
 
   if (matchesToShow.length === 0) {
     container.innerHTML = `
