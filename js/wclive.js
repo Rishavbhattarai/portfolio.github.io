@@ -22,7 +22,11 @@ const ROUNDS = [
   { key: 'r2',     label: 'Round 2',    start: '2026-06-18',          end: '2026-06-23' },
   { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-27' },
   { key: 'ro32',   label: 'Round Of 32',start: '2026-06-28',          end: '2026-07-03' },
-  // { key: 'ro16',   label: 'Round Of 16',start: '2026-07-04',          end: '2026-07-07' },
+  { key: 'ro16',   label: 'Round Of 16',start: '2026-07-04',          end: '2026-07-07' },
+  { key: 'qf',     label: 'QUARTER Hai GUYS/GIRL',start: '2026-07-09',       end: '2026-07-11' },
+  { key: 'sf',     label: 'SEMI Hai GUYS/GIRL',start: '2026-07-14',          end: '2026-07-15' },
+  { key: '3p',     label: '3rd Place Hai GUYS/GIRL',start: '2026-07-18',     end: '2026-07-18' },
+  { key: 'final',  label: 'FINALE Hai GUYS/GIRL',start: '2026-07-19',         end: '2026-07-19' },
 ];
 let activeRound = 'ro32';
 
@@ -508,7 +512,7 @@ function renderPlayerDetail() {
   const round = ROUNDS.find(r => r.key === selectedRoundKey) || ROUNDS[0];
   const filteredMatches = round.start === null ? MATCHES : MATCHES.filter(m => matchInRound(m, round));
 
-  const kanji = ['一','二','三','四','五'];
+  const kanji = ['一','二','三','四','五','六','七','八','九'];
   const definedRounds = ROUNDS.filter(r => r.key !== 'all' && r.start && r.start !== 'YYYY-MM-DD');
   const usedDbzIds = new Set();
   const dbzBuckets = [];
@@ -791,7 +795,6 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
   }
 };
 
-// ─── Tournament Stats – Roast Corner ──────────────────────────────────────
 // ─── Tournament Stats – Funny Stats & Roast Corner ──────────────────────
 function renderTournamentStats() {
   const container = document.getElementById('tournamentSubContent');
