@@ -21,9 +21,10 @@ const ROUNDS = [
   { key: 'r1',     label: 'Round 1',    start: '2026-06-11',          end: '2026-06-17' },
   { key: 'r2',     label: 'Round 2',    start: '2026-06-18',          end: '2026-06-23' },
   { key: 'r3',     label: 'Round 3',    start: '2026-06-24',          end: '2026-06-27' },
-  { key: 'ro32',   label: 'Round Of 32',start: '2026-06-28',          end: '2026-06-30' },
+  { key: 'ro32',   label: 'Round Of 32',start: '2026-06-28',          end: '2026-07-03' },
+  // { key: 'ro16',   label: 'Round Of 16',start: '2026-07-04',          end: '2026-07-07' },
 ];
-let activeRound = 'r3';
+let activeRound = 'ro32';
 
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;
