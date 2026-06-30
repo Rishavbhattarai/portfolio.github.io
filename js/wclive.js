@@ -800,7 +800,6 @@ function renderTournamentStats() {
   const container = document.getElementById('tournamentSubContent');
   if (!container) return;
 
-  // Compute per‑player stats
   const playersStats = PLAYERS.map(p => {
     const preds = MATCHES.flatMap(m =>
       m.preds.filter(pr => pr.p === p.name && pr.h !== null && pr.a !== null)
@@ -816,18 +815,15 @@ function renderTournamentStats() {
     return { ...p, total, exact, correct, wrong, totalPts, avgGoals, outcomeAcc };
   });
 
-  // Find extremes
   const mostPoints = playersStats.reduce((a, b) => a.totalPts > b.totalPts ? a : b);
   const mostExact = playersStats.reduce((a, b) => a.exact > b.exact ? a : b);
   const mostWrong = playersStats.reduce((a, b) => a.wrong > b.wrong ? a : b);
   const highestAcc = playersStats.reduce((a, b) => a.outcomeAcc > b.outcomeAcc ? a : b);
   const highestAvg = playersStats.reduce((a, b) => a.avgGoals > b.avgGoals ? a : b);
-  // Underdog: lowest points among those with at least 10 predictions (grinder)
   const underdog = playersStats
     .filter(p => p.total >= 10)
     .reduce((a, b) => a.totalPts < b.totalPts ? a : b);
 
-  // Movie references
   const movieRefs = {
     gambler: { title: 'The Gambler (2014)', icon: '🎲', quote: 'You gotta risk it for the biscuit.' },
     antman: { title: 'Ant‑Man', icon: '🐜', quote: 'Size doesn’t matter – it’s how you use it.' },
@@ -835,7 +831,6 @@ function renderTournamentStats() {
     thor: { title: 'Thor: Ragnarok', icon: '⚡', quote: 'He’s a friend from work!' },
   };
 
-  // Build cards
   const cards = [
     {
       title: '🎰 The High‑Risk Gambler',
@@ -843,7 +838,6 @@ function renderTournamentStats() {
       movie: movieRefs.gambler,
       description: `Leads with ${mostPoints.totalPts} pts (${mostPoints.exact} exacts) but also the most wrong (${mostPoints.wrong}). He’s the guy who bets on red and black at the same time – and somehow wins big.`,
     },
-
     {
       title: '🛡️ The Safe & Lucky Duo',
       players: [highestAcc, playersStats.find(p => p.name === 'Sweastik')],
@@ -858,7 +852,6 @@ function renderTournamentStats() {
     },
   ];
 
-  // Roast Corner – dynamic one‑liners
   const roasts = [
     {
       title: 'The "I Believe in Miracles" Award',
@@ -887,7 +880,6 @@ function renderTournamentStats() {
     },
   ];
 
-  // Build HTML
   let html = `
     <div class="tournament-container">
       <div class="tournament-header">
@@ -953,7 +945,12 @@ function buildAllUI() {
   populatePlayerRoundDropdown();
   renderPlayerDetail();
   buildAddPredSection();
-  // Ensure Tournament tab is rendered if it is the active sub-tab
+  // bracket refresh if visible
+  const bracketView = document.getElementById('matchBracketView');
+  if (bracketView && bracketView.style.display !== 'none') {
+    buildRishavBracket();
+  }
+  // Tournament tab if active
   const tournamentContent = document.getElementById('tournamentSubContent');
   if (tournamentContent && tournamentContent.style.display !== 'none') {
     renderTournamentStats();
@@ -965,7 +962,19 @@ window.showSection = function(id, btn) {
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (id === 'matches') renderRoundDashboard();
+  if (id === 'matches') {
+    // ensure sub-tab state is preserved
+    const activeTab = document.querySelector('.match-sub-tab.active');
+    if (activeTab && activeTab.dataset.matchtab === 'rishav') {
+      document.getElementById('matchDefaultView').style.display = 'none';
+      document.getElementById('matchBracketView').style.display = 'block';
+      buildRishavBracket();
+    } else {
+      document.getElementById('matchDefaultView').style.display = 'block';
+      document.getElementById('matchBracketView').style.display = 'none';
+      renderRoundDashboard();
+    }
+  }
   if (id === 'addpred') { buildAddPredSection(); startAddPredTimer(); } else stopAddPredTimer();
   if (id === 'standings') { buildTodayCarousel(); buildLeaderboard(); buildOverviewStats(); buildAllUpcomingGames(); }
   if (id === 'player') {
@@ -985,5 +994,132 @@ window.switchToPlayer = function(name) {
   renderPlayerDetail();
 };
 
+// ─── Match sub‑tab toggle ────────────────────────────────────────────────────
+function switchMatchSubTab(tab, btn) {
+  const defaultView = document.getElementById('matchDefaultView');
+  const bracketView = document.getElementById('matchBracketView');
+  const allBtns = document.querySelectorAll('.match-sub-tab');
+  allBtns.forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  if (tab === 'default') {
+    defaultView.style.display = 'block';
+    bracketView.style.display = 'none';
+    renderRoundDashboard();
+  } else {
+    defaultView.style.display = 'none';
+    bracketView.style.display = 'block';
+    buildRishavBracket();
+  }
+}
+
+// ─── Rishav's Bracket (teams only, no scores) ──────────────────────────────
+function buildRishavBracket() {
+  const container = document.getElementById('rishavBracketScroller');
+  if (!container) return;
+
+  const knockRounds = ['ro32', 'ro16', 'qf', 'sf', '3p', 'final'];
+  const roundLabels = {
+    ro32: 'Round of 32',
+    ro16: 'Round of 16',
+    qf: 'Quarter Final',
+    sf: 'Semi Final',
+    '3p': '3rd Place',
+    final: 'Final'
+  };
+  const order = ['ro32', 'ro16', 'qf', 'sf', '3p', 'final'];
+
+  const knockMatches = MATCHES.filter(m => {
+    const r = getRoundKeyForMatch(m);
+    return knockRounds.includes(r);
+  });
+
+  if (!knockMatches.length) {
+    container.innerHTML = `<div class="bracket-empty"><i class="ti ti-brackets"></i>No knockout matches found.</div>`;
+    return;
+  }
+
+  const grouped = {};
+  order.forEach(k => { grouped[k] = []; });
+  knockMatches.forEach(m => {
+    const r = getRoundKeyForMatch(m);
+    if (grouped[r]) grouped[r].push(m);
+  });
+  order.forEach(k => {
+    grouped[k].sort((a, b) => parseMatchDateTime(a.dateTimeRaw) - parseMatchDateTime(b.dateTimeRaw));
+  });
+
+  let html = '';
+  order.forEach(roundKey => {
+    const matches = grouped[roundKey] || [];
+    if (!matches.length) return;
+    const label = roundLabels[roundKey] || roundKey;
+
+    let matchesHtml = matches.map(m => {
+      const rishav = m.preds.find(p => p.p === 'Rishav');
+      const hasWinner = rishav && rishav.h !== null && rishav.a !== null;
+      const homeTeam = m.matchup.split(' vs ')[0] || m.matchup;
+      const awayTeam = m.matchup.split(' vs ')[1] || '?';
+      let winner = null;
+      if (hasWinner) {
+        if (rishav.h > rishav.a) winner = homeTeam;
+        else if (rishav.h < rishav.a) winner = awayTeam;
+        else winner = 'Draw (PK)';
+      }
+      // actual score not shown
+      return `<div class="bracket-match">
+        <div class="teams">
+          <span class="team" title="${homeTeam}">${homeTeam}</span>
+          <span class="vs">vs</span>
+          <span class="team" title="${awayTeam}">${awayTeam}</span>
+        </div>
+        ${winner ? `<div class="winner-tag">⬆️ <span class="team-win">${winner}</span> advances</div>` : `<div class="winner-tag tbd">⏳ TBD</div>`}
+      </div>`;
+    }).join('');
+
+    html += `<div class="bracket-round">
+      <div class="bracket-round-header">${label} <span style="font-weight:400;font-size:10px;color:var(--text-tertiary);">${matches.length} matches</span></div>
+      <div class="bracket-round-body">${matchesHtml}</div>
+    </div>`;
+
+    const idx = order.indexOf(roundKey);
+    if (idx < order.length - 1) {
+      const nextKey = order[idx + 1];
+      if (grouped[nextKey] && grouped[nextKey].length) {
+        html += `<div class="bracket-connector"><i class="ti ti-chevron-right"></i></div>`;
+      }
+    }
+  });
+
+  if (!html) {
+    container.innerHTML = `<div class="bracket-empty"><i class="ti ti-brackets"></i>No knockout matches found.</div>`;
+  } else {
+    container.innerHTML = html;
+  }
+}
+
+// helper: get round key for a match
+function getRoundKeyForMatch(match) {
+  const label = match.group || '';
+  const lower = label.toLowerCase();
+  if (lower.includes('round of 32') || lower.includes('round of thirty')) return 'ro32';
+  if (lower.includes('round of 16') || lower.includes('round of sixteen')) return 'ro16';
+  if (lower.includes('quarter') || lower.includes('quater')) return 'qf';
+  if (lower.includes('semi')) return 'sf';
+  if (lower.includes('3rd') || lower.includes('third')) return '3p';
+  if (lower.includes('finale') || lower.includes('final')) return 'final';
+  for (const r of ROUNDS) {
+    if (r.key === 'all') continue;
+    if (matchInRound(match, r)) return r.key;
+  }
+  return 'other';
+}
+
+// expose to global
+window.switchMatchSubTab = switchMatchSubTab;
+window.buildRishavBracket = buildRishavBracket;
+window.getRoundKeyForMatch = getRoundKeyForMatch;
+
+// ─── Initialize ──────────────────────────────────────────────────────────────
 loadData();
 window.addEventListener('beforeunload', () => { stopAddPredTimer(); });

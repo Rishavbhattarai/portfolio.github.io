@@ -50,7 +50,7 @@
       </button>
 
       <section id="standings" class="section active">
-        <div class="sec-label" id="carouselLabel">सुनुस् त</div>
+        <div class="sec-label" id="carouselLabel">घर लेरौनुस् त</div>
         <div class="carousel-container" id="carouselContainer">
           <div class="carousel-track" id="upcomingCarousel"></div>
         </div>
@@ -63,10 +63,32 @@
         <div id="allUpcomingGamesContainer"></div>
       </section>
 
-      <section id="matches" class="section">
-        <div id="statusTabs" class="filter-bar"></div>
-        <div id="roundDashboard"></div>
-      </section>
+<section id="matches" class="section">
+  <!-- sub-tabs: Matches / Rishav's Prediction -->
+  <div class="match-sub-tabs">
+    <button class="match-sub-tab active" data-matchtab="default" onclick="switchMatchSubTab('default',this)">📋 Matches</button>
+    <button class="match-sub-tab" data-matchtab="rishav" onclick="switchMatchSubTab('rishav',this)">🧠 Rishav's Prediction</button>
+  </div>
+
+  <!-- default match view (existing) -->
+  <div id="matchDefaultView">
+    <div id="statusTabs" class="filter-bar"></div>
+    <div id="roundDashboard"></div>
+  </div>
+
+  <!-- bracket view (Rishav's Prediction) -->
+  <div id="matchBracketView" style="display:none;">
+    <div class="sec-label" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span>🏆 Knockout Bracket – Rishav's Predictions</span>
+      <span style="font-size:11px;color:var(--text-tertiary);font-weight:400;margin-left:auto;">
+        <i class="ti ti-info-circle"></i> Scores shown are Rishav's predictions
+      </span>
+    </div>
+    <div id="rishavBracketContainer" class="bracket-shell">
+      <div class="bracket-scroll" id="rishavBracketScroller"></div>
+    </div>
+  </div>
+</section>
 
       <section id="player" class="section">
         <div class="sub-tabs-track">
