@@ -1,4 +1,4 @@
-/* WC 2026 – Live Prediction Game | styles.css (Golden & Dark Theme) */
+/* WC 2026 – Live Prediction Game | styles.css (Golden & Dark Navy Theme) */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,24 +6,24 @@
 }
 
 :root {
-  /* Rich golden palette – more gold, less rose */
-  --gold: #D4AF37;                 /* classic gold */
-  --gold-light: #FFF8E7;           /* soft cream */
-  --gold-dark: #B8860B;            /* deeper gold */
+  /* Rich golden palette – unchanged */
+  --gold: #D4AF37;
+  --gold-light: #FFF8E7;
+  --gold-dark: #B8860B;
 
-  /* Dark complementary – deep charcoal/warm black to make gold pop */
-  --malachite: #2A2A2A;            /* medium dark grey */
-  --malachite-light: #1A1A1A;      /* darker */
-  --malachite-base: #0F0F0F;       /* almost black */
-  --malachite-dark: #080808;       /* deepest */
+  /* Dark navy – very close to black, but with a cool blue undertone */
+  --malachite: #1E2230;          /* medium dark navy */
+  --malachite-light: #141824;    /* darker navy */
+  --malachite-base: #0B0E18;     /* almost black with a hint of blue */
+  --malachite-dark: #060810;     /* deepest navy */
 
-  /* Backgrounds – dark, elegant */
-  --bg: #0F0F0F;
-  --bg-secondary: #1A1A1A;
-  --bg-tertiary: #262626;
-  --text-primary: #F5F5F5;         /* crisp white */
-  --text-secondary: #D0D0D0;       /* light grey */
-  --text-tertiary: #A0A0A0;        /* medium grey */
+  /* Backgrounds – navy shades */
+  --bg: #0B0E18;
+  --bg-secondary: #141824;
+  --bg-tertiary: #1E2230;
+  --text-primary: #F5F5F5;
+  --text-secondary: #D0D0D0;
+  --text-tertiary: #A0A0A0;
 
   --border: rgba(212, 175, 55, 0.15);
   --border-md: rgba(212, 175, 55, 0.3);
@@ -37,18 +37,18 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  /* Keep consistent */
+  /* Keep consistent with dark navy */
   :root {
     --gold: #D4AF37;
     --gold-light: #FFF8E7;
     --gold-dark: #B8860B;
-    --malachite: #2A2A2A;
-    --malachite-light: #1A1A1A;
-    --malachite-base: #0F0F0F;
-    --malachite-dark: #080808;
-    --bg: #0F0F0F;
-    --bg-secondary: #1A1A1A;
-    --bg-tertiary: #262626;
+    --malachite: #1E2230;
+    --malachite-light: #141824;
+    --malachite-base: #0B0E18;
+    --malachite-dark: #060810;
+    --bg: #0B0E18;
+    --bg-secondary: #141824;
+    --bg-tertiary: #1E2230;
     --text-primary: #F5F5F5;
     --text-secondary: #D0D0D0;
     --text-tertiary: #A0A0A0;
