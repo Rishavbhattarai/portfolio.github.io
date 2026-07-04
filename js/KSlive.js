@@ -1,4 +1,4 @@
-// WC 2026 – Live Prediction Game | app.js (updated)
+// WC 2026 – Live Prediction Game | app.js (updated with GV)
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzDixFKGR37tpIZ7QrppJmBVMMnbTOUALuBx_9FOXZZ3fz7fryeQ3S8p5goswlbPDUmXQ/exec';
 const PLAYER_COLORS = {
   'Amit':      { color:'#5b6cf6', bg:'#eeedfe', textc:'#3C3489', initials:'AM' },
@@ -94,6 +94,23 @@ function calcPoints(homeScore, awayScore, predH, predA) {
   return Math.sign(homeScore-awayScore)===Math.sign(predH-predA) ? 1 : 0;
 }
 
+// ─── Goals Variance (GV) ──────────────────────────────────────────────────────
+function calcGoalsVariance(playerName) {
+  let totalError = 0;
+  let count = 0;
+  for (const m of MATCHES) {
+    if (m.homeScore === null || m.awayScore === null) continue; // only completed matches
+    const pr = m.preds.find(p => p.p === playerName);
+    if (!pr || pr.h === null || pr.a === null) continue;
+    const actualTotal = m.homeScore + m.awayScore;
+    const predTotal = pr.h + pr.a;
+    totalError += Math.abs(actualTotal - predTotal);
+    count++;
+  }
+  return count > 0 ? totalError : null; // null if no predictions on completed matches
+}
+
+// ─── Load & parse ──────────────────────────────────────────────────────────────
 async function loadData(silent=false) {
   const loadingMsg = document.getElementById('loadingMsg');
   const appContent = document.getElementById('appContent');
@@ -291,7 +308,7 @@ function buildTodayCarousel() {
   }
 }
 
-// ─── Leaderboard ──────────────────────────────────────────────────────────────
+// ─── Leaderboard (with GV column) ────────────────────────────────────────────
 function buildRoundFilterBar() {
   const el = document.getElementById('roundFilterBar');
   if (!el) return;
@@ -319,10 +336,21 @@ function getLeaderboardData() {
 function buildLeaderboard() {
   buildRoundFilterBar();
   const { roundMatches, gamesLeft } = getLeaderboardData();
-  const data = PLAYERS.map(p => ({
-    ...p,
-    pts: roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0)
-  }));
+  const data = PLAYERS.map(p => {
+    const pts = roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0);
+    // GV: only for completed matches (within the round)
+    let gv = 0, gvCount = 0;
+    for (const m of roundMatches) {
+      if (m.homeScore === null || m.awayScore === null) continue;
+      const pr = m.preds.find(pr=>pr.p===p.name);
+      if (!pr || pr.h === null || pr.a === null) continue;
+      const actualTotal = m.homeScore + m.awayScore;
+      const predTotal = pr.h + pr.a;
+      gv += Math.abs(actualTotal - predTotal);
+      gvCount++;
+    }
+    return { ...p, pts, gv: gvCount > 0 ? gv : null };
+  });
   const sorted=[...data].sort((a,b)=>b.pts-a.pts);
   const maxPts=sorted[0]?.pts||1;
   const labels=['🦏','✏️🧽','👁️','4th','5th','6th'];
@@ -332,7 +360,8 @@ function buildLeaderboard() {
     sorted.map((p,i)=>{
       const w=Math.round((p.pts/maxPts)*100);
       const rankLabel = i < 3 ? labels[i] : `${i+1}${['th','st','nd','rd'][(i+1)%10]||'th'}`;
-      return `<div class="player-row" onclick="switchToPlayer('${p.name}')"><span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span><div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div></div><div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div></div>`;
+      const gvDisplay = p.gv !== null ? p.gv : '—';
+      return `<div class="player-row" onclick="switchToPlayer('${p.name}')"><span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span><div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div></div><div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div><div class="gv-col"><div class="gv-big">${gvDisplay}</div><div class="gv-unit">GV</div></div></div>`;
     }).join('');
 }
 
@@ -564,7 +593,6 @@ function renderPlayerDetail() {
 }
 
 // ─── Add Predictions section ─────────────────────────────────────────────────
-// KEPT EXACTLY AS IN ORIGINAL KSlive.js (including player filtering)
 function buildAddPredSection() {
   const now = getCurrentPacificDate();
   const groups = new Map();
@@ -801,11 +829,46 @@ window.handleSavePred = async function(matchRowIndex, playerName, uid) {
   }
 };
 
-// ─── Tournament Stats – Funny Stats & Roast Corner ──────────────────────
+// ─── Tournament Stats – Funny Stats & Roast Corner + GV Leaderboard ──────
 function renderTournamentStats() {
   const container = document.getElementById('tournamentSubContent');
   if (!container) return;
 
+  // --- GV Leaderboard ---
+  const gvData = PLAYERS.map(p => {
+    const gv = calcGoalsVariance(p.name);
+    return { ...p, gv };
+  }).filter(p => p.gv !== null);
+  gvData.sort((a,b) => (a.gv ?? Infinity) - (b.gv ?? Infinity));
+
+  let gvHtml = '';
+  if (gvData.length) {
+    const medalClasses = ['gold','silver','bronze'];
+    gvHtml = `
+      <div class="gv-leaderboard-wrap">
+        <div class="gv-leaderboard-header">
+          <span>⚽ Goals Variance (GV) Leaderboard</span>
+          <span class="gv-hint">lowest = best goal‑tempo instinct</span>
+        </div>
+        ${gvData.map((p, idx) => {
+          const rank = idx + 1;
+          const badgeClass = idx < 3 ? `gv-rank-badge ${medalClasses[idx]}` : 'gv-rank-badge';
+          const rankLabel = idx < 3 ? ['🥇','🥈','🥉'][idx] : `#${rank}`;
+          return `<div class="gv-rank-row">
+            <span class="${badgeClass}">${rankLabel}</span>
+            <span class="gv-rank-avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</span>
+            <span class="gv-rank-name">${p.name}</span>
+            <span class="gv-rank-value">${p.gv}<span class="gv-rank-unit">GV</span></span>
+            <span class="gv-rank-pts-tag">${p.pts} pts</span>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+  } else {
+    gvHtml = `<div class="no-gv-data">No completed matches with predictions yet.</div>`;
+  }
+
+  // --- Existing Roast Corner & fun stats (keeping original) ---
   const playersStats = PLAYERS.map(p => {
     const preds = MATCHES.flatMap(m =>
       m.preds.filter(pr => pr.p === p.name && pr.h !== null && pr.a !== null)
@@ -932,6 +995,9 @@ function renderTournamentStats() {
           </div>
         `;
       }).join('')}
+
+      <!-- GV Leaderboard -->
+      ${gvHtml}
     </div>
   `;
 
@@ -1040,7 +1106,6 @@ function buildRishavBracket() {
   }
 }
 
-// helper: get round key for a match
 function getRoundKeyForMatch(match) {
   const label = match.group || '';
   const lower = label.toLowerCase();
@@ -1088,7 +1153,6 @@ window.showSection = function(id, btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   if (id === 'matches') {
-    // preserve sub-tab state
     const activeTab = document.querySelector('.match-sub-tab.active');
     if (activeTab && activeTab.dataset.matchtab === 'rishav') {
       document.getElementById('matchDefaultView').style.display = 'none';
@@ -1119,7 +1183,6 @@ window.switchToPlayer = function(name) {
   renderPlayerDetail();
 };
 
-// Expose new functions globally
 window.switchMatchSubTab = switchMatchSubTab;
 window.buildRishavBracket = buildRishavBracket;
 window.getRoundKeyForMatch = getRoundKeyForMatch;

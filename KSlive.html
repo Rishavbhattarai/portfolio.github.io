@@ -5,15 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>WC 2026 – Knockout Stage</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="../css/KSlive.css?v=18.1.2">
+  <link rel="stylesheet" href="../css/KSlive.css?v=19.1.2">
   <style id="stage-toggle-style">
-    /* ── Shared Stage Toggle (identical on wclive.html & KSlive.html) ──
-       Matches the live oval-pill toggle: dark rounded outer track,
-       active tab rendered as a solid gold oval pill. */
     .stg-toggle-wrap{width:100%;max-width:520px;margin:0 auto;background:#0B1B33;padding:14px 16px;box-sizing:border-box;flex-shrink:0}
     .stg-toggle-track{display:flex;width:100%;background:#274b83;border-radius:999px;padding:4px;gap:4px;position:relative;box-sizing:border-box}
     .stg-toggle-link{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;padding:10px 4px;font-size:13px;font-weight:700;border-radius:999px;color:rgba(255,255,255,.55);transition:all .2s;white-space:nowrap;box-sizing:border-box}
     .stg-toggle-link.stg-active{background:linear-gradient(135deg,#F4CE4E,#D4AF37);color:#0B1B33;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+    /* GV styles */
+    .gv-col { text-align:right; margin-left:12px; min-width:44px; flex-shrink:0; }
+    .gv-col .gv-big { font-size:22px; font-weight:700; line-height:1; color:var(--gold-dark); letter-spacing:.02em; }
+    .gv-col .gv-unit { font-size:10px; color:var(--text-tertiary); font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+    @media (prefers-color-scheme: dark) { .gv-col .gv-big { color:var(--gold); } }
+    .gv-leaderboard-wrap { margin-top:20px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+    .gv-leaderboard-header { background:var(--malachite-base); padding:12px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+    .gv-leaderboard-header span { font-weight:700; font-size:15px; color:var(--gold); letter-spacing:.04em; }
+    .gv-leaderboard-header .gv-hint { font-size:12px; font-weight:400; color:var(--text-tertiary); }
+    .gv-rank-row { display:flex; align-items:center; gap:12px; padding:12px 20px; border-bottom:1px solid var(--border); transition:background .2s; }
+    .gv-rank-row:last-child { border-bottom:none; }
+    .gv-rank-row:hover { background:var(--hover-bg); }
+    .gv-rank-badge { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; background:var(--bg-tertiary); color:var(--text-secondary); }
+    .gv-rank-badge.gold { background:var(--gold); color:var(--malachite-base); }
+    .gv-rank-badge.silver { background:#b0b0b0; color:#1a1a1a; }
+    .gv-rank-badge.bronze { background:#cd7f32; color:#1a1a1a; }
+    .gv-rank-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:13px; flex-shrink:0; }
+    .gv-rank-name { flex:1; font-weight:600; font-size:15px; color:var(--text-primary); }
+    .gv-rank-value { font-size:22px; font-weight:700; color:var(--gold-dark); letter-spacing:.02em; }
+    .gv-rank-value .gv-rank-unit { font-size:11px; font-weight:600; color:var(--text-tertiary); margin-left:4px; text-transform:uppercase; }
+    @media (prefers-color-scheme: dark) { .gv-rank-value { color:var(--gold); } }
+    .gv-rank-pts-tag { font-size:12px; color:var(--text-tertiary); background:var(--bg-secondary); padding:2px 10px; border-radius:999px; font-weight:500; margin-left:8px; }
+    .no-gv-data { padding:30px 20px; text-align:center; color:var(--text-tertiary); font-style:italic; }
+    @media (max-width:480px) { .gv-col .gv-big { font-size:18px; } .gv-rank-value { font-size:18px; } .gv-rank-name { font-size:13px; } .gv-rank-row { padding:10px 14px; gap:8px; } }
   </style>
 </head>
 <body>
@@ -111,7 +132,6 @@
             const tournamentContent = document.getElementById('tournamentSubContent');
             const tabPlayer = document.getElementById('subTabPlayer');
             const tabTournament = document.getElementById('subTabTournament');
-            
             if (tabName === 'player') {
               playerContent.style.display = 'block';
               tournamentContent.style.display = 'none';
@@ -122,10 +142,7 @@
               tournamentContent.style.display = 'block';
               tabPlayer.classList.remove('active');
               tabTournament.classList.add('active');
-              // renderTournamentStats is defined in wclive.js
-              if (typeof renderTournamentStats === 'function') {
-                renderTournamentStats();
-              }
+              if (typeof renderTournamentStats === 'function') renderTournamentStats();
             }
           }
         </script>
@@ -144,7 +161,7 @@
 </div>
 
 
-<script src="../js/KSlive.js?v=18.1.2"></script>
+<script src="../js/KSlive.js?v=19.1.2"></script>
   
 </body>
 </html>

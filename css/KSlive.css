@@ -6,25 +6,19 @@
 }
 
 :root {
-  /* Rose gold palette */
-  --gold: #B76E79;                 /* main rose gold */
-  --gold-light: #E8C8C9;           /* soft rose */
-  --gold-dark: #8E4A5A;            /* deep rose */
-
-  /* Complementary warm dark accents (instead of malachite green) */
-  --malachite: #5C3A3D;            /* muted rose‑brown */
-  --malachite-light: #3D1F2A;      /* dark warm */
-  --malachite-base: #1A1410;       /* very dark warm (header, primary) */
-  --malachite-dark: #0F0A08;       /* deepest */
-
-  /* Backgrounds – warm dark */
+  --gold: #B76E79;
+  --gold-light: #E8C8C9;
+  --gold-dark: #8E4A5A;
+  --malachite: #5C3A3D;
+  --malachite-light: #3D1F2A;
+  --malachite-base: #1A1410;
+  --malachite-dark: #0F0A08;
   --bg: #1A1410;
   --bg-secondary: #2A1F1A;
   --bg-tertiary: #3D2E24;
-  --text-primary: #F5E6D3;         /* warm ivory – matches rose gold */
-  --text-secondary: #D4C0B0;       /* softer warm grey */
+  --text-primary: #F5E6D3;
+  --text-secondary: #D4C0B0;
   --text-tertiary: #A8907A;
-
   --border: rgba(245, 230, 211, 0.12);
   --border-md: rgba(245, 230, 211, 0.22);
   --radius-sm: 8px;
@@ -37,7 +31,6 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  /* Keep same warm dark for consistency */
   :root {
     --gold: #B76E79;
     --gold-light: #E8C8C9;
@@ -991,18 +984,9 @@ body {
 }
 
 @keyframes pulse {
-  0% {
-    opacity: .7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-  100% {
-    opacity: .7;
-    transform: scale(1);
-  }
+  0% { opacity: .7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: .7; transform: scale(1); }
 }
 
 .pred-player-row {
@@ -1480,7 +1464,7 @@ body {
   font-style: italic;
 }
 
-/* ── Roast Corner styles ── */
+/* Roast Corner */
 .roast-corner-title {
   font-size: 20px;
   font-weight: 800;
@@ -1549,18 +1533,12 @@ body {
 }
 
 @media (max-width: 480px) {
-  .roast-body {
-    padding-left: 0;
-  }
-  .roast-header {
-    flex-wrap: wrap;
-  }
-  .roast-player-tag {
-    margin-left: 0;
-  }
+  .roast-body { padding-left: 0; }
+  .roast-header { flex-wrap: wrap; }
+  .roast-player-tag { margin-left: 0; }
 }
 
-/* ─── Sub‑tabs (Player / Tournament) ─── */
+/* Sub‑tabs */
 .sub-tabs-track {
   display: flex;
   background: var(--bg-secondary);
@@ -1596,87 +1574,6 @@ body {
   color: var(--text-primary);
 }
 
-/* ─── Roast Corner (Tournament tab) ─── */
-.roast-corner-title {
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
-}
-
-.roast-card {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  padding: 16px 18px;
-  border-left: 4px solid var(--gold);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 14px;
-}
-
-.roast-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.roast-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
-.roast-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
-.roast-title {
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--text-primary);
-}
-
-.roast-player-tag {
-  margin-left: auto;
-  font-size: 13px;
-  color: var(--text-tertiary);
-  background: var(--bg);
-  padding: 2px 12px;
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-.roast-body {
-  font-size: 15px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  padding-left: 44px;
-}
-
-@media (max-width: 480px) {
-  .roast-body {
-    padding-left: 0;
-  }
-  .roast-header {
-    flex-wrap: wrap;
-  }
-  .roast-player-tag {
-    margin-left: 0;
-  }
-}
-
-/* ─── Tournament stats cards ─── */
 .tournament-container {
   padding: 4px 0 20px;
 }
@@ -1770,13 +1667,7 @@ body {
   line-height: 1.5;
 }
 
-/* Roast corner already exists, but we keep it for consistency */
-.roast-corner-title {
-  font-size: 20px;
-  font-weight: 800;
-  margin: 24px 0 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
+/* GV leaderboard inside tournament */
+.gv-leaderboard-wrap {
+  margin-top: 24px;
 }
