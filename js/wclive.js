@@ -28,7 +28,7 @@ const ROUNDS = [
   { key: '3p',     label: '3rd Place Hai GUYS/GIRL',start: '2026-07-18',     end: '2026-07-18' },
   { key: 'final',  label: 'FINALE Hai GUYS/GIRL',start: '2026-07-19',         end: '2026-07-19' },
 ];
-let activeRound = 'ro32';
+let activeRound = 'ro16';
 
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;
