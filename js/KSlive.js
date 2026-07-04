@@ -1,4 +1,4 @@
-// WC 2026 – Live Prediction Game | app.js (updated with GV)
+// WC 2026 – Live Prediction Game | app.js (with smart round selection & auto‑center)
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzDixFKGR37tpIZ7QrppJmBVMMnbTOUALuBx_9FOXZZ3fz7fryeQ3S8p5goswlbPDUmXQ/exec';
 const PLAYER_COLORS = {
   'Amit':      { color:'#5b6cf6', bg:'#eeedfe', textc:'#3C3489', initials:'AM' },
@@ -28,7 +28,7 @@ const ROUNDS = [
   { key: '3p',     label: '3rd Place Hai GUYS/GIRL',start: '2026-07-18',     end: '2026-07-18' },
   { key: 'final',  label: 'FINALE Hai GUYS/GIRL',start: '2026-07-19',         end: '2026-07-19' },
 ];
-let activeRound = 'ro16';
+let activeRound = 'ro32'; // will be overridden after data loads
 
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;
@@ -99,7 +99,7 @@ function calcGoalsVariance(playerName) {
   let totalError = 0;
   let count = 0;
   for (const m of MATCHES) {
-    if (m.homeScore === null || m.awayScore === null) continue; // only completed matches
+    if (m.homeScore === null || m.awayScore === null) continue;
     const pr = m.preds.find(p => p.p === playerName);
     if (!pr || pr.h === null || pr.a === null) continue;
     const actualTotal = m.homeScore + m.awayScore;
@@ -107,7 +107,7 @@ function calcGoalsVariance(playerName) {
     totalError += Math.abs(actualTotal - predTotal);
     count++;
   }
-  return count > 0 ? totalError : null; // null if no predictions on completed matches
+  return count > 0 ? totalError : null;
 }
 
 // ─── Load & parse ──────────────────────────────────────────────────────────────
@@ -126,6 +126,8 @@ async function loadData(silent=false) {
     if (!data||data.length===0) throw new Error('Sheet returned no data');
     _dtCache.clear();
     parseSheetData(data);
+    // Set default round based on current date
+    setDefaultRound();
     if (!silent) { loadingMsg.style.display='none'; appContent.style.display='block'; }
     buildAllUI();
   } catch(err) {
@@ -182,6 +184,46 @@ function recalcAllPoints() {
   });
 }
 
+// ─── Set default round based on current date ─────────────────────────────────
+function setDefaultRound() {
+  const now = getCurrentPacificDate();
+  // consider only rounds that have at least one match
+  const roundsWithMatches = ROUNDS.filter(r => r.key !== 'all' && MATCHES.some(m => matchInRound(m, r)));
+  if (roundsWithMatches.length === 0) {
+    activeRound = 'all';
+    return;
+  }
+
+  // 1) Find round that contains today
+  const activeRoundCandidate = roundsWithMatches.find(r => {
+    if (!r.start || !r.end) return false;
+    const start = new Date(r.start + 'T00:00:00');
+    const end = new Date(r.end + 'T23:59:59');
+    return now >= start && now <= end;
+  });
+  if (activeRoundCandidate) {
+    activeRound = activeRoundCandidate.key;
+    return;
+  }
+
+  // 2) Find next upcoming round (start > today)
+  const futureRounds = roundsWithMatches.filter(r => r.start && new Date(r.start + 'T00:00:00') > now);
+  if (futureRounds.length) {
+    futureRounds.sort((a,b) => new Date(a.start) - new Date(b.start));
+    activeRound = futureRounds[0].key;
+    return;
+  }
+
+  // 3) Fallback: latest round by end date
+  const sorted = roundsWithMatches.sort((a,b) => {
+    const endA = a.end ? new Date(a.end + 'T23:59:59') : new Date(0);
+    const endB = b.end ? new Date(b.end + 'T23:59:59') : new Date(0);
+    return endB - endA;
+  });
+  activeRound = sorted[0].key;
+}
+
+// ─── Save prediction ──────────────────────────────────────────────────────────
 async function savePrediction(matchRowIndex, playerName, home, away) {
   const payload = JSON.stringify({action:'savePrediction',matchRowIndex,playerName,home,away});
   await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:payload});
@@ -308,13 +350,25 @@ function buildTodayCarousel() {
   }
 }
 
-// ─── Leaderboard (with GV column) ────────────────────────────────────────────
+// ─── Leaderboard (with GV column and proper sorting) ─────────────────────────
 function buildRoundFilterBar() {
   const el = document.getElementById('roundFilterBar');
   if (!el) return;
   el.innerHTML = ROUNDS.map(r =>
     `<button class="round-pill-btn ${r.key===activeRound?'active':''}" onclick="setRound('${r.key}',this)">${r.label}</button>`
   ).join('');
+
+  // Auto-scroll to center the active button
+  requestAnimationFrame(() => {
+    const activeBtn = el.querySelector('.round-pill-btn.active');
+    if (activeBtn) {
+      const containerWidth = el.offsetWidth;
+      const btnWidth = activeBtn.offsetWidth;
+      const btnLeft = activeBtn.offsetLeft;
+      const scrollTarget = btnLeft - (containerWidth / 2) + (btnWidth / 2);
+      el.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+    }
+  });
 }
 
 window.setRound = function(key, btn) {
@@ -322,6 +376,18 @@ window.setRound = function(key, btn) {
   document.querySelectorAll('#roundFilterBar .round-pill-btn').forEach(b=>b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   buildLeaderboard();
+  // Scroll to center after rebuild
+  requestAnimationFrame(() => {
+    const el = document.getElementById('roundFilterBar');
+    const activeBtn = el.querySelector('.round-pill-btn.active');
+    if (activeBtn) {
+      const containerWidth = el.offsetWidth;
+      const btnWidth = activeBtn.offsetWidth;
+      const btnLeft = activeBtn.offsetLeft;
+      const scrollTarget = btnLeft - (containerWidth / 2) + (btnWidth / 2);
+      el.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+    }
+  });
 };
 
 function getLeaderboardData() {
@@ -336,13 +402,13 @@ function getLeaderboardData() {
 function buildLeaderboard() {
   buildRoundFilterBar();
   const { roundMatches, gamesLeft } = getLeaderboardData();
+
   const data = PLAYERS.map(p => {
-    const pts = roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0);
-    // GV: only for completed matches (within the round)
+    const pts = roundMatches.reduce((s, m) => s + (m.preds.find(pr => pr.p === p.name)?.pts || 0), 0);
     let gv = 0, gvCount = 0;
     for (const m of roundMatches) {
       if (m.homeScore === null || m.awayScore === null) continue;
-      const pr = m.preds.find(pr=>pr.p===p.name);
+      const pr = m.preds.find(pr => pr.p === p.name);
       if (!pr || pr.h === null || pr.a === null) continue;
       const actualTotal = m.homeScore + m.awayScore;
       const predTotal = pr.h + pr.a;
@@ -351,26 +417,50 @@ function buildLeaderboard() {
     }
     return { ...p, pts, gv: gvCount > 0 ? gv : null };
   });
+
+  // Sort: points descending, then GV ascending (lower is better)
   const sorted = [...data].sort((a, b) => {
-  // primary: points descending
-  const ptsDiff = b.pts - a.pts;
-  if (ptsDiff !== 0) return ptsDiff;
-  // secondary: GV ascending (lower is better), nulls go last
-  const gvA = a.gv ?? Infinity;
-  const gvB = b.gv ?? Infinity;
-  return gvA - gvB;
-});
-  const maxPts=sorted[0]?.pts||1;
-  const labels=['🦏','✏️🧽','👁️','4th','5th','6th'];
-  const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888','#888'];
+    const ptsDiff = b.pts - a.pts;
+    if (ptsDiff !== 0) return ptsDiff;
+    const gvA = a.gv ?? Infinity;
+    const gvB = b.gv ?? Infinity;
+    return gvA - gvB;
+  });
+
+  const maxPts = sorted[0]?.pts || 1;
+  const labels = ['🦏', '✏️🧽', '👁️', '4th', '5th', '6th'];
+  const colors = ['var(--gold-dark)', '#888780', '#a0522d', '#888', '#888', '#888'];
   const el = document.getElementById('leaderboard');
-  el.innerHTML = `<div style="padding:10px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-secondary)"><span>🏟️ Games in this round: ${roundMatches.length}</span><span>⚽ Remaining: ${gamesLeft}</span></div>` +
-    sorted.map((p,i)=>{
-      const w=Math.round((p.pts/maxPts)*100);
-      const rankLabel = i < 3 ? labels[i] : `${i+1}${['th','st','nd','rd'][(i+1)%10]||'th'}`;
+
+  el.innerHTML = `
+    <div style="padding:10px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-secondary)">
+      <span>🏟️ Games in this round: ${roundMatches.length}</span>
+      <span>⚽ Remaining: ${gamesLeft}</span>
+    </div>
+    ${sorted.map((p, i) => {
+      const w = Math.round((p.pts / maxPts) * 100);
+      const rankLabel = i < 3 ? labels[i] : `${i + 1}${['th','st','nd','rd'][(i + 1) % 10] || 'th'}`;
       const gvDisplay = p.gv !== null ? p.gv : '—';
-      return `<div class="player-row" onclick="switchToPlayer('${p.name}')"><span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span><div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div></div><div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div><div class="gv-col"><div class="gv-big">${gvDisplay}</div><div class="gv-unit">GV</div></div></div>`;
-    }).join('');
+      return `
+        <div class="player-row" onclick="switchToPlayer('${p.name}')">
+          <span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span>
+          <div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div>
+          <div class="player-info">
+            <div class="player-name">${p.name}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div>
+          </div>
+          <div class="pts-col">
+            <div class="pts-big">${p.pts}</div>
+            <div class="pts-unit">pts</div>
+          </div>
+          <div class="gv-col">
+            <div class="gv-big">${gvDisplay}</div>
+            <div class="gv-unit">GV</div>
+          </div>
+        </div>
+      `;
+    }).join('')}
+  `;
 }
 
 // ─── Overview stats ───────────────────────────────────────────────────────────
@@ -876,7 +966,7 @@ function renderTournamentStats() {
     gvHtml = `<div class="no-gv-data">No completed matches with predictions yet.</div>`;
   }
 
-  // --- Existing Roast Corner & fun stats (keeping original) ---
+  // --- Existing Roast Corner & fun stats (unchanged) ---
   const playersStats = PLAYERS.map(p => {
     const preds = MATCHES.flatMap(m =>
       m.preds.filter(pr => pr.p === p.name && pr.h !== null && pr.a !== null)
@@ -1143,12 +1233,10 @@ function buildAllUI() {
   populatePlayerRoundDropdown();
   renderPlayerDetail();
   buildAddPredSection();
-  // bracket refresh if visible
   const bracketView = document.getElementById('matchBracketView');
   if (bracketView && bracketView.style.display !== 'none') {
     buildRishavBracket();
   }
-  // Tournament tab if active
   const tournamentContent = document.getElementById('tournamentSubContent');
   if (tournamentContent && tournamentContent.style.display !== 'none') {
     renderTournamentStats();

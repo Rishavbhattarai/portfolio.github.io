@@ -298,13 +298,25 @@ function buildRoundFilterBar() {
   el.innerHTML = ROUNDS.map(r =>
     `<button class="round-pill-btn ${r.key===activeRound?'active':''}" onclick="setRound('${r.key}',this)">${r.label}</button>`
   ).join('');
+
+  // ─── Auto‑scroll to center the active round button ────────────────────────
+  requestAnimationFrame(() => {
+    const activeBtn = el.querySelector('.round-pill-btn.active');
+    if (activeBtn) {
+      const containerWidth = el.offsetWidth;
+      const btnWidth = activeBtn.offsetWidth;
+      const btnLeft = activeBtn.offsetLeft;
+      const scrollTarget = btnLeft - (containerWidth / 2) + (btnWidth / 2);
+      el.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+    }
+  });
 }
 
 window.setRound = function(key, btn) {
   activeRound = key;
   document.querySelectorAll('#roundFilterBar .round-pill-btn').forEach(b=>b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  buildLeaderboard();
+  buildLeaderboard(); // this calls buildRoundFilterBar which will scroll to center
 };
 
 function getLeaderboardData() {
