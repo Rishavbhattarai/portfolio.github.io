@@ -351,7 +351,15 @@ function buildLeaderboard() {
     }
     return { ...p, pts, gv: gvCount > 0 ? gv : null };
   });
-  const sorted=[...data].sort((a,b)=>b.pts-a.pts);
+  const sorted = [...data].sort((a, b) => {
+  // primary: points descending
+  const ptsDiff = b.pts - a.pts;
+  if (ptsDiff !== 0) return ptsDiff;
+  // secondary: GV ascending (lower is better), nulls go last
+  const gvA = a.gv ?? Infinity;
+  const gvB = b.gv ?? Infinity;
+  return gvA - gvB;
+});
   const maxPts=sorted[0]?.pts||1;
   const labels=['🦏','✏️🧽','👁️','4th','5th','6th'];
   const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888','#888'];
