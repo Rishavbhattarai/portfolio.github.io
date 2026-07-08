@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jyotish Knowledge Dashboard – BPHS</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f9f6f0;
+            color: #2d2a24;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ----- HEADER & NAV ----- */
+        .header {
+            background: #2c1e16;
+            color: #f0e6d8;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #b8860b;
+        }
+        .header .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .header .logo i {
+            color: #e6b422;
+            margin-right: 0.5rem;
+        }
+        .header .search-box {
+            display: flex;
+            align-items: center;
+            background: #3d2e24;
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            flex: 1 1 300px;
+            max-width: 500px;
+            margin: 0.5rem 0;
+        }
+        .header .search-box input {
+            border: none;
+            background: transparent;
+            color: #f0e6d8;
+            font-size: 1rem;
+            padding: 0.4rem 0;
+            width: 100%;
+            outline: none;
+        }
+        .header .search-box input::placeholder {
+            color: #a68f7a;
+        }
+        .header .search-box i {
+            color: #b8860b;
+            margin-right: 0.5rem;
+        }
+
+        /* Navigation tabs */
+        .nav-tabs {
+            background: #3d2e24;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0.2rem 1rem;
+            gap: 0.2rem;
+            border-bottom: 2px solid #5a4234;
+        }
+        .nav-tabs button {
+            background: transparent;
+            border: none;
+            color: #cbb8a8;
+            padding: 0.7rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 20px 20px 0 0;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .nav-tabs button i {
+            font-size: 1.1rem;
+        }
+        .nav-tabs button:hover {
+            background: #5a4234;
+            color: #f0e6d8;
+        }
+        .nav-tabs button.active {
+            background: #b8860b;
+            color: #2c1e16;
+            font-weight: 600;
+        }
+
+        /* ----- MAIN LAYOUT ----- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ----- CARDS & GRID ----- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border-left: 6px solid #b8860b;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .card .sub {
+            color: #6b5a4a;
+            font-size: 0.9rem;
+        }
+        .card .badge {
+            background: #f0e6d8;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #3d2e24;
+        }
+        .card .icon-big {
+            font-size: 2rem;
+            width: 2.6rem;
+            text-align: center;
+        }
+
+        /* ----- DETAIL PANEL (modal style) ----- */
+        .detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .detail-overlay.open {
+            display: flex;
+        }
+        .detail-panel {
+            background: white;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 20px;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .detail-panel .close-btn {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #6b5a4a;
+            padding: 0 0.2rem;
+        }
+        .detail-panel .close-btn:hover {
+            color: #2c1e16;
+        }
+        .detail-panel h2 {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .detail-panel .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            background: #f9f6f0;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            margin: 0.8rem 0 1.2rem 0;
+        }
+        .detail-panel .meta span {
+            font-weight: 500;
+            color: #3d2e24;
+        }
+        .detail-panel .meta .label {
+            color: #6b5a4a;
+            font-weight: 400;
+        }
+        .detail-panel .section-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e6d5c0;
+            padding-bottom: 0.3rem;
+            margin: 1.2rem 0 0.6rem 0;
+        }
+        .detail-panel ul {
+            list-style: none;
+            padding: 0;
+        }
+        .detail-panel ul li {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #f0ece6;
+        }
+        .detail-panel ul li strong {
+            color: #2c1e16;
+        }
+        .detail-panel .house-effect {
+            background: #fcf9f5;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            margin: 0.4rem 0;
+        }
+        .detail-panel .house-effect span {
+            font-weight: 600;
+            color: #b8860b;
+        }
+
+        /* ----- TABLES ----- */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        table th {
+            background: #2c1e16;
+            color: #f0e6d8;
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+        table td {
+            padding: 0.5rem 0.8rem;
+            border-bottom: 1px solid #e6d5c0;
+        }
+        table tr:hover {
+            background: #f9f6f0;
+        }
+
+        /* ----- SEARCH HIGHLIGHT ----- */
+        .highlight {
+            background: #f5e56b;
+            padding: 0 0.2rem;
+            border-radius: 4px;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0.8rem 1rem;
+            }
+            .header .search-box {
+                max-width: 100%;
+                margin: 0.5rem 0;
+            }
+            .nav-tabs button {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .card-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .detail-panel {
+                padding: 1.2rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-tabs button span {
+                display: none;
+            }
+            .nav-tabs button i {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* ----- UTILITY ----- */
+        .text-muted {
+            color: #6b5a4a;
+        }
+        .mt-2 {
+            margin-top: 1rem;
+        }
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .tag {
+            background: #e6d5c0;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-star"></i> Jyotish · BPHS
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="globalSearch" placeholder="Search planets, signs, houses, yogas…" />
+        </div>
+    </header>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav-tabs" id="mainNav">
+        <button class="active" data-tab="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button data-tab="planets"><i class="fas fa-sun"></i><span>Planets</span></button>
+        <button data-tab="signs"><i class="fas fa-circle"></i><span>Signs</span></button>
+        <button data-tab="houses"><i class="fas fa-building"></i><span>Houses</span></button>
+        <button data-tab="relationships"><i class="fas fa-handshake"></i><span>Relationships</span></button>
+        <button data-tab="divisional"><i class="fas fa-vector-square"></i><span>Divisional</span></button>
+        <button data-tab="dashas"><i class="fas fa-clock"></i><span>Dashas</span></button>
+        <button data-tab="ashtakavarga"><i class="fas fa-chart-bar"></i><span>Ashtakavarga</span></button>
+        <button data-tab="yogas"><i class="fas fa-gem"></i><span>Yogas</span></button>
+    </nav>
+
+    <!-- ===== MAIN CONTAINER ===== -->
+    <div class="container" id="appContainer">
+
+        <!-- ========================== -->
+        <!-- HOME TAB -->
+        <!-- ========================== -->
+        <div class="tab-content active" id="tab-home">
+            <h1><i class="fas fa-book-open" style="color:#b8860b;"></i> Brihat Parashar Hora Shastra – Knowledge Base</h1>
+            <p style="font-size:1.1rem; margin:0.5rem 0 1.5rem 0; color:#5a4a3a;">
+                Browse the foundational concepts of Vedic astrology. Click any card to explore details.
+            </p>
+            <div class="card-grid" id="homeQuickRef">
+                <!-- Will be populated by JS -->
+            </div>
+            <div style="margin-top:2rem; background:#f0ece6; padding:1.2rem; border-radius:12px;">
+                <h3><i class="fas fa-sitemap"></i> Three Branches of Jyotish</h3>
+                <p><strong>Siddhanta</strong> – Mathematical astronomy · <strong>Samhita</strong> – Mundane &amp; omens · <strong>Hora</strong> – Predictive (this text)</p>
+                <p style="margin-top:0.5rem;"><i class="fas fa-quote-left"></i> “Jyotish is the eye of the Vedas.” – Sage Parashara</p>
+            </div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- PLANETS TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-planets">
+            <h2><i class="fas fa-sun" style="color:#b8860b;"></i> The Nine Planets (Navagrahas)</h2>
+            <div class="card-grid" id="planetGrid"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- SIGNS TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-signs">
+            <h2><i class="fas fa-circle" style="color:#b8860b;"></i> The 12 Zodiac Signs (Rashis)</h2>
+            <div class="card-grid" id="signGrid"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- HOUSES TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-houses">
+            <h2><i class="fas fa-building" style="color:#b8860b;"></i> The 12 Houses (Bhavas)</h2>
+            <div class="card-grid" id="houseGrid"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- RELATIONSHIPS TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-relationships">
+            <h2><i class="fas fa-handshake" style="color:#b8860b;"></i> Planetary Friendships (Panchadha Maitri)</h2>
+            <p>Natural (permanent) friendship matrix. Click a cell to see the five‑fold relationship calculation.</p>
+            <div class="table-wrap" id="relTableWrap"></div>
+            <div id="relDetail" style="margin-top:1.5rem;"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- DIVISIONAL CHARTS TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-divisional">
+            <h2><i class="fas fa-vector-square" style="color:#b8860b;"></i> 16 Divisional Charts (Shodashvarga)</h2>
+            <div class="card-grid" id="divisionalGrid"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- DASHAS TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-dashas">
+            <h2><i class="fas fa-clock" style="color:#b8860b;"></i> Vimshottari Dasha System</h2>
+            <p>The 120‑year cycle of planetary periods.</p>
+            <div class="table-wrap" id="dashaTableWrap"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- ASHTAKAVARGA TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-ashtakavarga">
+            <h2><i class="fas fa-chart-bar" style="color:#b8860b;"></i> Ashtakavarga – Bindu System</h2>
+            <p>Strength of planets and houses based on transit bindus.</p>
+            <div id="ashtakaContent"></div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- YOGAS TAB -->
+        <!-- ========================== -->
+        <div class="tab-content" id="tab-yogas">
+            <h2><i class="fas fa-gem" style="color:#b8860b;"></i> Planetary Yogas (Combinations)</h2>
+            <div class="card-grid" id="yogaGrid"></div>
+        </div>
+
+    </div>
+
+    <!-- ===== DETAIL OVERLAY (modal) ===== -->
+    <div class="detail-overlay" id="detailOverlay">
+        <div class="detail-panel" id="detailPanel">
+            <button class="close-btn" id="closeDetail">&times;</button>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer style="text-align:center; padding:1.5rem; color:#6b5a4a; border-top:1px solid #e0d6c8; margin-top:2rem;">
+        <small>Based on <em>Brihat Parashar Hora Shastra</em> · Knowledge Dashboard</small>
+    </footer>
+
+    <script>
+        // ========================================================================
+        //  1. DATA – compiled from BPHS summary & standard Jyotish knowledge
+        // ========================================================================
+
+        const PLANETS = [{
+            id: 'sun',
+            name: 'Sun',
+            emoji: '☀️',
+            icon: 'fas fa-sun',
+            avatar: 'Lord Rama',
+            nature: 'Royal, dry, hot, soul (Atma)',
+            day: 'Sunday',
+            direction: 'East',
+            element: 'Fire',
+            exaltation: 'Aries',
+            debilitation: 'Libra',
+            moolatrikona: { sign: 'Leo', start: 0, end: 10 },
+            natural_friends: ['Moon', 'Mars', 'Jupiter'],
+            natural_enemies: ['Venus', 'Saturn'],
+            natural_neutral: ['Mercury'],
+            house_effects: {
+                1: 'Strong leadership, good health, proud nature.',
+                2: 'Wealth through authority, speech is commanding.',
+                3: 'Courage, bold initiatives, sibling rivalry.',
+                4: 'House, property, mother’s status.',
+                5: 'Creative, good progeny, speculative gains.',
+                6: 'Overcomes enemies, health issues need care.',
+                7: 'Partnerships with authoritative figures, spouse proud.',
+                8: 'Health challenges, sudden changes, legacy.',
+                9: 'Dharma, father, spiritual leadership.',
+                10: 'Career in government, top positions.',
+                11: 'Gains through reputation, social status.',
+                12: 'Expenditure on foreign travel, loss of authority.'
+            }
+        }, {
+            id: 'moon',
+            name: 'Moon',
+            emoji: '🌙',
+            icon: 'fas fa-moon',
+            avatar: 'Lord Krishna',
+            nature: 'Receptive, cool, fluid, mind (Mana)',
+            day: 'Monday',
+            direction: 'Northwest',
+            element: 'Water',
+            exaltation: 'Taurus',
+            debilitation: 'Scorpio',
+            moolatrikona: { sign: 'Taurus', start: 3, end: 30 },
+            natural_friends: ['Sun', 'Mercury'],
+            natural_enemies: ['None'],
+            natural_neutral: ['Mars', 'Jupiter', 'Venus', 'Saturn'],
+            house_effects: {
+                1: 'Emotional nature, intuitive, attractive.',
+                2: 'Wealth from mother, good speech, family assets.',
+                3: 'Short travels, siblings caring.',
+                4: 'Strong bonding with mother, comfort.',
+                5: 'Creative mind, artistic children.',
+                6: 'Emotional troubles, health fluctuates.',
+                7: 'Romantic, spouse is caring.',
+                8: 'Mystical, hidden emotions.',
+                9: 'Spiritual, dharma through devotion.',
+                10: 'Public career, popularity.',
+                11: 'Gains through women, many friends.',
+                12: 'Foreign connections, dreamy nature.'
+            }
+        }, {
+            id: 'mars',
+            name: 'Mars',
+            emoji: '🔴',
+            icon: 'fas fa-fire',
+            avatar: 'Lord Narasimha',
+            nature: 'Aggressive, fiery, energy (Bala)',
+            day: 'Tuesday',
+            direction: 'South',
+            element: 'Fire',
+            exaltation: 'Capricorn',
+            debilitation: 'Cancer',
+            moolatrikona: { sign: 'Aries', start: 0, end: 12 },
+            natural_friends: ['Sun', 'Moon', 'Jupiter'],
+            natural_enemies: ['Mercury'],
+            natural_neutral: ['Venus', 'Saturn'],
+            house_effects: {
+                1: 'Strong physical energy, courageous, impulsive.',
+                2: 'Wealth through hard work, sharp speech.',
+                3: 'Bold siblings, short journeys, writing.',
+                4: 'Property disputes, aggressive mother.',
+                5: 'Passionate creativity, conflict with children.',
+                6: 'Wins over enemies, surgical skills.',
+                7: 'Passionate marriage, conflicts.',
+                8: 'Accidents, sudden energy drains.',
+                9: 'Religious zeal, protection of dharma.',
+                10: 'Career in military, engineering, sports.',
+                11: 'Gains through aggression, many friends.',
+                12: 'Expenditure, foreign travels with risk.'
+            }
+        }, {
+            id: 'mercury',
+            name: 'Mercury',
+            emoji: '☿',
+            icon: 'fas fa-brain',
+            avatar: 'Lord Buddha',
+            nature: 'Intellectual, witty, adaptive (Buddhi)',
+            day: 'Wednesday',
+            direction: 'North',
+            element: 'Earth',
+            exaltation: 'Virgo',
+            debilitation: 'Pisces',
+            moolatrikona: { sign: 'Virgo', start: 16, end: 20 },
+            natural_friends: ['Sun', 'Venus'],
+            natural_enemies: ['Moon'],
+            natural_neutral: ['Mars', 'Jupiter', 'Saturn'],
+            house_effects: {
+                1: 'Intelligent, communicative, youthful.',
+                2: 'Wealth through trade, speech, writing.',
+                3: 'Writing, short trips, siblings.',
+                4: 'Education, property documentation.',
+                5: 'Children are smart, speculative gains.',
+                6: 'Analytical, health issues resolved.',
+                7: 'Partnerships through communication.',
+                8: 'Mysteries, investigative skills.',
+                9: 'Dharma through logic, teacher.',
+                10: 'Career in business, media, IT.',
+                11: 'Gains through intellect, networking.',
+                12: 'Foreign languages, losses through communication.'
+            }
+        }, {
+            id: 'jupiter',
+            name: 'Jupiter',
+            emoji: '♃',
+            icon: 'fas fa-crown',
+            avatar: 'Lord Vamana',
+            nature: 'Expansive, benevolent, righteous (Jiva)',
+            day: 'Thursday',
+            direction: 'Northeast',
+            element: 'Ether',
+            exaltation: 'Cancer',
+            debilitation: 'Capricorn',
+            moolatrikona: { sign: 'Sagittarius', start: 0, end: 10 },
+            natural_friends: ['Sun', 'Moon', 'Mars'],
+            natural_enemies: ['Venus'],
+            natural_neutral: ['Mercury', 'Saturn'],
+            house_effects: {
+                1: 'Wisdom, optimistic, healthy.',
+                2: 'Wealth from teaching, advisors.',
+                3: 'Initiative, siblings in education.',
+                4: 'Property, mother wise.',
+                5: 'Children, dharma, spiritual lineage.',
+                6: 'Overcomes enemies, healing.',
+                7: 'Partnership with ethical people.',
+                8: 'Hidden knowledge, inheritance.',
+                9: 'Dharma, guru, pilgrimage.',
+                10: 'Career in law, education, finance.',
+                11: 'Gains through wisdom, many friends.',
+                12: 'Expenditure on charity, foreign spiritual travel.'
+            }
+        }, {
+            id: 'venus',
+            name: 'Venus',
+            emoji: '♀',
+            icon: 'fas fa-heart',
+            avatar: 'Lord Parashurama',
+            nature: 'Sweet, harmonious, luxurious (Bhoga)',
+            day: 'Friday',
+            direction: 'Southeast',
+            element: 'Water',
+            exaltation: 'Pisces',
+            debilitation: 'Virgo',
+            moolatrikona: { sign: 'Libra', start: 0, end: 15 },
+            natural_friends: ['Mercury', 'Saturn'],
+            natural_enemies: ['Sun', 'Moon'],
+            natural_neutral: ['Mars', 'Jupiter'],
+            house_effects: {
+                1: 'Attractive, artistic, charming.',
+                2: 'Wealth from art, jewellery, beauty.',
+                3: 'Creative expression, siblings.',
+                4: 'Comfortable home, luxury cars.',
+                5: 'Creative children, romantic.',
+                6: 'Health issues, enemies from relationships.',
+                7: 'Marriage, partnerships, love.',
+                8: 'Sudden gains from spouse, occult.',
+                9: 'Dharma through art, teacher.',
+                10: 'Career in arts, fashion, entertainment.',
+                11: 'Gains through women, social circles.',
+                12: 'Expenditure on luxury, foreign relations.'
+            }
+        }, {
+            id: 'saturn',
+            name: 'Saturn',
+            emoji: '♄',
+            icon: 'fas fa-hourglass-half',
+            avatar: 'Lord Kurma',
+            nature: 'Cold, slow, strict, discipline (Karma)',
+            day: 'Saturday',
+            direction: 'West',
+            element: 'Air',
+            exaltation: 'Libra',
+            debilitation: 'Aries',
+            moolatrikona: { sign: 'Aquarius', start: 0, end: 20 },
+            natural_friends: ['Mercury', 'Venus'],
+            natural_enemies: ['Sun', 'Moon', 'Mars'],
+            natural_neutral: ['Jupiter'],
+            house_effects: {
+                1: 'Serious, aged appearance, hardworking.',
+                2: 'Wealth through long service, slow speech.',
+                3: 'Persistent efforts, siblings distant.',
+                4: 'Property delayed, mother works hard.',
+                5: 'Children disciplined, delayed.',
+                6: 'Overcomes enemies through endurance.',
+                7: 'Partnerships serious, delayed marriage.',
+                8: 'Longevity, deep transformation.',
+                9: 'Dharma through service, father’s karma.',
+                10: 'Career in labour, administration, leadership.',
+                11: 'Gains through persistent work.',
+                12: 'Expenditure, foreign displacement.'
+            }
+        }, {
+            id: 'rahu',
+            name: 'Rahu',
+            emoji: '🌑',
+            icon: 'fas fa-dragon',
+            avatar: 'Lord Varaha',
+            nature: 'Obsessive, worldly, materialistic (Chhaya Graha)',
+            day: 'None',
+            direction: 'Southwest',
+            element: 'Air',
+            exaltation: 'Taurus',
+            debilitation: 'Scorpio',
+            moolatrikona: null,
+            natural_friends: ['Venus', 'Saturn'],
+            natural_enemies: ['Sun', 'Moon', 'Mars'],
+            natural_neutral: ['Mercury', 'Jupiter'],
+            house_effects: {
+                1: 'Strong ambition, unique appearance.',
+                2: 'Wealth through unconventional means.',
+                3: 'Bold initiatives, sibling challenges.',
+                4: 'Property changes, mother foreign.',
+                5: 'Children unusual, speculative gains.',
+                6: 'Wins over enemies, drug issues.',
+                7: 'Partnerships with foreigners, obsession.',
+                8: 'Sudden changes, occult interests.',
+                9: 'Dharma twisted, foreign gurus.',
+                10: 'Career in technology, spy, unconventional.',
+                11: 'Gains through trickery, many contacts.',
+                12: 'Foreign travel, losses through illusions.'
+            }
+        }, {
+            id: 'ketu',
+            name: 'Ketu',
+            emoji: '🌘',
+            icon: 'fas fa-feather',
+            avatar: 'Lord Matsya',
+            nature: 'Detached, spiritual, liberating (Chhaya Graha)',
+            day: 'None',
+            direction: 'Southeast',
+            element: 'Fire',
+            exaltation: 'Scorpio',
+            debilitation: 'Taurus',
+            moolatrikona: null,
+            natural_friends: ['Mars', 'Mercury'],
+            natural_enemies: ['Venus'],
+            natural_neutral: ['Sun', 'Moon', 'Jupiter', 'Saturn'],
+            house_effects: {
+                1: 'Spiritual, detached, psychic.',
+                2: 'Wealth through occult, speech blunt.',
+                3: 'Courage, siblings in spiritual fields.',
+                4: 'Property minimal, mother spiritual.',
+                5: 'Children spiritual, detachment.',
+                6: 'Wins through sacrifice, healing.',
+                7: 'Partnerships spiritual, detachment.',
+                8: 'Mysticism, sudden liberation.',
+                9: 'Dharma through renunciation.',
+                10: 'Career in spirituality, research.',
+                11: 'Gains through spiritual contacts.',
+                12: 'Expenditure on liberation, foreign places.'
+            }
+        }];
+
+        const SIGNS = [
+            { id: 'aries', name: 'Aries', emoji: '♈', element: 'Fire', direction: 'East', gender: 'Male', quality: 'Cardinal',
+                ruler: 'Mars', moolatrikona_for: 'Mars', physical_form: 'Quadruped', day_night: 'Day', body_parts: 'Head',
+                significations: 'Action, courage, new beginnings.' },
+            { id: 'taurus', name: 'Taurus', emoji: '♉', element: 'Earth', direction: 'South', gender: 'Female',
+                quality: 'Fixed', ruler: 'Venus', moolatrikona_for: 'Moon', physical_form: 'Quadruped', day_night: 'Night',
+                body_parts: 'Face, neck', significations: 'Wealth, stability, pleasure.' },
+            { id: 'gemini', name: 'Gemini', emoji: '♊', element: 'Air', direction: 'West', gender: 'Male',
+                quality: 'Mutable', ruler: 'Mercury', moolatrikona_for: null, physical_form: 'Human', day_night: 'Day',
+                body_parts: 'Arms, lungs', significations: 'Communication, intellect, trade.' },
+            { id: 'cancer', name: 'Cancer', emoji: '♋', element: 'Water', direction: 'North', gender: 'Female',
+                quality: 'Cardinal', ruler: 'Moon', moolatrikona_for: null, physical_form: 'Crawling', day_night: 'Night',
+                body_parts: 'Breasts, stomach', significations: 'Emotions, mother, home.' },
+            { id: 'leo', name: 'Leo', emoji: '♌', element: 'Fire', direction: 'East', gender: 'Male', quality: 'Fixed',
+                ruler: 'Sun', moolatrikona_for: 'Sun', physical_form: 'Quadruped', day_night: 'Day',
+                body_parts: 'Heart, spine', significations: 'Royalty, creativity, authority.' },
+            { id: 'virgo', name: 'Virgo', emoji: '♍', element: 'Earth', direction: 'South', gender: 'Female',
+                quality: 'Mutable', ruler: 'Mercury', moolatrikona_for: 'Mercury', physical_form: 'Human',
+                day_night: 'Night', body_parts: 'Abdomen, intestines', significations: 'Analysis, service, hygiene.' },
+            { id: 'libra', name: 'Libra', emoji: '♎', element: 'Air', direction: 'West', gender: 'Male',
+                quality: 'Cardinal', ruler: 'Venus', moolatrikona_for: 'Venus', physical_form: 'Human', day_night: 'Day',
+                body_parts: 'Kidneys, lower back', significations: 'Balance, relationships, art.' },
+            { id: 'scorpio', name: 'Scorpio', emoji: '♏', element: 'Water', direction: 'North', gender: 'Female',
+                quality: 'Fixed', ruler: 'Mars', moolatrikona_for: null, physical_form: 'Crawling', day_night: 'Night',
+                body_parts: 'Genitals', significations: 'Mystery, transformation, occult.' },
+            { id: 'sagittarius', name: 'Sagittarius', emoji: '♐', element: 'Fire', direction: 'East', gender: 'Male',
+                quality: 'Mutable', ruler: 'Jupiter', moolatrikona_for: 'Jupiter', physical_form: 'Quadruped',
+                day_night: 'Day', body_parts: 'Hips, thighs', significations: 'Dharma, wisdom, travel.' },
+            { id: 'capricorn', name: 'Capricorn', emoji: '♑', element: 'Earth', direction: 'South', gender: 'Female',
+                quality: 'Cardinal', ruler: 'Saturn', moolatrikona_for: null, physical_form: 'Quadruped',
+                day_night: 'Night', body_parts: 'Knees', significations: 'Discipline, career, structure.' },
+            { id: 'aquarius', name: 'Aquarius', emoji: '♒', element: 'Air', direction: 'West', gender: 'Male',
+                quality: 'Fixed', ruler: 'Saturn', moolatrikona_for: 'Saturn', physical_form: 'Human', day_night: 'Day',
+                body_parts: 'Ankles', significations: 'Innovation, friendship, humanitarian.' },
+            { id: 'pisces', name: 'Pisces', emoji: '♓', element: 'Water', direction: 'North', gender: 'Female',
+                quality: 'Mutable', ruler: 'Jupiter', moolatrikona_for: null, physical_form: 'Water creatures',
+                day_night: 'Night', body_parts: 'Feet', significations: 'Spirituality, imagination, compassion.' }
+        ];
+
+        const HOUSES = [];
+        const houseNames = [
+            '1st House (Ascendant)',
+            '2nd House (Wealth)',
+            '3rd House (Siblings)',
+            '4th House (Home)',
+            '5th House (Children)',
+            '6th House (Enemies)',
+            '7th House (Marriage)',
+            '8th House (Longevity)',
+            '9th House (Dharma)',
+            '10th House (Career)',
+            '11th House (Gains)',
+            '12th House (Losses)'
+        ];
+        const houseSignifications = [
+            'Self, body, health, personality.',
+            'Wealth, speech, family, assets.',
+            'Siblings, courage, short journeys.',
+            'Mother, property, vehicles, happiness.',
+            'Children, creativity, past-life merit.',
+            'Disease, debts, enemies, service.',
+            'Spouse, partnerships, business, relationships.',
+            'Death, transformation, occult, sudden changes.',
+            'Dharma, father, teachers, pilgrimage.',
+            'Career, status, authority, profession.',
+            'Gains, income, friends, aspirations.',
+            'Loss, expenditure, foreign, spirituality.'
+        ];
+        const karakas = [
+            'Sun',
+            'Jupiter',
+            'Mars',
+            'Moon',
+            'Jupiter',
+            'Saturn',
+            'Venus',
+            'Saturn',
+            'Jupiter',
+            'Sun, Saturn, Mercury',
+            'Jupiter',
+            'Saturn'
+        ];
+        const naturalRulers = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius',
+            'Capricorn', 'Aquarius', 'Pisces'
+        ];
+
+        for (let i = 0; i < 12; i++) {
+            HOUSES.push({
+                id: i + 1,
+                name: houseNames[i],
+                significations: houseSignifications[i],
+                karaka: karakas[i],
+                natural_ruler: naturalRulers[i],
+                planet_effects: {} // will fill by iterating planets later
+            });
+        }
+        // Populate house planet_effects from PLANETS[].house_effects
+        PLANETS.forEach(p => {
+            for (let h = 1; h <= 12; h++) {
+                if (p.house_effects[h]) {
+                    HOUSES[h - 1].planet_effects[p.name] = p.house_effects[h];
+                }
+            }
+        });
+
+        // Relationships natural matrix (simplified)
+        const REL_MATRIX = {};
+        const allPlanetNames = PLANETS.map(p => p.name);
+        allPlanetNames.forEach(n => REL_MATRIX[n] = {});
+        PLANETS.forEach(p => {
+            allPlanetNames.forEach(other => {
+                if (p.natural_friends.includes(other)) REL_MATRIX[p.name][other] = 'Friend';
+                else if (p.natural_enemies.includes(other)) REL_MATRIX[p.name][other] = 'Enemy';
+                else if (p.natural_neutral.includes(other)) REL_MATRIX[p.name][other] = 'Neutral';
+                else REL_MATRIX[p.name][other] = 'Neutral';
+            });
+        });
+
+        // Divisional charts
+        const DIVISIONAL = [
+            { id: 'd1', name: 'Rashi (D-1)', purpose: 'General life, body, overall chart' },
+            { id: 'd2', name: 'Hora (D-2)', purpose: 'Wealth, financial assets' },
+            { id: 'd3', name: 'Drekkana (D-3)', purpose: 'Siblings, courage, initiative' },
+            { id: 'd7', name: 'Saptamsha (D-7)', purpose: 'Children, legacy' },
+            { id: 'd9', name: 'Navamsha (D-9)', purpose: 'Marriage, dharma, soul, destiny' },
+            { id: 'd10', name: 'Dashamsha (D-10)', purpose: 'Career, status, profession' },
+            { id: 'd12', name: 'Dwadashamsha (D-12)', purpose: 'Parents, ancestors' },
+            { id: 'd30', name: 'Trishamsha (D-30)', purpose: 'Evil, mishaps, detailed karma' },
+            { id: 'd60', name: 'Shastiamsha (D-60)', purpose: 'Past-life karma, subtle influences' }
+        ];
+
+        // Dasha planets with years (Vimshottari)
+        const DASHA_PLANETS = [
+            { planet: 'Sun', years: 6, signification: 'Ego, authority, vitality' },
+            { planet: 'Moon', years: 10, signification: 'Mind, emotions, mother' },
+            { planet: 'Mars', years: 7, signification: 'Energy, actions, siblings' },
+            { planet: 'Rahu', years: 18, signification: 'Obsession, worldly pursuits' },
+            { planet: 'Jupiter', years: 16, signification: 'Wisdom, expansion, teachers' },
+            { planet: 'Saturn', years: 19, signification: 'Discipline, karma, structure' },
+            { planet: 'Mercury', years: 17, signification: 'Intellect, trade, communication' },
+            { planet: 'Ketu', years: 7, signification: 'Detachment, spirituality, liberation' },
+            { planet: 'Venus', years: 20, signification: 'Love, luxury, relationships' }
+        ];
+
+        // Yogas (sample from BPHS)
+        const YOGAS = [
+            { name: 'Gaja Kesari Yoga',
+                condition: 'Jupiter in kendra (1,4,7,10) from Moon or Ascendant.',
+                result: 'Wealth, wisdom, fame, leadership.',
+                source: 'BPHS – Yogas' },
+            { name: 'Pancha Mahapurusha Yoga',
+                condition: 'Any of the five planets (Mercury, Mars, Jupiter, Venus, Saturn) in its own sign or exaltation, and in a kendra from Moon or Ascendant.',
+                result: 'Great authority, power, and recognition.',
+                source: 'BPHS – Yogas' },
+            { name: 'Kemadruma Yoga',
+                condition: 'No planet in kendra from the Moon.',
+                result: 'Emotional hardship, isolation, financial struggles.',
+                source: 'BPHS – Yogas' },
+            { name: 'Dhana Yoga',
+                condition: 'Lords of 2nd and 11th houses connected (conjunct/aspect) or placed in mutual kendra/trikona.',
+                result: 'Accumulation of wealth, prosperity.',
+                source: 'BPHS – Yogas' },
+            { name: 'Neecha Bhanga Yoga',
+                condition: 'Debilitated planet has cancellation by exaltation of its dispositor or certain specific placements.',
+                result: 'Cancellation of debilitation, restoring strength.',
+                source: 'BPHS – Yogas' },
+            { name: 'Viparita Raja Yoga',
+                condition: 'Lords of 6th, 8th, 12th houses occupy these houses or are strong.',
+                result: 'Overcoming adversity, rise from humble origins.',
+                source: 'BPHS – Yogas' },
+            { name: 'Amala Yoga',
+                condition: '10th lord in 10th house or in its own sign/exaltation.',
+                result: 'Pure profession, good reputation, success in career.',
+                source: 'BPHS – Yogas' },
+            { name: 'Parashara’s Special Yogas',
+                condition: 'Various combinations of planets in kendras and trikonas.',
+                result: 'Raja yoga, great success.',
+                source: 'BPHS – Yogas' }
+        ];
+
+        // Ashtakavarga explanation
+        const ASHTAKA_EXPLANATION = `
+            <p>Ashtakavarga is a system of 8 planetary groups (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, and Ascendant) each providing bindus (points) to the 12 houses based on transit positions. The total bindus for each house indicates its strength. Houses with >30 bindus are strong, 25-30 average, <25 weak.</p>
+            <p>This system is used for transit predictions and strength assessment.</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>House</th><th>Total Bindus (example)</th><th>Strength</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>32</td><td>Strong</td></tr>
+                        <tr><td>2</td><td>28</td><td>Average</td></tr>
+                        <tr><td>3</td><td>24</td><td>Weak</td></tr>
+                        <tr><td>4</td><td>31</td><td>Strong</td></tr>
+                        <tr><td>5</td><td>27</td><td>Average</td></tr>
+                        <tr><td>6</td><td>20</td><td>Weak</td></tr>
+                        <tr><td>7</td><td>29</td><td>Average</td></tr>
+                        <tr><td>8</td><td>22</td><td>Weak</td></tr>
+                        <tr><td>9</td><td>35</td><td>Strong</td></tr>
+                        <tr><td>10</td><td>33</td><td>Strong</td></tr>
+                        <tr><td>11</td><td>38</td><td>Strong</td></tr>
+                        <tr><td>12</td><td>18</td><td>Weak</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><em>Note: The above bindus are illustrative; actual calculation depends on the birth chart.</em></p>
+        `;
+
+        // ========================================================================
+        //  2. RENDER FUNCTIONS
+        // ========================================================================
+
+        function renderHome() {
+            const grid = document.getElementById('homeQuickRef');
+            grid.innerHTML = `
+                <div class="card" onclick="showPlanet('sun')"><h3><span class="icon-big">☀️</span> Sun</h3><div class="sub">Avatar: Rama · Exalted: Aries</div></div>
+                <div class="card" onclick="showPlanet('moon')"><h3><span class="icon-big">🌙</span> Moon</h3><div class="sub">Avatar: Krishna · Exalted: Taurus</div></div>
+                <div class="card" onclick="showPlanet('mars')"><h3><span class="icon-big">🔴</span> Mars</h3><div class="sub">Avatar: Narasimha · Exalted: Capricorn</div></div>
+                <div class="card" onclick="showPlanet('mercury')"><h3><span class="icon-big">☿</span> Mercury</h3><div class="sub">Avatar: Buddha · Exalted: Virgo</div></div>
+                <div class="card" onclick="showPlanet('jupiter')"><h3><span class="icon-big">♃</span> Jupiter</h3><div class="sub">Avatar: Vamana · Exalted: Cancer</div></div>
+                <div class="card" onclick="showPlanet('venus')"><h3><span class="icon-big">♀</span> Venus</h3><div class="sub">Avatar: Parashurama · Exalted: Pisces</div></div>
+                <div class="card" onclick="showPlanet('saturn')"><h3><span class="icon-big">♄</span> Saturn</h3><div class="sub">Avatar: Kurma · Exalted: Libra</div></div>
+                <div class="card" onclick="showPlanet('rahu')"><h3><span class="icon-big">🌑</span> Rahu</h3><div class="sub">Avatar: Varaha · Exalted: Taurus</div></div>
+                <div class="card" onclick="showPlanet('ketu')"><h3><span class="icon-big">🌘</span> Ketu</h3><div class="sub">Avatar: Matsya · Exalted: Scorpio</div></div>
+            `;
+        }
+
+        function renderPlanets(filter = '') {
+            const grid = document.getElementById('planetGrid');
+            const list = PLANETS.filter(p => p.name.toLowerCase().includes(filter) || p.avatar.toLowerCase().includes(
+            filter) || p.nature.toLowerCase().includes(filter));
+            grid.innerHTML = list.map(p => `
+                <div class="card" onclick="showPlanet('${p.id}')">
+                    <h3><span class="icon-big">${p.emoji}</span> ${p.name}</h3>
+                    <div class="sub">${p.avatar} · ${p.nature.split(',')[0]}</div>
+                    <div class="flex-wrap"><span class="badge">Exalt: ${p.exaltation}</span><span class="badge">Moola: ${p.moolatrikona ? p.moolatrikona.sign : '—'}</span></div>
+                </div>
+            `).join('');
+        }
+
+        function renderSigns(filter = '') {
+            const grid = document.getElementById('signGrid');
+            const list = SIGNS.filter(s => s.name.toLowerCase().includes(filter) || s.element.toLowerCase().includes(filter) || s
+                .ruler.toLowerCase().includes(filter));
+            grid.innerHTML = list.map(s => `
+                <div class="card" onclick="showSign('${s.id}')">
+                    <h3><span style="font-size:1.8rem;">${s.emoji}</span> ${s.name}</h3>
+                    <div class="sub">${s.element} · ${s.quality} · Ruler: ${s.ruler}</div>
+                    <div><span class="badge">${s.direction}</span><span class="badge">${s.gender}</span></div>
+                </div>
+            `).join('');
+        }
+
+        function renderHouses(filter = '') {
+            const grid = document.getElementById('houseGrid');
+            const list = HOUSES.filter(h => h.name.toLowerCase().includes(filter) || h.significations.toLowerCase().includes(
+                filter) || h.karaka.toLowerCase().includes(filter));
+            grid.innerHTML = list.map(h => `
+                <div class="card" onclick="showHouse(${h.id})">
+                    <h3>${h.name}</h3>
+                    <div class="sub">${h.significations}</div>
+                    <div><span class="badge">Karaka: ${h.karaka}</span><span class="badge">Natural: ${h.natural_ruler}</span></div>
+                </div>
+            `).join('');
+        }
+
+        function renderRelationships() {
+            const wrap = document.getElementById('relTableWrap');
+            const names = allPlanetNames;
+            let html = '<table><thead><tr><th>Planet</th>';
+            names.forEach(n => html += `<th>${n}</th>`);
+            html += '</tr></thead><tbody>';
+            names.forEach(row => {
+                html += `<tr><td><strong>${row}</strong></td>`;
+                names.forEach(col => {
+                    const rel = REL_MATRIX[row][col] || 'Neutral';
+                    const color = rel === 'Friend' ? '#2a7d2a' : rel === 'Enemy' ? '#b33' : '#888';
+                    html +=
+                        `<td style="color:${color}; font-weight:600; cursor:pointer;" onclick="showRelDetail('${row}','${col}')">${rel}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            wrap.innerHTML = html;
+            document.getElementById('relDetail').innerHTML = '<p class="text-muted">Click any cell to see five‑fold explanation.</p>';
+        }
+
+        function showRelDetail(p1, p2) {
+            const div = document.getElementById('relDetail');
+            // Simple explanation
+            const rel = REL_MATRIX[p1][p2] || 'Neutral';
+            const temp = 'Temporary friendship depends on houses (2,3,4,10,11,12 = friend; 1,5,6,7,8,9 = enemy).';
+            const final = rel === 'Friend' ? 'Intimate Friend (Adhimitra) if temp is Friend, else Friend if temp Neutral.' :
+                rel === 'Enemy' ? 'Great Enemy (Adishatru) if temp Enemy, else Enemy if temp Neutral.' :
+                'Neutral (Sama) if permanent and temp are opposite or both Neutral.';
+            div.innerHTML = `
+                <div style="background:#f9f6f0; padding:1rem; border-radius:10px;">
+                    <h4>${p1} ↔ ${p2}</h4>
+                    <p><strong>Permanent:</strong> ${rel}</p>
+                    <p><strong>Temporary:</strong> (calculated from chart)</p>
+                    <p><strong>Five‑fold final:</strong> ${final}</p>
+                    <p><em>${temp}</em></p>
+                </div>
+            `;
+        }
+
+        function renderDivisional() {
+            const grid = document.getElementById('divisionalGrid');
+            grid.innerHTML = DIVISIONAL.map(d => `
+                <div class="card" onclick="showDivisional('${d.id}')">
+                    <h3>${d.name}</h3>
+                    <div class="sub">${d.purpose}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderDashas() {
+            const wrap = document.getElementById('dashaTableWrap');
+            let html = `<table><thead><tr><th>Planet</th><th>Years</th><th>Signification</th></tr></thead><tbody>`;
+            DASHA_PLANETS.forEach(d => {
+                html += `<tr><td><strong>${d.planet}</strong></td><td>${d.years}</td><td>${d.signification}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            wrap.innerHTML = html;
+        }
+
+        function renderAshtakavarga() {
+            document.getElementById('ashtakaContent').innerHTML = ASHTAKA_EXPLANATION;
+        }
+
+        function renderYogas(filter = '') {
+            const grid = document.getElementById('yogaGrid');
+            const list = YOGAS.filter(y => y.name.toLowerCase().includes(filter) || y.result.toLowerCase().includes(filter));
+            grid.innerHTML = list.map(y => `
+                <div class="card" onclick="showYoga('${y.name}')">
+                    <h3><i class="fas fa-gem" style="color:#b8860b;"></i> ${y.name}</h3>
+                    <div class="sub">${y.condition}</div>
+                    <div><span class="badge">${y.result.substring(0,40)}…</span></div>
+                </div>
+            `).join('');
+        }
+
+        // ========================================================================
+        //  3. DETAIL VIEWS (overlay)
+        // ========================================================================
+
+        function openDetail(html) {
+            document.getElementById('detailContent').innerHTML = html;
+            document.getElementById('detailOverlay').classList.add('open');
+        }
+
+        document.getElementById('closeDetail').addEventListener('click', () => {
+            document.getElementById('detailOverlay').classList.remove('open');
+        });
+        document.getElementById('detailOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) document.getElementById('detailOverlay').classList.remove('open');
+        });
+
+        function showPlanet(id) {
+            const p = PLANETS.find(p => p.id === id);
+            if (!p) return;
+            let html = `
+                <h2><span class="icon-big">${p.emoji}</span> ${p.name}</h2>
+                <div class="meta">
+                    <span><span class="label">Avatar:</span> ${p.avatar}</span>
+                    <span><span class="label">Nature:</span> ${p.nature}</span>
+                    <span><span class="label">Exaltation:</span> ${p.exaltation}</span>
+                    <span><span class="label">Debilitation:</span> ${p.debilitation}</span>
+                    ${p.moolatrikona ? `<span><span class="label">Moolatrikona:</span> ${p.moolatrikona.sign} (${p.moolatrikona.start}°–${p.moolatrikona.end}°)</span>` : ''}
+                    <span><span class="label">Day:</span> ${p.day}</span>
+                    <span><span class="label">Direction:</span> ${p.direction}</span>
+                    <span><span class="label">Element:</span> ${p.element}</span>
+                </div>
+                <div class="section-title">Natural Friends</div>
+                <div class="flex-wrap">${p.natural_friends.map(f => `<span class="tag" style="background:#d4edda;">${f}</span>`).join('')}</div>
+                <div class="section-title">Natural Enemies</div>
+                <div class="flex-wrap">${p.natural_enemies.map(f => `<span class="tag" style="background:#f8d7da;">${f}</span>`).join('')}</div>
+                <div class="section-title">Natural Neutral</div>
+                <div class="flex-wrap">${p.natural_neutral.map(f => `<span class="tag">${f}</span>`).join('')}</div>
+                <div class="section-title">Effects in Each House</div>
+                <div style="max-height:300px; overflow-y:auto;">
+            `;
+            for (let h = 1; h <= 12; h++) {
+                const desc = p.house_effects[h] || '—';
+                html += `<div class="house-effect"><span>House ${h}:</span> ${desc}</div>`;
+            }
+            html += `</div>`;
+            openDetail(html);
+        }
+
+        function showSign(id) {
+            const s = SIGNS.find(s => s.id === id);
+            if (!s) return;
+            let html = `
+                <h2><span style="font-size:2.5rem;">${s.emoji}</span> ${s.name}</h2>
+                <div class="meta">
+                    <span><span class="label">Element:</span> ${s.element}</span>
+                    <span><span class="label">Direction:</span> ${s.direction}</span>
+                    <span><span class="label">Gender:</span> ${s.gender}</span>
+                    <span><span class="label">Quality:</span> ${s.quality}</span>
+                    <span><span class="label">Ruler:</span> ${s.ruler}</span>
+                    <span><span class="label">Moolatrikona for:</span> ${s.moolatrikona_for || 'None'}</span>
+                    <span><span class="label">Form:</span> ${s.physical_form}</span>
+                    <span><span class="label">Day/Night:</span> ${s.day_night}</span>
+                    <span><span class="label">Body Parts:</span> ${s.body_parts}</span>
+                </div>
+                <div class="section-title">Significations</div>
+                <p>${s.significations}</p>
+            `;
+            openDetail(html);
+        }
+
+        function showHouse(id) {
+            const h = HOUSES.find(h => h.id === id);
+            if (!h) return;
+            let html = `
+                <h2>${h.name}</h2>
+                <div class="meta">
+                    <span><span class="label">Significations:</span> ${h.significations}</span>
+                    <span><span class="label">Karaka:</span> ${h.karaka}</span>
+                    <span><span class="label">Natural Ruler:</span> ${h.natural_ruler}</span>
+                </div>
+                <div class="section-title">Effects of Each Planet in this House</div>
+            `;
+            const sorted = Object.keys(h.planet_effects).sort();
+            sorted.forEach(pname => {
+                const desc = h.planet_effects[pname];
+                html += `<div class="house-effect"><strong>${pname}:</strong> ${desc}</div>`;
+            });
+            openDetail(html);
+        }
+
+        function showDivisional(id) {
+            const d = DIVISIONAL.find(d => d.id === id);
+            if (!d) return;
+            let html = `
+                <h2>${d.name}</h2>
+                <div class="meta">
+                    <span><span class="label">Purpose:</span> ${d.purpose}</span>
+                </div>
+                <p>Calculation: Each sign (30°) is divided into fractions. For example, D-9 (Navamsha) divides each sign into 9 parts of 3°20' each.</p>
+                <p>Used for fine‑tuned predictions in the specific area.</p>
+            `;
+            openDetail(html);
+        }
+
+        function showYoga(name) {
+            const y = YOGAS.find(y => y.name === name);
+            if (!y) return;
+            let html = `
+                <h2><i class="fas fa-gem" style="color:#b8860b;"></i> ${y.name}</h2>
+                <div class="meta">
+                    <span><span class="label">Condition:</span> ${y.condition}</span>
+                    <span><span class="label">Result:</span> ${y.result}</span>
+                </div>
+                <p><strong>Source:</strong> ${y.source}</p>
+            `;
+            openDetail(html);
+        }
+
+        // ========================================================================
+        //  4. NAVIGATION & SEARCH
+        // ========================================================================
+
+        const tabs = document.querySelectorAll('.nav-tabs button');
+        const contents = {
+            home: document.getElementById('tab-home'),
+            planets: document.getElementById('tab-planets'),
+            signs: document.getElementById('tab-signs'),
+            houses: document.getElementById('tab-houses'),
+            relationships: document.getElementById('tab-relationships'),
+            divisional: document.getElementById('tab-divisional'),
+            dashas: document.getElementById('tab-dashas'),
+            ashtakavarga: document.getElementById('tab-ashtakavarga'),
+            yogas: document.getElementById('tab-yogas')
+        };
+
+        function switchTab(tabId) {
+            tabs.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            Object.keys(contents).forEach(key => contents[key].classList.remove('active'));
+            contents[tabId].classList.add('active');
+            // re-render if needed
+            if (tabId === 'home') renderHome();
+            else if (tabId === 'planets') renderPlanets();
+            else if (tabId === 'signs') renderSigns();
+            else if (tabId === 'houses') renderHouses();
+            else if (tabId === 'relationships') renderRelationships();
+            else if (tabId === 'divisional') renderDivisional();
+            else if (tabId === 'dashas') renderDashas();
+            else if (tabId === 'ashtakavarga') renderAshtakavarga();
+            else if (tabId === 'yogas') renderYogas();
+        }
+
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                switchTab(tab);
+            });
+        });
+
+        // Search (global filter)
+        const searchInput = document.getElementById('globalSearch');
+        searchInput.addEventListener('input', function() {
+            const q = this.value.toLowerCase().trim();
+            // Determine active tab
+            const activeTab = document.querySelector('.nav-tabs .active');
+            if (!activeTab) return;
+            const tabId = activeTab.dataset.tab;
+            if (tabId === 'planets') renderPlanets(q);
+            else if (tabId === 'signs') renderSigns(q);
+            else if (tabId === 'houses') renderHouses(q);
+            else if (tabId === 'yogas') renderYogas(q);
+            // else other tabs not searchable
+        });
+
+        // ========================================================================
+        //  5. INITIAL RENDER
+        // ========================================================================
+
+        renderHome();
+        switchTab('home');
+
+        // ========================================================================
+        //  Expose functions to global for onclick
+        // ========================================================================
+        window.showPlanet = showPlanet;
+        window.showSign = showSign;
+        window.showHouse = showHouse;
+        window.showDivisional = showDivisional;
+        window.showYoga = showYoga;
+        window.showRelDetail = showRelDetail;
+    </script>
+</body>
+</html>
