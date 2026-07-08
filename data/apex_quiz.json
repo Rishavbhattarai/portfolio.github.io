@@ -1,0 +1,1302 @@
+[
+    {
+        "id": 1,
+        "section": "Data Modeling & Data Management",
+        "question": "Which relationship type strictly enforces cascade-delete from parent to child?",
+        "options": [
+            "A) Indirect Lookup",
+            "B) Master-Detail Relationship",
+            "C) Lookup Relationship",
+            "D) Hierarchical Relationship"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Master-Detail Relationship."
+    },
+    {
+        "id": 2,
+        "section": "Data Modeling & Data Management",
+        "question": "What is the maximum number of Master-Detail relationships a custom object can have?",
+        "options": [
+            "A) 4",
+            "B) 2",
+            "C) 3",
+            "D) 1"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is 2."
+    },
+    {
+        "id": 3,
+        "section": "Data Modeling & Data Management",
+        "question": "Which field type allows you to rollup summary calculations from child to parent?",
+        "options": [
+            "A) Formula",
+            "B) Number",
+            "C) Currency",
+            "D) Roll-up Summary"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Roll-up Summary."
+    },
+    {
+        "id": 4,
+        "section": "Data Modeling & Data Management",
+        "question": "What happens to a child record in a lookup relationship if the parent is deleted and 'Clear the value' is selected?",
+        "options": [
+            "A) An error is thrown.",
+            "B) The lookup field is set to null.",
+            "C) The deletion is blocked.",
+            "D) The child is deleted."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is The lookup field is set to null.."
+    },
+    {
+        "id": 5,
+        "section": "Data Modeling & Data Management",
+        "question": "Which operation should a developer use to prevent duplicate records during a data import based on a unique external key?",
+        "options": [
+            "A) Update",
+            "B) Upsert",
+            "C) Merge",
+            "D) Insert"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Upsert."
+    },
+    {
+        "id": 6,
+        "section": "Data Modeling & Data Management",
+        "question": "What is the limit of roll-up summary fields per object?",
+        "options": [
+            "A) 40",
+            "B) 10",
+            "C) 100",
+            "D) 25"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is 40."
+    },
+    {
+        "id": 7,
+        "section": "Data Modeling & Data Management",
+        "question": "Can a standard object be on the detail side of a custom object in a Master-Detail relationship?",
+        "options": [
+            "A) Only for Contact",
+            "B) Only for Account",
+            "C) Yes",
+            "D) No"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is No."
+    },
+    {
+        "id": 8,
+        "section": "Data Modeling & Data Management",
+        "question": "Which feature allows you to relate a Salesforce record to an external system record using a unique identifier?",
+        "options": [
+            "A) Lookup ID",
+            "B) Unique ID",
+            "C) External ID",
+            "D) Foreign Key"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is External ID."
+    },
+    {
+        "id": 9,
+        "section": "Data Modeling & Data Management",
+        "question": "What declarative tool can be used to ensure a custom field follows a specific format (e.g., SSN)?",
+        "options": [
+            "A) Validation Rule with REGEX",
+            "B) Process Builder",
+            "C) Apex Trigger",
+            "D) Workflow Rule"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Validation Rule with REGEX."
+    },
+    {
+        "id": 10,
+        "section": "Data Modeling & Data Management",
+        "question": "What is the organization-wide default (OWD) sharing setting impact on a Master-Detail relationship?",
+        "options": [
+            "A) Child inherits parent's sharing.",
+            "B) Child has separate sharing.",
+            "C) Child is Public Read/Write.",
+            "D) Child is Private."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Child inherits parent's sharing.."
+    },
+    {
+        "id": 11,
+        "section": "Data Modeling & Data Management",
+        "question": "Which statement is true about deleting a custom field?",
+        "options": [
+            "A) It deletes all associated Apex classes.",
+            "B) It cannot be restored.",
+            "C) It is permanently deleted immediately.",
+            "D) It is kept in the recycle bin for 15 days."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is It is kept in the recycle bin for 15 days.."
+    },
+    {
+        "id": 12,
+        "section": "Data Modeling & Data Management",
+        "question": "How can you make a field required at the database level?",
+        "options": [
+            "A) Check 'Required' when creating the field.",
+            "B) Page Layout",
+            "C) Validation Rule",
+            "D) Workflow Rule"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Check 'Required' when creating the field.."
+    },
+    {
+        "id": 13,
+        "section": "Data Modeling & Data Management",
+        "question": "What data type is returned by a formula field comparing two dates?",
+        "options": [
+            "A) Number",
+            "B) Text",
+            "C) Date",
+            "D) Boolean"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Number."
+    },
+    {
+        "id": 14,
+        "section": "Data Modeling & Data Management",
+        "question": "Which relationship allows many-to-many connections between two objects?",
+        "options": [
+            "A) External Lookup",
+            "B) Junction Object with two Master-Details",
+            "C) Lookup",
+            "D) Hierarchical"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Junction Object with two Master-Details."
+    },
+    {
+        "id": 15,
+        "section": "Data Modeling & Data Management",
+        "question": "What is the max number of fields you can track in Field History Tracking per object?",
+        "options": [
+            "A) 10",
+            "B) 100",
+            "C) 50",
+            "D) 20"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is 20."
+    },
+    {
+        "id": 16,
+        "section": "Data Modeling & Data Management",
+        "question": "Which API is best suited for loading 5 million records into Salesforce?",
+        "options": [
+            "A) Streaming API",
+            "B) SOAP API",
+            "C) Bulk API",
+            "D) REST API"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Bulk API."
+    },
+    {
+        "id": 17,
+        "section": "Data Modeling & Data Management",
+        "question": "How do you bypass validation rules when loading data?",
+        "options": [
+            "A) Disable them temporarily or bypass via integration user profile.",
+            "B) It is not possible",
+            "C) Use Bulk API",
+            "D) Use Data Loader settings"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Disable them temporarily or bypass via integration user profile.."
+    },
+    {
+        "id": 18,
+        "section": "Data Modeling & Data Management",
+        "question": "What happens if a validation rule fails during a data import?",
+        "options": [
+            "A) The specific record fails and is not saved.",
+            "B) The record is saved without the field.",
+            "C) The entire batch fails.",
+            "D) The system crashes."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is The specific record fails and is not saved.."
+    },
+    {
+        "id": 19,
+        "section": "Data Modeling & Data Management",
+        "question": "Which is a valid use case for a cross-object formula field?",
+        "options": [
+            "A) Deleting a Contact.",
+            "B) Creating a child record.",
+            "C) Displaying the Parent Account's Phone on a Contact.",
+            "D) Updating the Parent Account's Phone."
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Displaying the Parent Account's Phone on a Contact.."
+    },
+    {
+        "id": 20,
+        "section": "Data Modeling & Data Management",
+        "question": "What is the 15-character ID in Salesforce?",
+        "options": [
+            "A) Case-insensitive ID.",
+            "B) Session ID.",
+            "C) External ID.",
+            "D) Case-sensitive ID."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Case-sensitive ID.."
+    },
+    {
+        "id": 21,
+        "section": "Process Automation & Logic",
+        "question": "Which trigger context variable contains the old versions of records before an update?",
+        "options": [
+            "A) Trigger.oldMap",
+            "B) Trigger.old",
+            "C) Trigger.previous",
+            "D) Trigger.new"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Trigger.old."
+    },
+    {
+        "id": 22,
+        "section": "Process Automation & Logic",
+        "question": "In which trigger event can you modify fields on the record without a DML update statement?",
+        "options": [
+            "A) before insert / before update",
+            "B) after update",
+            "C) before delete",
+            "D) after insert"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is before insert / before update."
+    },
+    {
+        "id": 23,
+        "section": "Process Automation & Logic",
+        "question": "What is the maximum number of SOQL queries allowed in a synchronous Apex transaction?",
+        "options": [
+            "A) 150",
+            "B) 50",
+            "C) 100",
+            "D) 200"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is 100."
+    },
+    {
+        "id": 24,
+        "section": "Process Automation & Logic",
+        "question": "What is the maximum number of DML statements allowed in a synchronous Apex transaction?",
+        "options": [
+            "A) 100",
+            "B) 500",
+            "C) 150",
+            "D) 200"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is 150."
+    },
+    {
+        "id": 25,
+        "section": "Process Automation & Logic",
+        "question": "How do you avoid hitting SOQL governor limits in a trigger?",
+        "options": [
+            "A) Use smaller batch sizes.",
+            "B) Bulkify the code by moving SOQL outside of loops.",
+            "C) Use SOSL instead.",
+            "D) Use asynchronous Apex."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Bulkify the code by moving SOQL outside of loops.."
+    },
+    {
+        "id": 26,
+        "section": "Process Automation & Logic",
+        "question": "What is the correct order of execution for these events?",
+        "options": [
+            "A) Validation Rules, Before Triggers, After Triggers",
+            "B) After Triggers, Validation Rules, Before Triggers",
+            "C) Before Triggers, Validation Rules, After Triggers",
+            "D) Before Triggers, After Triggers, Validation Rules"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Before Triggers, Validation Rules, After Triggers."
+    },
+    {
+        "id": 27,
+        "section": "Process Automation & Logic",
+        "question": "Which collection type stores unique elements and does not allow duplicates?",
+        "options": [
+            "A) Array",
+            "B) Set",
+            "C) Map",
+            "D) List"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Set."
+    },
+    {
+        "id": 28,
+        "section": "Process Automation & Logic",
+        "question": "Which collection type associates a key with a value?",
+        "options": [
+            "A) Map",
+            "B) Set",
+            "C) List",
+            "D) Enum"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Map."
+    },
+    {
+        "id": 29,
+        "section": "Process Automation & Logic",
+        "question": "What exception is thrown when a DML operation fails?",
+        "options": [
+            "A) LimitException",
+            "B) QueryException",
+            "C) NullPointerException",
+            "D) DmlException"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is DmlException."
+    },
+    {
+        "id": 30,
+        "section": "Process Automation & Logic",
+        "question": "Which method allows partial success when inserting a list of records?",
+        "options": [
+            "A) Database.upsert(records)",
+            "B) Database.insert(records, true)",
+            "C) insert records;",
+            "D) Database.insert(records, false)"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Database.insert(records, false)."
+    },
+    {
+        "id": 31,
+        "section": "Process Automation & Logic",
+        "question": "How can you reset governor limits within a test class?",
+        "options": [
+            "A) System.resetLimits()",
+            "B) Test.startTest() and Test.stopTest()",
+            "C) Test.reset()",
+            "D) Database.reset()"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Test.startTest() and Test.stopTest()."
+    },
+    {
+        "id": 32,
+        "section": "Process Automation & Logic",
+        "question": "What does the 'with sharing' keyword do in an Apex class?",
+        "options": [
+            "A) Enforces field-level security.",
+            "B) Bypasses all sharing rules.",
+            "C) Enforces object-level permissions.",
+            "D) Enforces the user's sharing rules and record-level access."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Enforces the user's sharing rules and record-level access.."
+    },
+    {
+        "id": 33,
+        "section": "Process Automation & Logic",
+        "question": "What is the default sharing context if a class is not declared with or without sharing?",
+        "options": [
+            "A) with sharing",
+            "B) without sharing",
+            "C) Private",
+            "D) It inherits the sharing setting from the calling class."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is It inherits the sharing setting from the calling class.."
+    },
+    {
+        "id": 34,
+        "section": "Process Automation & Logic",
+        "question": "Which keyword is used to prevent a variable from being modified once initialized?",
+        "options": [
+            "A) readonly",
+            "B) final",
+            "C) const",
+            "D) static"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is final."
+    },
+    {
+        "id": 35,
+        "section": "Process Automation & Logic",
+        "question": "What is the return type of a SOQL aggregate function like COUNT()?",
+        "options": [
+            "A) Decimal",
+            "B) Integer",
+            "C) Double",
+            "D) List<sObject>"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Integer."
+    },
+    {
+        "id": 36,
+        "section": "Process Automation & Logic",
+        "question": "Which trigger context is best for creating related child records?",
+        "options": [
+            "A) before update",
+            "B) before insert",
+            "C) after insert",
+            "D) after delete"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is after insert."
+    },
+    {
+        "id": 37,
+        "section": "Process Automation & Logic",
+        "question": "What happens if you issue a DML statement on Trigger.new in an 'after' trigger?",
+        "options": [
+            "A) The records are updated.",
+            "B) The DML is ignored.",
+            "C) A runtime exception is thrown (System.FinalException).",
+            "D) An infinite loop occurs."
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is A runtime exception is thrown (System.FinalException).."
+    },
+    {
+        "id": 38,
+        "section": "Process Automation & Logic",
+        "question": "Which interface must a class implement to be scheduled via the Apex Scheduler?",
+        "options": [
+            "A) Batchable",
+            "B) Runnable",
+            "C) Queueable",
+            "D) Schedulable"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Schedulable."
+    },
+    {
+        "id": 39,
+        "section": "Process Automation & Logic",
+        "question": "Which interface allows you to process large volumes of data by breaking them into smaller chunks?",
+        "options": [
+            "A) System.Queueable",
+            "B) Database.Batchable",
+            "C) Database.Schedulable",
+            "D) Database.Bulkable"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Database.Batchable."
+    },
+    {
+        "id": 40,
+        "section": "Process Automation & Logic",
+        "question": "What annotation is used to make an Apex method available to a Lightning Web Component (LWC)?",
+        "options": [
+            "A) @AuraEnabled",
+            "B) @RemoteAction",
+            "C) @Future",
+            "D) @InvocableMethod"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is @AuraEnabled."
+    },
+    {
+        "id": 41,
+        "section": "Process Automation & Logic",
+        "question": "What must be added to @AuraEnabled to allow an LWC to wire the method?",
+        "options": [
+            "A) wire=true",
+            "B) cacheable=true",
+            "C) public=true",
+            "D) static=true"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is cacheable=true."
+    },
+    {
+        "id": 42,
+        "section": "Process Automation & Logic",
+        "question": "Which asynchronous feature allows chaining of jobs?",
+        "options": [
+            "A) Batch Apex",
+            "B) Queueable Apex",
+            "C) Future Methods",
+            "D) Scheduled Apex"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Queueable Apex."
+    },
+    {
+        "id": 43,
+        "section": "Process Automation & Logic",
+        "question": "Can a future method return a value?",
+        "options": [
+            "A) Yes, it can return sObjects.",
+            "B) Yes, it can return primitives.",
+            "C) Yes, it returns a Future object.",
+            "D) No, it must be void."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is No, it must be void.."
+    },
+    {
+        "id": 44,
+        "section": "Process Automation & Logic",
+        "question": "Which collection is ordered and allows duplicate values?",
+        "options": [
+            "A) Map",
+            "B) Dictionary",
+            "C) Set",
+            "D) List"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is List."
+    },
+    {
+        "id": 45,
+        "section": "Process Automation & Logic",
+        "question": "How do you check if a Map contains a specific key?",
+        "options": [
+            "A) map.hasKey(key)",
+            "B) map.containsKey(key)",
+            "C) map.contains(key)",
+            "D) map.keys(key)"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is map.containsKey(key)."
+    },
+    {
+        "id": 46,
+        "section": "SOQL & SOSL",
+        "question": "What does SOQL stand for?",
+        "options": [
+            "A) Salesforce Object Query Language",
+            "B) System Object Query Language",
+            "C) Standard Object Query Language",
+            "D) Salesforce Online Query Logic"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Salesforce Object Query Language."
+    },
+    {
+        "id": 47,
+        "section": "SOQL & SOSL",
+        "question": "What does SOSL stand for?",
+        "options": [
+            "A) Salesforce Online Search Logic",
+            "B) Standard Object Search Language",
+            "C) System Object Search Language",
+            "D) Salesforce Object Search Language"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Salesforce Object Search Language."
+    },
+    {
+        "id": 48,
+        "section": "SOQL & SOSL",
+        "question": "Which language allows you to search for a text string across multiple unrelated objects?",
+        "options": [
+            "A) Apex",
+            "B) SOQL",
+            "C) SOSL",
+            "D) DML"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is SOSL."
+    },
+    {
+        "id": 49,
+        "section": "SOQL & SOSL",
+        "question": "What is the return type of a SOSL query in Apex?",
+        "options": [
+            "A) Set<sObject>",
+            "B) List<sObject>",
+            "C) List<List<sObject>>",
+            "D) Map<Id, sObject>"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is List<List<sObject>>."
+    },
+    {
+        "id": 50,
+        "section": "SOQL & SOSL",
+        "question": "How do you query all Contacts related to an Account in a single SOQL query?",
+        "options": [
+            "A) SELECT Id, Contact.Id FROM Account",
+            "B) SELECT Id FROM Account JOIN Contacts",
+            "C) SELECT Id, Contacts FROM Account",
+            "D) SELECT Id, (SELECT Id FROM Contacts) FROM Account"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is SELECT Id, (SELECT Id FROM Contacts) FROM Account."
+    },
+    {
+        "id": 51,
+        "section": "SOQL & SOSL",
+        "question": "How do you query the Parent Account Name from a Contact record in SOQL?",
+        "options": [
+            "A) SELECT Account.Name FROM Contact",
+            "B) SELECT Account__r.Name FROM Contact",
+            "C) SELECT AccountName FROM Contact",
+            "D) SELECT Parent.Name FROM Contact"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is SELECT Account.Name FROM Contact."
+    },
+    {
+        "id": 52,
+        "section": "SOQL & SOSL",
+        "question": "Which SOQL keyword limits the number of records returned?",
+        "options": [
+            "A) ROWS",
+            "B) LIMIT",
+            "C) TOP",
+            "D) MAX"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is LIMIT."
+    },
+    {
+        "id": 53,
+        "section": "SOQL & SOSL",
+        "question": "Which SOQL keyword allows filtering records based on a list of values?",
+        "options": [
+            "A) INCLUDES",
+            "B) HAS",
+            "C) IN",
+            "D) CONTAINS"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is IN."
+    },
+    {
+        "id": 54,
+        "section": "SOQL & SOSL",
+        "question": "What is the maximum number of records returned by a synchronous SOQL query in Apex?",
+        "options": [
+            "A) 50,000",
+            "B) 100,000",
+            "C) Unlimited",
+            "D) 10,000"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is 50,000."
+    },
+    {
+        "id": 55,
+        "section": "SOQL & SOSL",
+        "question": "What exception is thrown when a SOQL query assigned to a single sObject variable returns multiple rows?",
+        "options": [
+            "A) System.QueryException",
+            "B) System.NullPointerException",
+            "C) System.ListException",
+            "D) System.LimitException"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is System.QueryException."
+    },
+    {
+        "id": 56,
+        "section": "SOQL & SOSL",
+        "question": "What exception is thrown when a SOQL query assigned to a single sObject variable returns no rows?",
+        "options": [
+            "A) System.NullPointerException",
+            "B) System.NoDataFoundException",
+            "C) System.LimitException",
+            "D) System.QueryException"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is System.QueryException."
+    },
+    {
+        "id": 57,
+        "section": "SOQL & SOSL",
+        "question": "Which function is used in SOQL to find records grouped by a specific field?",
+        "options": [
+            "A) SORT BY",
+            "B) HAVING",
+            "C) ORDER BY",
+            "D) GROUP BY"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is GROUP BY."
+    },
+    {
+        "id": 58,
+        "section": "SOQL & SOSL",
+        "question": "What does the 'FOR UPDATE' keyword do in a SOQL query?",
+        "options": [
+            "A) Bypasses read-only locks.",
+            "B) Allows dirty reads.",
+            "C) Updates the records immediately.",
+            "D) Locks the queried records to prevent other transactions from modifying them."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Locks the queried records to prevent other transactions from modifying them.."
+    },
+    {
+        "id": 59,
+        "section": "SOQL & SOSL",
+        "question": "How do you filter a SOQL query using an Apex variable?",
+        "options": [
+            "A) Use a dollar sign ($).",
+            "B) Use an ampersand (&).",
+            "C) Use a colon (:) before the variable name.",
+            "D) Use curly braces ({})."
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Use a colon (:) before the variable name.."
+    },
+    {
+        "id": 60,
+        "section": "SOQL & SOSL",
+        "question": "Which wildcard character represents zero or more characters in a SOQL LIKE clause?",
+        "options": [
+            "A) * (Asterisk)",
+            "B) ? (Question Mark)",
+            "C) % (Percent)",
+            "D) _ (Underscore)"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is % (Percent)."
+    },
+    {
+        "id": 61,
+        "section": "SOQL & SOSL",
+        "question": "Which wildcard character represents exactly one character in a SOQL LIKE clause?",
+        "options": [
+            "A) ? (Question Mark)",
+            "B) _ (Underscore)",
+            "C) % (Percent)",
+            "D) * (Asterisk)"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is _ (Underscore)."
+    },
+    {
+        "id": 62,
+        "section": "SOQL & SOSL",
+        "question": "In SOSL, what clause specifies which fields to return for each object?",
+        "options": [
+            "A) SELECT",
+            "B) YIELD",
+            "C) RETURNING",
+            "D) OUTPUT"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is RETURNING."
+    },
+    {
+        "id": 63,
+        "section": "SOQL & SOSL",
+        "question": "Can you perform DML operations on records returned by SOSL directly?",
+        "options": [
+            "A) Only on standard objects.",
+            "B) Yes, without casting.",
+            "C) Yes, if cast to the specific sObject list first.",
+            "D) No, SOSL records are read-only."
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Yes, if cast to the specific sObject list first.."
+    },
+    {
+        "id": 64,
+        "section": "SOQL & SOSL",
+        "question": "What is the maximum number of SOSL queries allowed in a synchronous transaction?",
+        "options": [
+            "A) 20",
+            "B) 50",
+            "C) 100",
+            "D) 200"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is 20."
+    },
+    {
+        "id": 65,
+        "section": "SOQL & SOSL",
+        "question": "What SOQL keyword is used to filter aggregate functions?",
+        "options": [
+            "A) FILTER",
+            "B) WHERE",
+            "C) HAVING",
+            "D) LIMIT"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is HAVING."
+    },
+    {
+        "id": 66,
+        "section": "Testing & Debugging",
+        "question": "What is the minimum overall code coverage requirement to deploy Apex to production?",
+        "options": [
+            "A) 75%",
+            "B) 85%",
+            "C) 50%",
+            "D) 100%"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is 75%."
+    },
+    {
+        "id": 67,
+        "section": "Testing & Debugging",
+        "question": "Which annotation is used to define a class containing only test methods?",
+        "options": [
+            "A) @TestSetup",
+            "B) @ApexTest",
+            "C) @TestClass",
+            "D) @isTest"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is @isTest."
+    },
+    {
+        "id": 68,
+        "section": "Testing & Debugging",
+        "question": "Which annotation is used to create common test records available to all test methods in a class?",
+        "options": [
+            "A) @TestFactory",
+            "B) @isTest(SeeAllData=true)",
+            "C) @BeforeTest",
+            "D) @testSetup"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is @testSetup."
+    },
+    {
+        "id": 69,
+        "section": "Testing & Debugging",
+        "question": "What is the purpose of System.runAs() in a test class?",
+        "options": [
+            "A) To bypass governor limits.",
+            "B) To execute code as a specific user to test sharing and permissions.",
+            "C) To run asynchronous code synchronously.",
+            "D) To deploy code safely."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is To execute code as a specific user to test sharing and permissions.."
+    },
+    {
+        "id": 70,
+        "section": "Testing & Debugging",
+        "question": "Does System.runAs() count against DML governor limits?",
+        "options": [
+            "A) Yes",
+            "B) Only for inserts",
+            "C) Only for updates",
+            "D) No"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is No."
+    },
+    {
+        "id": 71,
+        "section": "Testing & Debugging",
+        "question": "Do test methods have access to production data by default?",
+        "options": [
+            "A) Only if they are in a managed package.",
+            "B) Yes, but only standard objects.",
+            "C) Yes, they can read all data.",
+            "D) No, test data is isolated."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is No, test data is isolated.."
+    },
+    {
+        "id": 72,
+        "section": "Testing & Debugging",
+        "question": "Which annotation allows a test method to access pre-existing organization data?",
+        "options": [
+            "A) @isTest(SeeData=true)",
+            "B) @isTest(SeeAllData=true)",
+            "C) @AccessData",
+            "D) @TestSetup"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is @isTest(SeeAllData=true)."
+    },
+    {
+        "id": 73,
+        "section": "Testing & Debugging",
+        "question": "What method is used to force asynchronous code (like @future) to execute synchronously in a test?",
+        "options": [
+            "A) Test.startTest()",
+            "B) System.runAsync()",
+            "C) Test.executeAsync()",
+            "D) Test.stopTest()"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Test.stopTest()."
+    },
+    {
+        "id": 74,
+        "section": "Testing & Debugging",
+        "question": "Which method is used to assert that two values are identical in a test class?",
+        "options": [
+            "A) System.assert(expected == actual)",
+            "B) System.assertMatch(expected, actual)",
+            "C) System.assertEquals(expected, actual)",
+            "D) System.isEqual(expected, actual)"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is System.assertEquals(expected, actual)."
+    },
+    {
+        "id": 75,
+        "section": "Testing & Debugging",
+        "question": "What is the best practice for generating test data?",
+        "options": [
+            "A) Use the @isTest(SeeAllData=true) annotation.",
+            "B) Hardcode Ids in the test class.",
+            "C) Query existing production records.",
+            "D) Use a TestDataFactory utility class."
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Use a TestDataFactory utility class.."
+    },
+    {
+        "id": 76,
+        "section": "Testing & Debugging",
+        "question": "Can a test class invoke a callout to an external web service?",
+        "options": [
+            "A) No, you must use a Mock Callout.",
+            "B) Yes, if the endpoint is in Remote Site Settings.",
+            "C) Yes, but only in Sandbox.",
+            "D) No, callouts are permanently banned in Apex."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is No, you must use a Mock Callout.."
+    },
+    {
+        "id": 77,
+        "section": "Testing & Debugging",
+        "question": "Which interface must be implemented to mock an HTTP callout in a test?",
+        "options": [
+            "A) HttpCalloutMock",
+            "B) MockHttpResponse",
+            "C) WebServiceMock",
+            "D) TestCallout"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is HttpCalloutMock."
+    },
+    {
+        "id": 78,
+        "section": "Testing & Debugging",
+        "question": "Are governor limits completely removed during test execution?",
+        "options": [
+            "A) Yes, for DML only.",
+            "B) No, but they are reset when Test.startTest() is called.",
+            "C) Yes, tests have unlimited resources.",
+            "D) No, they are halved."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is No, but they are reset when Test.startTest() is called.."
+    },
+    {
+        "id": 79,
+        "section": "Testing & Debugging",
+        "question": "What is the maximum number of times Test.startTest() can be called in a single test method?",
+        "options": [
+            "A) Unlimited",
+            "B) Depends on the data",
+            "C) Once",
+            "D) Twice"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Once."
+    },
+    {
+        "id": 80,
+        "section": "Testing & Debugging",
+        "question": "How do you test exceptions in Apex?",
+        "options": [
+            "A) Use a try-catch block and assert that the exception was thrown.",
+            "B) Use System.assertException().",
+            "C) Exceptions automatically pass the test.",
+            "D) You cannot test exceptions."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Use a try-catch block and assert that the exception was thrown.."
+    },
+    {
+        "id": 81,
+        "section": "Testing & Debugging",
+        "question": "What developer tool allows you to view detailed execution logs and limits usage?",
+        "options": [
+            "A) Developer Console",
+            "B) Schema Builder",
+            "C) Data Loader",
+            "D) Workbench"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is Developer Console."
+    },
+    {
+        "id": 82,
+        "section": "Testing & Debugging",
+        "question": "Which log level provides the most detailed information about variable assignments and loop executions?",
+        "options": [
+            "A) FINEST",
+            "B) INFO",
+            "C) DEBUG",
+            "D) WARN"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is FINEST."
+    },
+    {
+        "id": 83,
+        "section": "Testing & Debugging",
+        "question": "What is a checkpoint in the Developer Console?",
+        "options": [
+            "A) A snapshot of heap and variables at a specific line of code.",
+            "B) A deployment validation step.",
+            "C) A break in execution that pauses the transaction.",
+            "D) A save state for the database."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is A snapshot of heap and variables at a specific line of code.."
+    },
+    {
+        "id": 84,
+        "section": "Testing & Debugging",
+        "question": "How are unhandled exceptions in Triggers presented to the end user?",
+        "options": [
+            "A) The browser crashes.",
+            "B) As a standard Salesforce error message on the record page.",
+            "C) An email is sent but the UI succeeds.",
+            "D) The record saves partially."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is As a standard Salesforce error message on the record page.."
+    },
+    {
+        "id": 85,
+        "section": "Testing & Debugging",
+        "question": "What happens to test data created in a test method after the test completes?",
+        "options": [
+            "A) It overwrites production data.",
+            "B) It remains in the database until manually deleted.",
+            "C) It is automatically rolled back.",
+            "D) It is moved to the recycle bin."
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is It is automatically rolled back.."
+    },
+    {
+        "id": 86,
+        "section": "LWC, Aura, & Deployment",
+        "question": "What are the core files in a Lightning Web Component bundle?",
+        "options": [
+            "A) CMP, JS, XML",
+            "B) HTML, JS, XML",
+            "C) JS, CSS, JSON",
+            "D) HTML, CSS, Apex"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is HTML, JS, XML."
+    },
+    {
+        "id": 87,
+        "section": "LWC, Aura, & Deployment",
+        "question": "Which LWC decorator is used to expose a property as public, so a parent component can set it?",
+        "options": [
+            "A) @public",
+            "B) @track",
+            "C) @wire",
+            "D) @api"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is @api."
+    },
+    {
+        "id": 88,
+        "section": "LWC, Aura, & Deployment",
+        "question": "Which LWC decorator is used to reactively call a Salesforce Apex method?",
+        "options": [
+            "A) @invoke",
+            "B) @wire",
+            "C) @track",
+            "D) @api"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is @wire."
+    },
+    {
+        "id": 89,
+        "section": "LWC, Aura, & Deployment",
+        "question": "In LWC, how do you imperatively call an Apex method?",
+        "options": [
+            "A) Call System.enqueueJob().",
+            "B) Use the @wire decorator.",
+            "C) Import the method and invoke it as a JavaScript Promise.",
+            "D) Use an iframe."
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is Import the method and invoke it as a JavaScript Promise.."
+    },
+    {
+        "id": 90,
+        "section": "LWC, Aura, & Deployment",
+        "question": "Which configuration file makes an LWC visible in the Lightning App Builder?",
+        "options": [
+            "A) The .css file",
+            "B) The .js file",
+            "C) The .html file",
+            "D) The .js-meta.xml file"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is The .js-meta.xml file."
+    },
+    {
+        "id": 91,
+        "section": "LWC, Aura, & Deployment",
+        "question": "What is the legacy component framework that preceded LWC?",
+        "options": [
+            "A) Web Dynpro",
+            "B) Aura Components",
+            "C) S-Controls",
+            "D) Visualforce"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Aura Components."
+    },
+    {
+        "id": 92,
+        "section": "LWC, Aura, & Deployment",
+        "question": "Which tool allows you to migrate metadata components between orgs without using a command-line interface?",
+        "options": [
+            "A) Salesforce CLI",
+            "B) Data Loader",
+            "C) Workbench",
+            "D) Change Sets"
+        ],
+        "correct_answer": "D",
+        "explanation": "The correct answer is Change Sets."
+    },
+    {
+        "id": 93,
+        "section": "LWC, Aura, & Deployment",
+        "question": "What is a Scratch Org?",
+        "options": [
+            "A) A disposable Salesforce environment used for development and testing.",
+            "B) A permanent production backup.",
+            "C) A testing sandbox that copies all production data.",
+            "D) A legacy org type."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is A disposable Salesforce environment used for development and testing.."
+    },
+    {
+        "id": 94,
+        "section": "LWC, Aura, & Deployment",
+        "question": "Which Salesforce CLI (sfdx) command pushes local code to a scratch org?",
+        "options": [
+            "A) sf project deploy start (or sfdx force:source:push)",
+            "B) sf data push",
+            "C) sfdx force:code:upload",
+            "D) sfdx source:commit"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is sf project deploy start (or sfdx force:source:push)."
+    },
+    {
+        "id": 95,
+        "section": "LWC, Aura, & Deployment",
+        "question": "What file defines the structure of a package in Salesforce CLI source-driven development?",
+        "options": [
+            "A) build.xml",
+            "B) config.json",
+            "C) sfdx-project.json",
+            "D) package.xml"
+        ],
+        "correct_answer": "C",
+        "explanation": "The correct answer is sfdx-project.json."
+    },
+    {
+        "id": 96,
+        "section": "LWC, Aura, & Deployment",
+        "question": "What does the 'cacheable=true' parameter do in an @AuraEnabled method?",
+        "options": [
+            "A) Caches the code compilation.",
+            "B) Caches the result on the client to improve performance, but prevents DML operations.",
+            "C) Caches the SOQL query in the database.",
+            "D) Allows DML operations to be cached."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Caches the result on the client to improve performance, but prevents DML operations.."
+    },
+    {
+        "id": 97,
+        "section": "LWC, Aura, & Deployment",
+        "question": "Which lifecycle hook in LWC fires when the component is inserted into the DOM?",
+        "options": [
+            "A) connectedCallback()",
+            "B) disconnectedCallback()",
+            "C) renderedCallback()",
+            "D) constructor()"
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is connectedCallback()."
+    },
+    {
+        "id": 98,
+        "section": "LWC, Aura, & Deployment",
+        "question": "How do components communicate from child to parent in LWC?",
+        "options": [
+            "A) By dispatching Custom Events.",
+            "B) Using Lightning Message Service.",
+            "C) By updating the database.",
+            "D) Using the @api decorator."
+        ],
+        "correct_answer": "A",
+        "explanation": "The correct answer is By dispatching Custom Events.."
+    },
+    {
+        "id": 99,
+        "section": "LWC, Aura, & Deployment",
+        "question": "How do components communicate across unrelated DOM elements in LWC?",
+        "options": [
+            "A) Custom Events.",
+            "B) Lightning Message Service (LMS) or PubSub.",
+            "C) URL parameters.",
+            "D) @api decorators."
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Lightning Message Service (LMS) or PubSub.."
+    },
+    {
+        "id": 100,
+        "section": "LWC, Aura, & Deployment",
+        "question": "What mechanism prevents arbitrary external code from accessing LWC component internals?",
+        "options": [
+            "A) OWD Sharing",
+            "B) Lightning Web Security (LWS) / Locker Service",
+            "C) Profile Permissions",
+            "D) Validation Rules"
+        ],
+        "correct_answer": "B",
+        "explanation": "The correct answer is Lightning Web Security (LWS) / Locker Service."
+    }
+]

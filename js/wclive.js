@@ -27,6 +27,8 @@ const ROUNDS = [
   { key: 'sf',     label: 'SEMI Hai GUYS/GIRL',start: '2026-07-14',          end: '2026-07-15' },
   { key: '3p',     label: '3rd Place Hai GUYS/GIRL',start: '2026-07-18',     end: '2026-07-18' },
   { key: 'final',  label: 'FINALE Hai GUYS/GIRL',start: '2026-07-19',         end: '2026-07-19' },
+  // Combined Knockout stage (QF to Final)
+  { key: 'ko',     label: 'Knockout (QF–Final)', start: '2026-07-09', end: '2026-07-19' },
 ];
 let activeRound = 'ro16';
 
@@ -316,7 +318,7 @@ window.setRound = function(key, btn) {
   activeRound = key;
   document.querySelectorAll('#roundFilterBar .round-pill-btn').forEach(b=>b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  buildLeaderboard(); // this calls buildRoundFilterBar which will scroll to center
+  buildLeaderboard();
 };
 
 function getLeaderboardData() {
@@ -328,24 +330,43 @@ function getLeaderboardData() {
   return { roundMatches, gamesLeft };
 }
 
+// ─── Leaderboard (bar chart only, no per‑round breakdown) ────────────────────
 function buildLeaderboard() {
   buildRoundFilterBar();
   const { roundMatches, gamesLeft } = getLeaderboardData();
+
   const data = PLAYERS.map(p => ({
     ...p,
-    pts: roundMatches.reduce((s,m)=>s+(m.preds.find(pr=>pr.p===p.name)?.pts||0),0)
+    pts: roundMatches.reduce((s, m) => s + (m.preds.find(pr => pr.p === p.name)?.pts || 0), 0)
   }));
-  const sorted=[...data].sort((a,b)=>b.pts-a.pts);
-  const maxPts=sorted[0]?.pts||1;
-  const labels=['🦏','✏️🧽','👁️','4th','5th','6th'];
-  const colors=['var(--gold-dark)','#888780','#a0522d','#888','#888','#888'];
+
+  const sorted = [...data].sort((a, b) => b.pts - a.pts);
+  const maxPts = sorted[0]?.pts || 1;
+  const labels = ['🦏', '✏️🧽', '👁️', '4th', '5th', '6th'];
+  const colors = ['var(--gold-dark)', '#888780', '#a0522d', '#888', '#888', '#888'];
   const el = document.getElementById('leaderboard');
-  el.innerHTML = `<div style="padding:10px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-secondary)"><span>🏟️ Games in this round: ${roundMatches.length}</span><span>⚽ Remaining: ${gamesLeft}</span></div>` +
-    sorted.map((p,i)=>{
-      const w=Math.round((p.pts/maxPts)*100);
+
+  const leaderHtml = `
+    <div style="padding:10px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-secondary)">
+      <span>🏟️ Games in this round: ${roundMatches.length}</span>
+      <span>⚽ Remaining: ${gamesLeft}</span>
+    </div>
+    ${sorted.map((p, i) => {
+      const w = Math.round((p.pts / maxPts) * 100);
       const rankLabel = i < 3 ? labels[i] : `${i+1}${['th','st','nd','rd'][(i+1)%10]||'th'}`;
-      return `<div class="player-row" onclick="switchToPlayer('${p.name}')"><span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span><div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div></div><div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div></div>`;
-    }).join('');
+      return `<div class="player-row" onclick="switchToPlayer('${p.name}')">
+        <span class="rank-badge" style="color:${colors[i]}">${rankLabel}</span>
+        <div class="avatar" style="background:${p.bg};color:${p.textc}">${p.initials}</div>
+        <div class="player-info">
+          <div class="player-name">${p.name}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${p.color}"></div></div>
+        </div>
+        <div class="pts-col"><div class="pts-big">${p.pts}</div><div class="pts-unit">pts</div></div>
+      </div>`;
+    }).join('')}
+  `;
+
+  el.innerHTML = leaderHtml;
 }
 
 // ─── Overview stats ───────────────────────────────────────────────────────────

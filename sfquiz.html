@@ -1,538 +1,2564 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Salesforce Dev1 Certification Hub</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Cert Deck — Quiz Game</title>
     <style>
+        /* ─── fonts ─── */
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+        /* ─── root ─── */
         :root {
-            --primary: #009EDB;
-            --primary-dark: #0076a8;
-            --secondary: #16325c;
-            --success: #2e7d32;
-            --success-bg: #edf7ed;
-            --error: #d32f2f;
-            --error-bg: #fdeded;
-            --neutral-light: #f3f2f1;
-            --neutral-dark: #2b2826;
-            --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            --radius: 12px;
+            --bg-deep: #0a1710;
+            --bg-card: #12261b;
+            --bg-card-alt: #1a3325;
+            --border-subtle: #2a4d38;
+            --border-glow: #3a6b4a;
+            --text-primary: #edf5ed;
+            --text-secondary: #b8d0be;
+            --text-dim: #7fa08a;
+            --gold: #d9a84c;
+            --gold-dim: #8a6f2e;
+            --gold-glow: rgba(217, 168, 76, 0.15);
+            --green-correct: #7fe0ac;
+            --green-dim: #1e4d32;
+            --red-wrong: #e2707a;
+            --red-dim: #4a282c;
+            --serif: 'Fraunces', serif;
+            --sans: 'Source Sans 3', sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+            --radius: 16px;
+            --shadow-card: 0 20px 48px -12px rgba(0, 0, 0, 0.7);
+            --transition: 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
 
+        /* ─── reset ─── */
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
         }
-
+        html,
         body {
-            background-color: #f4f6f9;
-            color: var(--neutral-dark);
+            height: 100%;
+        }
+        body {
+            background:
+                radial-gradient(ellipse 1200px 700px at 20% -10%, #1a4028 0%, transparent 65%),
+                radial-gradient(ellipse 900px 600px at 90% 110%, #1a3520 0%, transparent 55%),
+                var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--sans);
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             padding: 12px;
         }
 
-        .container {
+        .hidden {
+            display: none !important;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+
+        /* ─── app shell ─── */
+        .app {
             width: 100%;
-            max-width: 640px;
-            background: var(--white);
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ─── shared card shell ─── */
+        .shell {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-top: 8px;
+            padding: 32px 26px 28px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(2px);
+            transition: border-color 0.3s ease;
+        }
+        .shell:hover {
+            border-color: var(--border-glow);
         }
 
-        /* Screen States Management */
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
-
-        /* Typography */
-        h1 { color: var(--secondary); font-size: 22px; text-align: center; margin-bottom: 4px; }
-        .meta-subtitle { text-align: center; color: #514f4d; font-size: 13px; margin-bottom: 24px; }
-        h2 { color: var(--secondary); font-size: 18px; margin-bottom: 16px; font-weight: 600; }
-
-        /* Chapter Menu Grid Layout */
-        .menu-grid {
+        /* ─── brand ─── */
+        .brand {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 12px;
+            margin-bottom: 6px;
+        }
+        .brand-mark {
+            font-size: 26px;
+            color: var(--gold);
+            display: inline-block;
+            line-height: 1;
+        }
+        .brand-mark.spin {
+            animation: spin 1.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .brand h1 {
+            font-family: var(--serif);
+            font-weight: 700;
+            font-size: 26px;
+            letter-spacing: 0.4px;
+            background: linear-gradient(135deg, var(--gold), #f0d080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+            margin-top: 4px;
+        }
+        .tagline-mono {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* ─── buttons ─── */
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+        .btn-ghost:hover {
+            border-color: var(--gold-dim);
+            color: var(--text-primary);
+            background: var(--gold-glow);
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: #1a1710;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: transform 0.15s ease, filter 0.25s ease;
+            box-shadow: 0 4px 16px rgba(217, 168, 76, 0.25);
+        }
+        .btn-primary:hover {
+            filter: brightness(1.08);
+            transform: scale(1.01);
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            min-height: 40px;
+            min-width: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+        .btn-icon:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+            background: var(--gold-glow);
+        }
+        .btn-icon:disabled {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* ─── status screen ─── */
+        .status-screen .shell {
+            text-align: center;
+        }
+        .status-screen .brand-mark {
+            font-size: 34px;
+        }
+        .load-error {
+            color: var(--red-wrong);
+            font-size: 13px;
+            margin-top: 12px;
+            min-height: 20px;
+        }
+
+        /* ─── TOC ─── */
+        .toc-screen .shell {
+            padding-bottom: 24px;
+        }
+        .toc-header {
+            text-align: center;
             margin-bottom: 20px;
         }
-        .menu-card {
-            background: #fafafb;
-            border: 1px solid #dddbda;
-            border-radius: 8px;
-            padding: 14px 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-        .menu-card:active, .menu-card:hover {
-            border-color: var(--primary);
-            background-color: #f0f9fe;
-        }
-        .menu-card-title { font-weight: bold; color: var(--secondary); font-size: 15px; margin-bottom: 4px;}
-        .menu-card-meta { font-size: 12px; color: #747474; }
 
-        /* Top Progress Metrics */
-        .progress-header {
+        .toc-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
             gap: 12px;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            transition: border-color 0.25s ease, transform 0.15s ease, background 0.25s ease;
+            cursor: pointer;
         }
-        .progress-bar-bg {
-            flex-grow: 1;
-            height: 8px;
-            background-color: var(--neutral-light);
+        .toc-row:hover {
+            border-color: var(--gold-dim);
+            background: rgba(217, 168, 76, 0.06);
+        }
+        .toc-row:active {
+            transform: scale(0.98);
+        }
+        .toc-row.toc-all {
+            border-color: var(--gold-dim);
+            background: linear-gradient(135deg, rgba(217, 168, 76, 0.10), transparent);
+            margin-bottom: 14px;
+        }
+        .toc-row-main {
+            min-width: 0;
+            flex-shrink: 0;
+            width: 40%;
+        }
+        .toc-row-title {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .toc-row-count {
+            display: block;
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+        .toc-row-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .toc-bar {
+            flex: 1;
+            height: 5px;
+            background: var(--border-subtle);
             border-radius: 4px;
             overflow: hidden;
         }
-        .progress-bar-fill {
+        .toc-bar-fill {
             height: 100%;
             width: 0%;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+            transition: width 0.5s ease;
+            border-radius: 4px;
         }
-        .progress-counter { font-size: 13px; font-weight: bold; color: var(--secondary); white-space: nowrap; }
-
-        /* Card Structures */
-        .chapter-tag {
-            display: inline-block;
-            background-color: #e0f2fe;
-            color: var(--primary-dark);
-            padding: 4px 10px;
-            border-radius: 12px;
+        .toc-row-stat {
+            font-family: var(--mono);
             font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            color: var(--text-dim);
+            white-space: nowrap;
+            flex-shrink: 0;
         }
-        .question-box { font-size: 16px; font-weight: 600; color: var(--secondary); margin-bottom: 18px; line-height: 1.4; }
-        
-        /* Options Touch Targets */
-        .options-list { display: flex; flex-direction: column; gap: 10px; }
-        .option-item {
-            background-color: var(--white);
-            border: 1px solid #c9c7c5;
-            border-radius: 8px;
-            padding: 14px 16px;
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1.4;
-            transition: background-color 0.2s ease;
-            min-height: 48px; /* Ideal mobile hit footprint */
+
+        .toc-reset-wrap {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        /* ─── QUIZ SCREEN ─── */
+        .quiz-screen .shell {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .topbar {
             display: flex;
             align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-card-alt);
         }
-        .option-item:active { background-color: #f3f2f1; }
-        
-        /* Interactive Response Styling */
-        .option-item.correct {
-            background-color: var(--success-bg) !important;
-            border-color: var(--success) !important;
-            color: var(--success);
-            font-weight: 600;
-        }
-        .option-item.incorrect {
-            background-color: var(--error-bg) !important;
-            border-color: var(--error) !important;
-            color: var(--error);
-        }
-
-        /* Explanations Section */
-        .explanation-panel {
-            margin-top: 16px;
-            padding: 14px;
-            border-radius: 8px;
-            display: none;
+        .topbar .btn-icon {
+            min-height: 34px;
+            min-width: 34px;
+            padding: 0 10px;
             font-size: 13px;
-            line-height: 1.5;
+            border-radius: 8px;
         }
-        .explanation-panel.show { display: block; }
-        .explanation-panel.is-correct { background-color: var(--success-bg); border-left: 4px solid var(--success); }
-        .explanation-panel.is-wrong { background-color: var(--error-bg); border-left: 4px solid var(--error); }
-        .explanation-title { font-weight: bold; margin-bottom: 4px; font-size: 14px; }
+        .progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .progress-track {
+            flex: 1;
+            height: 5px;
+            background: var(--border-subtle);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+            transition: width 0.4s ease;
+            border-radius: 4px;
+        }
+        .progress-label {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text-dim);
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
 
-        /* Universal Action Buttons */
-        .btn {
+        .topbar-right {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ─── stage ─── */
+        .stage {
+            padding: 16px 16px 20px;
+        }
+
+        .scoreboard {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .score-pill {
+            font-family: var(--mono);
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            background: var(--bg-card-alt);
+            font-weight: 500;
+        }
+        .score-pill.correct {
+            color: var(--green-correct);
+            border-color: var(--green-dim);
+        }
+        .score-pill.incorrect {
+            color: var(--red-wrong);
+            border-color: var(--red-dim);
+        }
+        .score-pill.unseen {
+            color: var(--text-dim);
+        }
+
+        /* ─── card zone ─── */
+        .card-zone {
+            display: flex;
+            align-items: stretch;
+            gap: 6px;
+        }
+
+        .nav-arrow {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            width: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+            flex-shrink: 0;
+            height: auto;
+            min-height: 40px;
+        }
+        .nav-arrow:hover:not(:disabled) {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+            background: var(--gold-glow);
+        }
+        .nav-arrow:disabled {
+            opacity: 0.25;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .card-outer {
+            flex: 1;
+            min-width: 0;
+            perspective: 1400px;
+            min-height: 460px;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            min-height: 460px;
+            transform-style: preserve-3d;
+            transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+            cursor: pointer;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 22px 20px 18px;
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+        .card-front {
+            background: var(--bg-card);
+        }
+        .card-back {
+            background: var(--bg-card-alt);
+            transform: rotateY(180deg);
+        }
+
+        .section-tag {
+            align-self: flex-start;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--gold);
+            background: var(--gold-glow);
+            border: 1px solid var(--gold-dim);
+            border-radius: 5px;
+            padding: 3px 10px;
+            margin-bottom: 10px;
+        }
+        .qid {
+            font-family: var(--mono);
+            color: var(--text-dim);
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .question-text {
+            font-family: var(--serif);
+            font-size: 18px;
+            line-height: 1.45;
+            font-weight: 600;
+            margin: 0 0 16px;
+            color: var(--text-primary);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: auto;
+        }
+        .option-btn {
             display: block;
             width: 100%;
-            background-color: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: 14px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 8px;
+            text-align: left;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 10px 14px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            background: var(--bg-card-alt);
+            min-height: 44px;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease;
             cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-top: 16px;
-            min-height: 48px;
         }
-        .btn:active { background-color: var(--primary-dark); }
-        .btn-secondary { background-color: var(--secondary); }
-        .btn-secondary:active { background-color: #0b1a30; }
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--gold-dim);
+            background: var(--gold-glow);
+            box-shadow: 0 0 0 1px var(--gold-dim);
+        }
+        .option-btn:active:not(.disabled) {
+            transform: scale(0.98);
+        }
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .option-btn.chosen-correct {
+            border-color: var(--green-correct);
+            background: var(--green-dim);
+            color: var(--green-correct);
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--green-correct);
+        }
+        .option-btn.chosen-wrong {
+            border-color: var(--red-wrong);
+            background: var(--red-dim);
+            color: var(--red-wrong);
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--red-wrong);
+        }
+        .option-btn.reveal-correct {
+            border-color: var(--green-correct);
+            background: rgba(127, 224, 172, 0.10);
+            color: var(--green-correct);
+            box-shadow: 0 0 0 1px var(--green-correct);
+        }
 
-        /* Summary Dashboard */
-        .score-display { text-align: center; font-size: 48px; font-weight: 800; color: var(--primary); margin: 16px 0; }
-        .feedback-text { text-align: center; font-size: 15px; margin-bottom: 24px; color: var(--secondary); padding: 0 8px; line-height: 1.4; }
+        .flip-hint {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 12px;
+            margin: 14px 0 0;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* ─── back face ─── */
+        .result-banner {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            padding: 5px 14px;
+            border-radius: 7px;
+            align-self: flex-start;
+            margin-bottom: 12px;
+        }
+        .result-banner.right {
+            color: var(--green-correct);
+            background: var(--green-dim);
+            border: 1px solid var(--green-correct);
+        }
+        .result-banner.wrong {
+            color: var(--red-wrong);
+            background: var(--red-dim);
+            border: 1px solid var(--red-wrong);
+        }
+        .result-banner.skipped {
+            color: var(--text-dim);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .answer-badge {
+            align-self: flex-start;
+            font-family: var(--serif);
+            font-weight: 700;
+            font-size: 22px;
+            color: #1a1710;
+            background: var(--gold);
+            border-radius: 8px;
+            padding: 4px 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(217, 168, 76, 0.25);
+        }
+        .answer-text {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0 0 8px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        .reasoning-wrap {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+        .reasoning-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .explanation {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .card-back .flip-hint {
+            margin-top: 12px;
+        }
+
+        /* ─── jump dots ─── */
+        .jump-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 16px;
+            padding: 0 4px;
+        }
+        .jump-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: none;
+            padding: 0;
+            background: var(--border-subtle);
+            transition: background 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .jump-dot:hover {
+            transform: scale(1.3);
+        }
+        .jump-dot.current {
+            background: var(--gold);
+            transform: scale(1.35);
+            box-shadow: 0 0 8px rgba(217, 168, 76, 0.4);
+        }
+        .jump-dot.done-right {
+            background: var(--green-correct);
+        }
+        .jump-dot.done-wrong {
+            background: var(--red-wrong);
+        }
+
+        /* ─── DONE SCREEN ─── */
+        .done-screen .shell {
+            text-align: center;
+        }
+        .done-screen .brand-mark {
+            font-size: 42px;
+            display: block;
+            color: var(--green-correct);
+            margin-bottom: 4px;
+        }
+        .done-screen h1 {
+            font-family: var(--serif);
+            font-weight: 700;
+            font-size: 26px;
+            margin: 0 0 4px;
+            background: linear-gradient(135deg, var(--gold), #f0d080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .done-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .done-actions .btn-ghost {
+            width: 100%;
+        }
+        .done-actions .btn-primary {
+            width: 100%;
+        }
+
+        /* ─── responsive ─── */
+        @media (max-width: 640px) {
+            body {
+                padding: 8px;
+            }
+            .shell {
+                padding: 20px 14px 18px;
+                border-radius: 14px;
+            }
+            .brand h1 {
+                font-size: 22px;
+            }
+            .brand-mark {
+                font-size: 22px;
+            }
+
+            .toc-row {
+                padding: 12px 12px;
+                gap: 8px;
+            }
+            .toc-row-main {
+                width: 38%;
+            }
+            .toc-row-title {
+                font-size: 13px;
+            }
+
+            .topbar {
+                padding: 10px 12px;
+                gap: 6px;
+            }
+            .topbar .btn-icon {
+                min-height: 30px;
+                min-width: 30px;
+                padding: 0 8px;
+                font-size: 12px;
+            }
+            .progress-label {
+                font-size: 11px;
+            }
+
+            .stage {
+                padding: 12px 10px 14px;
+            }
+            .card-zone {
+                gap: 4px;
+            }
+            .nav-arrow {
+                width: 34px;
+                min-width: 34px;
+                min-height: 34px;
+                font-size: 16px;
+            }
+            .card-outer {
+                min-height: 420px;
+            }
+            .card {
+                min-height: 420px;
+            }
+            .card-face {
+                padding: 16px 14px 14px;
+                border-radius: 10px;
+            }
+            .question-text {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            .option-btn {
+                font-size: 13px;
+                padding: 9px 12px;
+                min-height: 40px;
+            }
+            .answer-badge {
+                font-size: 19px;
+                padding: 3px 12px;
+            }
+            .answer-text {
+                font-size: 14px;
+            }
+            .explanation {
+                font-size: 13px;
+            }
+            .flip-hint {
+                font-size: 11px;
+                margin-top: 10px;
+            }
+            .score-pill {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            .jump-dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            .done-screen .brand-mark {
+                font-size: 34px;
+            }
+            .done-screen h1 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .card-outer,
+            .card {
+                min-height: 480px;
+            }
+            .question-text {
+                font-size: 15px;
+            }
+            .option-btn {
+                font-size: 12px;
+                padding: 8px 10px;
+                min-height: 36px;
+            }
+            .shell {
+                padding: 14px 10px 14px;
+            }
+            .topbar {
+                padding: 8px 10px;
+                flex-wrap: wrap;
+            }
+            .topbar .btn-icon {
+                font-size: 11px;
+                min-height: 28px;
+                min-width: 28px;
+                padding: 0 6px;
+            }
+            .progress-label {
+                font-size: 10px;
+            }
+        }
+
+        /* ─── scrollbar polish ─── */
+        .card-face::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card-face::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .card-face::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 4px;
+        }
+        .card-face::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dim);
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="screen-dashboard" class="screen active">
-            <h1 id="app-title">Salesforce Developer I</h1>
-            <p class="meta-subtitle">Certification Study Companion</p>
-            <h2>Select Study Block:</h2>
-            
-            <div class="menu-grid" id="menu-target">
+    <div class="app">
+
+        <!-- ===== LOADING ===== -->
+        <section id="statusScreen" class="status-screen">
+            <div class="shell">
+                <div class="brand">
+                    <span class="brand-mark spin" id="statusIcon">◇</span>
+                    <h1>Cert Deck</h1>
                 </div>
-        </div>
+                <p class="tagline" id="statusMessage">Loading question bank…</p>
+                <p class="load-error" id="loadError"></p>
+            </div>
+        </section>
 
-        <div id="screen-quiz" class="screen">
-            <div class="progress-header">
-                <div class="progress-bar-bg">
-                    <div id="progress-fill" class="progress-bar-fill"></div>
+        <!-- ===== TABLE OF CONTENTS ===== -->
+        <section id="tocScreen" class="toc-screen hidden">
+            <div class="shell">
+                <header class="toc-header">
+                    <div class="brand">
+                        <span class="brand-mark">◇</span>
+                        <h1>Cert Deck</h1>
+                    </div>
+                    <p class="tagline tagline-mono" id="tocTagline">100 questions</p>
+                </header>
+
+                <button class="toc-row toc-all" id="tocAllBtn">
+                    <div class="toc-row-main">
+                        <span class="toc-row-title">All questions</span>
+                        <span class="toc-row-count" id="tocAllCount">0 cards</span>
+                    </div>
+                    <div class="toc-row-progress">
+                        <div class="toc-bar"><div class="toc-bar-fill" id="tocAllFill"></div></div>
+                        <span class="toc-row-stat" id="tocAllStat">0 / 0</span>
+                    </div>
+                </button>
+
+                <div class="toc-list" id="tocList"></div>
+
+                <div class="toc-reset-wrap">
+                    <button class="btn-ghost" id="tocResetBtn">↺ Clear all progress</button>
                 </div>
-                <div id="progress-counter" class="progress-counter">0/0</div>
             </div>
+        </section>
 
-            <div>
-                <div id="card-chapter" class="chapter-tag">Chapter Context</div>
-                <div id="card-question" class="question-box">Question string loading contextually?</div>
-                <div id="card-options" class="options-list"></div>
+        <!-- ===== QUIZ ===== -->
+        <section id="quizScreen" class="quiz-screen hidden">
+            <div class="shell">
+
+                <header class="topbar">
+                    <button class="btn-icon back-btn" id="backToTocBtn" title="Back to sections">‹</button>
+
+                    <div class="progress-wrap">
+                        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+                        <span class="progress-label"><span id="progressCurrent">1</span> / <span id="progressTotal">0</span></span>
+                    </div>
+
+                    <div class="topbar-right">
+                        <button class="btn-icon" id="shuffleBtn" title="Shuffle deck">⤨</button>
+                    </div>
+                </header>
+
+                <main class="stage">
+
+                    <div class="scoreboard">
+                        <span class="score-pill correct">✓ <span id="scoreCorrect">0</span></span>
+                        <span class="score-pill incorrect">✕ <span id="scoreIncorrect">0</span></span>
+                        <span class="score-pill unseen">◌ <span id="scoreUnseen">0</span></span>
+                    </div>
+
+                    <div class="card-zone">
+                        <button class="nav-arrow left" id="prevBtn" aria-label="Previous">‹</button>
+
+                        <div class="card-outer" id="cardOuter">
+                            <div class="card" id="card">
+
+                                <!-- FRONT -->
+                                <div class="card-face card-front">
+                                    <span class="section-tag" id="frontSection">Section</span>
+                                    <div class="qid" id="frontId">Q1</div>
+                                    <p class="question-text" id="frontQuestion">Question text</p>
+                                    <div class="options" id="frontOptions"></div>
+                                    <p class="flip-hint" id="flipHint">Tap an answer → check yourself</p>
+                                </div>
+
+                                <!-- BACK -->
+                                <div class="card-face card-back">
+                                    <span class="section-tag" id="backSection">Section</span>
+                                    <div class="result-banner" id="resultBanner"></div>
+                                    <div class="answer-badge" id="answerBadge">B</div>
+                                    <p class="answer-text" id="answerText">Answer text</p>
+                                    <div class="reasoning-wrap">
+                                        <span class="reasoning-label">💡 Reasoning</span>
+                                        <div class="explanation" id="explanationText">Explanation</div>
+                                    </div>
+                                    <p class="flip-hint">Tap card or press → for next</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <button class="nav-arrow right" id="nextBtn" aria-label="Next">›</button>
+                    </div>
+
+                    <div class="jump-row" id="jumpRow"></div>
+
+                </main>
             </div>
+        </section>
 
-            <div id="explanation-box" class="explanation-panel">
-                <div id="explanation-heading" class="explanation-title">Explanation Breakdown</div>
-                <p id="explanation-body">Context string...</p>
+        <!-- ===== DONE ===== -->
+        <section id="doneScreen" class="done-screen hidden">
+            <div class="shell">
+                <span class="brand-mark">✓</span>
+                <h1>Deck complete</h1>
+                <p class="tagline" id="doneSummary"></p>
+                <div class="done-actions">
+                    <button class="btn-primary" id="reviewMissedBtn">↻ Review missed</button>
+                    <button class="btn-ghost" id="restartAllBtn">⟳ Start over</button>
+                    <button class="btn-ghost" id="doneBackToTocBtn">‹ Back to sections</button>
+                </div>
             </div>
+        </section>
 
-            <button class="btn" id="btn-next" style="display: none;">Next Question</button>
-        </div>
-
-        <div id="screen-results" class="screen">
-            <h1>Session Completed!</h1>
-            <div id="final-score" class="score-display">0%</div>
-            <p id="final-feedback" class="feedback-text">Feedback context details go here...</p>
-            
-            <button class="btn" id="btn-restart">Retry Shuffled Deck</button>
-            <button class="btn btn-secondary" id="btn-home">Main Menu</button>
-        </div>
     </div>
 
     <script>
-        // STATIC REPOSITORY DATA
-        const quizDatabase = {
-          "book_title": "Salesforce Developer I Certification",
-          "chapters": [
-            {
-              "chapter_number": 1,
-              "chapter_title": "Salesforce Fundamentals and Architecture",
-              "questions": [
-                {
-                  "q_id": "1.1",
-                  "q": "What does the 'Model' in Salesforce MVC represent?",
-                  "opts": ["User Interface", "Data layer (objects, fields, database)", "Business logic (Apex, Flow)", "Security layer"],
-                  "ans_idx": 1,
-                  "exp": "In the MVC pattern, the Model represents the data layer. In Salesforce, this includes objects, fields, relationships, and the underlying database that stores the organization's data."
-                },
-                {
-                  "q_id": "1.2",
-                  "q": "In a multi-tenant environment, how is tenant data protected from other tenants?",
-                  "opts": ["Physical separation of servers per tenant", "Logical isolation within shared infrastructure", "No separation is needed in cloud environments", "Each tenant gets a dedicated database instance"],
-                  "ans_idx": 1,
-                  "exp": "Salesforce uses logical isolation, not physical separation. All tenants share the same hardware, databases, and infrastructure, but each tenant's data is logically separated and protected."
-                },
-                {
-                  "q_id": "1.3",
-                  "q": "Which of the following is NOT an implication of multi-tenancy in Salesforce?",
-                  "opts": ["Shared hardware and database resources", "Each organization gets its own dedicated physical server", "Centralized upgrades pushed by Salesforce", "Logical data isolation between tenants"],
-                  "ans_idx": 1,
-                  "exp": "Multi-tenancy specifically means sharing resources, not dedicating physical servers per tenant."
-                },
-                {
-                  "q_id": "1.4",
-                  "q": "What is the primary purpose of Salesforce Developer Edition?",
-                  "opts": ["Production deployment for small businesses", "Learning, prototyping, and developing proof-of-concepts", "Customer data storage and CRM operations", "Billing and subscription management"],
-                  "ans_idx": 1,
-                  "exp": "Developer Edition is a free, fully functional version of Salesforce designed for individual developers to safely build, experiment, and test applications without affecting live data."
-                },
-                {
-                  "q_id": "1.5",
-                  "q": "The 'View' component in Salesforce MVC corresponds to:",
-                  "opts": ["Apex classes and triggers", "Lightning pages, Visualforce, and page layouts", "Database tables and custom objects", "API endpoints and integrations"],
-                  "ans_idx": 1,
-                  "exp": "The View is the presentation layer — what users see and interact with. In Salesforce, this includes Lightning pages, Visualforce pages, and page layouts."
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DATA  (100 questions – embedded)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        const QUESTIONS_DATA = [{
+            "id": 1,
+            "section": "Data Modeling & Data Management",
+            "question": "Which relationship type strictly enforces cascade-delete from parent to child?",
+            "options": [
+                "A) Indirect Lookup",
+                "B) Master-Detail Relationship",
+                "C) Lookup Relationship",
+                "D) Hierarchical Relationship"
+            ],
+            "correct_answer": "B",
+            "explanation": "Master-Detail relationships enforce cascade-delete: when the parent is deleted, all child records are automatically deleted."
+        }, {
+            "id": 2,
+            "section": "Data Modeling & Data Management",
+            "question": "What is the maximum number of Master-Detail relationships a custom object can have?",
+            "options": [
+                "A) 4",
+                "B) 2",
+                "C) 3",
+                "D) 1"
+            ],
+            "correct_answer": "B",
+            "explanation": "A custom object can have up to 2 Master-Detail relationships. This is a hard limit in Salesforce."
+        }, {
+            "id": 3,
+            "section": "Data Modeling & Data Management",
+            "question": "Which field type allows you to rollup summary calculations from child to parent?",
+            "options": [
+                "A) Formula",
+                "B) Number",
+                "C) Currency",
+                "D) Roll-up Summary"
+            ],
+            "correct_answer": "D",
+            "explanation": "Roll-up Summary fields calculate values (COUNT, SUM, MIN, MAX, AVG) from child records on the parent."
+        }, {
+            "id": 4,
+            "section": "Data Modeling & Data Management",
+            "question": "What happens to a child record in a lookup relationship if the parent is deleted and 'Clear the value' is selected?",
+            "options": [
+                "A) An error is thrown.",
+                "B) The lookup field is set to null.",
+                "C) The deletion is blocked.",
+                "D) The child is deleted."
+            ],
+            "correct_answer": "B",
+            "explanation": "With 'Clear the value', the lookup field on the child is set to null, and the child record remains."
+        }, {
+            "id": 5,
+            "section": "Data Modeling & Data Management",
+            "question": "Which operation should a developer use to prevent duplicate records during a data import based on a unique external key?",
+            "options": [
+                "A) Update",
+                "B) Upsert",
+                "C) Merge",
+                "D) Insert"
+            ],
+            "correct_answer": "B",
+            "explanation": "Upsert uses an External ID to either update an existing record or insert a new one, avoiding duplicates."
+        }, {
+            "id": 6,
+            "section": "Data Modeling & Data Management",
+            "question": "What is the limit of roll-up summary fields per object?",
+            "options": [
+                "A) 40",
+                "B) 10",
+                "C) 100",
+                "D) 25"
+            ],
+            "correct_answer": "A",
+            "explanation": "The maximum number of Roll-up Summary fields per object is 40."
+        }, {
+            "id": 7,
+            "section": "Data Modeling & Data Management",
+            "question": "Can a standard object be on the detail side of a custom object in a Master-Detail relationship?",
+            "options": [
+                "A) Only for Contact",
+                "B) Only for Account",
+                "C) Yes",
+                "D) No"
+            ],
+            "correct_answer": "D",
+            "explanation": "Standard objects cannot be the detail side of a Master-Detail relationship — only custom objects can."
+        }, {
+            "id": 8,
+            "section": "Data Modeling & Data Management",
+            "question": "Which feature allows you to relate a Salesforce record to an external system record using a unique identifier?",
+            "options": [
+                "A) Lookup ID",
+                "B) Unique ID",
+                "C) External ID",
+                "D) Foreign Key"
+            ],
+            "correct_answer": "C",
+            "explanation": "External ID fields store a unique identifier from an external system and enable upsert operations."
+        }, {
+            "id": 9,
+            "section": "Data Modeling & Data Management",
+            "question": "What declarative tool can be used to ensure a custom field follows a specific format (e.g., SSN)?",
+            "options": [
+                "A) Validation Rule with REGEX",
+                "B) Process Builder",
+                "C) Apex Trigger",
+                "D) Workflow Rule"
+            ],
+            "correct_answer": "A",
+            "explanation": "Validation Rules with REGEX functions can enforce specific field formats without code."
+        }, {
+            "id": 10,
+            "section": "Data Modeling & Data Management",
+            "question": "What is the organization-wide default (OWD) sharing setting impact on a Master-Detail relationship?",
+            "options": [
+                "A) Child inherits parent's sharing.",
+                "B) Child has separate sharing.",
+                "C) Child is Public Read/Write.",
+                "D) Child is Private."
+            ],
+            "correct_answer": "A",
+            "explanation": "In a Master-Detail relationship, the child record inherits the sharing and security of the parent."
+        }, {
+            "id": 11,
+            "section": "Data Modeling & Data Management",
+            "question": "Which statement is true about deleting a custom field?",
+            "options": [
+                "A) It deletes all associated Apex classes.",
+                "B) It cannot be restored.",
+                "C) It is permanently deleted immediately.",
+                "D) It is kept in the recycle bin for 15 days."
+            ],
+            "correct_answer": "D",
+            "explanation": "Deleted custom fields are kept in the recycle bin for 15 days before permanent deletion."
+        }, {
+            "id": 12,
+            "section": "Data Modeling & Data Management",
+            "question": "How can you make a field required at the database level?",
+            "options": [
+                "A) Check 'Required' when creating the field.",
+                "B) Page Layout",
+                "C) Validation Rule",
+                "D) Workflow Rule"
+            ],
+            "correct_answer": "A",
+            "explanation": "Checking 'Required' at field creation enforces the field at the database level."
+        }, {
+            "id": 13,
+            "section": "Data Modeling & Data Management",
+            "question": "What data type is returned by a formula field comparing two dates?",
+            "options": [
+                "A) Number",
+                "B) Text",
+                "C) Date",
+                "D) Boolean"
+            ],
+            "correct_answer": "A",
+            "explanation": "Date comparisons return a Number (the difference in days) in formula fields."
+        }, {
+            "id": 14,
+            "section": "Data Modeling & Data Management",
+            "question": "Which relationship allows many-to-many connections between two objects?",
+            "options": [
+                "A) External Lookup",
+                "B) Junction Object with two Master-Details",
+                "C) Lookup",
+                "D) Hierarchical"
+            ],
+            "correct_answer": "B",
+            "explanation": "A Junction Object with two Master-Detail relationships enables many-to-many relationships."
+        }, {
+            "id": 15,
+            "section": "Data Modeling & Data Management",
+            "question": "What is the max number of fields you can track in Field History Tracking per object?",
+            "options": [
+                "A) 10",
+                "B) 100",
+                "C) 50",
+                "D) 20"
+            ],
+            "correct_answer": "D",
+            "explanation": "You can track up to 20 fields per object with Field History Tracking."
+        }, {
+            "id": 16,
+            "section": "Data Modeling & Data Management",
+            "question": "Which API is best suited for loading 5 million records into Salesforce?",
+            "options": [
+                "A) Streaming API",
+                "B) SOAP API",
+                "C) Bulk API",
+                "D) REST API"
+            ],
+            "correct_answer": "C",
+            "explanation": "Bulk API is designed for large data volumes (millions of records) with parallel processing."
+        }, {
+            "id": 17,
+            "section": "Data Modeling & Data Management",
+            "question": "How do you bypass validation rules when loading data?",
+            "options": [
+                "A) Disable them temporarily or bypass via integration user profile.",
+                "B) It is not possible",
+                "C) Use Bulk API",
+                "D) Use Data Loader settings"
+            ],
+            "correct_answer": "A",
+            "explanation": "Validation rules can be disabled temporarily, or bypassed using a user profile with the 'Bypass Validation' permission."
+        }, {
+            "id": 18,
+            "section": "Data Modeling & Data Management",
+            "question": "What happens if a validation rule fails during a data import?",
+            "options": [
+                "A) The specific record fails and is not saved.",
+                "B) The record is saved without the field.",
+                "C) The entire batch fails.",
+                "D) The system crashes."
+            ],
+            "correct_answer": "A",
+            "explanation": "When a validation rule fails, that specific record is not saved; other records in the batch may still succeed."
+        }, {
+            "id": 19,
+            "section": "Data Modeling & Data Management",
+            "question": "Which is a valid use case for a cross-object formula field?",
+            "options": [
+                "A) Deleting a Contact.",
+                "B) Creating a child record.",
+                "C) Displaying the Parent Account's Phone on a Contact.",
+                "D) Updating the Parent Account's Phone."
+            ],
+            "correct_answer": "C",
+            "explanation": "Cross-object formula fields display data from a parent record (e.g., Account Phone on a Contact)."
+        }, {
+            "id": 20,
+            "section": "Data Modeling & Data Management",
+            "question": "What is the 15-character ID in Salesforce?",
+            "options": [
+                "A) Case-insensitive ID.",
+                "B) Session ID.",
+                "C) External ID.",
+                "D) Case-sensitive ID."
+            ],
+            "correct_answer": "D",
+            "explanation": "The 15-character ID is case-sensitive; the 18-character ID is case-insensitive."
+        }, {
+            "id": 21,
+            "section": "Process Automation & Logic",
+            "question": "Which trigger context variable contains the old versions of records before an update?",
+            "options": [
+                "A) Trigger.oldMap",
+                "B) Trigger.old",
+                "C) Trigger.previous",
+                "D) Trigger.new"
+            ],
+            "correct_answer": "B",
+            "explanation": "Trigger.old holds the old versions of records in an update or delete trigger."
+        }, {
+            "id": 22,
+            "section": "Process Automation & Logic",
+            "question": "In which trigger event can you modify fields on the record without a DML update statement?",
+            "options": [
+                "A) before insert / before update",
+                "B) after update",
+                "C) before delete",
+                "D) after insert"
+            ],
+            "correct_answer": "A",
+            "explanation": "In before triggers, you can modify field values directly on Trigger.new without an additional DML."
+        }, {
+            "id": 23,
+            "section": "Process Automation & Logic",
+            "question": "What is the maximum number of SOQL queries allowed in a synchronous Apex transaction?",
+            "options": [
+                "A) 150",
+                "B) 50",
+                "C) 100",
+                "D) 200"
+            ],
+            "correct_answer": "C",
+            "explanation": "The governor limit for SOQL queries in a synchronous transaction is 100."
+        }, {
+            "id": 24,
+            "section": "Process Automation & Logic",
+            "question": "What is the maximum number of DML statements allowed in a synchronous Apex transaction?",
+            "options": [
+                "A) 100",
+                "B) 500",
+                "C) 150",
+                "D) 200"
+            ],
+            "correct_answer": "C",
+            "explanation": "The governor limit for DML statements in a synchronous transaction is 150."
+        }, {
+            "id": 25,
+            "section": "Process Automation & Logic",
+            "question": "How do you avoid hitting SOQL governor limits in a trigger?",
+            "options": [
+                "A) Use smaller batch sizes.",
+                "B) Bulkify the code by moving SOQL outside of loops.",
+                "C) Use SOSL instead.",
+                "D) Use asynchronous Apex."
+            ],
+            "correct_answer": "B",
+            "explanation": "Bulkification means moving SOQL queries outside of loops to avoid hitting query limits."
+        }, {
+            "id": 26,
+            "section": "Process Automation & Logic",
+            "question": "What is the correct order of execution for these events?",
+            "options": [
+                "A) Validation Rules, Before Triggers, After Triggers",
+                "B) After Triggers, Validation Rules, Before Triggers",
+                "C) Before Triggers, Validation Rules, After Triggers",
+                "D) Before Triggers, After Triggers, Validation Rules"
+            ],
+            "correct_answer": "C",
+            "explanation": "Order: Before Triggers → Validation Rules → After Triggers (with Workflow/Process Builder in between)."
+        }, {
+            "id": 27,
+            "section": "Process Automation & Logic",
+            "question": "Which collection type stores unique elements and does not allow duplicates?",
+            "options": [
+                "A) Array",
+                "B) Set",
+                "C) Map",
+                "D) List"
+            ],
+            "correct_answer": "B",
+            "explanation": "Set stores unique elements; duplicates are automatically eliminated."
+        }, {
+            "id": 28,
+            "section": "Process Automation & Logic",
+            "question": "Which collection type associates a key with a value?",
+            "options": [
+                "A) Map",
+                "B) Set",
+                "C) List",
+                "D) Enum"
+            ],
+            "correct_answer": "A",
+            "explanation": "Map is a key-value pair collection."
+        }, {
+            "id": 29,
+            "section": "Process Automation & Logic",
+            "question": "What exception is thrown when a DML operation fails?",
+            "options": [
+                "A) LimitException",
+                "B) QueryException",
+                "C) NullPointerException",
+                "D) DmlException"
+            ],
+            "correct_answer": "D",
+            "explanation": "DmlException is thrown when a DML operation fails (e.g., validation rule violation)."
+        }, {
+            "id": 30,
+            "section": "Process Automation & Logic",
+            "question": "Which method allows partial success when inserting a list of records?",
+            "options": [
+                "A) Database.upsert(records)",
+                "B) Database.insert(records, true)",
+                "C) insert records;",
+                "D) Database.insert(records, false)"
+            ],
+            "correct_answer": "D",
+            "explanation": "Database.insert(records, false) allows partial success; allOrNone=false returns save results."
+        }, {
+            "id": 31,
+            "section": "Process Automation & Logic",
+            "question": "How can you reset governor limits within a test class?",
+            "options": [
+                "A) System.resetLimits()",
+                "B) Test.startTest() and Test.stopTest()",
+                "C) Test.reset()",
+                "D) Database.reset()"
+            ],
+            "correct_answer": "B",
+            "explanation": "Test.startTest() and Test.stopTest() reset governor limits in test methods."
+        }, {
+            "id": 32,
+            "section": "Process Automation & Logic",
+            "question": "What does the 'with sharing' keyword do in an Apex class?",
+            "options": [
+                "A) Enforces field-level security.",
+                "B) Bypasses all sharing rules.",
+                "C) Enforces object-level permissions.",
+                "D) Enforces the user's sharing rules and record-level access."
+            ],
+            "correct_answer": "D",
+            "explanation": "'with sharing' enforces the current user's sharing rules for record-level access."
+        }, {
+            "id": 33,
+            "section": "Process Automation & Logic",
+            "question": "What is the default sharing context if a class is not declared with or without sharing?",
+            "options": [
+                "A) with sharing",
+                "B) without sharing",
+                "C) Private",
+                "D) It inherits the sharing setting from the calling class."
+            ],
+            "correct_answer": "D",
+            "explanation": "If no sharing keyword is used, the class inherits the sharing setting of the calling class."
+        }, {
+            "id": 34,
+            "section": "Process Automation & Logic",
+            "question": "Which keyword is used to prevent a variable from being modified once initialized?",
+            "options": [
+                "A) readonly",
+                "B) final",
+                "C) const",
+                "D) static"
+            ],
+            "correct_answer": "B",
+            "explanation": "The 'final' keyword makes a variable immutable after initialization."
+        }, {
+            "id": 35,
+            "section": "Process Automation & Logic",
+            "question": "What is the return type of a SOQL aggregate function like COUNT()?",
+            "options": [
+                "A) Decimal",
+                "B) Integer",
+                "C) Double",
+                "D) List<sObject>"
+            ],
+            "correct_answer": "B",
+            "explanation": "COUNT() returns an Integer."
+        }, {
+            "id": 36,
+            "section": "Process Automation & Logic",
+            "question": "Which trigger context is best for creating related child records?",
+            "options": [
+                "A) before update",
+                "B) before insert",
+                "C) after insert",
+                "D) after delete"
+            ],
+            "correct_answer": "C",
+            "explanation": "After insert triggers are ideal for creating child records because the parent ID is available."
+        }, {
+            "id": 37,
+            "section": "Process Automation & Logic",
+            "question": "What happens if you issue a DML statement on Trigger.new in an 'after' trigger?",
+            "options": [
+                "A) The records are updated.",
+                "B) The DML is ignored.",
+                "C) A runtime exception is thrown (System.FinalException).",
+                "D) An infinite loop occurs."
+            ],
+            "correct_answer": "C",
+            "explanation": "Trigger.new is read-only in after triggers; modifying it throws a System.FinalException."
+        }, {
+            "id": 38,
+            "section": "Process Automation & Logic",
+            "question": "Which interface must a class implement to be scheduled via the Apex Scheduler?",
+            "options": [
+                "A) Batchable",
+                "B) Runnable",
+                "C) Queueable",
+                "D) Schedulable"
+            ],
+            "correct_answer": "D",
+            "explanation": "The Schedulable interface is required for scheduled Apex jobs."
+        }, {
+            "id": 39,
+            "section": "Process Automation & Logic",
+            "question": "Which interface allows you to process large volumes of data by breaking them into smaller chunks?",
+            "options": [
+                "A) System.Queueable",
+                "B) Database.Batchable",
+                "C) Database.Schedulable",
+                "D) Database.Bulkable"
+            ],
+            "correct_answer": "B",
+            "explanation": "Database.Batchable processes large data sets in manageable chunks to stay within limits."
+        }, {
+            "id": 40,
+            "section": "Process Automation & Logic",
+            "question": "What annotation is used to make an Apex method available to a Lightning Web Component (LWC)?",
+            "options": [
+                "A) @AuraEnabled",
+                "B) @RemoteAction",
+                "C) @Future",
+                "D) @InvocableMethod"
+            ],
+            "correct_answer": "A",
+            "explanation": "@AuraEnabled exposes Apex methods to Lightning components (both LWC and Aura)."
+        }, {
+            "id": 41,
+            "section": "Process Automation & Logic",
+            "question": "What must be added to @AuraEnabled to allow an LWC to wire the method?",
+            "options": [
+                "A) wire=true",
+                "B) cacheable=true",
+                "C) public=true",
+                "D) static=true"
+            ],
+            "correct_answer": "B",
+            "explanation": "cacheable=true allows the method to be used with @wire in LWC for client-side caching."
+        }, {
+            "id": 42,
+            "section": "Process Automation & Logic",
+            "question": "Which asynchronous feature allows chaining of jobs?",
+            "options": [
+                "A) Batch Apex",
+                "B) Queueable Apex",
+                "C) Future Methods",
+                "D) Scheduled Apex"
+            ],
+            "correct_answer": "B",
+            "explanation": "Queueable Apex supports job chaining using System.enqueueJob() within the job."
+        }, {
+            "id": 43,
+            "section": "Process Automation & Logic",
+            "question": "Can a future method return a value?",
+            "options": [
+                "A) Yes, it can return sObjects.",
+                "B) Yes, it can return primitives.",
+                "C) Yes, it returns a Future object.",
+                "D) No, it must be void."
+            ],
+            "correct_answer": "D",
+            "explanation": "Future methods must return void; they cannot return values."
+        }, {
+            "id": 44,
+            "section": "Process Automation & Logic",
+            "question": "Which collection is ordered and allows duplicate values?",
+            "options": [
+                "A) Map",
+                "B) Dictionary",
+                "C) Set",
+                "D) List"
+            ],
+            "correct_answer": "D",
+            "explanation": "List is an ordered collection that allows duplicates."
+        }, {
+            "id": 45,
+            "section": "Process Automation & Logic",
+            "question": "How do you check if a Map contains a specific key?",
+            "options": [
+                "A) map.hasKey(key)",
+                "B) map.containsKey(key)",
+                "C) map.contains(key)",
+                "D) map.keys(key)"
+            ],
+            "correct_answer": "B",
+            "explanation": "map.containsKey(key) returns true if the key exists in the map."
+        }, {
+            "id": 46,
+            "section": "SOQL & SOSL",
+            "question": "What does SOQL stand for?",
+            "options": [
+                "A) Salesforce Object Query Language",
+                "B) System Object Query Language",
+                "C) Standard Object Query Language",
+                "D) Salesforce Online Query Logic"
+            ],
+            "correct_answer": "A",
+            "explanation": "SOQL stands for Salesforce Object Query Language."
+        }, {
+            "id": 47,
+            "section": "SOQL & SOSL",
+            "question": "What does SOSL stand for?",
+            "options": [
+                "A) Salesforce Online Search Logic",
+                "B) Standard Object Search Language",
+                "C) System Object Search Language",
+                "D) Salesforce Object Search Language"
+            ],
+            "correct_answer": "D",
+            "explanation": "SOSL stands for Salesforce Object Search Language."
+        }, {
+            "id": 48,
+            "section": "SOQL & SOSL",
+            "question": "Which language allows you to search for a text string across multiple unrelated objects?",
+            "options": [
+                "A) Apex",
+                "B) SOQL",
+                "C) SOSL",
+                "D) DML"
+            ],
+            "correct_answer": "C",
+            "explanation": "SOSL can search across multiple objects for a text string."
+        }, {
+            "id": 49,
+            "section": "SOQL & SOSL",
+            "question": "What is the return type of a SOSL query in Apex?",
+            "options": [
+                "A) Set<sObject>",
+                "B) List<sObject>",
+                "C) List<List<sObject>>",
+                "D) Map<Id, sObject>"
+            ],
+            "correct_answer": "C",
+            "explanation": "SOSL returns a List of Lists of sObjects (one inner list per searched object)."
+        }, {
+            "id": 50,
+            "section": "SOQL & SOSL",
+            "question": "How do you query all Contacts related to an Account in a single SOQL query?",
+            "options": [
+                "A) SELECT Id, Contact.Id FROM Account",
+                "B) SELECT Id FROM Account JOIN Contacts",
+                "C) SELECT Id, Contacts FROM Account",
+                "D) SELECT Id, (SELECT Id FROM Contacts) FROM Account"
+            ],
+            "correct_answer": "D",
+            "explanation": "Use a subquery: (SELECT Id FROM Contacts) to query related contacts."
+        }, {
+            "id": 51,
+            "section": "SOQL & SOSL",
+            "question": "How do you query the Parent Account Name from a Contact record in SOQL?",
+            "options": [
+                "A) SELECT Account.Name FROM Contact",
+                "B) SELECT Account__r.Name FROM Contact",
+                "C) SELECT AccountName FROM Contact",
+                "D) SELECT Parent.Name FROM Contact"
+            ],
+            "correct_answer": "A",
+            "explanation": "Use dot notation: Account.Name to reference the parent account's name."
+        }, {
+            "id": 52,
+            "section": "SOQL & SOSL",
+            "question": "Which SOQL keyword limits the number of records returned?",
+            "options": [
+                "A) ROWS",
+                "B) LIMIT",
+                "C) TOP",
+                "D) MAX"
+            ],
+            "correct_answer": "B",
+            "explanation": "LIMIT restricts the number of rows returned by a SOQL query."
+        }, {
+            "id": 53,
+            "section": "SOQL & SOSL",
+            "question": "Which SOQL keyword allows filtering records based on a list of values?",
+            "options": [
+                "A) INCLUDES",
+                "B) HAS",
+                "C) IN",
+                "D) CONTAINS"
+            ],
+            "correct_answer": "C",
+            "explanation": "IN filters records where a field matches any value in a provided list."
+        }, {
+            "id": 54,
+            "section": "SOQL & SOSL",
+            "question": "What is the maximum number of records returned by a synchronous SOQL query in Apex?",
+            "options": [
+                "A) 50,000",
+                "B) 100,000",
+                "C) Unlimited",
+                "D) 10,000"
+            ],
+            "correct_answer": "A",
+            "explanation": "The maximum number of records returned by a synchronous SOQL query is 50,000."
+        }, {
+            "id": 55,
+            "section": "SOQL & SOSL",
+            "question": "What exception is thrown when a SOQL query assigned to a single sObject variable returns multiple rows?",
+            "options": [
+                "A) System.QueryException",
+                "B) System.NullPointerException",
+                "C) System.ListException",
+                "D) System.LimitException"
+            ],
+            "correct_answer": "A",
+            "explanation": "A QueryException is thrown when a query that should return a single record returns multiple."
+        }, {
+            "id": 56,
+            "section": "SOQL & SOSL",
+            "question": "What exception is thrown when a SOQL query assigned to a single sObject variable returns no rows?",
+            "options": [
+                "A) System.NullPointerException",
+                "B) System.NoDataFoundException",
+                "C) System.LimitException",
+                "D) System.QueryException"
+            ],
+            "correct_answer": "D",
+            "explanation": "A QueryException is also thrown when no rows are found for a single-row query."
+        }, {
+            "id": 57,
+            "section": "SOQL & SOSL",
+            "question": "Which function is used in SOQL to find records grouped by a specific field?",
+            "options": [
+                "A) SORT BY",
+                "B) HAVING",
+                "C) ORDER BY",
+                "D) GROUP BY"
+            ],
+            "correct_answer": "D",
+            "explanation": "GROUP BY groups records by a specified field for aggregate functions."
+        }, {
+            "id": 58,
+            "section": "SOQL & SOSL",
+            "question": "What does the 'FOR UPDATE' keyword do in a SOQL query?",
+            "options": [
+                "A) Bypasses read-only locks.",
+                "B) Allows dirty reads.",
+                "C) Updates the records immediately.",
+                "D) Locks the queried records to prevent other transactions from modifying them."
+            ],
+            "correct_answer": "D",
+            "explanation": "FOR UPDATE locks the selected records for the duration of the transaction."
+        }, {
+            "id": 59,
+            "section": "SOQL & SOSL",
+            "question": "How do you filter a SOQL query using an Apex variable?",
+            "options": [
+                "A) Use a dollar sign ($).",
+                "B) Use an ampersand (&).",
+                "C) Use a colon (:) before the variable name.",
+                "D) Use curly braces ({})."
+            ],
+            "correct_answer": "C",
+            "explanation": "Use a colon (:) to bind an Apex variable into a SOQL query."
+        }, {
+            "id": 60,
+            "section": "SOQL & SOSL",
+            "question": "Which wildcard character represents zero or more characters in a SOQL LIKE clause?",
+            "options": [
+                "A) * (Asterisk)",
+                "B) ? (Question Mark)",
+                "C) % (Percent)",
+                "D) _ (Underscore)"
+            ],
+            "correct_answer": "C",
+            "explanation": "% matches zero or more characters in a LIKE clause."
+        }, {
+            "id": 61,
+            "section": "SOQL & SOSL",
+            "question": "Which wildcard character represents exactly one character in a SOQL LIKE clause?",
+            "options": [
+                "A) ? (Question Mark)",
+                "B) _ (Underscore)",
+                "C) % (Percent)",
+                "D) * (Asterisk)"
+            ],
+            "correct_answer": "B",
+            "explanation": "_ matches exactly one character in a LIKE clause."
+        }, {
+            "id": 62,
+            "section": "SOQL & SOSL",
+            "question": "In SOSL, what clause specifies which fields to return for each object?",
+            "options": [
+                "A) SELECT",
+                "B) YIELD",
+                "C) RETURNING",
+                "D) OUTPUT"
+            ],
+            "correct_answer": "C",
+            "explanation": "RETURNING specifies the object and fields to return in SOSL."
+        }, {
+            "id": 63,
+            "section": "SOQL & SOSL",
+            "question": "Can you perform DML operations on records returned by SOSL directly?",
+            "options": [
+                "A) Only on standard objects.",
+                "B) Yes, without casting.",
+                "C) Yes, if cast to the specific sObject list first.",
+                "D) No, SOSL records are read-only."
+            ],
+            "correct_answer": "C",
+            "explanation": "SOSL returns generic sObjects; you must cast them to the specific type to perform DML."
+        }, {
+            "id": 64,
+            "section": "SOQL & SOSL",
+            "question": "What is the maximum number of SOSL queries allowed in a synchronous transaction?",
+            "options": [
+                "A) 20",
+                "B) 50",
+                "C) 100",
+                "D) 200"
+            ],
+            "correct_answer": "A",
+            "explanation": "The governor limit for SOSL queries in a synchronous transaction is 20."
+        }, {
+            "id": 65,
+            "section": "SOQL & SOSL",
+            "question": "What SOQL keyword is used to filter aggregate functions?",
+            "options": [
+                "A) FILTER",
+                "B) WHERE",
+                "C) HAVING",
+                "D) LIMIT"
+            ],
+            "correct_answer": "C",
+            "explanation": "HAVING filters grouped records after GROUP BY with aggregate conditions."
+        }, {
+            "id": 66,
+            "section": "Testing & Debugging",
+            "question": "What is the minimum overall code coverage requirement to deploy Apex to production?",
+            "options": [
+                "A) 75%",
+                "B) 85%",
+                "C) 50%",
+                "D) 100%"
+            ],
+            "correct_answer": "A",
+            "explanation": "Salesforce requires at least 75% overall code coverage for production deployment."
+        }, {
+            "id": 67,
+            "section": "Testing & Debugging",
+            "question": "Which annotation is used to define a class containing only test methods?",
+            "options": [
+                "A) @TestSetup",
+                "B) @ApexTest",
+                "C) @TestClass",
+                "D) @isTest"
+            ],
+            "correct_answer": "D",
+            "explanation": "@isTest marks a class or method as test code."
+        }, {
+            "id": 68,
+            "section": "Testing & Debugging",
+            "question": "Which annotation is used to create common test records available to all test methods in a class?",
+            "options": [
+                "A) @TestFactory",
+                "B) @isTest(SeeAllData=true)",
+                "C) @BeforeTest",
+                "D) @testSetup"
+            ],
+            "correct_answer": "D",
+            "explanation": "@testSetup creates common test data for all test methods in a class."
+        }, {
+            "id": 69,
+            "section": "Testing & Debugging",
+            "question": "What is the purpose of System.runAs() in a test class?",
+            "options": [
+                "A) To bypass governor limits.",
+                "B) To execute code as a specific user to test sharing and permissions.",
+                "C) To run asynchronous code synchronously.",
+                "D) To deploy code safely."
+            ],
+            "correct_answer": "B",
+            "explanation": "System.runAs() tests sharing rules and permissions by running code as a specific user."
+        }, {
+            "id": 70,
+            "section": "Testing & Debugging",
+            "question": "Does System.runAs() count against DML governor limits?",
+            "options": [
+                "A) Yes",
+                "B) Only for inserts",
+                "C) Only for updates",
+                "D) No"
+            ],
+            "correct_answer": "D",
+            "explanation": "System.runAs() does not count against DML limits in test methods."
+        }, {
+            "id": 71,
+            "section": "Testing & Debugging",
+            "question": "Do test methods have access to production data by default?",
+            "options": [
+                "A) Only if they are in a managed package.",
+                "B) Yes, but only standard objects.",
+                "C) Yes, they can read all data.",
+                "D) No, test data is isolated."
+            ],
+            "correct_answer": "D",
+            "explanation": "By default, test data is isolated and does not access production data."
+        }, {
+            "id": 72,
+            "section": "Testing & Debugging",
+            "question": "Which annotation allows a test method to access pre-existing organization data?",
+            "options": [
+                "A) @isTest(SeeData=true)",
+                "B) @isTest(SeeAllData=true)",
+                "C) @AccessData",
+                "D) @TestSetup"
+            ],
+            "correct_answer": "B",
+            "explanation": "@isTest(SeeAllData=true) grants access to pre-existing org data."
+        }, {
+            "id": 73,
+            "section": "Testing & Debugging",
+            "question": "What method is used to force asynchronous code (like @future) to execute synchronously in a test?",
+            "options": [
+                "A) Test.startTest()",
+                "B) System.runAsync()",
+                "C) Test.executeAsync()",
+                "D) Test.stopTest()"
+            ],
+            "correct_answer": "D",
+            "explanation": "Test.stopTest() forces async code to execute synchronously in a test method."
+        }, {
+            "id": 74,
+            "section": "Testing & Debugging",
+            "question": "Which method is used to assert that two values are identical in a test class?",
+            "options": [
+                "A) System.assert(expected == actual)",
+                "B) System.assertMatch(expected, actual)",
+                "C) System.assertEquals(expected, actual)",
+                "D) System.isEqual(expected, actual)"
+            ],
+            "correct_answer": "C",
+            "explanation": "System.assertEquals(expected, actual) asserts that two values are identical."
+        }, {
+            "id": 75,
+            "section": "Testing & Debugging",
+            "question": "What is the best practice for generating test data?",
+            "options": [
+                "A) Use the @isTest(SeeAllData=true) annotation.",
+                "B) Hardcode Ids in the test class.",
+                "C) Query existing production records.",
+                "D) Use a TestDataFactory utility class."
+            ],
+            "correct_answer": "D",
+            "explanation": "Using a TestDataFactory utility class is the best practice for reusable test data."
+        }, {
+            "id": 76,
+            "section": "Testing & Debugging",
+            "question": "Can a test class invoke a callout to an external web service?",
+            "options": [
+                "A) No, you must use a Mock Callout.",
+                "B) Yes, if the endpoint is in Remote Site Settings.",
+                "C) Yes, but only in Sandbox.",
+                "D) No, callouts are permanently banned in Apex."
+            ],
+            "correct_answer": "A",
+            "explanation": "Tests must use mock callouts (HttpCalloutMock) instead of real external calls."
+        }, {
+            "id": 77,
+            "section": "Testing & Debugging",
+            "question": "Which interface must be implemented to mock an HTTP callout in a test?",
+            "options": [
+                "A) HttpCalloutMock",
+                "B) MockHttpResponse",
+                "C) WebServiceMock",
+                "D) TestCallout"
+            ],
+            "correct_answer": "A",
+            "explanation": "The HttpCalloutMock interface is used to mock HTTP callouts in tests."
+        }, {
+            "id": 78,
+            "section": "Testing & Debugging",
+            "question": "Are governor limits completely removed during test execution?",
+            "options": [
+                "A) Yes, for DML only.",
+                "B) No, but they are reset when Test.startTest() is called.",
+                "C) Yes, tests have unlimited resources.",
+                "D) No, they are halved."
+            ],
+            "correct_answer": "B",
+            "explanation": "Governor limits are reset when Test.startTest() is called in a test method."
+        }, {
+            "id": 79,
+            "section": "Testing & Debugging",
+            "question": "What is the maximum number of times Test.startTest() can be called in a single test method?",
+            "options": [
+                "A) Unlimited",
+                "B) Depends on the data",
+                "C) Once",
+                "D) Twice"
+            ],
+            "correct_answer": "C",
+            "explanation": "Test.startTest() can be called only once per test method."
+        }, {
+            "id": 80,
+            "section": "Testing & Debugging",
+            "question": "How do you test exceptions in Apex?",
+            "options": [
+                "A) Use a try-catch block and assert that the exception was thrown.",
+                "B) Use System.assertException().",
+                "C) Exceptions automatically pass the test.",
+                "D) You cannot test exceptions."
+            ],
+            "correct_answer": "A",
+            "explanation": "Use try-catch and assert that the expected exception is thrown."
+        }, {
+            "id": 81,
+            "section": "Testing & Debugging",
+            "question": "What developer tool allows you to view detailed execution logs and limits usage?",
+            "options": [
+                "A) Developer Console",
+                "B) Schema Builder",
+                "C) Data Loader",
+                "D) Workbench"
+            ],
+            "correct_answer": "A",
+            "explanation": "Developer Console provides logs, limits, and debugging tools for Apex."
+        }, {
+            "id": 82,
+            "section": "Testing & Debugging",
+            "question": "Which log level provides the most detailed information about variable assignments and loop executions?",
+            "options": [
+                "A) FINEST",
+                "B) INFO",
+                "C) DEBUG",
+                "D) WARN"
+            ],
+            "correct_answer": "A",
+            "explanation": "FINEST is the most detailed log level, showing variable assignments and loop executions."
+        }, {
+            "id": 83,
+            "section": "Testing & Debugging",
+            "question": "What is a checkpoint in the Developer Console?",
+            "options": [
+                "A) A snapshot of heap and variables at a specific line of code.",
+                "B) A deployment validation step.",
+                "C) A break in execution that pauses the transaction.",
+                "D) A save state for the database."
+            ],
+            "correct_answer": "A",
+            "explanation": "Checkpoints capture a snapshot of heap and variable values at a specific line."
+        }, {
+            "id": 84,
+            "section": "Testing & Debugging",
+            "question": "How are unhandled exceptions in Triggers presented to the end user?",
+            "options": [
+                "A) The browser crashes.",
+                "B) As a standard Salesforce error message on the record page.",
+                "C) An email is sent but the UI succeeds.",
+                "D) The record saves partially."
+            ],
+            "correct_answer": "B",
+            "explanation": "Unhandled exceptions display as standard Salesforce error messages on the record page."
+        }, {
+            "id": 85,
+            "section": "Testing & Debugging",
+            "question": "What happens to test data created in a test method after the test completes?",
+            "options": [
+                "A) It overwrites production data.",
+                "B) It remains in the database until manually deleted.",
+                "C) It is automatically rolled back.",
+                "D) It is moved to the recycle bin."
+            ],
+            "correct_answer": "C",
+            "explanation": "Test data is automatically rolled back after the test completes."
+        }, {
+            "id": 86,
+            "section": "LWC, Aura, & Deployment",
+            "question": "What are the core files in a Lightning Web Component bundle?",
+            "options": [
+                "A) CMP, JS, XML",
+                "B) HTML, JS, XML",
+                "C) JS, CSS, JSON",
+                "D) HTML, CSS, Apex"
+            ],
+            "correct_answer": "B",
+            "explanation": "An LWC bundle consists of HTML, JavaScript (.js), and XML meta (.js-meta.xml) files."
+        }, {
+            "id": 87,
+            "section": "LWC, Aura, & Deployment",
+            "question": "Which LWC decorator is used to expose a property as public, so a parent component can set it?",
+            "options": [
+                "A) @public",
+                "B) @track",
+                "C) @wire",
+                "D) @api"
+            ],
+            "correct_answer": "D",
+            "explanation": "@api exposes a property or method as public for parent components."
+        }, {
+            "id": 88,
+            "section": "LWC, Aura, & Deployment",
+            "question": "Which LWC decorator is used to reactively call a Salesforce Apex method?",
+            "options": [
+                "A) @invoke",
+                "B) @wire",
+                "C) @track",
+                "D) @api"
+            ],
+            "correct_answer": "B",
+            "explanation": "@wire is used to wire Apex methods or data to a property or function."
+        }, {
+            "id": 89,
+            "section": "LWC, Aura, & Deployment",
+            "question": "In LWC, how do you imperatively call an Apex method?",
+            "options": [
+                "A) Call System.enqueueJob().",
+                "B) Use the @wire decorator.",
+                "C) Import the method and invoke it as a JavaScript Promise.",
+                "D) Use an iframe."
+            ],
+            "correct_answer": "C",
+            "explanation": "Import the Apex method and call it as a JavaScript Promise imperatively."
+        }, {
+            "id": 90,
+            "section": "LWC, Aura, & Deployment",
+            "question": "Which configuration file makes an LWC visible in the Lightning App Builder?",
+            "options": [
+                "A) The .css file",
+                "B) The .js file",
+                "C) The .html file",
+                "D) The .js-meta.xml file"
+            ],
+            "correct_answer": "D",
+            "explanation": "The .js-meta.xml file configures the component for Lightning App Builder."
+        }, {
+            "id": 91,
+            "section": "LWC, Aura, & Deployment",
+            "question": "What is the legacy component framework that preceded LWC?",
+            "options": [
+                "A) Web Dynpro",
+                "B) Aura Components",
+                "C) S-Controls",
+                "D) Visualforce"
+            ],
+            "correct_answer": "B",
+            "explanation": "Aura Components were the precursor to Lightning Web Components."
+        }, {
+            "id": 92,
+            "section": "LWC, Aura, & Deployment",
+            "question": "Which tool allows you to migrate metadata components between orgs without using a command-line interface?",
+            "options": [
+                "A) Salesforce CLI",
+                "B) Data Loader",
+                "C) Workbench",
+                "D) Change Sets"
+            ],
+            "correct_answer": "D",
+            "explanation": "Change Sets enable metadata migration between orgs via the UI."
+        }, {
+            "id": 93,
+            "section": "LWC, Aura, & Deployment",
+            "question": "What is a Scratch Org?",
+            "options": [
+                "A) A disposable Salesforce environment used for development and testing.",
+                "B) A permanent production backup.",
+                "C) A testing sandbox that copies all production data.",
+                "D) A legacy org type."
+            ],
+            "correct_answer": "A",
+            "explanation": "Scratch Orgs are disposable, source-driven development environments."
+        }, {
+            "id": 94,
+            "section": "LWC, Aura, & Deployment",
+            "question": "Which Salesforce CLI (sfdx) command pushes local code to a scratch org?",
+            "options": [
+                "A) sf project deploy start (or sfdx force:source:push)",
+                "B) sf data push",
+                "C) sfdx force:code:upload",
+                "D) sfdx source:commit"
+            ],
+            "correct_answer": "A",
+            "explanation": "sf project deploy start (or force:source:push) pushes source to a scratch org."
+        }, {
+            "id": 95,
+            "section": "LWC, Aura, & Deployment",
+            "question": "What file defines the structure of a package in Salesforce CLI source-driven development?",
+            "options": [
+                "A) build.xml",
+                "B) config.json",
+                "C) sfdx-project.json",
+                "D) package.xml"
+            ],
+            "correct_answer": "C",
+            "explanation": "sfdx-project.json defines the package structure in source-driven development."
+        }, {
+            "id": 96,
+            "section": "LWC, Aura, & Deployment",
+            "question": "What does the 'cacheable=true' parameter do in an @AuraEnabled method?",
+            "options": [
+                "A) Caches the code compilation.",
+                "B) Caches the result on the client to improve performance, but prevents DML operations.",
+                "C) Caches the SOQL query in the database.",
+                "D) Allows DML operations to be cached."
+            ],
+            "correct_answer": "B",
+            "explanation": "cacheable=true caches the result client-side but prevents DML in the method."
+        }, {
+            "id": 97,
+            "section": "LWC, Aura, & Deployment",
+            "question": "Which lifecycle hook in LWC fires when the component is inserted into the DOM?",
+            "options": [
+                "A) connectedCallback()",
+                "B) disconnectedCallback()",
+                "C) renderedCallback()",
+                "D) constructor()"
+            ],
+            "correct_answer": "A",
+            "explanation": "connectedCallback() fires when the component is inserted into the DOM."
+        }, {
+            "id": 98,
+            "section": "LWC, Aura, & Deployment",
+            "question": "How do components communicate from child to parent in LWC?",
+            "options": [
+                "A) By dispatching Custom Events.",
+                "B) Using Lightning Message Service.",
+                "C) By updating the database.",
+                "D) Using the @api decorator."
+            ],
+            "correct_answer": "A",
+            "explanation": "Child components communicate to parents by dispatching Custom Events."
+        }, {
+            "id": 99,
+            "section": "LWC, Aura, & Deployment",
+            "question": "How do components communicate across unrelated DOM elements in LWC?",
+            "options": [
+                "A) Custom Events.",
+                "B) Lightning Message Service (LMS) or PubSub.",
+                "C) URL parameters.",
+                "D) @api decorators."
+            ],
+            "correct_answer": "B",
+            "explanation": "Use Lightning Message Service or PubSub to communicate across unrelated components."
+        }, {
+            "id": 100,
+            "section": "LWC, Aura, & Deployment",
+            "question": "What mechanism prevents arbitrary external code from accessing LWC component internals?",
+            "options": [
+                "A) OWD Sharing",
+                "B) Lightning Web Security (LWS) / Locker Service",
+                "C) Profile Permissions",
+                "D) Validation Rules"
+            ],
+            "correct_answer": "B",
+            "explanation": "Lightning Web Security (LWS) / Locker Service isolates and secures LWC components."
+        }];
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  APP
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        (() => {
+            'use strict';
+
+            // ─── state ───
+            let allQuestions = [];
+            let sectionsOrder = [];
+            let deck = [];
+            let index = 0;
+            let grades = {};
+            const STORAGE_KEY = 'certdeck_progress_v2';
+
+            // ─── DOM refs ───
+            const $ = id => document.getElementById(id);
+            const statusScreen = $('statusScreen');
+            const statusIcon = $('statusIcon');
+            const statusMessage = $('statusMessage');
+            const loadError = $('loadError');
+
+            const tocScreen = $('tocScreen');
+            const tocTagline = $('tocTagline');
+            const tocAllBtn = $('tocAllBtn');
+            const tocAllCount = $('tocAllCount');
+            const tocAllFill = $('tocAllFill');
+            const tocAllStat = $('tocAllStat');
+            const tocList = $('tocList');
+            const tocResetBtn = $('tocResetBtn');
+
+            const quizScreen = $('quizScreen');
+            const doneScreen = $('doneScreen');
+
+            const backToTocBtn = $('backToTocBtn');
+            const doneBackToTocBtn = $('doneBackToTocBtn');
+
+            const progressFill = $('progressFill');
+            const progressCurrent = $('progressCurrent');
+            const progressTotal = $('progressTotal');
+
+            const shuffleBtn = $('shuffleBtn');
+
+            const scoreCorrect = $('scoreCorrect');
+            const scoreIncorrect = $('scoreIncorrect');
+            const scoreUnseen = $('scoreUnseen');
+
+            const cardEl = $('card');
+            const prevBtn = $('prevBtn');
+            const nextBtn = $('nextBtn');
+
+            const frontSection = $('frontSection');
+            const frontId = $('frontId');
+            const frontQuestion = $('frontQuestion');
+            const frontOptions = $('frontOptions');
+
+            const backSection = $('backSection');
+            const resultBanner = $('resultBanner');
+            const answerBadge = $('answerBadge');
+            const answerText = $('answerText');
+            const explanationText = $('explanationText');
+
+            const jumpRow = $('jumpRow');
+            const doneSummary = $('doneSummary');
+            const reviewMissedBtn = $('reviewMissedBtn');
+            const restartAllBtn = $('restartAllBtn');
+
+            // ─── helpers ───
+            function normalize(raw) {
+                let arr = raw;
+                if (!Array.isArray(raw)) {
+                    const candidate = Object.values(raw || {}).find(v => Array.isArray(v));
+                    arr = candidate || [];
                 }
-              ]
-            },
-            {
-              "chapter_number": 2,
-              "chapter_title": "Objects and Data Management",
-              "questions": [
-                {
-                  "q_id": "2.1",
-                  "q": "Which standard object stores information about potential customers before they are qualified?",
-                  "opts": ["Account", "Contact", "Lead", "Opportunity"],
-                  "ans_idx": 2,
-                  "exp": "The Lead object stores information about prospects who have not yet been qualified. Once qualified, a Lead converts to an Account, Contact, and optionally an Opportunity."
-                },
-                {
-                  "q_id": "2.2",
-                  "q": "What is the standard API naming convention for custom objects in Salesforce?",
-                  "opts": ["ObjectName", "ObjectName__c", "Custom_ObjectName", "API_ObjectName__c"],
-                  "ans_idx": 1,
-                  "exp": "Custom object API names always end with '__c' (double underscore c) to distinguish custom metadata definitions from core standard platform objects."
-                },
-                {
-                  "q_id": "2.3",
-                  "q": "In a Master-Detail relationship, what happens to child records when the parent record is deleted?",
-                  "opts": ["Nothing happens to child records", "All child records are automatically deleted (cascade delete)", "Child records become orphaned (parent field cleared)", "Only the master-detail field is cleared, records remain"],
-                  "ans_idx": 1,
-                  "exp": "Master-Detail relationships enforce strict coupling. When the master is deleted, all detail child records are automatically cascade-deleted."
-                }
-              ]
-            },
-            {
-              "chapter_number": 3,
-              "chapter_title": "Salesforce Automatization Tools",
-              "questions": [
-                {
-                  "q_id": "3.1",
-                  "q": "What is the primary purpose of Record Types in Salesforce?",
-                  "opts": ["To store additional data fields", "To offer different business processes, page layouts, and picklist values per profile or use case", "To replace page layouts entirely", "To automate email sending based on record criteria"],
-                  "ans_idx": 1,
-                  "exp": "Record Types allow you to segment a single object for different business processes, offering specialized available picklist values and layouts per profile."
-                },
-                {
-                  "q_id": "3.3",
-                  "q": "Which Salesforce automation tool is considered 'declarative programming' (point-and-click, no code)?",
-                  "opts": ["Apex Triggers", "Visualforce pages", "Flow", "Lightning Web Components"],
-                  "ans_idx": 2,
-                  "exp": "Flow is Salesforce's primary declarative visual engine. It allows administrators to configure sophisticated logical processes without writing programmatic code."
-                }
-              ]
-            },
-            {
-              "chapter_number": 4,
-              "chapter_title": "Apex Programming",
-              "questions": [
-                {
-                  "q_id": "4.1",
-                  "q": "Apex is best described as what type of programming language?",
-                  "opts": ["Weakly-typed scripting language", "Strongly-typed, object-oriented programming language", "Purely functional programming language", "Markup and styling language"],
-                  "ans_idx": 1,
-                  "exp": "Apex is a strongly-typed, object-oriented programming language that compiles to bytecode and runs natively on multi-tenant Salesforce architecture servers."
-                },
-                {
-                  "q_id": "4.5",
-                  "q": "What is a key characteristic of a Set collection in Apex?",
-                  "opts": ["Ordered collection that allows duplicate elements", "Unordered collection that contains only unique elements", "Key-value pairs where keys must be unique", "Indexed by integer positions like an array"],
-                  "ans_idx": 1,
-                  "exp": "A Set is an unordered collection of entirely unique elements. Adding duplicate indices will be silently ignored without error constraints."
-                }
-              ]
+                return arr.map((q, i) => ({
+                    id: q.id ?? i + 1,
+                    section: q.section || 'General',
+                    question: q.question || '(missing question)',
+                    options: Array.isArray(q.options) ? q.options : [],
+                    correct_answer: (q.correct_answer || '').toString().trim(),
+                    explanation: q.explanation || 'No explanation provided.'
+                }));
             }
-          ]
-        };
 
-        // Application State
-        let activeDeck = [];
-        let currentCardIndex = 0;
-        let sessionScore = 0;
-        let cardAnswered = false;
-        let lastSelectedChapter = 'all';
-
-        // Interface Screen Hooks
-        const screenDashboard = document.getElementById('screen-dashboard');
-        const screenQuiz = document.getElementById('screen-quiz');
-        const screenResults = document.getElementById('screen-results');
-        const menuTarget = document.getElementById('menu-target');
-
-        // Fisher-Yates Randomization Shuffler
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+            function optionLetter(opt) {
+                const m = /^([A-Za-z])[\).:]/.exec(opt.trim());
+                return m ? m[1].toUpperCase() : null;
             }
-            return array;
-        }
 
-        // Initialize Dynamic Menu Buttons
-        function buildMainMenu() {
-            document.getElementById('app-title').innerText = quizDatabase.book_title;
-            menuTarget.innerHTML = '';
+            function correctLetter(q) {
+                return q.correct_answer.replace(/[^A-Za-z]/g, '').toUpperCase();
+            }
 
-            // 1. Add "All Combined" Option card
-            let totalQCount = 0;
-            quizDatabase.chapters.forEach(c => totalQCount += c.questions.length);
+            function findCorrectOptionText(q) {
+                const letter = correctLetter(q);
+                const match = q.options.find(o => optionLetter(o) === letter);
+                return match || q.correct_answer;
+            }
 
-            const allCard = document.createElement('div');
-            allCard.className = 'menu-card';
-            allCard.innerHTML = `
-                <div class="menu-card-title">All Chapters Combined</div>
-                <div class="menu-card-meta">Full Deck simulation &bull; ${totalQCount} Total Cards</div>
-            `;
-            allCard.onclick = () => initQuizSession('all');
-            menuTarget.appendChild(allCard);
+            function escapeHtml(str) {
+                const d = document.createElement('div');
+                d.textContent = str;
+                return d.innerHTML;
+            }
 
-            // 2. Map structural sub-chapters
-            quizDatabase.chapters.forEach(ch => {
-                const card = document.createElement('div');
-                card.className = 'menu-card';
-                card.innerHTML = `
-                    <div class="menu-card-title">Chapter ${ch.chapter_number}: ${ch.chapter_title}</div>
-                    <div class="menu-card-meta">${ch.questions.length} Practice Cards</div>
-                `;
-                card.onclick = () => initQuizSession(ch.chapter_number);
-                menuTarget.appendChild(card);
-            });
-        }
+            // ─── persistence ───
+            function saveProgress() {
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ grades })); } catch (_) { /* ignore */ }
+            }
 
-        function switchView(target) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            target.classList.add('active');
-            window.scrollTo(0, 0);
-        }
+            function loadProgress() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) grades = JSON.parse(raw).grades || {};
+                } catch (_) { grades = {}; }
+            }
 
-        // Initialize Selected Quiz Session Context
-        function initQuizSession(chapterId) {
-            lastSelectedChapter = chapterId;
-            activeDeck = [];
-            sessionScore = 0;
-            currentCardIndex = 0;
+            // ─── stats ───
+            function sectionStats(list) {
+                const ids = list.map(q => q.id);
+                let right = 0,
+                    wrong = 0;
+                ids.forEach(id => {
+                    if (grades[id] === 'right') right++;
+                    else if (grades[id] === 'wrong') wrong++;
+                });
+                return { total: ids.length, right, wrong, done: right + wrong };
+            }
 
-            quizDatabase.chapters.forEach(ch => {
-                if (chapterId === 'all' || ch.chapter_number.toString() === chapterId.toString()) {
-                    ch.questions.forEach(q => {
-                        activeDeck.push({
-                            ...q,
-                            chapterText: `Chapter ${ch.chapter_number}: ${ch.chapter_title}`
-                        });
-                    });
+            // ─── boot ───
+            function boot() {
+                try {
+                    const normalized = normalize(QUESTIONS_DATA);
+                    if (!normalized.length) throw new Error('No questions found.');
+                    allQuestions = normalized;
+                    sectionsOrder = [...new Set(allQuestions.map(q => q.section))];
+                    loadProgress();
+                    showToc();
+                } catch (err) {
+                    statusIcon.classList.remove('spin');
+                    statusIcon.textContent = '!';
+                    statusMessage.textContent = 'Could not load question bank.';
+                    loadError.textContent = err.message;
                 }
-            });
+            }
 
-            // Always Shuffle target question deck dynamically
-            shuffleArray(activeDeck);
-            switchView(screenQuiz);
-            renderCard();
-        }
+            // ─── TOC ───
+            function showToc() {
+                statusScreen.classList.add('hidden');
+                quizScreen.classList.add('hidden');
+                doneScreen.classList.add('hidden');
+                tocScreen.classList.remove('hidden');
+                renderToc();
+            }
 
-        // Render Active Question
-        function renderCard() {
-            cardAnswered = false;
-            document.getElementById('btn-next').style.display = 'none';
-            document.getElementById('explanation-box').className = 'explanation-panel';
+            function renderToc() {
+                tocTagline.textContent = `${allQuestions.length} questions · ${sectionsOrder.length} sections`;
 
-            const card = activeDeck[currentCardIndex];
+                const allStats = sectionStats(allQuestions);
+                tocAllCount.textContent = `${allStats.total} cards`;
+                tocAllFill.style.width = `${allStats.total ? (allStats.done / allStats.total) * 100 : 0}%`;
+                tocAllStat.textContent = `${allStats.done} / ${allStats.total}`;
 
-            // Progress tracking updates
-            const progressiveCounter = currentCardIndex + 1;
-            const percentageComplete = (progressiveCounter / activeDeck.length) * 100;
-            document.getElementById('progress-fill').style.width = `${percentageComplete}%`;
-            document.getElementById('progress-counter').innerText = `${progressiveCounter}/${activeDeck.length}`;
-
-            // Insert textual data configurations
-            document.getElementById('card-chapter').innerText = card.chapterText;
-            document.getElementById('card-question').innerText = card.q;
-
-            // Gather options mapping, cache original data structures, then shuffle choices
-            const choiceDeck = card.opts.map((opt, idx) => ({ text: opt, originIdx: idx }));
-            shuffleArray(choiceDeck);
-
-            const optionsContainer = document.getElementById('card-options');
-            optionsContainer.innerHTML = '';
-
-            choiceDeck.forEach(choice => {
-                const optionEl = document.createElement('div');
-                optionEl.className = 'option-item';
-                optionEl.innerText = choice.text;
-
-                optionEl.onclick = () => {
-                    if (cardAnswered) return;
-                    processSelection(optionEl, choice.originIdx, card);
-                };
-
-                optionsContainer.appendChild(optionEl);
-            });
-        }
-
-        // Process Choice Selections
-        function processSelection(selectedEl, chosenIdx, questionObj) {
-            cardAnswered = true;
-            const actualCorrectIdx = questionObj.ans_idx;
-            const isCorrect = (chosenIdx === actualCorrectIdx);
-
-            if (isCorrect) {
-                sessionScore++;
-                selectedEl.classList.add('correct');
-            } else {
-                selectedEl.classList.add('incorrect');
-                // Auto-highlight correct choice instantly
-                Array.from(document.getElementById('card-options').children).forEach(el => {
-                    if (el.innerText === questionObj.opts[actualCorrectIdx]) {
-                        el.classList.add('correct');
-                    }
+                tocList.innerHTML = '';
+                sectionsOrder.forEach(section => {
+                    const list = allQuestions.filter(q => q.section === section);
+                    const stats = sectionStats(list);
+                    const row = document.createElement('button');
+                    row.className = 'toc-row';
+                    row.innerHTML = `
+                <div class="toc-row-main">
+                  <span class="toc-row-title">${escapeHtml(section)}</span>
+                  <span class="toc-row-count">${stats.total} cards</span>
+                </div>
+                <div class="toc-row-progress">
+                  <div class="toc-bar"><div class="toc-bar-fill" style="width:${stats.total ? (stats.done/stats.total)*100 : 0}%"></div></div>
+                  <span class="toc-row-stat">${stats.done} / ${stats.total}</span>
+                </div>`;
+                    row.addEventListener('click', () => enterQuiz(list));
+                    tocList.appendChild(row);
                 });
             }
 
-            // Expose structural verification explanation values
-            const expBox = document.getElementById('explanation-box');
-            expBox.className = `explanation-panel show ${isCorrect ? 'is-correct' : 'is-wrong'}`;
-            document.getElementById('explanation-heading').innerText = isCorrect ? "✓ Correct Choice" : "✗ Incorrect Selection";
-            document.getElementById('explanation-body').innerText = questionObj.exp;
+            tocAllBtn.addEventListener('click', () => enterQuiz([...allQuestions]));
+            tocResetBtn.addEventListener('click', () => {
+                if (!confirm('Clear all progress?')) return;
+                grades = {};
+                saveProgress();
+                renderToc();
+            });
+            backToTocBtn.addEventListener('click', showToc);
+            doneBackToTocBtn.addEventListener('click', showToc);
 
-            document.getElementById('btn-next').style.display = 'block';
-        }
-
-        // Navigation Loop Controls
-        document.getElementById('btn-next').onclick = () => {
-            currentCardIndex++;
-            if (currentCardIndex < activeDeck.length) {
+            // ─── enter quiz ───
+            function enterQuiz(list) {
+                deck = list;
+                index = 0;
+                tocScreen.classList.add('hidden');
+                doneScreen.classList.add('hidden');
+                quizScreen.classList.remove('hidden');
                 renderCard();
-            } else {
-                renderResultsPanel();
-            }
-        };
-
-        function renderResultsPanel() {
-            switchView(screenResults);
-            const scorePercent = Math.round((sessionScore / activeDeck.length) * 100);
-            document.getElementById('final-score').innerText = `${scorePercent}%`;
-            
-            let feedbackSummary = `Review your incorrect answers and try again. Practice makes perfect! (${sessionScore}/${activeDeck.length} correct)`;
-            if (scorePercent >= 85) {
-                feedbackSummary = `Excellent performance! You've shown exceptional mastery of these topics. (${sessionScore}/${activeDeck.length} correct)`;
-            } else if (scorePercent >= 70) {
-                feedbackSummary = `Good job! You have a solid grasp of the core concepts, but keep polishing. (${sessionScore}/${activeDeck.length} correct)`;
+                renderJumpRow();
             }
 
-            document.getElementById('final-feedback').innerText = feedbackSummary;
-        }
+            shuffleBtn.addEventListener('click', () => {
+                for (let i = deck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [deck[i], deck[j]] = [deck[j], deck[i]];
+                }
+                index = 0;
+                renderCard();
+                renderJumpRow();
+            });
 
-        // Restart Loops
-        document.getElementById('btn-restart').onclick = () => initQuizSession(lastSelectedChapter);
-        document.getElementById('btn-home').onclick = () => switchView(screenDashboard);
+            // ─── render card ───
+            function renderCard() {
+                if (!deck.length) return;
+                const q = deck[index];
+                cardEl.classList.remove('flipped');
 
-        // Run application menu initialization
-        buildMainMenu();
+                frontSection.textContent = q.section;
+                backSection.textContent = q.section;
+                frontId.textContent = `Q${q.id}`;
+                frontQuestion.textContent = q.question;
+
+                frontOptions.innerHTML = q.options.map(o => {
+                    const letter = optionLetter(o) || '';
+                    return `<button type="button" class="option-btn" data-letter="${letter}">${escapeHtml(o)}</button>`;
+                }).join('');
+                frontOptions.classList.remove('answered');
+
+                const correctText = findCorrectOptionText(q);
+                answerBadge.textContent = q.correct_answer || '?';
+                answerText.textContent = escapeHtml(correctText).replace(/^([A-Za-z])[\).:]\s*/, '');
+                explanationText.textContent = q.explanation || 'No explanation provided.';
+
+                const state = grades[q.id];
+                resultBanner.className = 'result-banner' + (state ? ` ${state}` : '');
+                resultBanner.textContent = state === 'right' ? '✓ Correct' : state === 'wrong' ? '✕ Incorrect' : '';
+
+                progressCurrent.textContent = index + 1;
+                progressTotal.textContent = deck.length;
+                progressFill.style.width = `${((index + 1) / deck.length) * 100}%`;
+
+                prevBtn.disabled = index === 0;
+                nextBtn.textContent = index === deck.length - 1 ? '✓ Finish' : '›';
+
+                updateScoreboard();
+                highlightJumpDot();
+            }
+
+            // ─── answer selection ───
+            function answerSelected(btn) {
+                if (frontOptions.classList.contains('answered')) return;
+                const q = deck[index];
+                const chosenLetter = btn.dataset.letter;
+                const correct = correctLetter(q);
+                const isCorrect = chosenLetter === correct;
+
+                frontOptions.classList.add('answered');
+                [...frontOptions.children].forEach(b => b.classList.add('disabled'));
+                btn.classList.add(isCorrect ? 'chosen-correct' : 'chosen-wrong');
+                if (!isCorrect) {
+                    const correctBtn = [...frontOptions.children].find(b => b.dataset.letter === correct);
+                    if (correctBtn) correctBtn.classList.add('reveal-correct');
+                }
+
+                grades[q.id] = isCorrect ? 'right' : 'wrong';
+                saveProgress();
+                updateScoreboard();
+                renderJumpRow();
+
+                resultBanner.className = `result-banner ${isCorrect ? 'right' : 'wrong'}`;
+                resultBanner.textContent = isCorrect ? '✓ Correct' : '✕ Incorrect';
+
+                setTimeout(() => cardEl.classList.add('flipped'), 580);
+            }
+
+            frontOptions.addEventListener('click', (e) => {
+                const btn = e.target.closest('.option-btn');
+                if (!btn) return;
+                e.stopPropagation();
+                answerSelected(btn);
+            });
+
+            // ─── scoreboard ───
+            function updateScoreboard() {
+                const stats = sectionStats(deck);
+                scoreCorrect.textContent = stats.right;
+                scoreIncorrect.textContent = stats.wrong;
+                scoreUnseen.textContent = stats.total - stats.done;
+            }
+
+            // ─── jump dots ───
+            function renderJumpRow() {
+                jumpRow.innerHTML = '';
+                deck.forEach((q, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'jump-dot';
+                    dot.title = `Q${q.id}`;
+                    if (grades[q.id] === 'right') dot.classList.add('done-right');
+                    if (grades[q.id] === 'wrong') dot.classList.add('done-wrong');
+                    dot.addEventListener('click', () => { index = i;
+                        renderCard();
+                        highlightJumpDot(); });
+                    jumpRow.appendChild(dot);
+                });
+                highlightJumpDot();
+            }
+
+            function highlightJumpDot() {
+                [...jumpRow.children].forEach((d, i) => d.classList.toggle('current', i === index));
+            }
+
+            // ─── navigation ───
+            cardEl.addEventListener('click', () => cardEl.classList.toggle('flipped'));
+
+            function goNext() {
+                if (index < deck.length - 1) { index++;
+                    renderCard(); } else { showDone(); }
+            }
+
+            function goPrev() {
+                if (index > 0) { index--;
+                    renderCard(); }
+            }
+
+            nextBtn.addEventListener('click', goNext);
+            prevBtn.addEventListener('click', goPrev);
+
+            document.addEventListener('keydown', (e) => {
+                if (quizScreen.classList.contains('hidden')) return;
+                if (e.code === 'Space') { e.preventDefault();
+                    cardEl.classList.toggle('flipped'); }
+                if (e.code === 'ArrowRight') goNext();
+                if (e.code === 'ArrowLeft') goPrev();
+                if (['1', '2', '3', '4'].includes(e.key) && !frontOptions.classList.contains('answered')) {
+                    const btn = frontOptions.children[Number(e.key) - 1];
+                    if (btn) answerSelected(btn);
+                }
+            });
+
+            // ─── done ───
+            function showDone() {
+                quizScreen.classList.add('hidden');
+                doneScreen.classList.remove('hidden');
+                const stats = sectionStats(deck);
+                doneSummary.textContent =
+                    `${stats.right} correct · ${stats.wrong} missed · ${stats.total - stats.done} unseen`;
+            }
+
+            reviewMissedBtn.addEventListener('click', () => {
+                const missedIds = new Set(deck.filter(q => grades[q.id] === 'wrong').map(q => q.id));
+                if (!missedIds.size) { alert('No missed cards — great work!'); return; }
+                deck = deck.filter(q => missedIds.has(q.id));
+                index = 0;
+                doneScreen.classList.add('hidden');
+                quizScreen.classList.remove('hidden');
+                renderCard();
+                renderJumpRow();
+            });
+
+            restartAllBtn.addEventListener('click', () => {
+                index = 0;
+                doneScreen.classList.add('hidden');
+                quizScreen.classList.remove('hidden');
+                renderCard();
+                renderJumpRow();
+            });
+
+            // ─── start ───
+            boot();
+        })();
     </script>
+
 </body>
 </html>
