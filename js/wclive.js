@@ -30,7 +30,7 @@ const ROUNDS = [
   // Combined Knockout stage (QF to Final)
   { key: 'ko',     label: 'Knockout (QF–Final)', start: '2026-07-09', end: '2026-07-19' },
 ];
-let activeRound = 'ro16';
+let activeRound = 'qf';
 
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;

@@ -266,6 +266,7 @@ section{ position:relative; z-index:1; padding: clamp(50px,8vw,86px) 0; }
 .sign-card .sign-top{ display:flex; justify-content:space-between; align-items:flex-start; }
 .sign-card .sym{ font-size:1.5rem; color: var(--el, var(--gold)); font-family: var(--font-data); }
 .sign-card h4{ font-family: var(--font-display); font-size:1.15rem; margin-top:10px; color:var(--mist); }
+.sign-card h4 .sanskrit-inline{ font-family: var(--font-body); font-size:.62em; font-weight:600; color: var(--mist-dim); }
 .sign-card .sanskrit-sm{ font-size:.78rem; color: var(--mist-dim); margin-top:2px;}
 .sign-meta{ margin-top:12px; display:flex; flex-direction:column; gap:5px; }
 .sign-meta div{ font-size:.72rem; color: var(--mist-dim); display:flex; justify-content:space-between; }
@@ -363,6 +364,114 @@ table.ref-table td b{ color: var(--mist); }
 .tl-item .tl-sanskrit{ color: var(--gold-soft); font-size:.95rem; margin-left:8px; }
 .tl-item p{ font-size:.84rem; color: var(--mist-dim); margin-top:4px; max-width:640px; }
 
+/* ============ HOUSES ============ */
+.house-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; }
+.house-card{
+  background: var(--night-2); border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:18px 16px; transition: transform .25s var(--ease), border-color .25s; cursor:default;
+}
+.house-card:hover{ transform: translateY(-3px); border-color: var(--line-strong); }
+.house-card .hc-top{ display:flex; align-items:center; justify-content:space-between; }
+.house-card .hc-num{ font-family:var(--font-display); font-size:1.7rem; color: var(--gold-soft); font-weight:650; }
+.house-card .hc-group{ font-size:.6rem; text-transform:uppercase; letter-spacing:.07em; padding:2px 7px; border-radius:99px; font-weight:700; }
+.house-card .hc-group.kendra{ background: rgba(79,154,110,0.18); color:#7fb894; }
+.house-card .hc-group.trikona{ background: rgba(227,163,59,0.18); color: var(--gold-soft); }
+.house-card .hc-group.dusthana{ background: rgba(193,56,47,0.18); color: var(--vermilion-soft); }
+.house-card .hc-group.other{ background: rgba(255,255,255,0.06); color: var(--mist-dim); }
+.house-card h4{ font-family:var(--font-display); font-size:1.05rem; color:var(--mist); margin-top:8px; }
+.house-card .hc-sanskrit{ font-size:.72rem; color: var(--mist-dim); margin-bottom:8px; }
+.house-card .hc-karaka{ font-family:var(--font-data); font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; color: var(--gold-soft); margin-top:8px; }
+.house-card p{ font-size:.8rem; color: var(--mist-dim); margin-top:6px; }
+
+.occupancy-compare{ margin-top:40px; }
+.occ-head{ margin-bottom:18px; }
+.occ-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.occ-card{ border-radius: var(--radius-lg); padding:22px; border:1px solid var(--line); }
+.occ-card.occ-good{ background: linear-gradient(155deg, rgba(79,154,110,0.14), var(--night-2)); border-color: rgba(79,154,110,0.35); }
+.occ-card.occ-hard{ background: linear-gradient(155deg, rgba(193,56,47,0.12), var(--night-2)); border-color: rgba(193,56,47,0.3); }
+.occ-top{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.occ-glyph{ font-size:1.6rem; color: var(--sun); }
+.occ-house{ font-family:var(--font-data); font-size:.76rem; text-transform:uppercase; letter-spacing:.05em; color: var(--mist); }
+.occ-card p{ font-size:.86rem; color: var(--mist-dim); }
+.occ-card p b{ color: var(--mist); }
+
+.bhavat-block{ margin-top:40px; }
+.bhavat-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; }
+.bhavat-card{ background: var(--night-2); border:1px solid var(--line); border-radius: var(--radius-md); padding:16px; text-align:center; }
+.bhavat-card .bh-eq{ font-family:var(--font-display); font-size:1.3rem; color: var(--gold-soft); }
+.bhavat-card p{ font-size:.78rem; color: var(--mist-dim); margin-top:8px; }
+
+/* ============ DASHA ============ */
+.dasha-sequence{ display:flex; flex-wrap:wrap; gap:10px; }
+.dasha-chip{
+  flex:1 1 150px; background: var(--night-2); border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:16px; position:relative; overflow:hidden;
+}
+.dasha-chip::before{ content:""; position:absolute; inset:0; background: var(--pc, var(--gold)); opacity:.06; }
+.dasha-chip .dc-top{ display:flex; align-items:center; justify-content:space-between; position:relative; }
+.dasha-chip .dc-glyph{ font-size:1.3rem; color: var(--pc, var(--gold)); }
+.dasha-chip .dc-years{ font-family:var(--font-data); font-size:1.15rem; font-weight:700; color: var(--pc, var(--gold)); }
+.dasha-chip h4{ font-family:var(--font-display); font-size:1.05rem; color:var(--mist); margin-top:8px; position:relative; }
+.dasha-chip p{ font-size:.76rem; color: var(--mist-dim); margin-top:4px; position:relative; }
+.dasha-chip .dc-arrow{ position:absolute; right:-8px; top:50%; transform:translateY(-50%); color: var(--mist-dim); font-size:.9rem; z-index:2; }
+
+/* ============ ASHTAKAVARGA / LONGEVITY ============ */
+.deeper-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.deeper-card{ background: linear-gradient(160deg, var(--night-3), var(--night-2)); border:1px solid var(--line); border-radius: var(--radius-lg); padding:26px; }
+.dcard-tag{ font-family:var(--font-data); font-size:.66rem; text-transform:uppercase; letter-spacing:.1em; color: var(--vermilion-soft); }
+.deeper-card h4{ font-family:var(--font-display); font-size:1.35rem; color:var(--mist); margin:8px 0 10px; }
+.deeper-card p{ font-size:.86rem; color: var(--mist-dim); }
+.method-list{ margin-top:12px; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:10px; }
+.method-list li{ font-size:.82rem; color: var(--mist-dim); padding-left:16px; position:relative; }
+.method-list li::before{ content:"—"; position:absolute; left:0; color: var(--gold-soft); }
+.method-list li b{ color: var(--mist); }
+.bindu-scale{ margin-top:14px; border:1px solid var(--line); border-radius: var(--radius-sm); overflow:hidden; }
+.bindu-row{ display:flex; justify-content:space-between; padding:8px 14px; font-size:.8rem; border-bottom:1px solid var(--line); }
+.bindu-row:last-child{ border-bottom:none; }
+.bindu-row span{ font-family:var(--font-data); color: var(--gold-soft); font-weight:700; }
+.bindu-row i{ color: var(--mist-dim); font-style:normal; }
+
+/* ============ READER TOOL ============ */
+.reader-tool{ background: linear-gradient(160deg, var(--night-3), var(--night-2)); border:1px solid var(--line); border-radius: var(--radius-lg); padding: 28px; }
+.reader-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px; }
+.reader-grid input[type="date"]{
+  width:100%; background: var(--night); border:1px solid var(--line-strong); color: var(--mist);
+  padding:11px 14px; border-radius: var(--radius-sm); font-family:var(--font-body); font-weight:700; font-size:.9rem;
+  color-scheme: dark;
+}
+.planet-input-grid{ margin-top:22px; display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+.pi-field{ background: rgba(0,0,0,0.2); border:1px solid var(--line); border-radius: var(--radius-sm); padding:10px 12px; }
+.pi-field label{ display:flex; align-items:center; gap:6px; font-family:var(--font-data); font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color: var(--pc, var(--mist-dim)); margin-bottom:6px; }
+.pi-field select{
+  width:100%; background: transparent; border:none; color: var(--mist);
+  font-family:var(--font-body); font-weight:700; font-size:.86rem; padding:2px 0;
+  appearance:none; -webkit-appearance:none;
+}
+.reader-btn{
+  margin-top:24px; width:100%; background: var(--gold-soft); color: var(--night); border:none;
+  padding:15px; border-radius: var(--radius-sm); font-weight:800; font-size:.92rem; text-transform:uppercase; letter-spacing:.06em;
+  transition: transform .2s, background .2s;
+}
+.reader-btn:hover{ background: var(--gold); transform: translateY(-2px); }
+.reader-output{ margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.ro-wide{ grid-column: 1 / -1; }
+.ro-block{ background: rgba(0,0,0,0.22); border:1px solid var(--line); border-radius: var(--radius-md); padding:18px; }
+.ro-block h4{ font-family:var(--font-display); font-size:1.05rem; color:var(--mist); margin-bottom:12px; }
+.table-scroll{ overflow-x:auto; }
+.table-scroll table{ min-width:420px; }
+.dignity-pill{ font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:3px 9px; border-radius:99px; display:inline-block; }
+.dignity-pill.exalted{ background: rgba(79,154,110,0.2); color:#7fb894; }
+.dignity-pill.debilitated{ background: rgba(193,56,47,0.2); color: var(--vermilion-soft); }
+.dignity-pill.own{ background: rgba(227,163,59,0.2); color: var(--gold-soft); }
+.dignity-pill.moola{ background: rgba(109,132,180,0.22); color:#9fb2da; }
+.dignity-pill.neutral{ background: rgba(255,255,255,0.07); color: var(--mist-dim); }
+.timeline-reader{ display:flex; flex-direction:column; gap:8px; }
+.tr-row{ display:grid; grid-template-columns: 90px 1fr 130px; gap:12px; align-items:center; padding:10px 14px; border-radius: var(--radius-sm); border:1px solid var(--line); font-size:.82rem; }
+.tr-row.tr-active{ background: rgba(227,163,59,0.14); border-color: var(--line-strong); }
+.tr-row .tr-planet{ font-family:var(--font-display); font-weight:650; color: var(--pc, var(--mist)); }
+.tr-row .tr-range{ color: var(--mist-dim); font-family:var(--font-data); font-size:.78rem; }
+.tr-row .tr-now{ text-align:right; font-family:var(--font-data); font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; color: var(--gold-soft); }
+
 /* ============ FOOTER ============ */
 footer{ padding: 40px 0 60px; text-align:center; color: var(--mist-dim); font-size:.8rem; position:relative; z-index:1; }
 footer .fglyph{ font-family:var(--font-display); font-size:1.3rem; color: var(--gold-soft); margin-bottom:10px; }
@@ -375,6 +484,13 @@ footer .fglyph{ font-family:var(--font-display); font-size:1.3rem; color: var(--
   .varga-grid{ grid-template-columns: repeat(2, 1fr); }
   .varga-card.hero-varga{ grid-column: span 2; }
   .branch-grid{ grid-template-columns: 1fr; }
+  .house-grid{ grid-template-columns: repeat(3, 1fr); }
+  .occ-grid{ grid-template-columns: 1fr; }
+  .bhavat-grid{ grid-template-columns: repeat(2, 1fr); }
+  .deeper-grid{ grid-template-columns: 1fr; }
+  .reader-grid{ grid-template-columns: 1fr; }
+  .planet-input-grid{ grid-template-columns: repeat(2, 1fr); }
+  .reader-output{ grid-template-columns: 1fr; }
 }
 @media (max-width: 620px){
   .planet-grid{ grid-template-columns: 1fr; }
@@ -385,6 +501,12 @@ footer .fglyph{ font-family:var(--font-display); font-size:1.3rem; color: var(--
   .varga-card.hero-varga{ grid-column: span 2; }
   .maitri-result{ grid-template-columns: 1fr; text-align:center; }
   .result-badge{ margin: 0 auto; }
+  .house-grid{ grid-template-columns: repeat(2, 1fr); }
+  .bhavat-grid{ grid-template-columns: 1fr 1fr; }
+  .planet-input-grid{ grid-template-columns: 1fr; }
+  .dasha-chip{ flex:1 1 100%; }
+  .tr-row{ grid-template-columns: 70px 1fr; }
+  .tr-row .tr-now{ grid-column: 1 / -1; text-align:left; }
 }
 @media (prefers-reduced-motion: reduce){
   .mandala-spin{ animation:none; }
@@ -408,6 +530,10 @@ footer .fglyph{ font-family:var(--font-display); font-size:1.3rem; color: var(--
       <a href="#dignity">Dignity</a>
       <a href="#maitri">Maitri</a>
       <a href="#vargas">Vargas</a>
+      <a href="#houses">Houses</a>
+      <a href="#dasha">Dasha</a>
+      <a href="#deeper">Ashtakavarga</a>
+      <a href="#reader">Reader</a>
       <a href="#chapters">Chapters</a>
     </div>
   </div>
@@ -547,6 +673,155 @@ footer .fglyph{ font-family:var(--font-display); font-size:1.3rem; color: var(--
   </div>
 </section>
 
+<section id="houses">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Bhava Phaladhyay · The 12 Houses</span>
+      <h2>The twelve arenas of life</h2>
+      <p>Planets are the actors and signs are their costumes — but the Houses (Bhavas) are the stage. Tap a house to see its arena, its classical Karaka (natural significator), and whether it belongs to the auspicious Kendra/Trikona group or the difficult Dusthana group.</p>
+    </div>
+    <div class="house-grid reveal" id="houseGrid"></div>
+
+    <div class="occupancy-compare reveal">
+      <div class="occ-head">
+        <span class="tag">Worked example · The Sun in House 10 vs House 12</span>
+        <h3>Same planet, opposite stage</h3>
+      </div>
+      <div class="occ-grid">
+        <div class="occ-card occ-good">
+          <div class="occ-top"><span class="occ-glyph">☉</span><span class="occ-house">10th House · Karma Bhava</span></div>
+          <p><b>Dig Bala (directional strength).</b> The Sun sits at its highest noon position here — career, authority and public visibility come effortlessly. Strong professional honors, an active bond with the father, and a healthy ego bound to real achievement.</p>
+        </div>
+        <div class="occ-card occ-hard">
+          <div class="occ-top"><span class="occ-glyph">☉</span><span class="occ-house">12th House · Vyaya Bhava</span></div>
+          <p><b>Hidden, exported inward.</b> Directly opposite the public 10th — friction with authority figures, recognition that's slow to arrive. The flip side: an exceptional placement for spiritual depth, research, and foreign or behind-the-scenes work.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bhavat-block reveal">
+      <div class="section-head" style="margin-bottom:20px;">
+        <span class="tag">Bhavat Bhavam · "From House to House"</span>
+        <h3 style="font-family:var(--font-display); font-size:1.3rem; color:var(--mist);">A house's hidden double</h3>
+        <p>To find a house's deeper core, count that same number of houses forward from itself. Parashara's key pairings:</p>
+      </div>
+      <div class="bhavat-grid" id="bhavatGrid"></div>
+    </div>
+  </div>
+</section>
+
+<section id="dasha">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Dashadhyay · Page 374</span>
+      <h2>Vimshottari Dasha — the 120&nbsp;year clock</h2>
+      <p>Your birth chart is a still photograph; the Dasha system is what makes it move. "Vimshottari" means 120 — the ideal human lifespan in the Kali Yuga — divided into nine planetary Mahadasha periods that always run in the same fixed order, starting from wherever the Moon sat at birth.</p>
+    </div>
+    <div class="dasha-sequence reveal" id="dashaSequence"></div>
+    <div class="concept-note reveal">
+      <b>Sub-periods (Antardasha).</b> Every Mahadasha is broken into smaller sub-periods ruled by each of the nine planets in turn. A person could be living the main period of Jupiter (expansion, learning) with the sub-period of Venus (relationships, wealth) — a blended flavor unique to those few years. Want your own timeline calculated against a real birth date? Jump to the <a href="#reader" style="color:var(--gold-soft); text-decoration:underline;">Reader</a> below.
+    </div>
+  </div>
+</section>
+
+<section id="deeper">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Ayurdayadhyay · p260 &amp; Ashtakavargadhyay · p317</span>
+      <h2>Longevity &amp; the Ashtakavarga points system</h2>
+      <p>Two of the text's most mathematically dense chapters — how long a life runs, and a point-based scoring system used to judge whether a transit will bless or burden you.</p>
+    </div>
+    <div class="deeper-grid reveal">
+      <div class="deeper-card">
+        <span class="dcard-tag">Longevity · 3 methods</span>
+        <h4>Pindayu, Amsayu, Nisargayu</h4>
+        <p>The astrologer first finds whichever of the Sun, Moon, or Ascendant is strongest — that decides which method applies.</p>
+        <ul class="method-list">
+          <li><b>Pindayu</b> — used when the Sun is strongest. Each planet has a fixed maximum year-count (Sun 19, Moon 25, Venus 21, Jupiter 15, Saturn 20…) reduced for debilitation, enemy signs, or combustion.</li>
+          <li><b>Amsayu</b> — used when the Ascendant is strongest. Years come from the exact degree/Navamsha a planet has traveled through its sign, not a fixed count.</li>
+          <li><b>Nisargayu</b> — used when the Moon is strongest. Fixed "natural" years (Moon 1, Mars 2, Mercury 9, Venus 20, Jupiter 18, Sun 20, Saturn 50) which sum to exactly 120.</li>
+        </ul>
+      </div>
+      <div class="deeper-card">
+        <span class="dcard-tag">Ashtakavarga · 8-fold division</span>
+        <h4>Bindus — a point system for transits</h4>
+        <p>The 7 visible planets plus the Ascendant (8 reference points) each drop a positive point — a <i>Bindu</i> — into houses they favor. Sum every planet's scorecard for one house and you get its <b>Sarva Ashtakavarga</b> total (337 points spread across the whole chart).</p>
+        <div class="bindu-scale">
+          <div class="bindu-row"><span>0–3</span><i>Weak / struggle</i></div>
+          <div class="bindu-row"><span>4</span><i>Average</i></div>
+          <div class="bindu-row"><span>5–8</span><i>Strong / auspicious</i></div>
+        </div>
+        <p style="margin-top:10px;">The golden rule: compare the 11th house (gains) to the 12th (losses) — more points in the 11th means wealth accumulates naturally.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reader">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Your chart · Manual entry</span>
+      <h2>Birth chart reader</h2>
+      <p>Enter what you already have from an existing chart — Ascendant, each planet's sign, birth date, and starting Dasha lord — and this applies the book's own rules to compute dignities, house lordships, which planets turn Yogakaraka (or Dusthana/Maraka) for your Ascendant, and a real calendar Dasha timeline.</p>
+    </div>
+
+    <div class="reader-tool reveal">
+      <div class="reader-grid">
+        <div class="field">
+          <label>Ascendant (Lagna) sign</label>
+          <select id="readerAsc"></select>
+        </div>
+        <div class="field">
+          <label>Birth date</label>
+          <input type="date" id="readerDob" value="2000-01-01">
+        </div>
+        <div class="field">
+          <label>Starting Mahadasha lord (from Moon's Nakshatra)</label>
+          <select id="readerStartDasha"></select>
+        </div>
+      </div>
+
+      <div class="planet-input-grid" id="readerPlanetInputs"></div>
+
+      <button class="reader-btn" id="readerGenerate" type="button">Generate reading</button>
+
+      <div class="reader-output" id="readerOutput" style="display:none;">
+        <div class="ro-block">
+          <h4>Dignity summary</h4>
+          <div class="table-scroll">
+            <table class="ref-table" id="readerDignityTable">
+              <thead><tr><th>Graha</th><th>Sign</th><th>House</th><th>Dignity</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ro-block">
+          <h4>House lords</h4>
+          <div class="table-scroll">
+            <table class="ref-table" id="readerHouseTable">
+              <thead><tr><th>House</th><th>Sign</th><th>Lord</th><th>Lord seated in</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ro-block ro-wide">
+          <h4>Functional roles for this Ascendant <span style="font-weight:500; color:var(--mist-dim); font-size:.7rem; text-transform:none; letter-spacing:0;">— Yogakaraka, Dusthana &amp; Maraka lords</span></h4>
+          <div class="table-scroll">
+            <table class="ref-table" id="readerYogaTable">
+              <thead><tr><th>Graha</th><th>Rules</th><th>Functional role</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ro-block ro-wide">
+          <h4>Vimshottari Dasha timeline</h4>
+          <div class="timeline-reader" id="readerDashaTimeline"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="chapters">
   <div class="wrap">
     <div class="section-head reveal">
@@ -619,6 +894,23 @@ const ELEMENT_INFO = {
   Water:{ color:"var(--moon)", direction:"North", trait:"Emotion, intuition, depth" },
 };
 
+// Devanagari lookup for every Rashi, and a helper that appends "(देवनागरी)"
+// after any sign name found in a string — used everywhere a Rashi is printed.
+const SIGN_DEV = {};
+SIGNS.forEach(s=> SIGN_DEV[s.name] = s.sanskrit);
+function withDev(str){
+  if(!str) return str;
+  return str.split(" · ").map(chunk=>{
+    const match = SIGNS.find(s=> chunk.startsWith(s.name));
+    if(!match) return chunk;
+    const rest = chunk.slice(match.name.length).trim(); // e.g. "(0°–20°)" or ""
+    if(rest.startsWith("(") && rest.endsWith(")")){
+      return `${match.name} (${match.sanskrit} · ${rest.slice(1,-1)})`;
+    }
+    return `${match.name} (${match.sanskrit})${rest ? " "+rest : ""}`;
+  }).join(" · ");
+}
+
 const VARGAS = [
   { d:"D-1", name:"Rashi", sanskrit:"राशि", area:"Physical body & general life path", desc:"The root chart — the full photograph of a person's entire reality.", hero:true },
   { d:"D-9", name:"Navamsha", sanskrit:"नवांश", area:"Soul, marriage, dharma", desc:"The most important Varga — the chart of the soul and inner nature. No prediction is finalised without it.", hero:true, star:"Essential" },
@@ -641,6 +933,41 @@ const CHAPTERS = [
   { sanskrit:"आयुर्दायाध्यायः", name:"Ayurdayadhyay", eng:"Longevity Calculation", page:260 },
   { sanskrit:"अष्टकवर्गाध्यायः", name:"Ashtakavargadhyay", eng:"Ashtakavarga System", page:317 },
   { sanskrit:"दशाध्यायः", name:"Dashadhyay", eng:"Planetary Periods (Vimshottari Dasha)", page:374 },
+];
+
+const HOUSES = [
+  { num:1, sanskrit:"लग्न भाव", name:"Lagna Bhava", group:"kendra", karaka:"Sun", arena:"Self, Body, Personality", desc:"Constitution, health, vitality, and how you project yourself onto the world." },
+  { num:2, sanskrit:"धन भाव", name:"Dhana Bhava", group:"other", karaka:"Jupiter", arena:"Wealth, Speech, Family, Food", desc:"Accumulated assets, early family upbringing, vocal expression, and diet." },
+  { num:3, sanskrit:"सहज भाव", name:"Sahaja Bhava", group:"other", karaka:"Mars", arena:"Courage, Siblings, Communication", desc:"Willpower, manual skill, hobbies, writing, and younger siblings." },
+  { num:4, sanskrit:"सुख भाव", name:"Sukha Bhava", group:"kendra", karaka:"Moon", arena:"Mother, Home, Vehicles, Happiness", desc:"Emotional foundations, real estate, land, luxury vehicles, domestic comfort." },
+  { num:5, sanskrit:"पुत्र भाव", name:"Putra Bhava", group:"trikona", karaka:"Jupiter", arena:"Children, Intellect, Purva Punya", desc:"Romance, speculative investing, education, mantra, past-life spiritual credit." },
+  { num:6, sanskrit:"शत्रु भाव", name:"Shatru Bhava", group:"dusthana", karaka:"Mars", arena:"Enemies, Debts, Disease", desc:"Daily routines, service, pets, and your capacity to handle conflict and competition." },
+  { num:7, sanskrit:"युवति भाव", name:"Yuvati Bhava", group:"kendra", karaka:"Venus", arena:"Marriage, Partnerships, Travel", desc:"The primary mirror house — nature of your life partner, public interactions, open contracts." },
+  { num:8, sanskrit:"रन्ध्र भाव", name:"Randhra Bhava", group:"dusthana", karaka:"Saturn", arena:"Longevity, Secrets, Joint Finances", desc:"Inheritance, unearned money, research, occult sciences, transformation, chronic challenges." },
+  { num:9, sanskrit:"धर्म भाव", name:"Dharma Bhava", group:"trikona", karaka:"Jupiter", arena:"Fortune, Father, Guru", desc:"Belief systems, religious inclination, luck, higher education, long journeys." },
+  { num:10, sanskrit:"कर्म भाव", name:"Karma Bhava", group:"kendra", karaka:"Sun", arena:"Career, Public Status, Authority", desc:"The highest point of visible achievement — profession, bosses/government, fame." },
+  { num:11, sanskrit:"लाभ भाव", name:"Labha Bhava", group:"other", karaka:"Jupiter", arena:"Gains, Income, Elder Siblings", desc:"Cash flow, business profits, large networks, and realization of ambitions." },
+  { num:12, sanskrit:"व्यय भाव", name:"Vyaya Bhava", group:"dusthana", karaka:"Saturn", arena:"Losses, Isolation, Moksha", desc:"Foreign settlement, the subconscious, dreams, hospitals, ashrams, letting go of ego." },
+];
+
+const BHAVAT = [
+  { from:"3rd", to:"5th", note:"True courage & communicative drive is read through internal intelligence and creative focus." },
+  { from:"7th", to:"1st", note:"Your relationship with yourself directly mirrors the health of your long-term partnerships." },
+  { from:"8th", to:"3rd", note:"The secondary house of lifespan — raw determination and vitality decide survival through crises." },
+  { from:"9th", to:"5th", note:"Current luck (9th) is generated entirely from the credit stored in your past-life reservoir (5th)." },
+];
+
+// Whole-sign house lordship — classical rulers of the 12 Rashi.
+const RASHI_LORDS = {
+  Aries:"mars", Taurus:"venus", Gemini:"mercury", Cancer:"moon", Leo:"sun", Virgo:"mercury",
+  Libra:"venus", Scorpio:"mars", Sagittarius:"jupiter", Capricorn:"saturn", Aquarius:"saturn", Pisces:"jupiter",
+};
+
+// Fixed Vimshottari cycle — always in this order, total 120 years.
+const DASHA_SEQUENCE = [
+  { key:"sun", years:6 }, { key:"moon", years:10 }, { key:"mars", years:7 },
+  { key:"rahu", years:18 }, { key:"jupiter", years:16 }, { key:"saturn", years:19 },
+  { key:"mercury", years:17 }, { key:"ketu", years:7 }, { key:"venus", years:20 },
 ];
 
 // Classical Naisargika (natural / permanent) friendship — the seven graha only.
@@ -742,10 +1069,10 @@ PLANETS.forEach(p=>{
           <h4>${p.name}</h4>
           <span class="pb-tag">${p.essence}</span>
         </div>
-        <div class="pb-row"><span class="k">Exalted in</span><span class="v">${p.exalt}${p.exaltDeg? " · "+p.exaltDeg:""}</span></div>
-        <div class="pb-row"><span class="k">Debilitated in</span><span class="v">${p.debil}</span></div>
-        <div class="pb-row"><span class="k">Moolatrikona</span><span class="v">${p.moola}</span></div>
-        <div class="pb-row"><span class="k">Own sign</span><span class="v">${p.own}</span></div>
+        <div class="pb-row"><span class="k">Exalted in</span><span class="v">${withDev(p.exalt)}${p.exaltDeg? " · "+p.exaltDeg:""}</span></div>
+        <div class="pb-row"><span class="k">Debilitated in</span><span class="v">${withDev(p.debil)}</span></div>
+        <div class="pb-row"><span class="k">Moolatrikona</span><span class="v">${withDev(p.moola)}</span></div>
+        <div class="pb-row"><span class="k">Own sign</span><span class="v">${withDev(p.own)}</span></div>
         <div class="pb-row"><span class="k">Nature</span><span class="v" style="font-family:var(--font-body); font-weight:600;">${p.nature}</span></div>
         <div class="pb-note">${p.represents}</div>
       </div>
@@ -816,8 +1143,7 @@ function renderZodiac(activeElement){
         <span class="sym">${s.symbol}</span>
         <span class="el-badge">${s.element}</span>
       </div>
-      <h4>${s.name}</h4>
-      <div class="sanskrit-sm">${s.sanskrit}</div>
+      <h4>${s.name} <span class="sanskrit-inline">(${s.sanskrit})</span></h4>
       <div class="sign-meta">
         <div><span>Direction</span><b>${info.direction}</b></div>
         <div><span>Temperament</span><b style="text-align:right;">${info.trait}</b></div>
@@ -849,7 +1175,7 @@ try{
 const dignityBody = document.querySelector("#dignityTable tbody");
 PLANETS.filter(p=>p.exaltDeg).forEach(p=>{
   const tr = document.createElement("tr");
-  tr.innerHTML = `<td class="planet-cell">${p.symbol} ${p.name}</td><td>${p.exalt} <b>${p.exaltDeg}</b></td><td>${p.debil}</td><td>${p.moola}</td>`;
+  tr.innerHTML = `<td class="planet-cell">${p.symbol} ${p.name}</td><td>${withDev(p.exalt)} <b>${p.exaltDeg}</b></td><td>${withDev(p.debil)}</td><td>${withDev(p.moola)}</td>`;
   dignityBody.appendChild(tr);
 });
 }catch(e){ console.error("dignity table render failed:", e); }
@@ -891,7 +1217,7 @@ try{
           callbacks:{
             label:(item)=>{
               const p = chartPlanets[item.dataIndex];
-              return [`Exalted: ${p.exalt} at ${p.exaltDeg}`, `Debilitated: ${p.debil} at same degree`];
+              return [`Exalted: ${withDev(p.exalt)} at ${p.exaltDeg}`, `Debilitated: ${withDev(p.debil)} at same degree`];
             }
           }
         }
@@ -984,6 +1310,199 @@ VARGAS.forEach(v=>{
   vargaGrid.appendChild(card);
 });
 }catch(e){ console.error("varga render failed:", e); }
+
+/* ============================================================
+   RENDER: HOUSES
+   ============================================================ */
+try{
+const houseGrid = document.getElementById("houseGrid");
+const GROUP_LABEL = { kendra:"Kendra", trikona:"Trikona", dusthana:"Dusthana", other:"—" };
+HOUSES.forEach(h=>{
+  const card = document.createElement("div");
+  card.className = "house-card";
+  card.innerHTML = `
+    <div class="hc-top">
+      <span class="hc-num">${h.num}</span>
+      <span class="hc-group ${h.group}">${GROUP_LABEL[h.group]}</span>
+    </div>
+    <h4>${h.name}</h4>
+    <div class="hc-sanskrit">${h.sanskrit}</div>
+    <p><b style="color:var(--mist);">${h.arena}.</b> ${h.desc}</p>
+    <div class="hc-karaka">Karaka · ${h.karaka}</div>
+  `;
+  houseGrid.appendChild(card);
+});
+
+const bhavatGrid = document.getElementById("bhavatGrid");
+BHAVAT.forEach(b=>{
+  const card = document.createElement("div");
+  card.className = "bhavat-card";
+  card.innerHTML = `<div class="bh-eq">${b.from} → ${b.to}</div><p>${b.note}</p>`;
+  bhavatGrid.appendChild(card);
+});
+}catch(e){ console.error("houses render failed:", e); }
+
+/* ============================================================
+   RENDER: DASHA SEQUENCE
+   ============================================================ */
+try{
+const dashaSeq = document.getElementById("dashaSequence");
+DASHA_SEQUENCE.forEach((d,i)=>{
+  const p = PLANETS.find(pl=>pl.key===d.key);
+  const chip = document.createElement("div");
+  chip.className = "dasha-chip";
+  chip.style.setProperty("--pc", p.color);
+  chip.innerHTML = `
+    <div class="dc-top"><span class="dc-glyph">${p.symbol}</span><span class="dc-years">${d.years}y</span></div>
+    <h4>${p.name}</h4>
+    <p>${p.sanskrit}</p>
+    ${i < DASHA_SEQUENCE.length-1 ? `<span class="dc-arrow">→</span>` : ``}
+  `;
+  dashaSeq.appendChild(chip);
+});
+}catch(e){ console.error("dasha sequence render failed:", e); }
+
+/* ============================================================
+   READER TOOL
+   ============================================================ */
+try{
+const SIGN_NAMES = SIGNS.map(s=>s.name);
+const ascSel = document.getElementById("readerAsc");
+SIGN_NAMES.forEach(s=> ascSel.add(new Option(`${s} (${SIGN_DEV[s]})`, s)));
+ascSel.value = "Aries";
+
+const startDashaSel = document.getElementById("readerStartDasha");
+DASHA_SEQUENCE.forEach(d=>{
+  const p = PLANETS.find(pl=>pl.key===d.key);
+  startDashaSel.add(new Option(`${p.symbol} ${p.name} (${d.years}y)`, d.key));
+});
+startDashaSel.value = "moon";
+
+const planetInputs = document.getElementById("readerPlanetInputs");
+PLANETS.forEach(p=>{
+  const field = document.createElement("div");
+  field.className = "pi-field";
+  field.style.setProperty("--pc", p.color);
+  field.innerHTML = `<label>${p.symbol} ${p.name}</label><select data-key="${p.key}"></select>`;
+  const sel = field.querySelector("select");
+  SIGN_NAMES.forEach(s=> sel.add(new Option(`${s} (${SIGN_DEV[s]})`, s)));
+  sel.value = SIGN_NAMES[PLANETS.indexOf(p) % 12];
+  planetInputs.appendChild(field);
+});
+
+function dignityOf(p, sign){
+  const owns = (p.own||"").split("·").map(s=>s.trim());
+  if(p.exalt === sign) return { label:"Exalted", cls:"exalted" };
+  if(p.debil === sign) return { label:"Debilitated", cls:"debilitated" };
+  if((p.moola||"").startsWith(sign)) return { label:"Moolatrikona", cls:"moola" };
+  if(owns.includes(sign)) return { label:"Own sign", cls:"own" };
+  return { label:"Neutral", cls:"neutral" };
+}
+
+function houseOfSign(ascSign, sign){
+  const ai = SIGN_NAMES.indexOf(ascSign), si = SIGN_NAMES.indexOf(sign);
+  return ((si - ai + 12) % 12) + 1;
+}
+
+document.getElementById("readerGenerate").addEventListener("click", ()=>{
+  const asc = ascSel.value;
+  const dob = document.getElementById("readerDob").value;
+  const startKey = startDashaSel.value;
+
+  // gather planet placements
+  const placements = {};
+  planetInputs.querySelectorAll("select").forEach(sel=>{
+    placements[sel.dataset.key] = sel.value;
+  });
+
+  // --- Dignity table ---
+  const dignityBody = document.querySelector("#readerDignityTable tbody");
+  dignityBody.innerHTML = "";
+  PLANETS.forEach(p=>{
+    const sign = placements[p.key];
+    const house = houseOfSign(asc, sign);
+    const dig = dignityOf(p, sign);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="planet-cell">${p.symbol} ${p.name}</td><td>${withDev(sign)}</td><td>House ${house}</td><td><span class="dignity-pill ${dig.cls}">${dig.label}</span></td>`;
+    dignityBody.appendChild(tr);
+  });
+
+  // --- House lords table ---
+  const houseBody = document.querySelector("#readerHouseTable tbody");
+  houseBody.innerHTML = "";
+  const ascIndex = SIGN_NAMES.indexOf(asc);
+  for(let n=1; n<=12; n++){
+    const sign = SIGN_NAMES[(ascIndex + n - 1) % 12];
+    const lordKey = RASHI_LORDS[sign];
+    const lordPlanet = PLANETS.find(pl=>pl.key===lordKey);
+    let seated = "—";
+    if(lordKey && placements[lordKey]){
+      seated = "House " + houseOfSign(asc, placements[lordKey]);
+    }
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>House ${n}</td><td>${withDev(sign)}</td><td class="planet-cell">${lordPlanet? lordPlanet.symbol+" "+lordPlanet.name : "—"}</td><td>${seated}</td>`;
+    houseBody.appendChild(tr);
+  }
+
+  // --- Functional planet roles (Yogakaraka / Kendra / Trikona / Dusthana / Maraka) ---
+  const yogaBody = document.querySelector("#readerYogaTable tbody");
+  yogaBody.innerHTML = "";
+  const KENDRA_H = [1,4,7,10], TRIKONA_H = [1,5,9], DUSTHANA_H = [6,8,12], MARAKA_H = [2,7];
+  PLANETS.slice(0,7).forEach(p=>{ // the 7 classical rulers — Rahu/Ketu own no signs
+    const ownedSigns = Object.keys(RASHI_LORDS).filter(sign=> RASHI_LORDS[sign]===p.key);
+    const ownedHouses = ownedSigns.map(sign=> houseOfSign(asc, sign));
+    const tags = [];
+    const hasKendraOnly = ownedHouses.some(h=> [4,7,10].includes(h));
+    const hasTrikonaOnly = ownedHouses.some(h=> [5,9].includes(h));
+    if(hasKendraOnly && hasTrikonaOnly) tags.push("Yogakaraka");
+    if(ownedHouses.some(h=> KENDRA_H.includes(h))) tags.push("Kendra lord");
+    if(ownedHouses.some(h=> TRIKONA_H.includes(h))) tags.push("Trikona lord");
+    if(ownedHouses.some(h=> DUSTHANA_H.includes(h))) tags.push("Dusthana lord");
+    if(ownedHouses.some(h=> MARAKA_H.includes(h))) tags.push("Maraka");
+    const uniqueTags = [...new Set(tags)];
+    const rulesText = ownedSigns.map((s,i)=> `${withDev(s)} (H${ownedHouses[i]})`).join(", ");
+    const roleText = uniqueTags.length ? uniqueTags.map(t=>{
+      const cls = t==="Yogakaraka" ? "exalted" : t==="Dusthana lord" ? "debilitated" : t==="Maraka" ? "moola" : "own";
+      return `<span class="dignity-pill ${cls}">${t}</span>`;
+    }).join(" ") : `<span class="dignity-pill neutral">Neutral</span>`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="planet-cell">${p.symbol} ${p.name}</td><td>${rulesText}</td><td>${roleText}</td>`;
+    yogaBody.appendChild(tr);
+  });
+
+  // --- Dasha timeline ---
+  const tl = document.getElementById("readerDashaTimeline");
+  tl.innerHTML = "";
+  if(dob){
+    const startIdx = DASHA_SEQUENCE.findIndex(d=>d.key===startKey);
+    let cursor = new Date(dob);
+    const today = new Date();
+    for(let i=0; i<DASHA_SEQUENCE.length; i++){
+      const d = DASHA_SEQUENCE[(startIdx + i) % DASHA_SEQUENCE.length];
+      const p = PLANETS.find(pl=>pl.key===d.key);
+      const start = new Date(cursor);
+      const end = new Date(cursor);
+      end.setFullYear(end.getFullYear() + d.years);
+      const isActive = today >= start && today < end;
+      const row = document.createElement("div");
+      row.className = "tr-row" + (isActive? " tr-active":"");
+      row.style.setProperty("--pc", p.color);
+      row.innerHTML = `
+        <div class="tr-planet">${p.symbol} ${p.name}</div>
+        <div class="tr-range">${start.toISOString().slice(0,10)} → ${end.toISOString().slice(0,10)} · ${d.years}y</div>
+        <div class="tr-now">${isActive? "● Current":""}</div>
+      `;
+      tl.appendChild(row);
+      cursor = end;
+    }
+  } else {
+    tl.innerHTML = `<p style="color:var(--mist-dim); font-size:.85rem;">Enter a birth date above to calculate real calendar dates.</p>`;
+  }
+
+  document.getElementById("readerOutput").style.display = "grid";
+  document.getElementById("readerOutput").scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+}catch(e){ console.error("reader tool render failed:", e); }
 
 /* ============================================================
    RENDER: CHAPTER TIMELINE
