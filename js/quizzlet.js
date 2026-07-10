@@ -1,6 +1,6 @@
 /**
  * ApexLearn Quizz — app logic
- * All question data is fetched at runtime from apex_quiz.json (never hardcoded here).
+ * All question data is fetched at runtime from ../data/apex_quiz.json (never hardcoded here).
  * NOTE: fetch() requires this file to be served over http(s) — e.g. `npx serve` or
  * `python -m http.server` locally, or any static host in production. Opening
  * index.html directly via file:// will block the fetch in most browsers.
@@ -20,11 +20,10 @@
   const state = {
     allQuestions: [],
     categories: [],           // [{ key, name, count, questions }]
+    chapters: [],             // chapter study-guide summaries, from ../data/chapters.json
     selectedQuizCategory: null,
     selectedQuizLength: null,
-    selectedLearnCategory: null,
     selectedExamLength: null,
-    flashcards: { list: [], index: 0 },
     progress: null,
   };
 
@@ -120,13 +119,13 @@
   }
 
   /* ---------------------------------------------------
-     DATA LOADING (from apex_quiz.json — the single source of truth)
+     DATA LOADING (from ../data/apex_quiz.json — the single source of truth)
   --------------------------------------------------- */
   async function loadQuestions() {
-    const res = await fetch('..//data/apex_quiz.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Failed to load apex_quiz.json (${res.status})`);
+    const res = await fetch('../data/apex_quiz.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to load ../data/apex_quiz.json (${res.status})`);
     const data = await res.json();
-    if (!Array.isArray(data) || !data.length) throw new Error('apex_quiz.json is empty or malformed');
+    if (!Array.isArray(data) || !data.length) throw new Error('../data/apex_quiz.json is empty or malformed');
 
     const map = new Map();
     data.forEach((q) => {
@@ -406,54 +405,191 @@
   }
 
   /* ---------------------------------------------------
-     LEARN TAB (flashcards)
+     LEARN TAB — CHAPTER STUDY GUIDE
   --------------------------------------------------- */
-  function selectLearnCategory(key) {
-    state.selectedLearnCategory = key;
-    renderCategoryPills(qs('learnCategoryNav'), key, selectLearnCategory);
-    const cat = state.categories.find((c) => c.key === key);
-    if (!cat) return;
-    state.flashcards.list = cat.questions;
-    state.flashcards.index = 0;
-    renderFlashcard();
+  async function loadChapters() {
+    const res = await fetch('../data/chapters.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to load ../data/chapters.json (${res.status})`);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('../data/chapters.json is malformed');
+    state.chapters = data;
   }
 
-  function renderFlashcard() {
-    const { list, index } = state.flashcards;
-    if (!list.length) return;
-    const q = list[index];
+  // Best-effort match from a ../data/chapters.json entry to an actual quiz category,
+  // so "Quiz me on this chapter" opens the right topic even if section naming
+  // drifts slightly between ../data/chapters.json and ../data/apex_quiz.json.
+  function resolveCategoryForChapter(chapter) {
+    if (!state.categories.length) return null;
+    const targetKey = slugify(chapter.section || chapter.title);
+    let match = state.categories.find((c) => c.key === targetKey);
+    if (match) return match;
 
-    qs('flashMeta').textContent = `Card ${index + 1} of ${list.length}`;
-    qs('flashcard').classList.remove('flipped');
-    qs('flashQuestion').textContent = q.question;
-
-    const correctOpt = q.options.find((o) => parseOption(o).letter === q.correct_answer);
-    qs('flashAnswer').textContent = correctOpt ? parseOption(correctOpt).text : '';
-    qs('flashExplanation').textContent = q.explanation || '';
+    if (chapter.number) {
+      const numRe = new RegExp(`chapter\\s*${chapter.number}\\b`, 'i');
+      match = state.categories.find((c) => numRe.test(c.name));
+      if (match) return match;
+    }
+    return null;
   }
 
-  function initFlashcardControls() {
-    qs('flashcard').addEventListener('click', () => qs('flashcard').classList.toggle('flipped'));
+  function getScoreBadge(cat) {
+    if (!cat) return null;
+    const best = state.progress.bestByCategory[cat.key];
+    if (!best) return null;
+    const cls = best.percent >= 85 ? 'high' : best.percent >= 60 ? 'mid' : 'low';
+    return { pct: best.percent, cls };
+  }
 
-    qs('flashPrevBtn').addEventListener('click', () => {
-      const fc = state.flashcards;
-      if (!fc.list.length) return;
-      fc.index = (fc.index - 1 + fc.list.length) % fc.list.length;
-      renderFlashcard();
+  function buildPointHtml(point) {
+    const text = point.term
+      ? `<strong>${escapeHtml(point.term)}:</strong> ${escapeHtml(point.text)}`
+      : escapeHtml(point.text);
+    const code = point.code
+      ? `<div class="chapter-code-block">${escapeHtml(point.code)}</div>`
+      : '';
+    return `
+      <div class="chapter-point">
+        <span class="chapter-point-dot"></span>
+        <div class="chapter-point-text">${text}${code}</div>
+      </div>
+    `;
+  }
+
+  function buildTopicHtml(topic) {
+    const intro = topic.intro ? `<p class="chapter-topic-intro">${escapeHtml(topic.intro)}</p>` : '';
+    const points = topic.points.map(buildPointHtml).join('');
+    return `
+      <div class="chapter-topic">
+        <h4>${escapeHtml(topic.heading)}</h4>
+        ${intro}
+        <div class="chapter-point-list">${points}</div>
+      </div>
+    `;
+  }
+
+  function renderChapterSummaries() {
+    const list = qs('chapterSummaryList');
+    if (!state.chapters.length) {
+      list.innerHTML = '<p class="empty-state">No chapter summaries available yet.</p>';
+      return;
+    }
+
+    list.innerHTML = '';
+
+    state.chapters.forEach((chapter) => {
+      const cat = resolveCategoryForChapter(chapter);
+      const badge = getScoreBadge(cat);
+      const badgeHtml = badge
+        ? `<div class="chapter-summary-score ${badge.cls}">${badge.pct}%</div>`
+        : '';
+
+      const topicsHtml = chapter.sections.map(buildTopicHtml).join('');
+
+      const card = document.createElement('div');
+      card.className = 'chapter-summary-card';
+      card.dataset.key = chapter.key;
+      card.innerHTML = `
+        <button type="button" class="chapter-summary-header" data-action="toggle">
+          <div class="chapter-summary-icon"><i class="ti ${chapter.icon || 'ti-book-2'}"></i></div>
+          <div class="chapter-summary-heading">
+            <span class="chapter-summary-eyebrow">Chapter ${chapter.number}</span>
+            <h3>${escapeHtml(chapter.title)}</h3>
+          </div>
+          ${badgeHtml}
+          <i class="ti ti-chevron-down chapter-summary-chevron"></i>
+        </button>
+        <div class="chapter-summary-body">
+          <div class="chapter-summary-inner">
+            <p class="chapter-summary-intro">${escapeHtml(chapter.intro)}</p>
+            ${topicsHtml}
+            <button type="button" class="chapter-quiz-cta" data-action="quiz" data-key="${chapter.key}">
+              <i class="ti ti-list-check"></i> Quiz me on Chapter ${chapter.number}
+            </button>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
     });
 
-    qs('flashNextBtn').addEventListener('click', () => {
-      const fc = state.flashcards;
-      if (!fc.list.length) return;
-      fc.index = (fc.index + 1) % fc.list.length;
-      renderFlashcard();
+    updateLearnToolbarStat();
+  }
+
+  function updateLearnToolbarStat() {
+    const total = state.chapters.length;
+    const quizzesTaken = state.progress.attempts.length;
+    qs('learnToolbarStat').textContent = quizzesTaken
+      ? `${total} chapter${total === 1 ? '' : 's'} · ${quizzesTaken} quiz${quizzesTaken === 1 ? '' : 'zes'} taken`
+      : `${total} chapter${total === 1 ? '' : 's'} to review`;
+  }
+
+  function switchToSection(sectionId) {
+    const btn = document.querySelector(`.nav-btn[data-section="${sectionId}"]`);
+    if (btn) btn.click();
+  }
+
+  function initLearnControls() {
+    const list = qs('chapterSummaryList');
+
+    list.addEventListener('click', (e) => {
+      const quizBtn = e.target.closest('.chapter-quiz-cta');
+      if (quizBtn) {
+        const chapter = state.chapters.find((c) => c.key === quizBtn.dataset.key);
+        const cat = chapter ? resolveCategoryForChapter(chapter) : null;
+        if (cat) selectQuizCategory(cat.key);
+        switchToSection('quizz');
+        return;
+      }
+
+      const header = e.target.closest('.chapter-summary-header');
+      if (header) {
+        const card = header.closest('.chapter-summary-card');
+        card.classList.toggle('open');
+        syncToggleAllLabel();
+      }
     });
 
-    qs('flashShuffleBtn').addEventListener('click', () => {
-      state.flashcards.list = shuffle(state.flashcards.list);
-      state.flashcards.index = 0;
-      renderFlashcard();
+    qs('learnToggleAllBtn').addEventListener('click', () => {
+      const cards = Array.from(list.querySelectorAll('.chapter-summary-card'));
+      const anyClosed = cards.some((c) => !c.classList.contains('open'));
+      cards.forEach((c) => c.classList.toggle('open', anyClosed));
+      syncToggleAllLabel();
     });
+
+    qs('learnExamCta').addEventListener('click', () => switchToSection('test'));
+  }
+
+  function syncToggleAllLabel() {
+    const cards = Array.from(qs('chapterSummaryList').querySelectorAll('.chapter-summary-card'));
+    const allOpen = cards.length > 0 && cards.every((c) => c.classList.contains('open'));
+    qs('learnToggleAllBtn').textContent = allOpen ? 'Collapse All' : 'Expand All';
+  }
+
+  // Updates just the score badges (called after any quiz/exam finishes) without
+  // rebuilding the cards, so any chapters the learner has open stay open.
+  function refreshChapterSummaryScores() {
+    const list = qs('chapterSummaryList');
+    if (!list) return;
+    state.chapters.forEach((chapter) => {
+      const card = list.querySelector(`.chapter-summary-card[data-key="${chapter.key}"]`);
+      if (!card) return;
+      const cat = resolveCategoryForChapter(chapter);
+      const badge = getScoreBadge(cat);
+      const header = card.querySelector('.chapter-summary-header');
+      const chevron = card.querySelector('.chapter-summary-chevron');
+      let badgeEl = card.querySelector('.chapter-summary-score');
+
+      if (badge) {
+        if (!badgeEl) {
+          badgeEl = document.createElement('div');
+          header.insertBefore(badgeEl, chevron);
+        }
+        badgeEl.className = `chapter-summary-score ${badge.cls}`;
+        badgeEl.textContent = `${badge.pct}%`;
+      } else if (badgeEl) {
+        badgeEl.remove();
+      }
+    });
+    updateLearnToolbarStat();
   }
 
   /* ---------------------------------------------------
@@ -531,26 +667,25 @@
     const list = qs('categoryProgressList');
     if (!state.categories.length) {
       list.innerHTML = '';
-      return;
-    }
-    if (!categoriesPracticed) {
+    } else if (!categoriesPracticed) {
       list.innerHTML = '<p class="progress-empty">Take a quiz to see your best scores here.</p>';
-      return;
+    } else {
+      list.innerHTML = '';
+      state.categories.forEach((cat) => {
+        const best = p.bestByCategory[cat.key];
+        const pct = best ? best.percent : 0;
+        const row = document.createElement('div');
+        row.className = 'progress-row';
+        row.innerHTML = `
+          <span class="progress-name">${escapeHtml(cat.name)}</span>
+          <span class="progress-track"><span class="progress-fill" style="width:${pct}%"></span></span>
+          <span class="progress-pct">${best ? pct + '%' : '—'}</span>
+        `;
+        list.appendChild(row);
+      });
     }
 
-    list.innerHTML = '';
-    state.categories.forEach((cat) => {
-      const best = p.bestByCategory[cat.key];
-      const pct = best ? best.percent : 0;
-      const row = document.createElement('div');
-      row.className = 'progress-row';
-      row.innerHTML = `
-        <span class="progress-name">${escapeHtml(cat.name)}</span>
-        <span class="progress-track"><span class="progress-fill" style="width:${pct}%"></span></span>
-        <span class="progress-pct">${best ? pct + '%' : '—'}</span>
-      `;
-      list.appendChild(row);
-    });
+    refreshChapterSummaryScores();
   }
 
   function initProfileControls() {
@@ -564,12 +699,12 @@
   }
 
   /* ---------------------------------------------------
-     ERROR STATE (e.g. apex_quiz.json missing or blocked)
+     ERROR STATE (e.g. ../data/apex_quiz.json missing or blocked)
   --------------------------------------------------- */
   function showLoadError() {
     qs('cardBadge').textContent = 'Error';
     qs('cardTitle').textContent = 'Could not load questions';
-    qs('cardDesc').textContent = 'Make sure apex_quiz.json sits alongside index.html and that this page is served over http(s) — opening it directly as a file:// URL blocks the fetch in most browsers.';
+    qs('cardDesc').textContent = 'Make sure ../data/apex_quiz.json sits alongside index.html and that this page is served over http(s) — opening it directly as a file:// URL blocks the fetch in most browsers.';
     qs('lengthOptions').innerHTML = '';
     qs('examBadge').textContent = 'Error';
   }
@@ -618,10 +753,16 @@
     });
     qs('startQuizBtn').addEventListener('click', startPracticeQuiz);
 
+    try {
+      await loadChapters();
+    } catch (err) {
+      console.error(err);
+      state.chapters = [];
+    }
+
     // Learn tab
-    renderCategoryPills(qs('learnCategoryNav'), firstCategoryKey, selectLearnCategory);
-    selectLearnCategory(firstCategoryKey);
-    initFlashcardControls();
+    renderChapterSummaries();
+    initLearnControls();
 
     // Test tab
     renderExamSetup();

@@ -103,41 +103,29 @@
 
     </section>
 
-    <!-- ============ LEARN (flashcard study mode) ============ -->
+    <!-- ============ LEARN (chapter-by-chapter study guide) ============ -->
     <section id="learn" class="content-section">
 
       <header class="quiz-header">
         <h2>Learn</h2>
-        <p>Study questions and explanations at your own pace.</p>
+        <p>Read through each chapter, then quiz yourself on what you just covered.</p>
       </header>
 
-      <nav class="quiz-category-nav" id="learnCategoryNav">
-        <!-- category pills injected by quizzlet.js -->
-      </nav>
-
-      <div id="flashcardView">
-        <div class="flash-meta" id="flashMeta">Card 1 of 20</div>
-
-        <div class="flashcard" id="flashcard">
-          <div class="flashcard-inner" id="flashcardInner">
-            <div class="flashcard-face flashcard-front">
-              <span class="flash-hint">Tap card to reveal answer</span>
-              <p class="flash-question" id="flashQuestion">Loading…</p>
-            </div>
-            <div class="flashcard-face flashcard-back">
-              <span class="flash-answer-label">Correct Answer</span>
-              <p class="flash-answer" id="flashAnswer"></p>
-              <p class="flash-explanation" id="flashExplanation"></p>
-            </div>
-          </div>
-        </div>
-
-        <div class="flash-nav">
-          <button class="secondary-btn" id="flashPrevBtn"><i class="ti ti-chevron-left"></i> Prev</button>
-          <button class="secondary-btn" id="flashShuffleBtn"><i class="ti ti-arrows-shuffle"></i> Shuffle</button>
-          <button class="secondary-btn" id="flashNextBtn">Next <i class="ti ti-chevron-right"></i></button>
-        </div>
+      <div class="learn-toolbar">
+        <div class="learn-toolbar-stat" id="learnToolbarStat">Loading chapters…</div>
+        <button class="learn-toggle-all-btn" id="learnToggleAllBtn">Expand All</button>
       </div>
+
+      <div id="chapterSummaryList" class="chapter-summary-list"></div>
+
+      <button class="exam-cta" id="learnExamCta">
+        <div class="exam-cta-icon"><i class="ti ti-alarm"></i></div>
+        <div class="exam-cta-text">
+          <strong>Covered everything?</strong>
+          <span>Take the full timed mock exam over in the Test tab</span>
+        </div>
+        <i class="ti ti-chevron-right"></i>
+      </button>
 
     </section>
 

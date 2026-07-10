@@ -1,0 +1,201 @@
+[
+  {
+    "key": "chapter-3",
+    "number": 3,
+    "title": "Salesforce Automation Tools",
+    "section": "Chapter 3: Salesforce Automatization Tools",
+    "icon": "ti-bolt",
+    "intro": "Automation is the cornerstone of an efficient Salesforce org. It lets businesses streamline processes, enforce data integrity, and cut down manual entry errors. In modern Salesforce development, declarative tools are strongly preferred over programmatic ones for standard use cases.",
+    "sections": [
+      {
+        "heading": "3.1 Quick Actions, Page Layouts & Record Types",
+        "points": [
+          { "term": "Quick Actions", "text": "Let users rapidly create or update records, log calls, send emails, or invoke Lightning components. Can be global or object-specific." },
+          { "term": "Page Layouts", "text": "Control which fields, related lists, and buttons appear on a record page. UI-level only — this can be bypassed via the API." },
+          { "term": "Record Types", "text": "Offer different business processes, picklist values, and page layouts to different users based on their profile." }
+        ]
+      },
+      {
+        "heading": "3.2 Validation Rules & Approval Processes",
+        "points": [
+          { "term": "Validation Rules", "text": "Enforce data quality by conditionally blocking record saves. They evaluate a formula on create/update — if it returns True, an error shows and the transaction rolls back." },
+          { "term": "Approval Processes", "text": "Route records through a sequence of steps for approval by designated users. They can lock records from editing during the cycle, and trigger actions (Email Alerts, Field Updates, Outbound Messages, Tasks) on approval or rejection." }
+        ]
+      },
+      {
+        "heading": "3.3 Declarative Programming with Flows",
+        "intro": "With Process Builder and Workflow Rules retired, Flow is the premier declarative automation tool.",
+        "points": [
+          { "term": "Screen Flows", "text": "Guide users through a multi-step UI to collect and update data." },
+          { "term": "Record-Triggered Flows", "text": "Fire automatically on record create, update, or delete. Run before save (fast field updates) or after save (update related records / perform actions)." },
+          { "term": "Schedule-Triggered Flows", "text": "Run in the background at a set time and frequency for a batch of records." },
+          { "term": "Autolaunched Flows", "text": "Invoked by Apex, the REST API, or other Flows without any user interaction." }
+        ]
+      },
+      {
+        "heading": "3.4 Flow Components",
+        "intro": "Flows are built from a visual interface composed of:",
+        "points": [
+          { "term": "Elements", "text": "Actions (create/update/delete records), Logic (assignments, decisions, loops), and Data (getting records)." },
+          { "term": "Resources", "text": "Variables, constants, formulas, and choices used to store and manipulate data during execution." },
+          { "term": "Connectors", "text": "The lines that define the execution path between elements." }
+        ]
+      },
+      {
+        "heading": "3.5 Building a Flow — Best Practices",
+        "points": [
+          { "term": "Don't hardcode IDs", "text": "Always query for the ID, or use custom labels/metadata instead." },
+          { "term": "Bulkification", "text": "Flows auto-bulkify DML and SOQL, but never place a \"Get Records\" or \"Update Records\" element inside a Loop." },
+          { "term": "Error Handling", "text": "Use Fault Paths to catch exceptions and notify admins." }
+        ]
+      },
+      {
+        "heading": "3.6 Invocable Methods in Flows",
+        "intro": "When Flow can't achieve a complex requirement, it can call Apex.",
+        "points": [
+          { "text": "Use the @InvocableMethod annotation on an Apex method." },
+          { "text": "Only one invocable method is allowed per class." },
+          { "text": "The method must be static and public or global." },
+          { "text": "It accepts a List<T> of inputs and returns a List<T> of outputs — keeping it bulkification-safe for Flow." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-4",
+    "number": 4,
+    "title": "Apex Programming",
+    "section": "Chapter 4: Apex Programming",
+    "icon": "ti-code",
+    "intro": "Apex is a strongly typed, object-oriented language that executes on Salesforce's servers. It has Java-like syntax and acts as the controller in Salesforce's MVC architecture.",
+    "sections": [
+      {
+        "heading": "4.1 Apex Language Syntax",
+        "points": [
+          { "text": "Case-insensitive." },
+          { "text": "Statements end with a semicolon (;)." },
+          { "text": "Strongly typed — variable data types must be declared." },
+          { "text": "Multi-tenant aware, with strictly enforced governor limits." }
+        ]
+      },
+      {
+        "heading": "4.2 Anonymous Window (Developer Console)",
+        "points": [
+          { "text": "Lets developers run ad-hoc Apex without writing a formal class — handy for debugging, data fixes, or testing logic. Code here runs in the user's context and still consumes governor limits." }
+        ]
+      },
+      {
+        "heading": "4.3 Variable Data Types",
+        "points": [
+          { "term": "Primitives", "text": "Integer, Double, Long, Decimal, Boolean, String, Date, Datetime, Time, Id, Blob — all are objects and default to null." },
+          { "term": "sObjects", "text": "Represent Salesforce records, e.g. Account a = new Account();" },
+          { "term": "Enums", "text": "Abstract data types storing a finite set of identifiers." }
+        ]
+      },
+      {
+        "heading": "4.4 Collections",
+        "intro": "Apex provides three primary collection types:",
+        "points": [
+          { "term": "Lists", "text": "Ordered, allow duplicates, accessed via a 0-based index.", "code": "List<String> names = new List<String>();\nnames.add('Alice');" },
+          { "term": "Sets", "text": "Unordered, unique elements — highly optimized for .contains() checks.", "code": "Set<Id> accountIds = new Set<Id>();" },
+          { "term": "Maps", "text": "Key-value pairs with unique keys — great for pairing record IDs with the actual sObject.", "code": "Map<Id, Account> accountMap = new Map<Id, Account>(\n  [SELECT Id, Name FROM Account]\n);" }
+        ]
+      },
+      {
+        "heading": "4.5 Operators & Control Statements",
+        "points": [
+          { "term": "If-Else", "text": "Standard conditional execution." },
+          { "term": "Switch", "text": "Evaluates a single expression against multiple values — Apex's version of switch-case." },
+          { "term": "Loops", "text": "for (Integer i = 0; i < 10; i++) · for (String name : namesList) · for (Account acc : [SELECT Id FROM Account]) — the SOQL for-loop, optimized for heap space." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-5",
+    "number": 5,
+    "title": "Data Manipulation Language (DML)",
+    "section": "Chapter 5: Data Manipulation Language (DML)",
+    "icon": "ti-database",
+    "intro": "DML is the toolset used to modify data in Salesforce — inserting, updating, and removing records safely and at scale.",
+    "sections": [
+      {
+        "heading": "5.1 DML Statements & Operations",
+        "points": [
+          { "text": "Core statements: insert, update, upsert, delete, undelete, merge." },
+          { "term": "DML limits", "text": "150 statements per synchronous transaction; 10,000 records processed per transaction." }
+        ]
+      },
+      {
+        "heading": "5.2 Database Class Methods",
+        "points": [
+          { "term": "Standalone DML", "text": "insert accountList; runs \"all or nothing\" — if one record fails, the entire transaction rolls back.", "code": "insert accountList;" },
+          { "term": "Database Class methods", "text": "Setting allOrNone to false allows partial success: successful records commit, and failures are returned in an error array.", "code": "Database.insert(accountList, false);" }
+        ]
+      },
+      {
+        "heading": "5.3 Schema Classes & Methods",
+        "intro": "Used to retrieve metadata information dynamically at runtime.",
+        "points": [
+          { "text": "Schema.getGlobalDescribe()" },
+          { "text": "Schema.DescribeSObjectResult" },
+          { "text": "Useful for checking field-level security (isAccessible(), isUpdateable()) before performing DML." }
+        ]
+      },
+      {
+        "heading": "5.4 Database.Batchable Interface",
+        "intro": "For processing millions of records without hitting standard synchronous limits.",
+        "points": [
+          { "term": "start()", "text": "Collects the records or objects to be processed (returns a Database.QueryLocator or Iterable)." },
+          { "term": "execute()", "text": "Performs the actual processing on the current chunk of data." },
+          { "term": "finish()", "text": "Runs post-processing operations, like sending a completion email." },
+          { "text": "Requires Database.Stateful to maintain state across execution chunks." }
+        ]
+      },
+      {
+        "heading": "5.5 Exceptions",
+        "points": [
+          { "term": "NullPointerException", "text": "Thrown when dereferencing a null object." },
+          { "term": "DmlException", "text": "Catches database constraint violations." },
+          { "term": "QueryException", "text": "Thrown when assigning a list of records to a single sObject variable but the query returns 0 or more than 1 record." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-6",
+    "number": 6,
+    "title": "SOQL and SOSL",
+    "section": "Chapter 6: SOQL and SOSL",
+    "icon": "ti-search",
+    "intro": "Salesforce gives you two query languages: SOQL for structured, relational queries, and SOSL for fast free-text search across objects.",
+    "sections": [
+      {
+        "heading": "6.1 Salesforce Object Query Language (SOQL)",
+        "intro": "Used to query relational data.",
+        "points": [
+          { "text": "Basic syntax:", "code": "SELECT Field1, Field2 FROM ObjectName WHERE Condition" },
+          { "term": "Child-to-Parent", "text": "SELECT Id, Account.Name FROM Contact" },
+          { "term": "Parent-to-Child", "text": "SELECT Id, (SELECT Id FROM Contacts) FROM Account" },
+          { "term": "Limits", "text": "100 SOQL queries per synchronous transaction; 50,000 records retrieved." }
+        ]
+      },
+      {
+        "heading": "6.2 Salesforce Object Search Language (SOSL)",
+        "intro": "Used to perform text searches across multiple, unrelated objects simultaneously.",
+        "points": [
+          { "text": "Basic syntax:", "code": "FIND 'SearchQuery' IN ALL FIELDS\nRETURNING Account(Name), Contact(FirstName)" },
+          { "text": "Faster for free-text search, since it relies on search indexes rather than table scans." }
+        ]
+      },
+      {
+        "heading": "6.3 Query Best Practices",
+        "points": [
+          { "term": "Never loop your queries", "text": "Don't put SOQL or DML inside a FOR loop — bulkify by collecting criteria into Sets/Lists, querying once, and iterating over the results." },
+          { "term": "Use bind variables", "text": "SELECT Id FROM Account WHERE Name = :targetName" },
+          { "term": "Indexing", "text": "Keep queries selective, using indexed fields in WHERE clauses to avoid table scans on Large Data Volumes (LDV)." }
+        ]
+      }
+    ]
+  }
+]
