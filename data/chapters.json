@@ -1,62 +1,272 @@
 [
   {
-    "key": "chapter-3",
-    "number": 3,
-    "title": "Salesforce Automation Tools",
-    "section": "Chapter 3: Salesforce Automatization Tools",
-    "icon": "ti-bolt",
-    "intro": "Automation is the cornerstone of an efficient Salesforce org. It lets businesses streamline processes, enforce data integrity, and cut down manual entry errors. In modern Salesforce development, declarative tools are strongly preferred over programmatic ones for standard use cases.",
+    "key": "chapter-1",
+    "number": 1,
+    "title": "Introducing Apex",
+    "section": "Chapter 1: Introducing Apex",
+    "icon": "ti-rocket",
+    "intro": "Apex is a strongly typed, object-oriented programming language that executes flow and transaction control statements on the Salesforce Platform server. It uses Java-like syntax and behaves like database stored procedures — letting you add business logic to system events, button clicks, Visualforce pages, and web service requests.",
     "sections": [
       {
-        "heading": "3.1 Quick Actions, Page Layouts & Record Types",
+        "heading": "1.1 What is Apex?",
         "points": [
-          { "term": "Quick Actions", "text": "Let users rapidly create or update records, log calls, send emails, or invoke Lightning components. Can be global or object-specific." },
-          { "term": "Page Layouts", "text": "Control which fields, related lists, and buttons appear on a record page. UI-level only — this can be bypassed via the API." },
-          { "term": "Record Types", "text": "Offer different business processes, picklist values, and page layouts to different users based on their profile." }
+          { "term": "Strongly typed", "text": "All variables and expressions have a data type, checked at compile time. Invalid references fail fast." },
+          { "term": "On-demand", "text": "Runs entirely on Salesforce's multitenant Lightning Platform — written, compiled, and executed in the cloud." },
+          { "term": "Java-like syntax", "text": "Familiar for developers who know Java, JavaScript, C#, or similar languages." },
+          { "term": "Transaction control", "text": "Supports Savepoints and rollback — you can control the atomic unit of work." },
+          { "term": "Built-in support", "text": "DML, SOQL, SOSL, locking, custom public API calls, and metadata dependency tracking are all native." }
         ]
       },
       {
-        "heading": "3.2 Validation Rules & Approval Processes",
+        "heading": "1.2 The 8 Core Characteristics of Apex",
         "points": [
-          { "term": "Validation Rules", "text": "Enforce data quality by conditionally blocking record saves. They evaluate a formula on create/update — if it returns True, an error shows and the transaction rolls back." },
-          { "term": "Approval Processes", "text": "Route records through a sequence of steps for approval by designated users. They can lock records from editing during the cycle, and trigger actions (Email Alerts, Field Updates, Outbound Messages, Tasks) on approval or rejection." }
+          { "term": "Integrated", "text": "DML, inline SOQL/SOSL, bulk processing, locking, public API calls, and dependency warnings are built in." },
+          { "term": "Easy to use", "text": "Based on familiar Java idioms — variables, conditionals, loops, objects, arrays." },
+          { "term": "Data focused", "text": "Threads multiple query and DML statements into one unit of work, like database stored procedures." },
+          { "term": "Rigorous", "text": "Direct references to schema objects. Fails at compile time if references are invalid." },
+          { "term": "Hosted", "text": "Interpreted, executed, and controlled entirely by the Lightning Platform." },
+          { "term": "Multitenant aware", "text": "Runtime engine guards against runaway code to prevent monopolizing shared resources." },
+          { "term": "Easy to test", "text": "Built-in support for unit test creation, execution, and code coverage." },
+          { "term": "Versioned", "text": "You can save Apex against different API versions to maintain behavior over time." }
         ]
       },
       {
-        "heading": "3.3 Declarative Programming with Flows",
-        "intro": "With Process Builder and Workflow Rules retired, Flow is the premier declarative automation tool.",
+        "heading": "1.3 When to Use Apex (vs Flow / LWC / Visualforce)",
         "points": [
-          { "term": "Screen Flows", "text": "Guide users through a multi-step UI to collect and update data." },
-          { "term": "Record-Triggered Flows", "text": "Fire automatically on record create, update, or delete. Run before save (fast field updates) or after save (update related records / perform actions)." },
-          { "term": "Schedule-Triggered Flows", "text": "Run in the background at a set time and frequency for a batch of records." },
-          { "term": "Autolaunched Flows", "text": "Invoked by Apex, the REST API, or other Flows without any user interaction." }
+          { "term": "Use Apex when", "text": "You need to create web services, email services, complex multi-object validation, complex business processes Flow can't handle, custom transactional logic, or logic that must run regardless of UI origin." },
+          { "term": "Use Lightning Web Components", "text": "For custom user interfaces in Lightning Experience, the Salesforce mobile app, or standalone apps. LWC follows W3C web standards." },
+          { "term": "Use Visualforce", "text": "For wizards, multi-step processes, custom flow control, or specialized data-driven UI patterns." },
+          { "term": "Use SOAP API", "text": "When you only process one type of record at a time and don't need transactional control." }
         ]
       },
       {
-        "heading": "3.4 Flow Components",
-        "intro": "Flows are built from a visual interface composed of:",
+        "heading": "1.4 What Apex Cannot Do",
         "points": [
-          { "term": "Elements", "text": "Actions (create/update/delete records), Logic (assignments, decisions, loops), and Data (getting records)." },
-          { "term": "Resources", "text": "Variables, constants, formulas, and choices used to store and manipulate data during execution." },
-          { "term": "Connectors", "text": "The lines that define the execution path between elements." }
+          { "text": "Render UI elements other than error messages." },
+          { "text": "Change standard functionality — it can only prevent it or add to it." },
+          { "text": "Create temporary files." },
+          { "text": "Spawn threads." },
+          { "text": "It is NOT a general-purpose programming language — it is tailored to Salesforce data access and manipulation." }
         ]
       },
       {
-        "heading": "3.5 Building a Flow — Best Practices",
+        "heading": "1.5 The Apex Development Process",
+        "intro": "The recommended 6-step lifecycle for any Apex project:",
         "points": [
-          { "term": "Don't hardcode IDs", "text": "Always query for the ID, or use custom labels/metadata instead." },
-          { "term": "Bulkification", "text": "Flows auto-bulkify DML and SOQL, but never place a \"Get Records\" or \"Update Records\" element inside a Loop." },
-          { "term": "Error Handling", "text": "Use Fault Paths to catch exceptions and notify admins." }
+          { "term": "1. Choose an org", "text": "Sandbox, scratch org, or Developer Edition. Never develop directly in production." },
+          { "term": "2. Learn Apex", "text": "Use Trailhead, Apex Developer Center, and this study guide." },
+          { "term": "3. Write Apex", "text": "Use VS Code + Salesforce Extensions, Code Builder, or Developer Console." },
+          { "term": "4. Write tests", "text": "Use test-driven development — write tests at the same time as code." },
+          { "term": "5. Deploy to sandbox", "text": "Run final unit tests in an isolated environment." },
+          { "term": "6. Deploy to production", "text": "Via change sets, Salesforce CLI, or Metadata API." }
         ]
       },
       {
-        "heading": "3.6 Invocable Methods in Flows",
-        "intro": "When Flow can't achieve a complex requirement, it can call Apex.",
+        "heading": "1.6 Choosing a Salesforce Org for Development",
         "points": [
-          { "text": "Use the @InvocableMethod annotation on an Apex method." },
-          { "text": "Only one invocable method is allowed per class." },
-          { "text": "The method must be static and public or global." },
-          { "text": "It accepts a List<T> of inputs and returns a List<T> of outputs — keeping it bulkification-safe for Flow." }
+          { "term": "Sandbox (Recommended)", "text": "Copy of production metadata, isolated. Developer and Developer Pro sandboxes support source tracking, Salesforce CLI, Code Builder, and DevOps Center." },
+          { "term": "Scratch orgs (Recommended)", "text": "Source-driven, temporary, fully configurable deployment. Max 30-day lifespan, default 7 days. Great for emulating different editions." },
+          { "term": "Developer Edition", "text": "Free org with Enterprise Edition features. Can become outdated and expire. No source tracking, can't be used in DevOps Center." },
+          { "term": "Trial Edition", "text": "30-day expiration. Good for evaluation. Triggers are disabled when you convert to another edition." },
+          { "term": "Production (Not supported)", "text": "Never develop directly in production — live users can destabilize data or corrupt the application." }
+        ]
+      },
+      {
+        "heading": "1.7 Development Environments",
+        "points": [
+          { "term": "VS Code + Extensions", "text": "The primary modern environment. Supports scratch orgs, sandboxes, and DE orgs. Works with Apex, LWC, and Visualforce." },
+          { "term": "Code Builder", "text": "Browser-based VS Code with everything pre-installed — work from any computer." },
+          { "term": "Developer Console", "text": "Built-in IDE in Salesforce. Supports writing, compiling, debugging, testing, SOQL queries, and code coverage inspection." },
+          { "term": "Setup Code Editors", "text": "View and edit Apex classes and triggers from Salesforce Setup. Auto-compile on save. Not available in production orgs." },
+          { "term": "Agentforce for Developers", "text": "AI-powered code generation from natural language prompts, inline auto-complete, and test case generation. Available in VS Code." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-2",
+    "number": 2,
+    "title": "Data Types and Variables",
+    "section": "Chapter 2: Data Types and Variables",
+    "icon": "ti-code",
+    "intro": "Apex uses data types, variables, enums, constants, expressions, operators, and assignment statements. Type checking is strictly enforced at compile time — assigning a String to an Integer field is a compile error.",
+    "sections": [
+      {
+        "heading": "2.1 All Apex Data Types",
+        "points": [
+          { "term": "Primitives", "text": "Integer, Double, Long, Decimal, Boolean, String, ID, Date, Datetime, Time, Blob, Object." },
+          { "term": "sObjects", "text": "Generic sObject or specific types like Account, Contact, MyCustomObject__c." },
+          { "term": "Collections", "text": "Lists, Sets, and Maps of primitives, sObjects, or user-defined types." },
+          { "term": "Enums", "text": "A typed list of identifiers for values that don't have a numerical order." },
+          { "term": "User-defined types", "text": "Objects created from your own Apex classes." },
+          { "term": "System-supplied types", "text": "Objects from Salesforce-provided classes like Database, UserInfo, Schema." },
+          { "term": "Null", "text": "Can be assigned to any variable. All Apex variables are initialized to null by default." }
+        ]
+      },
+      {
+        "heading": "2.2 Primitive Data Types",
+        "intro": "All Apex variables are initialized to null. Always initialize before use.",
+        "points": [
+          { "term": "Blob", "text": "Binary data stored as a single object. Use toString() and valueOf() to convert. Used for document bodies, attachments, and crypto." },
+          { "term": "Boolean", "text": "true, false, or null. Example: Boolean isWinner = true;" },
+          { "term": "Date", "text": "A particular day with no time. Always create via system static method. Only Integer addition/subtraction works on Date." },
+          { "term": "Datetime", "text": "A day and time (timestamp). Use system static methods. Supports Integer and Double addition/subtraction." },
+          { "term": "Decimal", "text": "Arbitrary precision number. Currency fields are Decimal. Use setScale() to control decimal places. Two numerically-equal Decimals with different scale (1.1 vs 1.10) have different hashcodes." },
+          { "term": "Double", "text": "64-bit number with decimal point. Range is -2^63 to 2^63-1. Scientific notation (e) not supported." },
+          { "term": "ID", "text": "Any valid 18-character Salesforce record ID. Auto-converts 15-char to 18-char. Invalid IDs throw runtime exception." },
+          { "term": "Integer", "text": "32-bit number without decimal. Range: -2,147,483,648 to 2,147,483,647." },
+          { "term": "Long", "text": "64-bit number without decimal. Range: -2^63 to 2^63-1. Use when wider range than Integer is needed. Append L: 2147483648L." },
+          { "term": "Object", "text": "Any supported Apex data type. All types inherit from Object. Cast to a specific type to access its members." },
+          { "term": "String", "text": "Any set of characters in single quotes. Supports ==, !=, <, <=, >, >=. Comparison is NOT case-sensitive and uses the context user's locale." },
+          { "term": "Time", "text": "A particular time. Always create via system static method." }
+        ]
+      },
+      {
+        "heading": "2.3 String Escapes and Multiline Strings",
+        "points": [
+          { "term": "Escape sequences", "text": "\\b (backspace), \\t (tab), \\n (line feed), \\f (form feed), \\r (carriage return), \\s (space), \\\" (double quote), \\' (single quote), \\\\ (backslash)." },
+          { "term": "sObject String rules", "text": "sObject String fields can never be empty (only null) and cannot have leading/trailing whitespace — required for database storage." },
+          { "term": "Apex String rules", "text": "Apex Strings CAN be null, empty, or have leading/trailing whitespace — useful for building messages." },
+          { "term": "Multiline string", "text": "Starts with three single quotes (''') followed by a newline. Ends with three single quotes. Leading whitespace is stripped, trailing whitespace is stripped unless you use \\s.", "code": "String json = '''\n{\n  \"name\": \"Acme\",\n  \"type\": \"Customer\"\n}''';" },
+          { "term": "Multiline concatenation", "text": "Use \\ at the end of a line to concatenate lines without inserting newlines." }
+        ]
+      },
+      {
+        "heading": "2.4 Lists",
+        "intro": "A list is an ordered collection of elements distinguished by their indices. The first index is always 0.",
+        "points": [
+          { "term": "Create empty list", "text": "Use the new keyword and List keyword with the element type in <>.", "code": "List<Integer> myList = new List<Integer>();" },
+          { "term": "Add elements", "text": "Use the .add() method, or use literal notation with braces.", "code": "List<String> colors = new List<String>{'Red', 'Green', 'Blue'};" },
+          { "term": "Get / Set", "text": "Use .get(index) and .set(index, value). Square brackets also work: colors[0] = 'Green'." },
+          { "term": "Array notation", "text": "For one-dimensional lists, you can use Java-style array notation: String[] colors = new String[3];" },
+          { "term": "Nested lists", "text": "Up to 7 levels of nested collections (8 levels overall). Example: List<List<Set<Integer>>>." },
+          { "term": "List.sort()", "text": "Sorts in ascending order for primitives. For custom types, implement Comparable. For SelectOption, sorts by value first, then label." },
+          { "term": "Elastic vs array", "text": "When you add via .add(), the list grows as needed. When you assign via square brackets, the list behaves like a fixed-size array." }
+        ]
+      },
+      {
+        "heading": "2.5 Sets",
+        "intro": "A set is an unordered collection of unique elements.",
+        "points": [
+          { "term": "No duplicates", "text": "Adding an existing element has no effect. Highly optimized for .contains() checks." },
+          { "term": "Unordered", "text": "You cannot access a set element by index. You can only iterate." },
+          { "term": "Hash structure", "text": "Unlike Java, Apex uses a hash structure for all sets. You don't specify HashSet vs TreeSet." },
+          { "term": "Create with literal", "text": "Set<String> s = new Set<String>{'a', 'b', 'c'};", "code": "Set<String> mySet = new Set<String>{'New York', 'Paris'};" },
+          { "term": "Core methods", "text": ".add(value), .contains(value), .remove(value), .size(), .clear()." }
+        ]
+      },
+      {
+        "heading": "2.6 Maps",
+        "intro": "A map is a collection of key-value pairs where each unique key maps to a single value.",
+        "points": [
+          { "term": "Keys", "text": "Can be any primitive data type. Each key must be unique." },
+          { "term": "Values", "text": "Can be any data type — primitives, sObjects, collections. Values can be duplicated." },
+          { "term": "Create with literal", "text": "Use => to separate key and value pairs.", "code": "Map<Integer, String> m = new Map<Integer, String>{1 => 'a', 2 => 'b'};" },
+          { "term": "Core methods", "text": ".put(key, value), .get(key), .containsKey(key), .keySet(), .values(), .remove(key), .size()." }
+        ]
+      },
+      {
+        "heading": "2.7 Enums",
+        "points": [
+          { "term": "Purpose", "text": "An abstract data type whose values each take on exactly one of a finite set of identifiers you specify." },
+          { "term": "When to use", "text": "For sets of possible values that don't have a numerical order — e.g., seasons, card suits, order statuses." },
+          { "term": "Switch-friendly", "text": "Enums work especially well with switch statements in Apex." }
+        ]
+      },
+      {
+        "heading": "2.8 Variables, Constants, and Assignment",
+        "points": [
+          { "term": "Declaration", "text": "datatype variable_name [= value]; — always end statements with a semicolon.", "code": "Integer count = 0;\nDecimal total;\nAccount a = new Account();" },
+          { "term": "Pass-by-value (primitives)", "text": "Integer, String, etc. are passed into methods by value. Changes inside the method are lost when the method returns." },
+          { "term": "Pass-by-reference (sObjects)", "text": "sObjects are passed by reference. Changes to field values persist after the method returns." },
+          { "term": "Constants", "text": "Use the final keyword. Once initialized, the value cannot change.", "code": "private static final Integer MAX_RECORDS = 200;" },
+          { "term": "Assignment operators", "text": "Valid: =, +=, -=, *=, /=, |=, &=, ++, --." }
+        ]
+      },
+      {
+        "heading": "2.9 Operators and Expressions",
+        "intro": "Apex supports most Java operators plus two important modern ones: safe navigation (?.) and null coalescing (??).",
+        "points": [
+          { "term": "Safe navigation ?.", "text": "Returns null instead of throwing NullPointerException when navigating a chain. Example: account?.Contact?.Email.", "code": "String email = acc?.Contact?.Email; // null if acc or Contact is null" },
+          { "term": "Null coalescing ??", "text": "Returns the right-hand operand when the left-hand is null. Replaces verbose null checks.", "code": "Integer x = maybeNull ?? 100;\nAccount a = [SELECT Id FROM Account WHERE Id=:fakeId] ?? defaultAccount;" },
+          { "term": "String comparison", "text": "Apex Strings support ==, !=, <, <=, >, >=. NOT case-sensitive, uses context user's locale." },
+          { "term": "Ternary", "text": "boolean ? valueIfTrue : valueIfFalse" },
+          { "term": "instanceof", "text": "Check if an sObject is a specific type: if (sobj instanceof Account) { ... }" }
+        ]
+      },
+      {
+        "heading": "2.10 Operator Precedence (Top to Bottom)",
+        "points": [
+          { "text": "1. Grouping and prefix: {} () ++ --" },
+          { "text": "2. Unary, type cast, new: ~ ! -x +x (type) new" },
+          { "text": "3. Multiplication/division: * /" },
+          { "text": "4. Addition/subtraction: + -" },
+          { "text": "5. Shift: << >> >>>" },
+          { "text": "6. Comparison: < <= > >= instanceof" },
+          { "text": "7. Equality: == !=" },
+          { "text": "8-10. Bitwise: & ^ |" },
+          { "text": "11-12. Logical: && ||" },
+          { "text": "13. Null coalescing: ??" },
+          { "text": "14. Ternary: ?:" },
+          { "text": "15. Assignment: = += -= *= /= &= <<= >>= >>>=" }
+        ]
+      },
+      {
+        "heading": "2.11 Rules of Conversion",
+        "points": [
+          { "term": "Implicit numeric promotion", "text": "Hierarchy: Integer → Long → Double → Decimal. Lower types can be assigned to higher types without explicit conversion." },
+          { "term": "ID ↔ String", "text": "IDs can be assigned to Strings. Strings can be assigned to IDs but throw runtime exception if invalid." },
+          { "term": "Date → Datetime", "text": "Both implicit and explicit casting work. Time component is zeroed out." },
+          { "term": "Overflow warning", "text": "Apex does NOT throw an exception for overflow/underflow — Integer i = 2147483647 + 1; yields -2147483648. Use Long (append L) for larger computations." },
+          { "term": "Integer division", "text": "5/3 returns 1 (Integer) before implicit conversion. Use 5.0/3.0 to preserve fractions." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-3",
+    "number": 3,
+    "title": "Control Flow Statements",
+    "section": "Chapter 3: Control Flow Statements",
+    "icon": "ti-git-fork",
+    "intro": "Apex provides if-else statements, switch statements, and five types of loops. Statements normally execute line by line; control flow lets you branch or repeat.",
+    "sections": [
+      {
+        "heading": "3.1 If-Else Statements",
+        "points": [
+          { "term": "Basic syntax", "text": "Works just like Java. The else is always optional and groups with the closest if.", "code": "if (condition) {\n  // true branch\n} else {\n  // false branch\n}" },
+          { "term": "else if chains", "text": "Chain multiple conditions. else is always optional.", "code": "if (place == 1) medal = 'gold';\nelse if (place == 2) medal = 'silver';\nelse if (place == 3) medal = 'bronze';\nelse medal = null;" },
+          { "term": "Braces", "text": "Curly braces are required for multi-statement blocks, optional for single-statement blocks." }
+        ]
+      },
+      {
+        "heading": "3.2 Switch Statements (Modern Apex)",
+        "intro": "Apex switch uses when blocks — no fall-through.",
+        "points": [
+          { "term": "Syntax", "text": "switch on expression { when value { ... } when else { ... } }", "code": "switch on i {\n  when 2 { System.debug('two'); }\n  when 3, 4 { System.debug('three or four'); }\n  when else { System.debug('other'); }\n}" },
+          { "term": "No fall-through", "text": "After a when block executes, the switch exits. This is different from C/Java switch." },
+          { "term": "Allowed expression types", "text": "Integer, Long, sObject, String, Enum." },
+          { "term": "Multiple values", "text": "A when clause can have multiple comma-separated literals: when 2, 3, 4 { ... }" },
+          { "term": "sObject type matching", "text": "switch on sobject { when Account a { ... } when Contact c { ... } } — implicit instanceof + cast.", "code": "switch on sobject {\n  when Account a { System.debug('account ' + a); }\n  when Contact c { System.debug('contact ' + c); }\n  when null { System.debug('null'); }\n  when else { System.debug('default'); }\n}" },
+          { "term": "when else", "text": "Optional default block. Salesforce recommends including it, especially with enums (in case a managed package adds new values)." }
+        ]
+      },
+      {
+        "heading": "3.3 The Five Loop Types",
+        "intro": "Apex supports five procedural loop patterns. All loops support break; and continue;.",
+        "points": [
+          { "term": "do-while", "text": "Runs the body first, then checks the condition. Always executes at least once. Curly braces are required.", "code": "do {\n  // body\n} while (condition);" },
+          { "term": "while", "text": "Checks the condition before the body. May execute zero times.", "code": "while (condition) {\n  // body\n}" },
+          { "term": "for (classic)", "text": "Three-part: initialization; exit condition; increment.", "code": "for (Integer i = 0; i < 10; i++) {\n  System.debug(i);\n}" },
+          { "term": "for (collection)", "text": "Iterates a list or set. Enhanced for-each loop.", "code": "for (String name : namesList) {\n  System.debug(name);\n}" },
+          { "term": "for (SOQL)", "text": "Iterates query results directly. Best for bulk processing — heap-efficient.", "code": "for (Account a : [SELECT Id, Name FROM Account]) {\n  System.debug(a.Name);\n}" }
+        ]
+      },
+      {
+        "heading": "3.4 Loop Control",
+        "points": [
+          { "term": "break", "text": "Exits the entire loop immediately." },
+          { "term": "continue", "text": "Skips the rest of the current iteration and proceeds to the next." }
         ]
       }
     ]
@@ -64,49 +274,83 @@
   {
     "key": "chapter-4",
     "number": 4,
-    "title": "Apex Programming",
-    "section": "Chapter 4: Apex Programming",
-    "icon": "ti-code",
-    "intro": "Apex is a strongly typed, object-oriented language that executes on Salesforce's servers. It has Java-like syntax and acts as the controller in Salesforce's MVC architecture.",
+    "title": "Classes, Objects, and Interfaces",
+    "section": "Chapter 4: Classes, Objects, and Interfaces",
+    "icon": "ti-layers",
+    "intro": "Apex classes are blueprints for objects. A class can contain variables, methods, properties, constructors, and initialization code. Use access modifiers to control visibility.",
     "sections": [
       {
-        "heading": "4.1 Apex Language Syntax",
+        "heading": "4.1 Defining a Class",
         "points": [
-          { "text": "Case-insensitive." },
-          { "text": "Statements end with a semicolon (;)." },
-          { "text": "Strongly typed — variable data types must be declared." },
-          { "text": "Multi-tenant aware, with strictly enforced governor limits." }
+          { "term": "Basic syntax", "text": "public class MyClass { ... }", "code": "public class MyHelloWorld {\n  public static void applyDiscount(Book__c[] books) {\n    for (Book__c b : books) {\n      b.Price__c *= 0.9;\n    }\n  }\n}" },
+          { "term": "Default access", "text": "If you omit a modifier, the class is private (only visible within the same namespace)." }
         ]
       },
       {
-        "heading": "4.2 Anonymous Window (Developer Console)",
+        "heading": "4.2 Class Modifiers",
         "points": [
-          { "text": "Lets developers run ad-hoc Apex without writing a formal class — handy for debugging, data fixes, or testing logic. Code here runs in the user's context and still consumes governor limits." }
+          { "term": "public", "text": "Visible to any Apex in the application or namespace." },
+          { "term": "private (default)", "text": "Only visible within the same class. Not accessible from other classes." },
+          { "term": "global", "text": "Visible to all Apex code everywhere, including code in other namespaces. Required for exposed web services and managed package APIs." },
+          { "term": "abstract", "text": "Class cannot be instantiated. Used as a base class. Can contain abstract methods (no body)." },
+          { "term": "virtual", "text": "Class can be extended. Use virtual when subclasses need to override methods." },
+          { "term": "with sharing", "text": "Enforces the running user's sharing rules and record-level access." },
+          { "term": "without sharing", "text": "Bypasses sharing rules. Use carefully — typically for system-level utilities." },
+          { "term": "inherited sharing", "text": "Inherits sharing context from the calling code. Available in API v48.0+." }
         ]
       },
       {
-        "heading": "4.3 Variable Data Types",
+        "heading": "4.3 Static vs Instance",
         "points": [
-          { "term": "Primitives", "text": "Integer, Double, Long, Decimal, Boolean, String, Date, Datetime, Time, Id, Blob — all are objects and default to null." },
-          { "term": "sObjects", "text": "Represent Salesforce records, e.g. Account a = new Account();" },
-          { "term": "Enums", "text": "Abstract data types storing a finite set of identifiers." }
+          { "term": "Static", "text": "Belongs to the class, not an instance. Accessed via ClassName.method(). Only one copy exists." },
+          { "term": "Instance", "text": "Belongs to an object. Requires an instance to call. Each object has its own copy." },
+          { "term": "Static initialization", "text": "Static variables are initialized when the class is first loaded. Use static { } block for static initialization code." },
+          { "term": "Static methods", "text": "Cannot access instance variables or methods. Often used for utility/helper methods." }
         ]
       },
       {
-        "heading": "4.4 Collections",
-        "intro": "Apex provides three primary collection types:",
+        "heading": "4.4 Methods",
         "points": [
-          { "term": "Lists", "text": "Ordered, allow duplicates, accessed via a 0-based index.", "code": "List<String> names = new List<String>();\nnames.add('Alice');" },
-          { "term": "Sets", "text": "Unordered, unique elements — highly optimized for .contains() checks.", "code": "Set<Id> accountIds = new Set<Id>();" },
-          { "term": "Maps", "text": "Key-value pairs with unique keys — great for pairing record IDs with the actual sObject.", "code": "Map<Id, Account> accountMap = new Map<Id, Account>(\n  [SELECT Id, Name FROM Account]\n);" }
+          { "term": "Access modifiers", "text": "public, private, protected, global — control visibility." },
+          { "term": "Static vs instance", "text": "Static methods belong to the class; instance methods require an object." },
+          { "term": "Return type", "text": "Specify a return type (Integer, String, void, sObject, etc.) or void for no return." },
+          { "term": "Overloading", "text": "Apex supports method overloading — multiple methods with the same name but different parameter lists." },
+          { "term": "Pass-by-value vs reference", "text": "Primitives pass by value. sObjects pass by reference (field changes persist)." }
         ]
       },
       {
-        "heading": "4.5 Operators & Control Statements",
+        "heading": "4.5 Constructors",
         "points": [
-          { "term": "If-Else", "text": "Standard conditional execution." },
-          { "term": "Switch", "text": "Evaluates a single expression against multiple values — Apex's version of switch-case." },
-          { "term": "Loops", "text": "for (Integer i = 0; i < 10; i++) · for (String name : namesList) · for (Account acc : [SELECT Id FROM Account]) — the SOQL for-loop, optimized for heap space." }
+          { "term": "Purpose", "text": "Initialize an object when it is created via new." },
+          { "term": "Default constructor", "text": "If you don't write a constructor, Apex provides a no-argument constructor automatically." },
+          { "term": "Overloaded constructors", "text": "You can write multiple constructors with different parameter lists." },
+          { "term": "No return type", "text": "Constructors don't have a return type, not even void." }
+        ]
+      },
+      {
+        "heading": "4.6 Interfaces",
+        "points": [
+          { "term": "Purpose", "text": "Define a contract — methods that implementing classes must provide. Apex supports interfaces and abstract classes." },
+          { "term": "Method signatures", "text": "Interface methods have no body. Implementing class must provide the body." },
+          { "term": "Multiple interfaces", "text": "A class can implement multiple interfaces (use commas), but can only extend one class." },
+          { "term": "Common interfaces", "text": "Database.Batchable<SObject>, Schedulable, Queueable, Comparable, Iterator, Iterable." }
+        ]
+      },
+      {
+        "heading": "4.7 Properties",
+        "points": [
+          { "term": "What is a property?", "text": "A property looks like a field but is actually a pair of get/set accessors. Cleaner than explicit getter/setter methods." },
+          { "term": "Auto-properties", "text": "public Integer Count { get; set; } — Apex auto-generates the backing field and accessors." },
+          { "term": "Custom get/set", "text": "You can provide custom getter and setter logic blocks." }
+        ]
+      },
+      {
+        "heading": "4.8 Inheritance and Polymorphism",
+        "points": [
+          { "term": "extends", "text": "A class can extend exactly one parent class. Use 'virtual' on the parent to allow overriding." },
+          { "term": "override", "text": "Use the override keyword to override a virtual or abstract method from a parent." },
+          { "term": "virtual", "text": "Methods marked virtual can be overridden. Abstract methods MUST be overridden." },
+          { "term": "super", "text": "Call the parent implementation with super.methodName()." }
         ]
       }
     ]
@@ -114,50 +358,61 @@
   {
     "key": "chapter-5",
     "number": 5,
-    "title": "Data Manipulation Language (DML)",
-    "section": "Chapter 5: Data Manipulation Language (DML)",
+    "title": "Working with sObjects and DML",
+    "section": "Chapter 5: Working with sObjects and DML",
     "icon": "ti-database",
-    "intro": "DML is the toolset used to modify data in Salesforce — inserting, updating, and removing records safely and at scale.",
+    "intro": "The sObject data type holds Salesforce records. Data Manipulation Language (DML) operations insert, update, delete, undelete, merge, and convert records.",
     "sections": [
       {
-        "heading": "5.1 DML Statements & Operations",
+        "heading": "5.1 sObject Basics",
         "points": [
-          { "text": "Core statements: insert, update, upsert, delete, undelete, merge." },
-          { "term": "DML limits", "text": "150 statements per synchronous transaction; 10,000 records processed per transaction." }
+          { "term": "What is an sObject?", "text": "Any data type that represents a Salesforce record — standard (Account, Contact) or custom (MyObject__c)." },
+          { "term": "Generic sObject", "text": "sObject generic type can hold any record. Use specific types (Account, Contact) whenever possible for type safety." },
+          { "term": "Custom objects", "text": "Always end with __c. Custom fields end with __c." },
+          { "term": "Creating records", "text": "Use the new keyword and the sObject type name. Pass field values as named parameters.", "code": "Account a = new Account(Name='Acme', BillingCity='SF');\ninsert a;" }
         ]
       },
       {
-        "heading": "5.2 Database Class Methods",
+        "heading": "5.2 DML Statements",
+        "intro": "Six core DML operations. All run in the current transaction context.",
         "points": [
-          { "term": "Standalone DML", "text": "insert accountList; runs \"all or nothing\" — if one record fails, the entire transaction rolls back.", "code": "insert accountList;" },
-          { "term": "Database Class methods", "text": "Setting allOrNone to false allows partial success: successful records commit, and failures are returned in an error array.", "code": "Database.insert(accountList, false);" }
+          { "term": "insert", "text": "Adds new records. Sets Id automatically." },
+          { "term": "update", "text": "Modifies existing records. Must have Id populated." },
+          { "term": "upsert", "text": "Updates if record with matching external/Id field exists; otherwise inserts. Requires an external ID field or Id." },
+          { "term": "delete", "text": "Removes records. Goes to Recycle Bin for 15 days; can be undeleted within that window." },
+          { "term": "undelete", "text": "Restores records from the Recycle Bin." },
+          { "term": "merge", "text": "Combines up to 3 records of the same sObject type into one. Merges child records too." }
         ]
       },
       {
-        "heading": "5.3 Schema Classes & Methods",
-        "intro": "Used to retrieve metadata information dynamically at runtime.",
+        "heading": "5.3 DML Syntax — Two Forms",
         "points": [
-          { "text": "Schema.getGlobalDescribe()" },
-          { "text": "Schema.DescribeSObjectResult" },
-          { "text": "Useful for checking field-level security (isAccessible(), isUpdateable()) before performing DML." }
+          { "term": "Statement form", "text": "Direct DML — runs 'all or nothing'. If one record fails, the entire transaction rolls back.", "code": "insert myAccounts;\nupdate myContacts;\ndelete oldRecords;" },
+          { "term": "Database class form", "text": "Database.insert(records, allOrNone). Use false to allow partial success.", "code": "Database.insert(accs, false); // partial success allowed\nDatabase.update(conts, true); // all or nothing" },
+          { "term": "When to use Database class", "text": "When you need partial-success behavior or to inspect individual record errors. Returns Database.SaveResult[] or Database.DeleteResult[]." }
         ]
       },
       {
-        "heading": "5.4 Database.Batchable Interface",
-        "intro": "For processing millions of records without hitting standard synchronous limits.",
+        "heading": "5.4 Savepoints and Rollback",
         "points": [
-          { "term": "start()", "text": "Collects the records or objects to be processed (returns a Database.QueryLocator or Iterable)." },
-          { "term": "execute()", "text": "Performs the actual processing on the current chunk of data." },
-          { "term": "finish()", "text": "Runs post-processing operations, like sending a completion email." },
-          { "text": "Requires Database.Stateful to maintain state across execution chunks." }
+          { "term": "Savepoint", "text": "Marks a point in the transaction you can roll back to.", "code": "Savepoint sp = Database.setSavepoint();\n// ... do work ...\nDatabase.rollback(sp);" },
+          { "term": "Limits", "text": "Only 10 active savepoints per request. Each rollback decrements the count." },
+          { "term": "Use case", "text": "Try a DML operation, roll back if it fails, and continue with logic." }
         ]
       },
       {
-        "heading": "5.5 Exceptions",
+        "heading": "5.5 Locking Records (FOR UPDATE)",
         "points": [
-          { "term": "NullPointerException", "text": "Thrown when dereferencing a null object." },
-          { "term": "DmlException", "text": "Catches database constraint violations." },
-          { "term": "QueryException", "text": "Thrown when assigning a list of records to a single sObject variable but the query returns 0 or more than 1 record." }
+          { "term": "FOR UPDATE", "text": "Locks sObject records during the transaction to prevent race conditions.", "code": "Account[] accs = [SELECT Id FROM Account WHERE Industry = 'Tech' FOR UPDATE];" },
+          { "term": "When to use", "text": "When subsequent code will update the records and you need to prevent other transactions from modifying them." }
+        ]
+      },
+      {
+        "heading": "5.6 Field Relationships",
+        "points": [
+          { "term": "Parent-to-child", "text": "Traverse a lookup using dot notation: account.Owner.Name." },
+          { "term": "Child-to-parent", "text": "Query through a relationship: SELECT Account.Owner.Name FROM Contact." },
+          { "term": "Custom relationship", "text": "For custom __r: SELECT My_Custom_Child__r.Name FROM Account." }
         ]
       }
     ]
@@ -168,32 +423,363 @@
     "title": "SOQL and SOSL",
     "section": "Chapter 6: SOQL and SOSL",
     "icon": "ti-search",
-    "intro": "Salesforce gives you two query languages: SOQL for structured, relational queries, and SOSL for fast free-text search across objects.",
+    "intro": "Two query languages for retrieving data. SOQL for relational, structured queries against a single object. SOSL for free-text search across multiple objects simultaneously.",
     "sections": [
       {
-        "heading": "6.1 Salesforce Object Query Language (SOQL)",
-        "intro": "Used to query relational data.",
+        "heading": "6.1 SOQL Basics",
         "points": [
-          { "text": "Basic syntax:", "code": "SELECT Field1, Field2 FROM ObjectName WHERE Condition" },
-          { "term": "Child-to-Parent", "text": "SELECT Id, Account.Name FROM Contact" },
-          { "term": "Parent-to-Child", "text": "SELECT Id, (SELECT Id FROM Contacts) FROM Account" },
-          { "term": "Limits", "text": "100 SOQL queries per synchronous transaction; 50,000 records retrieved." }
+          { "term": "What is SOQL?", "text": "Salesforce Object Query Language. Query relational data from a single object or related objects." },
+          { "term": "Basic syntax", "text": "SELECT field1, field2 FROM ObjectName WHERE condition", "code": "List<Account> accs = [SELECT Id, Name FROM Account WHERE Industry = 'Technology'];" },
+          { "term": "Query all fields", "text": "Don't use SELECT * — always list fields explicitly for performance and clarity." },
+          { "term": "Child-to-parent", "text": "SELECT Id, Account.Name FROM Contact" },
+          { "term": "Parent-to-child", "text": "SELECT Id, (SELECT Id, LastName FROM Contacts) FROM Account", "code": "List<Account> accs = [\n  SELECT Id, Name, (SELECT Id, LastName FROM Contacts)\n  FROM Account\n  WHERE Industry = 'Technology'\n];" }
         ]
       },
       {
-        "heading": "6.2 Salesforce Object Search Language (SOSL)",
-        "intro": "Used to perform text searches across multiple, unrelated objects simultaneously.",
+        "heading": "6.2 SOQL Clauses",
         "points": [
-          { "text": "Basic syntax:", "code": "FIND 'SearchQuery' IN ALL FIELDS\nRETURNING Account(Name), Contact(FirstName)" },
-          { "text": "Faster for free-text search, since it relies on search indexes rather than table scans." }
+          { "term": "WHERE", "text": "Filter records. Use bind variables for user input: WHERE Name = :varName" },
+          { "term": "ORDER BY", "text": "Sort results: ORDER BY Name ASC, CreatedDate DESC" },
+          { "term": "LIMIT", "text": "Cap returned records: LIMIT 100" },
+          { "term": "OFFSET", "text": "Skip records for pagination: OFFSET 200" },
+          { "term": "GROUP BY / HAVING", "text": "Aggregate. SELECT COUNT(Id), Industry FROM Account GROUP BY Industry HAVING COUNT(Id) > 5" },
+          { "term": "FOR UPDATE", "text": "Lock records: SELECT Id FROM Account WHERE Name = 'Acme' FOR UPDATE" },
+          { "term": "FOR REFERENCE", "text": "Used in trigger context variables to get old values without locking." },
+          { "term": "UPDATE TRACKING / VIEWSTAT", "text": "Enable tracking for change data capture events." }
         ]
       },
       {
-        "heading": "6.3 Query Best Practices",
+        "heading": "6.3 SOQL with SECURITY_ENFORCED / WITH USER_MODE",
         "points": [
-          { "term": "Never loop your queries", "text": "Don't put SOQL or DML inside a FOR loop — bulkify by collecting criteria into Sets/Lists, querying once, and iterating over the results." },
-          { "term": "Use bind variables", "text": "SELECT Id FROM Account WHERE Name = :targetName" },
-          { "term": "Indexing", "text": "Keep queries selective, using indexed fields in WHERE clauses to avoid table scans on Large Data Volumes (LDV)." }
+          { "term": "WITH USER_MODE", "text": "Enforces field-level security (FLS) and sharing rules. Recommended over WITH SECURITY_ENFORCED.", "code": "List<Account> accs = [SELECT Id, Name FROM Account WITH USER_MODE];" },
+          { "term": "WITH SYSTEM_MODE", "text": "Bypasses FLS and sharing. Use for system code only (e.g., setup operations).", "code": "[SELECT Id FROM Account WITH SYSTEM_MODE]" },
+          { "term": "WITHOUT sharing context", "text": "Use UserMode/AccessLevel enums: WITH USER_MODE or [SELECT Id FROM Account AS USER] or [AS SYSTEM]." }
+        ]
+      },
+      {
+        "heading": "6.4 Aggregate Functions",
+        "points": [
+          { "term": "COUNT()", "text": "Returns Integer. SELECT COUNT(Id) FROM Account" },
+          { "term": "SUM(), AVG(), MIN(), MAX()", "text": "Numeric aggregates. SELECT MAX(Amount), MIN(Amount) FROM Opportunity" },
+          { "term": "GROUP BY", "text": "Required for most aggregates. SELECT Industry, COUNT(Id) cnt FROM Account GROUP BY Industry" }
+        ]
+      },
+      {
+        "heading": "6.5 Relationship Queries",
+        "points": [
+          { "term": "Child relationship name", "text": "Find the relationship name via object manager. For Contacts on Account, it's 'Contacts' (plural)." },
+          { "term": "Custom relationship", "text": "Ends with __r for the parent reference. SELECT My_Child__c FROM Parent__c" },
+          { "term": "Filter on related fields", "text": "WHERE Account.Industry = 'Tech' — filter using a related object's field." }
+        ]
+      },
+      {
+        "heading": "6.6 SOSL Basics",
+        "points": [
+          { "term": "What is SOSL?", "text": "Salesforce Object Search Language. Free-text search across multiple, unrelated objects at once." },
+          { "term": "Syntax", "text": "FIND 'searchTerm' IN ALL FIELDS RETURNING Object(field1, field2)", "code": "List<List<SObject>> results = [FIND 'Acme' IN ALL FIELDS\n  RETURNING Account(Id, Name), Contact(Id, FirstName, LastName)];" },
+          { "term": "Return type", "text": "List<List<SObject>> — a list of result lists, one per object type." },
+          { "term": "When to use", "text": "When you don't know which object has the data, or need to search many objects at once. Faster for free-text than SOQL on large text fields." }
+        ]
+      },
+      {
+        "heading": "6.7 Dynamic SOQL and SOSL",
+        "points": [
+          { "term": "Database.query()", "text": "Build SOQL as a String at runtime. Use bind variables to prevent SOQL injection.", "code": "String s = 'SELECT Id FROM Account WHERE Industry = :ind';\nList<SObject> rows = Database.query(s);" },
+          { "term": "Search.query()", "text": "Same idea for SOSL. Returns List<List<SObject>>." },
+          { "term": "Security", "text": "Use String.escapeSingleQuotes() and Database.query with bind variables to prevent injection." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-7",
+    "number": 7,
+    "title": "Triggers",
+    "section": "Chapter 7: Triggers",
+    "icon": "ti-bolt",
+    "intro": "Triggers are Apex code that execute before or after records of a particular type are inserted, updated, deleted, or undeleted. All triggers run in bulk — they process multiple records at once.",
+    "sections": [
+      {
+        "heading": "7.1 Trigger Syntax",
+        "points": [
+          { "term": "Definition", "text": "trigger TriggerName on ObjectName (events) { ... }", "code": "trigger MyTrigger on Account (before insert, before update, after insert, after update) {\n  // body\n}" },
+          { "term": "Events", "text": "before insert, before update, before delete, after insert, after update, after delete, after undelete." },
+          { "term": "Combine events", "text": "A single trigger can handle multiple events. Branch with Trigger.operationType." }
+        ]
+      },
+      {
+        "heading": "7.2 Trigger Context Variables",
+        "intro": "Implicitly defined in every trigger. Provide access to the records and event context.",
+        "points": [
+          { "term": "Trigger.new", "text": "List of new sObject versions. Available in all events. Read-only in after triggers." },
+          { "term": "Trigger.old", "text": "List of old sObject versions. Available in update, delete, undelete." },
+          { "term": "Trigger.newMap", "text": "Map<Id, sObject> of new versions, keyed by Id. Available in update, insert, delete, undelete (post-save)." },
+          { "term": "Trigger.oldMap", "text": "Map<Id, sObject> of old versions, keyed by Id. Available in update, delete." },
+          { "term": "Trigger.isInsert", "text": "Boolean. True if the trigger fired on insert." },
+          { "term": "Trigger.isUpdate / isDelete / isUndelete / isBefore / isAfter", "text": "Booleans for the current context." },
+          { "term": "Trigger.size", "text": "Number of records in the trigger invocation — useful for bulk handling." },
+          { "term": "Trigger.operationType", "text": "Enum: BEFORE_INSERT, BEFORE_UPDATE, BEFORE_DELETE, AFTER_INSERT, AFTER_UPDATE, AFTER_DELETE, AFTER_UNDELETE." }
+        ]
+      },
+      {
+        "heading": "7.3 Trigger Events and What They Allow",
+        "points": [
+          { "term": "Before insert / before update", "text": "Modify field values on Trigger.new directly. No DML needed. Use for validation and data normalization." },
+          { "term": "After insert / after update", "text": "Trigger.new is read-only. Use for related record creation and other side effects. DML allowed." },
+          { "term": "Before delete", "text": "Use Trigger.old to inspect. Can call addError() to block deletion." },
+          { "term": "After delete / undelete", "text": "Use Trigger.old or Trigger.new. Good for cleanup or restoration logic." }
+        ]
+      },
+      {
+        "heading": "7.4 Trigger Best Practices",
+        "points": [
+          { "term": "Bulkify", "text": "Never put SOQL or DML inside a for loop. Collect criteria into Sets/Lists, query once, iterate results." },
+          { "term": "One trigger per object", "text": "Use a single trigger per object with a handler class to keep logic organized." },
+          { "term": "Avoid recursion", "text": "Use a static Boolean flag or Set<Id> to prevent recursive firing from cascading updates." },
+          { "term": "Logic-less triggers", "text": "Best practice: put logic in a handler class, keep the trigger a one-liner that calls it." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-8",
+    "number": 8,
+    "title": "Governor Limits and Bulkification",
+    "section": "Chapter 8: Governor Limits and Bulkification",
+    "icon": "ti-shield",
+    "intro": "Because Apex runs on a shared multitenant platform, strict governor limits prevent any one execution from monopolizing resources. All Apex is bounded — you must design for bulk.",
+    "sections": [
+      {
+        "heading": "8.1 Per-Transaction Limits (Synchronous)",
+        "points": [
+          { "term": "SOQL queries", "text": "100 queries per synchronous transaction. 200 in async (Batch/Future/Queueable/Schedulable)." },
+          { "term": "SOQL query rows", "text": "50,000 rows retrieved in a single transaction." },
+          { "term": "DML statements", "text": "150 statements per synchronous transaction." },
+          { "term": "DML rows", "text": "10,000 records processed per transaction." },
+          { "term": "Heap size", "text": "6 MB synchronous, 12 MB asynchronous." },
+          { "term": "CPU time", "text": "10,000 ms synchronous, 60,000 ms asynchronous." },
+          { "term": "Callouts", "text": "100 HTTP callouts per transaction." },
+          { "term": "Email", "text": "100 sendEmail methods per transaction." },
+          { "term": "Future methods", "text": "50 per transaction." },
+          { "term": "Queueable jobs", "text": "1 per transaction (50 with TransactionFinalizers in chain)." }
+        ]
+      },
+      {
+        "heading": "8.2 Bulkification",
+        "intro": "The single most important Apex design pattern. Handle many records as efficiently as one.",
+        "points": [
+          { "term": "What it means", "text": "Code that processes a List of 200 records with the same number of SOQL/DML as 1 record." },
+          { "term": "Bad pattern", "text": "for (Account a : Trigger.new) { List<Contact> cs = [SELECT Id FROM Contact WHERE AccountId = :a.Id]; } — hits SOQL limit fast." },
+          { "term": "Good pattern", "text": "Collect all AccountIds into a Set, run ONE SOQL, iterate.", "code": "Set<Id> accIds = new Map<Id, Account>(Trigger.new).keySet();\nMap<Id, Contact[]> contactsByAcc = new Map<Id, Contact[]>();\nfor (Contact c : [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accIds]) {\n  if (!contactsByAcc.containsKey(c.AccountId)) contactsByAcc.put(c.AccountId, new List<Contact>());\n  contactsByAcc.get(c.AccountId).add(c);\n}" },
+          { "term": "DML at the end", "text": "Build lists of records to update/insert, then perform ONE DML on the whole list at the end of the trigger." }
+        ]
+      },
+      {
+        "heading": "8.3 The Order of Execution",
+        "intro": "When a record is saved, Salesforce runs through a specific order. Knowing this helps debug and design.",
+        "points": [
+          { "text": "1. System validation rules (required fields, field format)" },
+          { "text": "2. Before triggers run" },
+          { "text": "3. Custom validation rules" },
+          { "text": "4. Record saved to database (but not committed)" },
+          { "text": "5. After triggers run" },
+          { "text": "6. Assignment rules" },
+          { "text": "7. Auto-response rules" },
+          { "text": "8. Workflow rules" },
+          { "text": "9. Processes (Flows, Process Builder — being retired)" },
+          { "text": "10. Escalation rules" },
+          { "text": "11. Entitlement rules" },
+          { "text": "12. Roll-up summary fields update child records" },
+          { "text": "13. Criteria-based sharing evaluation" },
+          { "text": "14. DML commits to database" }
+        ]
+      },
+      {
+        "heading": "8.4 Why Limits Matter",
+        "points": [
+          { "text": "All Apex code runs on shared, multitenant infrastructure." },
+          { "text": "Limits prevent one tenant's runaway code from degrading the platform for everyone." },
+          { "text": "All Apex requests return 1 to 50,000 records — you must design for bulk." },
+          { "text": "If you don't, you'll hit governor limits in production with real data." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-9",
+    "number": 9,
+    "title": "Exception Handling",
+    "section": "Chapter 9: Exception Handling",
+    "icon": "ti-alert-triangle",
+    "intro": "Apex uses try-catch-finally for exception handling. Some built-in exceptions (DmlException, QueryException, NullPointerException) cover the most common failure modes.",
+    "sections": [
+      {
+        "heading": "9.1 Try-Catch-Finally",
+        "points": [
+          { "term": "Syntax", "text": "try { ... } catch (ExceptionType e) { ... } finally { ... }", "code": "try {\n  insert accs;\n} catch (DmlException e) {\n  for (Integer i = 0; i < e.getNumDml(); i++) {\n    System.debug(e.getDmlMessage(i));\n  }\n} finally {\n  System.debug('Done');\n}" },
+          { "term": "finally block", "text": "Always runs, even if an exception is thrown. Use for cleanup (Database.rollback, logging)." }
+        ]
+      },
+      {
+        "heading": "9.2 Common Built-in Exceptions",
+        "points": [
+          { "term": "DmlException", "text": "Thrown when a DML operation fails. Use getDmlMessage(i) and getDmlId(i) to inspect each error." },
+          { "term": "QueryException", "text": "Thrown when a SOQL query fails — invalid SOQL, query assigned to single sObject but returns 0 or many rows." },
+          { "term": "NullPointerException", "text": "Thrown when dereferencing a null variable. Use safe navigation (?. ) to avoid." },
+          { "term": "ListException", "text": "Thrown on invalid list operations — index out of bounds, modifying list during for-each." },
+          { "term": "LimitException", "text": "Thrown when a governor limit is exceeded." },
+          { "term": "MathException", "text": "Thrown on arithmetic errors like division by zero." }
+        ]
+      },
+      {
+        "heading": "9.3 Custom Exceptions",
+        "points": [
+          { "term": "Define", "text": "Extend the Exception class. Optionally pass a message to the constructor.", "code": "public class MyException extends Exception {}" },
+          { "term": "Throw", "text": "throw new MyException('Something went wrong');" },
+          { "term": "Catch", "text": "catch (MyException e) { System.debug(e.getMessage()); }" }
+        ]
+      },
+      {
+        "heading": "9.4 addError() vs Exceptions",
+        "points": [
+          { "term": "addError() in triggers", "text": "In a trigger, call e.addError('msg') to roll back the transaction and display the error to the user." },
+          { "term": "addError() on fields", "text": "acc.Name.addError('Name is required'); — error attached to a specific field." },
+          { "term": "When to use what", "text": "Use addError() in triggers for user-facing validation. Use try-catch for programmatic error handling." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-10",
+    "number": 10,
+    "title": "Testing Apex",
+    "section": "Chapter 10: Testing Apex",
+    "icon": "ti-checkbox",
+    "intro": "Testing is critical — Salesforce requires 75% code coverage before deploying Apex, but the real goal is verifying every use case works. Use test-driven development.",
+    "sections": [
+      {
+        "heading": "10.1 Test Class Basics",
+        "points": [
+          { "term": "@IsTest annotation", "text": "Mark the class and methods as test code. @IsTest classes don't count against the 6 MB Apex code limit." },
+          { "term": "Static test methods", "text": "Test methods must be static, return void, and take no arguments." },
+          { "term": "testMethod keyword", "text": "Equivalent to @IsTest. Salesforce recommends @IsTest — testMethod may be versioned out." },
+          { "term": "Required coverage", "text": "At least 75% of Apex code must be covered by tests. All tests must pass. Every trigger must have some coverage." }
+        ]
+      },
+      {
+        "heading": "10.2 The @TestSetup Pattern",
+        "points": [
+          { "term": "Purpose", "text": "Create test data once for the entire class. Re-runs before each test method to ensure isolation." },
+          { "term": "Usage", "text": "Annotate a method with @TestSetup. It must be static.", "code": "@IsTest\nstatic void makeData() {\n  List<Account> accs = new List<Account>();\n  for (Integer i = 0; i < 5; i++) {\n    accs.add(new Account(Name='Test ' + i));\n  }\n  insert accs;\n}" },
+          { "term": "Access in tests", "text": "Use [SELECT Id FROM Account LIMIT 1] to fetch the records created by @TestSetup." }
+        ]
+      },
+      {
+        "heading": "10.3 Test.startTest / Test.stopTest",
+        "points": [
+          { "term": "Why", "text": "Apex sets a new governor limit boundary inside startTest/stopTest. Use to simulate large data and isolate async code." },
+          { "term": "Pattern", "text": "Wrap the code under test between startTest and stopTest. After stopTest, async code has completed.", "code": "Test.startTest();\ninsert newAccounts;\nTest.stopTest();" },
+          { "term": "Required for async", "text": "Future methods, Batch Apex, and Queueable jobs only execute inside a startTest/stopTest block." }
+        ]
+      },
+      {
+        "heading": "10.4 Assertions",
+        "points": [
+          { "term": "System.assert", "text": "assert(condition) — fails if false." },
+          { "term": "System.assertEquals", "text": "assertEquals(expected, actual) — fails if not equal." },
+          { "term": "System.assertNotEquals", "text": "assertNotEquals(unexpected, actual)" },
+          { "term": "Assert.areEqual", "text": "Assert class with areEqual, areNotEqual, isTrue, isFalse, isNull, isNotNull." },
+          { "term": "Best practice", "text": "One logical assertion per test. Test one thing at a time." }
+        ]
+      },
+      {
+        "heading": "10.5 Test Data and SeeAllData",
+        "points": [
+          { "term": "Default isolation", "text": "By default, tests cannot see pre-existing org data. They only see data they create." },
+          { "term": "@IsTest(SeeAllData=true)", "text": "Test can see existing org data. Avoid — makes tests fragile and dependent on org state." },
+          { "term": "Best practice", "text": "Always create your own test data. Don't depend on org data existing." }
+        ]
+      },
+      {
+        "heading": "10.6 Testing Triggers",
+        "points": [
+          { "term": "Insert test records", "text": "Insert sObjects in your test, then re-query and verify field values reflect trigger logic." },
+          { "term": "Test bulk", "text": "Insert a list of 200+ records to verify your trigger handles bulk correctly." },
+          { "term": "Test all paths", "text": "Test before insert, before update, after insert, after update — every branch of your trigger." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-11",
+    "number": 11,
+    "title": "Asynchronous Apex",
+    "section": "Chapter 11: Asynchronous Apex",
+    "icon": "ti-clock",
+    "intro": "When you need to break out of synchronous limits — long operations, large data volumes, scheduled logic, or chaining — use asynchronous Apex. Four flavors cover most needs.",
+    "sections": [
+      {
+        "heading": "11.1 @future Methods",
+        "points": [
+          { "term": "What", "text": "A simple way to run Apex asynchronously. Mark a static method with @future." },
+          { "term": "Must be static", "text": "Future methods must be static, return void, and accept only primitive or collection of primitive parameters." },
+          { "term": "Limits", "text": "50 future calls per transaction. Async limits are higher than sync (200 SOQL, 12 MB heap, 60s CPU)." },
+          { "term": "Use case", "text": "Make a web service callout, do work that shouldn't block the user, fire-and-forget logic.", "code": "@future(callout=true)\npublic static void makeCallout(Id accId) { ... }" }
+        ]
+      },
+      {
+        "heading": "11.2 Queueable Apex",
+        "points": [
+          { "term": "What", "text": "A more powerful async option that supports non-primitive types and job chaining." },
+          { "term": "Interface", "text": "Implement Queueable and the execute(QueueableContext) method.", "code": "public class MyJob implements Queueable {\n  public void execute(QueueableContext ctx) {\n    // work\n  }\n}\nSystem.enqueueJob(new MyJob());" },
+          { "term": "Chaining", "text": "Call System.enqueueJob() at the end of execute() to chain jobs together." },
+          { "term": "Limits", "text": "1 queueable job per transaction (50 with chaining via TransactionFinalizers)." }
+        ]
+      },
+      {
+        "heading": "11.3 Batch Apex",
+        "points": [
+          { "term": "What", "text": "Process millions of records in chunks. Each chunk runs in its own transaction with its own governor limits." },
+          { "term": "Interface", "text": "Implement Database.Batchable<SObject> with three methods: start, execute, finish.", "code": "global class MyBatch implements Database.Batchable<SObject> {\n  global Database.QueryLocator start(Database.BatchableContext ctx) { return Database.getQueryLocator('SELECT Id FROM Account'); }\n  global void execute(Database.BatchableContext ctx, List<Account> scope) { /* process chunk */ }\n  global void finish(Database.BatchableContext ctx) { /* post-processing */ }\n}\nDatabase.executeBatch(new MyBatch(), 200);" },
+          { "term": "Database.Stateful", "text": "Implement to maintain state (instance variables) across execute() calls. Default is stateless." },
+          { "term": "Batch size", "text": "Up to 2000 per chunk (default 200). Larger chunks may hit heap limits." }
+        ]
+      },
+      {
+        "heading": "11.4 Scheduled Apex",
+        "points": [
+          { "term": "What", "text": "Run Apex at a specific time. Cron-like scheduling." },
+          { "term": "Interface", "text": "Implement Schedulable and the execute(SchedulableContext) method.", "code": "global class MySched implements Schedulable {\n  global void execute(SchedulableContext ctx) {\n    Database.executeBatch(new MyBatch());\n  }\n}\nSystem.schedule('Nightly job', '0 0 1 * * ?', new MySched());" },
+          { "term": "Schedule expression", "text": "Cron syntax: 'Seconds Minutes Hours DayOfMonth Month DayOfWeek Year'. Use System.schedule()." }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "chapter-12",
+    "number": 12,
+    "title": "ApexDoc and Code Documentation",
+    "section": "Chapter 12: ApexDoc and Code Documentation",
+    "icon": "ti-notebook",
+    "intro": "ApexDoc is a standardized comment format, based on JavaDoc, that makes your Apex code easier for humans, documentation generators, and AI agents to understand. Use it for collaboration and long-term maintainability.",
+    "sections": [
+      {
+        "heading": "12.1 The ApexDoc Block",
+        "points": [
+          { "term": "What it looks like", "text": "/** Description followed by tags. */ placed immediately above classes, methods, or properties.", "code": "/**\n * Calculates the discounted price for a list of books.\n * @param books The list of Book__c records to discount.\n * @return The number of books that were processed.\n */\npublic static Integer applyDiscount(Book__c[] books) { ... }" },
+          { "term": "@param", "text": "Describes a method parameter. One per parameter." },
+          { "term": "@return", "text": "Describes what the method returns." },
+          { "term": "@throws", "text": "Documents the exception types a method can throw." },
+          { "term": "@author, @since, @see, @deprecated", "text": "Additional descriptive tags." }
+        ]
+      },
+      {
+        "heading": "12.2 Why Document?",
+        "points": [
+          { "text": "AI agents and code-completion tools use doc comments to understand intent." },
+          { "text": "Future developers (including future you) will thank you." },
+          { "text": "Auto-generated documentation tools can produce reference docs from your comments." },
+          { "text": "ApexDoc tags are required by Salesforce for managed packages and AppExchange apps." }
         ]
       }
     ]
