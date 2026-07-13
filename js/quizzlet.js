@@ -142,6 +142,28 @@
   }
 
   /* ---------------------------------------------------
+     REFERENCE TILES (Quizz tab: ApexLearn vs Beginner Developer)
+  --------------------------------------------------- */
+  function initReferenceTiles() {
+    const tiles = Array.from(document.querySelectorAll('.reference-tile'));
+    const panels = {
+      apexlearn: qs('refPanelApexlearn'),
+      beginnerdev: qs('refPanelBeginnerdev'),
+    };
+
+    tiles.forEach((tile) => {
+      tile.addEventListener('click', () => {
+        const key = tile.dataset.ref;
+        tiles.forEach((t) => t.classList.toggle('active', t === tile));
+        Object.keys(panels).forEach((k) => {
+          const panel = panels[k];
+          if (panel) panel.classList.toggle('active', k === key);
+        });
+      });
+    });
+  }
+
+  /* ---------------------------------------------------
      TAB NAVIGATION
   --------------------------------------------------- */
   function initNav() {
@@ -207,7 +229,9 @@
 
       clearInterval(timerId);
       if (isTimed) {
-        secondsLeft = initialDuration;
+        // durationSeconds > 0 => countdown (timed mock exam).
+        // durationSeconds === 0 (or omitted) => count-up stopwatch (untimed practice quiz).
+        secondsLeft = initialDuration > 0 ? initialDuration : 0;
         updateTimerDisplay();
         timerId = setInterval(tick, 1000);
       }
@@ -216,18 +240,26 @@
     }
 
     function tick() {
-      secondsLeft -= 1;
-      updateTimerDisplay();
-      if (secondsLeft <= 0) {
-        clearInterval(timerId);
-        finish();
+      if (initialDuration > 0) {
+        secondsLeft -= 1;
+        updateTimerDisplay();
+        if (secondsLeft <= 0) {
+          clearInterval(timerId);
+          finish();
+        }
+      } else {
+        secondsLeft += 1;
+        updateTimerDisplay();
       }
     }
 
     function updateTimerDisplay() {
       if (!el.timerPill) return;
-      el.timerPill.textContent = formatTime(secondsLeft);
-      el.timerPill.classList.toggle('timer-low', secondsLeft <= 30);
+      const textEl = el.timerPill.querySelector('.timer-pill-text') || el.timerPill;
+      textEl.textContent = formatTime(secondsLeft);
+      // Countdown mode (initialDuration > 0) turns urgent when time is running out.
+      // Count-up/stopwatch mode (initialDuration === 0) never shows the "low time" state.
+      el.timerPill.classList.toggle('timer-low', initialDuration > 0 && secondsLeft <= 30);
     }
 
     function renderQuestion() {
@@ -397,6 +429,8 @@
     const questionSet = shuffle(cat.questions).slice(0, count);
 
     quizEngine.start(questionSet, {
+      timed: true,
+      durationSeconds: 0, // 0 = count-up stopwatch, since practice quizzes aren't time-limited
       onFinish: (result) => {
         recordAttempt({ mode: 'practice', categoryKey: cat.key, categoryName: cat.name, correct: result.correct, total: result.total });
         renderProfile();
@@ -707,6 +741,8 @@
     qs('cardDesc').textContent = 'Make sure ../data/apex_quiz.json sits alongside index.html and that this page is served over http(s) — opening it directly as a file:// URL blocks the fetch in most browsers.';
     qs('lengthOptions').innerHTML = '';
     qs('examBadge').textContent = 'Error';
+    const refApexMeta = qs('refApexMeta');
+    if (refApexMeta) refApexMeta.textContent = 'Could not load';
   }
 
   /* ---------------------------------------------------
@@ -714,6 +750,7 @@
   --------------------------------------------------- */
   async function init() {
     initNav();
+    initReferenceTiles();
     state.progress = loadProgress();
 
     try {
@@ -722,6 +759,11 @@
       console.error(err);
       showLoadError();
       return;
+    }
+
+    const refApexMeta = qs('refApexMeta');
+    if (refApexMeta) {
+      refApexMeta.textContent = `${state.allQuestions.length} questions · ${state.categories.length} topics`;
     }
 
     const firstCategoryKey = state.categories[0].key;
@@ -736,7 +778,7 @@
       progressFill: qs('quizProgressFill'),
       questionMeta: qs('quizQuestionMeta'),
       scorePill: qs('quizScorePill'),
-      timerPill: null,
+      timerPill: qs('quizTimerPill'),
       questionText: qs('quizQuestionText'),
       optionsList: qs('quizOptionsList'),
       explanationBox: qs('quizExplanationBox'),

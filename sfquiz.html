@@ -7,6 +7,9 @@
   <meta name="description" content="Practice quizzes, flashcards and mock exams built from your own question bank.">
   <!-- Tabler Icons CSS CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <!-- Fonts: Manrope (display/body) + JetBrains Mono (data/labels) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="../css/quizzlet.css">
 </head>
 <body>
@@ -41,63 +44,99 @@
     <!-- ============ QUIZZ (practice quizzes by topic) ============ -->
     <section id="quizz" class="content-section active">
 
-      <header class="quiz-header">
-        <h2>Quizz</h2>
-        <p>Select a topic to begin your quiz session.</p>
+      <!-- Dynamic dual-tile header: choose which reference track to study -->
+      <header class="reference-header">
+        <span class="section-eyebrow">Study Reference</span>
+        <h2 class="reference-title">Reference</h2>
+        <div class="reference-tiles" id="referenceTiles">
+          <button type="button" class="reference-tile active" data-ref="apexlearn">
+            <div class="reference-tile-icon"><i class="ti ti-brand-salesforce"></i></div>
+            <div class="reference-tile-text">
+              <span class="reference-tile-name">ApexLearn</span>
+              <span class="reference-tile-meta" id="refApexMeta">Loading…</span>
+            </div>
+            <i class="ti ti-chevron-right reference-tile-arrow"></i>
+          </button>
+          <button type="button" class="reference-tile" data-ref="beginnerdev">
+            <div class="reference-tile-icon"><i class="ti ti-code"></i></div>
+            <div class="reference-tile-text">
+              <span class="reference-tile-name">Beginner Developer</span>
+              <span class="reference-tile-meta">Coming soon</span>
+            </div>
+            <i class="ti ti-chevron-right reference-tile-arrow"></i>
+          </button>
+        </div>
       </header>
 
-      <nav class="quiz-category-nav" id="quizCategoryNav">
-        <!-- category pills injected by quizzlet.js -->
-      </nav>
+      <!-- ===== ApexLearn panel: existing quiz content lives here ===== -->
+      <div id="refPanelApexlearn" class="reference-panel active">
 
-      <!-- Setup: pick a topic + quiz length -->
-      <div id="quizSetupView">
-        <div class="quiz-card" id="quizCard">
-          <div class="card-badge" id="cardBadge">Loading…</div>
-          <h3 class="card-title" id="cardTitle">Loading questions…</h3>
-          <p class="card-desc" id="cardDesc">Please wait while we load your question bank.</p>
+        <p class="card-desc" style="margin-bottom: 18px;">Select a topic to begin your quiz session.</p>
 
-          <div class="length-options" id="lengthOptions"></div>
+        <nav class="quiz-category-nav" id="quizCategoryNav">
+          <!-- category pills injected by quizzlet.js -->
+        </nav>
 
-          <div class="card-footer">
-            <div class="author-info">
-              <div class="avatar"><i class="ti ti-user"></i></div>
-              <span>By ApexLearn</span>
+        <!-- Setup: pick a topic + quiz length -->
+        <div id="quizSetupView">
+          <div class="quiz-card" id="quizCard">
+            <div class="card-badge" id="cardBadge">Loading…</div>
+            <h3 class="card-title" id="cardTitle">Loading questions…</h3>
+            <p class="card-desc" id="cardDesc">Please wait while we load your question bank.</p>
+
+            <div class="length-options" id="lengthOptions"></div>
+
+            <div class="card-footer">
+              <div class="author-info">
+                <div class="avatar"><i class="ti ti-user"></i></div>
+                <span>By ApexLearn</span>
+              </div>
+              <button class="start-btn" id="startQuizBtn" disabled>Start Quiz</button>
             </div>
-            <button class="start-btn" id="startQuizBtn" disabled>Start Quiz</button>
           </div>
         </div>
+
+        <!-- Active quiz game -->
+        <div id="quizGameView" class="quiz-game hidden">
+          <div class="game-topbar">
+            <button class="exit-btn" id="exitQuizBtn" aria-label="Exit quiz"><i class="ti ti-x"></i></button>
+            <div class="progress-bar-track"><div class="progress-bar-fill" id="quizProgressFill"></div></div>
+            <div class="timer-pill" id="quizTimerPill"><i class="ti ti-clock"></i><span class="timer-pill-text">0:00</span></div>
+            <div class="score-pill" id="quizScorePill">0 / 0</div>
+          </div>
+          <div class="question-meta" id="quizQuestionMeta">Question 1 of 10</div>
+          <div class="question-card">
+            <p class="question-text" id="quizQuestionText"></p>
+            <div class="options-list" id="quizOptionsList"></div>
+            <div class="explanation-box hidden" id="quizExplanationBox">
+              <div class="explanation-label" id="quizExplanationLabel"></div>
+              <p id="quizExplanationText"></p>
+            </div>
+          </div>
+          <button class="next-btn hidden" id="quizNextBtn">Next Question <i class="ti ti-arrow-right"></i></button>
+        </div>
+
+        <!-- Results -->
+        <div id="quizResultsView" class="quiz-results hidden">
+          <div class="result-card">
+            <div class="result-score" id="quizResultScore">0%</div>
+            <h3 id="quizResultTitle">Great job!</h3>
+            <p id="quizResultSubtitle">You got 0 out of 0 correct.</p>
+            <div class="result-actions">
+              <button class="secondary-btn" id="quizRetryBtn"><i class="ti ti-refresh"></i> Retry</button>
+              <button class="start-btn" id="quizBackBtn">Back to Quizzes</button>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Active quiz game -->
-      <div id="quizGameView" class="quiz-game hidden">
-        <div class="game-topbar">
-          <button class="exit-btn" id="exitQuizBtn" aria-label="Exit quiz"><i class="ti ti-x"></i></button>
-          <div class="progress-bar-track"><div class="progress-bar-fill" id="quizProgressFill"></div></div>
-          <div class="score-pill" id="quizScorePill">0 / 0</div>
-        </div>
-        <div class="question-meta" id="quizQuestionMeta">Question 1 of 10</div>
-        <div class="question-card">
-          <p class="question-text" id="quizQuestionText"></p>
-          <div class="options-list" id="quizOptionsList"></div>
-          <div class="explanation-box hidden" id="quizExplanationBox">
-            <div class="explanation-label" id="quizExplanationLabel"></div>
-            <p id="quizExplanationText"></p>
-          </div>
-        </div>
-        <button class="next-btn hidden" id="quizNextBtn">Next Question <i class="ti ti-arrow-right"></i></button>
-      </div>
-
-      <!-- Results -->
-      <div id="quizResultsView" class="quiz-results hidden">
-        <div class="result-card">
-          <div class="result-score" id="quizResultScore">0%</div>
-          <h3 id="quizResultTitle">Great job!</h3>
-          <p id="quizResultSubtitle">You got 0 out of 0 correct.</p>
-          <div class="result-actions">
-            <button class="secondary-btn" id="quizRetryBtn"><i class="ti ti-refresh"></i> Retry</button>
-            <button class="start-btn" id="quizBackBtn">Back to Quizzes</button>
-          </div>
+      <!-- ===== Beginner Developer panel: placeholder for future content ===== -->
+      <div id="refPanelBeginnerdev" class="reference-panel">
+        <div class="reference-empty-state">
+          <div class="reference-empty-icon"><i class="ti ti-hammer"></i></div>
+          <h3>Beginner Developer reference is on the way</h3>
+          <p>This track will hold a separate question bank and study guide for foundational developer topics. Check back soon.</p>
         </div>
       </div>
 
@@ -107,6 +146,7 @@
     <section id="learn" class="content-section">
 
       <header class="quiz-header">
+        <span class="section-eyebrow">Study Guide</span>
         <h2>Learn</h2>
         <p>Read through each chapter, then quiz yourself on what you just covered.</p>
       </header>
@@ -133,6 +173,7 @@
     <section id="test" class="content-section">
 
       <header class="quiz-header">
+        <span class="section-eyebrow">Timed Mock Exam</span>
         <h2>Test</h2>
         <p>Simulate a real exam with a timed, mixed-topic question set.</p>
       </header>
@@ -159,7 +200,7 @@
         <div class="game-topbar">
           <button class="exit-btn" id="exitExamBtn" aria-label="Exit exam"><i class="ti ti-x"></i></button>
           <div class="progress-bar-track"><div class="progress-bar-fill" id="examProgressFill"></div></div>
-          <div class="timer-pill" id="examTimerPill">20:00</div>
+          <div class="timer-pill" id="examTimerPill"><i class="ti ti-clock"></i><span class="timer-pill-text">20:00</span></div>
         </div>
         <div class="question-meta" id="examQuestionMeta">Question 1 of 20</div>
         <div class="question-card">
@@ -192,6 +233,7 @@
     <section id="profile" class="content-section">
 
       <header class="quiz-header">
+        <span class="section-eyebrow">Your Progress</span>
         <h2>Profile</h2>
         <p>Your quiz activity and progress at a glance.</p>
       </header>
