@@ -30,7 +30,7 @@ const ROUNDS = [
   // Combined Knockout stage (QF to Final)
   { key: 'ko',     label: 'Knockout (QF–Final)', start: '2026-07-09', end: '2026-07-19' },
 ];
-let activeRound = 'qf';
+let activeRound = 'sf';
 
 function matchInRound(match, round) {
   if (!round || round.start === null) return true;
@@ -221,6 +221,7 @@ function stopAddPredTimer() {
 }
 
 // ─── Carousel ──────────────────────────────────────────────────────────────────
+// ─── Carousel (Updated to show remaining Semis & Finals) ──────────────────────
 function buildTodayCarousel() {
   const now = getCurrentPacificDate();
   const todayStr = getPacificDateStr(now);
@@ -228,14 +229,23 @@ function buildTodayCarousel() {
   const tomorrowStr = getPacificDateStr(tomorrow);
   const getDateStr = m => getPacificDateStr(parseMatchDateTime(m.dateTimeRaw));
 
+  // Find all remaining Semi-Final, 3rd Place, and Final matches
+  const remainingSemiAndFinals = MATCHES.filter(m => {
+    const rKey = getRoundKeyForMatch(m);
+    const isSemiOrFinal = ['sf', '3p', 'final'].includes(rKey);
+    const isRemaining = m.homeScore === null || m.awayScore === null;
+    return isSemiOrFinal && isRemaining;
+  });
+
   const todayTomorrow = MATCHES.filter(m=>{ const d=getDateStr(m); return d===todayStr||d===tomorrowStr; });
   const prevResults = MATCHES
     .filter(m=>m.homeScore!==null&&m.awayScore!==null&&getDateStr(m)<todayStr)
     .sort((a,b)=>parseMatchDateTime(b.dateTimeRaw)-parseMatchDateTime(a.dateTimeRaw))
     .slice(0,2);
 
+  // Combine them all uniquely to prevent duplicates
   const uniqueMap = new Map();
-  [...prevResults,...todayTomorrow].forEach(m=>uniqueMap.set(m.id,m));
+  [...prevResults, ...todayTomorrow, ...remainingSemiAndFinals].forEach(m=>uniqueMap.set(m.id,m));
   const allMatchesSorted = Array.from(uniqueMap.values())
     .sort((a,b)=>parseMatchDateTime(a.dateTimeRaw)-parseMatchDateTime(b.dateTimeRaw));
 
@@ -323,7 +333,20 @@ window.setRound = function(key, btn) {
 
 function getLeaderboardData() {
   const round = ROUNDS.find(r => r.key === activeRound) || ROUNDS[0];
-  const roundMatches = MATCHES.filter(m => matchInRound(m, round));
+  let roundMatches = MATCHES.filter(m => matchInRound(m, round));
+
+  // If the active round is Semi Final ('sf'), also include Quarter Final ('qf') matches
+  if (activeRound === 'sf') {
+    const qfRound = ROUNDS.find(r => r.key === 'qf');
+    if (qfRound) {
+      const qfMatches = MATCHES.filter(m => matchInRound(m, qfRound));
+      // Combine both sets of matches and ensure no duplicates
+      const uniqueMap = new Map();
+      [...roundMatches, ...qfMatches].forEach(m => uniqueMap.set(m.id, m));
+      roundMatches = Array.from(uniqueMap.values());
+    }
+  }
+
   const totalInRound = roundMatches.length;
   const scoredInRound = roundMatches.filter(m => m.homeScore !== null && m.awayScore !== null).length;
   const gamesLeft = totalInRound - scoredInRound;
