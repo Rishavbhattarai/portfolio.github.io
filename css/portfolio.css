@@ -59,6 +59,27 @@ button { background: none; border: none; cursor: pointer; font-family: inherit; 
 ul { list-style: none; }
 img { display: block; max-width: 100%; }
 
+/* ── ACCESSIBILITY: FOCUS & MOTION ──────────────────── */
+a:focus-visible,
+button:focus-visible,
+.tnode:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+[id] { scroll-margin-top: 90px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── SCROLLBAR ───────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--navy-800); }
