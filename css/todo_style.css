@@ -1,0 +1,1741 @@
+/* ==================================================================
+   THE STEWARD'S LEDGER — an illuminated-manuscript command console
+   Middle-earth aesthetic: obsidian & aged parchment, mithril and
+   worn gold, palantír-glass teal. One viewport, nothing scrolls but
+   the ledger's own columns. Every ID/class below is load-bearing —
+   script.js reaches into these exact hooks.
+   ================================================================== */
+
+/* ---------------------------------------------------------------
+   0. RESET
+   --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior-y: none;
+}
+button, input, select {
+    font-family: inherit;
+    color: inherit;
+}
+button { cursor: pointer; }
+h1, h2, h3, h4, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* ---------------------------------------------------------------
+   1. TOKENS
+   --------------------------------------------------------------- */
+:root {
+    /* base surfaces — obsidian stone, worn leather, aged bronze */
+    --bg: #0c0e08;
+    --bg-deep: #070805;
+    --surface: rgba(27, 29, 19, 0.88);
+    --surface-solid: #191b12;
+    --surface-raised: rgba(38, 41, 27, 0.94);
+    --border: rgba(201, 162, 75, 0.16);
+    --border-strong: rgba(201, 162, 75, 0.36);
+
+    /* text — parchment ink */
+    --text: #ece0c2;
+    --text-dim: #b7a97e;
+    --text-faint: #736853;
+
+    /* accents — worn gold (primary) + palantír teal (secondary) */
+    --accent: #c9a24b;
+    --accent-soft: rgba(201, 162, 75, 0.17);
+    --accent-2: #7bc4bb;
+    --accent-2-soft: rgba(123, 196, 187, 0.16);
+    --warn: #d99a52;
+    --danger: #a24736;
+    --success: #7ea35c;
+
+    /* habit sigil palette — jewel tones against bronze */
+    --c-coffee: #c9a24b;
+    --c-skincare: #c98bab;
+    --c-jobs: #6f9bc7;
+    --c-projects: #a084c4;
+    --c-nutrition: #7ea35c;
+    --c-workout: #bf7a45;
+    --c-salesforce: #6ec6c1;
+
+    /* geometry */
+    --radius-sm: 8px;
+    --radius-md: 13px;
+    --radius-lg: 18px;
+    --header-h: 66px;
+
+    /* leaf/gilding — reused anywhere a gold surface or rule is drawn */
+    --gild: linear-gradient(135deg, #e6c877 0%, var(--accent) 42%, #a9812f 100%);
+    --gild-rule: linear-gradient(90deg, transparent, rgba(201,162,75,0.55), transparent);
+
+    /* motion */
+    --ease: cubic-bezier(.22, .8, .32, 1);
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --spring: cubic-bezier(.34, 1.56, .64, 1);
+    --fast: 160ms;
+    --med: 300ms;
+    --slow: 620ms;
+
+    color-scheme: dark;
+}
+
+@media (max-width: 560px) {
+    :root {
+        --header-h: 58px;
+    }
+}
+
+/* ---------------------------------------------------------------
+   2. TYPE — Cinzel (engraved display) + Spectral (literary body)
+   --------------------------------------------------------------- */
+body {
+    font-family: 'Spectral', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+.brand h1, .core-console-heading h2, .timer-phase-badge, .kanban-column-header h3,
+.habit-info h3, .kanban-tab-btn, #timer-display, .core-console-count,
+.trail-nav-marker .marker-text span, .timer-stat-value {
+    font-family: 'Cinzel', 'Spectral', serif;
+}
+
+/* ---------------------------------------------------------------
+   3. AMBIENT BACKGROUND — four stacked layers, all fixed behind the
+      shell and entirely non-interactive:
+        .starfield        static gradient bed + vignette
+        .starfield::before  slow aurora veil (forge-light vs. glass)
+        .starfield::after   parchment grain
+        .star / .ember      twinkling motes + rising forge-ash
+   --------------------------------------------------------------- */
+.starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 90% 55% at 18% -8%, rgba(201,162,75,0.10), transparent 62%),
+        radial-gradient(ellipse 70% 50% at 100% 4%, rgba(123,196,187,0.08), transparent 60%),
+        radial-gradient(ellipse 120% 90% at 50% 120%, rgba(0,0,0,0.55), transparent 60%),
+        var(--bg-deep);
+}
+
+/* Aurora veil — three broad washes drifting against each other on a
+   long, deliberately unhurried cycle. Blurred heavily so it reads as
+   light in the air rather than as shapes. */
+.starfield::before {
+    content: '';
+    position: absolute;
+    inset: -30%;
+    background:
+        radial-gradient(circle at 28% 34%, rgba(201,162,75,0.13), transparent 42%),
+        radial-gradient(circle at 74% 62%, rgba(123,196,187,0.11), transparent 44%),
+        radial-gradient(circle at 52% 88%, rgba(160,132,196,0.07), transparent 46%);
+    filter: blur(34px);
+    will-change: transform, opacity;
+    animation: veil-drift 46s ease-in-out infinite alternate;
+}
+@keyframes veil-drift {
+    0%   { transform: translate3d(-3%, -2%, 0) scale(1);   opacity: 0.7; }
+    50%  { transform: translate3d(3%, 2%, 0) scale(1.09);  opacity: 1; }
+    100% { transform: translate3d(-2%, 4%, 0) scale(1.03); opacity: 0.78; }
+}
+
+/* Parchment grain — a single tiled turbulence swatch, blended low so
+   the flat gradients above pick up a little tooth. */
+.starfield::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.32;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 72%);
+    opacity: 0.5;
+    animation: twinkle 4s ease-in-out infinite;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.10; transform: scale(0.75) translateY(0); }
+    50%      { opacity: 0.85; transform: scale(1.2) translateY(-3px); }
+}
+
+/* Forge-ash: embers lifting off the bottom of the hall, guttering out
+   somewhere near the top. Pure CSS travel — no per-frame JS. */
+.ember {
+    position: absolute;
+    bottom: -14px;
+    width: var(--ember-size, 2px);
+    height: var(--ember-size, 2px);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ember-color, var(--accent)) 0%, transparent 70%);
+    opacity: 0;
+    /* no will-change: these animate transform/opacity only, so they're
+       composited anyway, and there are ~18 of them holding layers for
+       the life of the page */
+    animation: ember-rise var(--ember-dur, 15s) linear infinite;
+    animation-delay: var(--ember-delay, 0s);
+}
+@keyframes ember-rise {
+    0%   { opacity: 0; transform: translate3d(0, 0, 0) scale(0.5); }
+    10%  { opacity: var(--ember-op, 0.65); }
+    75%  { opacity: var(--ember-op, 0.65); }
+    100% { opacity: 0; transform: translate3d(var(--ember-x, 24px), -104vh, 0) scale(1.15); }
+}
+
+/* ---------------------------------------------------------------
+   4. APP SHELL
+   --------------------------------------------------------------- */
+.app-shell {
+    position: relative;
+    z-index: 1;
+    height: 100dvh;
+    height: 100vh; /* fallback */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ---------------------------------------------------------------
+   5. HEADER — a carved lintel above the hall
+   --------------------------------------------------------------- */
+.app-header {
+    position: relative;
+    flex: 0 0 auto;
+    min-height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(17,19,11,0.94), rgba(17,19,11,0.68));
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 0 rgba(201,162,75,0.06);
+}
+/* a gilt rule beneath the lintel, brightest at the centre */
+.app-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: var(--gild-rule);
+    opacity: 0.7;
+}
+/* each cluster of the header settles in, left to right */
+.app-header > * { animation: header-settle 640ms var(--ease-out) backwards; }
+.app-header > .brand        { animation-delay: 40ms; }
+.app-header > .trail-nav    { animation-delay: 120ms; }
+.app-header > .header-right { animation-delay: 200ms; }
+@keyframes header-settle {
+    from { opacity: 0; transform: translateY(-9px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.brand-mark {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 35% 30%, rgba(201,162,75,0.32), var(--surface-solid) 72%);
+    color: var(--accent);
+    font-size: 14px;
+    border: 1px solid rgba(201,162,75,0.4);
+    box-shadow: 0 0 12px rgba(201,162,75,0.25), inset 0 0 6px rgba(201,162,75,0.2);
+    animation: mark-glow 5s ease-in-out infinite;
+}
+@keyframes mark-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(201,162,75,0.2), inset 0 0 5px rgba(201,162,75,0.15); }
+    50% { box-shadow: 0 0 18px rgba(201,162,75,0.4), inset 0 0 8px rgba(201,162,75,0.3); }
+}
+.brand-text { min-width: 0; }
+/* Gilding: a highlight travels across the lettering every few
+   seconds, the way raised gold leaf catches a moving light. */
+.brand-text h1 {
+    font-size: 16px;
+    letter-spacing: 0.09em;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: linear-gradient(100deg,
+        var(--text) 26%, #fff4d4 42%, var(--accent) 50%, var(--text) 66%);
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    animation: gild-sweep 8.5s ease-in-out infinite;
+}
+@keyframes gild-sweep {
+    0%, 62%, 100% { background-position: 150% 0; }
+    92%           { background-position: -40% 0; }
+}
+.brand-text p {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+}
+
+.trail-nav {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.trail-nav-arrow {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+}
+.trail-nav-arrow:hover { background: var(--surface-raised); color: var(--accent); border-color: var(--border-strong); }
+.trail-nav-marker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease);
+    max-width: 30vw;
+}
+.trail-nav-marker.is-today { border-color: rgba(201,162,75,0.5); background: var(--accent-soft); }
+.marker-icon { color: var(--success); font-size: 12px; }
+.trail-nav-marker.is-today .marker-icon { color: var(--accent); }
+.marker-text { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+.marker-text span { font-size: 12.5px; font-weight: 700; letter-spacing: 0.03em; }
+.marker-text small { font-size: 10.5px; color: var(--text-faint); letter-spacing: 0.03em; font-style: italic; }
+
+.header-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.sync-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-faint);
+    padding: 5px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+}
+.sync-status i { font-size: 11px; }
+.sync-status.status-ok { color: var(--success); border-color: rgba(126,163,92,0.4); }
+.sync-status.status-saving { color: var(--warn); border-color: rgba(217,154,82,0.4); }
+.sync-status.status-error { color: var(--danger); border-color: rgba(162,71,54,0.4); }
+.sync-status.status-saving i { animation: seer-pulse 1.1s ease-in-out infinite; }
+@keyframes seer-pulse { 0%, 100% { opacity: 0.5; transform: scale(0.92); } 50% { opacity: 1; transform: scale(1.12); } }
+
+.reset-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.reset-btn:hover { background: rgba(162,71,54,0.14); color: var(--danger); border-color: rgba(162,71,54,0.35); }
+
+/* ---------------------------------------------------------------
+   6. COSMOS → THE HALL. One continuous view: the ledger stands at
+      the center like a table in Rivendell's hall of fire, habit
+      sigils hang and drift around it like carved medallions.
+   --------------------------------------------------------------- */
+.cosmos {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px 16px calc(120px + env(safe-area-inset-bottom));
+    /* Column flex + auto margins on the child: centres the composition
+       when it fits, and degrades to normal top-anchored scrolling when
+       it doesn't (unlike place-content:center, which clips the top). */
+    display: flex;
+    flex-direction: column;
+}
+
+/* The hall floor. Two rows: the ledger — with its ambient rings
+   behind it — always occupies row 1. On narrow screens the habit
+   sigils drop into row 2 as a swipeable rail, because there is
+   simply no room to ring a 92vw console. On wide screens they lift
+   back into row 1 and layoutOrbit() in script.js measures the
+   console and hangs them in the margins on either side. */
+.orbit-system {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto;
+    justify-items: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1080px;
+    flex: 0 0 auto;
+    margin: auto;
+    padding-top: 8px;
+    --ring-size: 460px;
+}
+.orbit-decor  { grid-area: 1 / 1; }
+.core-console { grid-area: 1 / 1; }
+.habit-orbit  { grid-area: 2 / 1; justify-self: stretch; }
+
+@media (min-width: 860px) {
+    .orbit-system {
+        gap: 0;
+        padding-top: 64px;
+        padding-bottom: 12px;
+        --ring-size: 740px;
+    }
+    .habit-orbit { grid-area: 1 / 1; justify-self: center; }
+}
+
+/* filigree rings — the inlaid rings of a smith's table. Purely
+   ambient now: nothing is positioned off them, so they are free to
+   be sized for looks rather than for clearance. */
+.orbit-decor {
+    position: relative;
+    width: 1px;
+    height: 1px;
+    z-index: 0;
+    pointer-events: none;
+    transform: translate3d(var(--decor-px, 0px), var(--decor-py, 0px), 0);
+    transition: transform 400ms var(--ease-out);
+}
+.orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--ring-size);
+    height: var(--ring-size);
+    border-radius: 50%;
+    border: 1px dashed rgba(201,162,75,0.18);
+    transform: translate(-50%, -50%);
+    animation: ring-spin 110s linear infinite;
+}
+.orbit-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,162,75,0.07);
+}
+/* a single bright bead riding each ring, so the spin is legible */
+.orbit-ring::after {
+    content: '';
+    position: absolute;
+    top: -2.5px;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    margin-left: -2.5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px 2px rgba(201,162,75,0.6);
+    opacity: 0.75;
+}
+.orbit-ring-inner {
+    width: calc(var(--ring-size) - 74px);
+    height: calc(var(--ring-size) - 74px);
+    border-color: rgba(123,196,187,0.15);
+    animation-duration: 85s;
+    animation-direction: reverse;
+}
+.orbit-ring-inner::after {
+    background: var(--accent-2);
+    box-shadow: 0 0 10px 2px rgba(123,196,187,0.6);
+}
+@keyframes ring-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* ---------------------------------------------------------------
+   7. THE LEDGER — illuminated-manuscript console, always centered
+   --------------------------------------------------------------- */
+.core-console {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 92vw);
+    display: flex;
+    flex-direction: column;
+    background:
+        linear-gradient(180deg, rgba(201,162,75,0.05), transparent 18%),
+        var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 0 1px rgba(201,162,75,0.07), 0 26px 60px rgba(0,0,0,0.55), 0 0 50px rgba(201,162,75,0.06);
+    padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+    animation: core-in 700ms var(--ease-out);
+}
+.core-console::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(201,162,75,0.08);
+    border-radius: calc(var(--radius-lg) - 6px);
+    pointer-events: none;
+}
+/* Corner brackets, as on a ruled manuscript page — eight hairlines
+   drawn as background slivers, one pair per corner. */
+.core-console::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    pointer-events: none;
+    opacity: 0.38;
+    background-repeat: no-repeat;
+    background-image:
+        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent));
+    background-size: 1px 15px, 15px 1px, 1px 15px, 15px 1px,
+                     1px 15px, 15px 1px, 1px 15px, 15px 1px;
+    background-position:
+        0 0,        0 0,          /* top-left  */
+        100% 0,     100% 0,       /* top-right */
+        0 100%,     0 100%,       /* bottom-left */
+        100% 100%,  100% 100%;    /* bottom-right */
+}
+@keyframes core-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.965); }
+    to   { opacity: 1; transform: none; }
+}
+.core-console-heading {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 11px;
+    margin-bottom: 13px;
+}
+/* illuminated rule closing the heading */
+.core-console-heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--gild-rule);
+}
+.core-console-heading h2 {
+    font-size: 17px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--text);
+    flex: 1 1 auto;
+}
+.core-console-heading h2 i { color: var(--accent); font-size: 15px; }
+.core-console-count {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #241a08;
+    background: linear-gradient(135deg, var(--accent), #a9812f);
+    border: 1px solid rgba(201,162,75,0.5);
+    border-radius: 999px;
+    padding: 4px 11px;
+    white-space: nowrap;
+    box-shadow: 0 0 10px rgba(201,162,75,0.25);
+}
+
+/* ---------------------------------------------------------------
+   8. LEDGER — input + kanban ("mission board" → scroll-table)
+   --------------------------------------------------------------- */
+.todo-input-wrapper {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+#todo-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: rgba(7,8,5,0.35);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 15.5px;
+    font-family: 'Spectral', serif;
+    color: var(--text);
+    transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+#todo-input::placeholder { color: var(--text-faint); font-style: italic; }
+#todo-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+#todo-add-btn {
+    position: relative;
+    overflow: hidden;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(201,162,75,0.5);
+    background: var(--gild);
+    color: #221904;
+    font-weight: 700;
+    font-size: 14.5px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 14px rgba(201,162,75,0.28);
+    transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+#todo-add-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(201,162,75,0.45); }
+#todo-add-btn:active { transform: translateY(0) scale(0.985); }
+/* the quill dips as the button is pressed */
+#todo-add-btn i { transition: transform var(--med) var(--spring); }
+#todo-add-btn:hover i { transform: rotate(-16deg) translateY(-1px); }
+
+/* A sheen that crosses the gilded buttons on hover. */
+#todo-add-btn::before,
+.save-flip-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 45%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    opacity: 0;
+}
+#todo-add-btn:hover::before,
+.save-flip-btn:hover::before { animation: sheen-sweep 780ms var(--ease-out); }
+@keyframes sheen-sweep {
+    from { left: -60%; opacity: 0.9; }
+    to   { left: 130%; opacity: 0; }
+}
+
+/* press ripples (spawned by the ripple handler in script.js) */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: radial-gradient(circle, rgba(255,255,255,0.42), transparent 68%);
+    pointer-events: none;
+    animation: ripple-out 560ms var(--ease-out) forwards;
+}
+@keyframes ripple-out {
+    to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Mobile segmented control */
+.kanban-tabs {
+    display: none;
+    flex: 0 0 auto;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+.kanban-tab-btn {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 8px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.kanban-tab-btn.is-active { color: var(--text); border-color: var(--border-strong); background: var(--surface-raised); }
+.kanban-tab-count {
+    background: rgba(0,0,0,0.3);
+    border-radius: 999px;
+    min-width: 16px;
+    padding: 0 5px;
+    font-size: 11px;
+}
+
+.kanban-board {
+    flex: 1 1 auto;
+    min-height: 260px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.kanban-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: rgba(7,8,5,0.28);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+.kanban-column.drag-over {
+    border-color: var(--accent);
+    background: rgba(201,162,75,0.06);
+    box-shadow: 0 0 0 3px var(--accent-soft) inset, 0 0 22px rgba(201,162,75,0.16);
+}
+.kanban-column.drag-over .kanban-empty { border-color: var(--border-strong); color: var(--accent); }
+.kanban-column-header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+}
+.kanban-column-header h3 { font-size: 12px; letter-spacing: 0.07em; font-weight: 600; flex: 1 1 auto; color: var(--text-dim); }
+.kanban-column-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-faint);
+    background: rgba(0,0,0,0.3);
+    border-radius: 999px;
+    min-width: 18px;
+    text-align: center;
+    padding: 2px 6px;
+}
+.kanban-dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; }
+.dot-not-started { background: var(--text-faint); }
+.dot-doing { background: var(--warn); box-shadow: 0 0 8px rgba(217,154,82,0.6); }
+.dot-done { background: var(--success); box-shadow: 0 0 8px rgba(126,163,92,0.6); }
+
+.kanban-column-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.kanban-empty {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-faint);
+    text-align: center;
+    padding: 18px 8px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+    animation: empty-breathe 5s ease-in-out infinite;
+}
+@keyframes empty-breathe {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 0.95; }
+}
+
+.kanban-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-left: 2px solid rgba(201,162,75,0.3);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    cursor: grab;
+    animation: card-in 420ms var(--ease-out) backwards;
+    transition: border-color var(--fast) var(--ease),
+                transform 200ms var(--ease),
+                box-shadow 200ms var(--ease),
+                background var(--fast) var(--ease);
+}
+.kanban-card:hover {
+    border-color: var(--border-strong);
+    background: rgba(46, 49, 33, 0.96);
+    transform: translateX(2px) translateY(-1px);
+    box-shadow: -3px 4px 14px rgba(0,0,0,0.4), 0 0 14px rgba(201,162,75,0.10);
+}
+.kanban-card:active { cursor: grabbing; }
+.kanban-card.dragging { opacity: 0.4; transform: rotate(1.6deg) scale(1.02); }
+.kanban-column[data-status="done"] .kanban-card { border-left-color: rgba(126,163,92,0.55); }
+.kanban-column[data-status="doing"] .kanban-card { border-left-color: rgba(217,154,82,0.5); }
+@keyframes card-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+/* fulfilled tasks get a struck-through, faded look */
+.kanban-column[data-status="done"] .kanban-card-text {
+    color: var(--text-dim);
+    text-decoration: line-through;
+    text-decoration-color: rgba(126,163,92,0.5);
+    text-decoration-thickness: 1px;
+}
+.kanban-card-top { display: flex; align-items: flex-start; gap: 8px; }
+.kanban-card-check {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--border-strong);
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    color: transparent;
+    margin-top: 1px;
+    transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease),
+                color var(--fast) var(--ease), transform 220ms var(--spring);
+}
+.kanban-card-check i {
+    transform: scale(0.3) rotate(-25deg);
+    opacity: 0;
+    transition: transform 320ms var(--spring), opacity 140ms linear;
+}
+.kanban-column[data-status="done"] .kanban-card-check {
+    background: var(--success);
+    border-color: var(--success);
+    color: #10230a;
+}
+.kanban-column[data-status="done"] .kanban-card-check i {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+}
+.kanban-card-check:hover { border-color: var(--accent); transform: scale(1.12); }
+.kanban-card-check:hover i { opacity: 0.35; transform: scale(0.85) rotate(0deg); color: var(--accent); }
+.kanban-card-text { font-size: 15px; line-height: 1.45; flex: 1 1 auto; word-break: break-word; }
+.kanban-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    gap: 8px;
+}
+.kanban-card-origin {
+    font-size: 11.5px;
+    font-style: italic;
+    color: var(--accent-2);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.kanban-card-delete {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: var(--text-faint);
+    font-size: 12.5px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+.kanban-card-delete:hover { color: var(--danger); background: rgba(162,71,54,0.14); }
+
+/* ---------------------------------------------------------------
+   9. HABIT SIGILS — hanging rune-medallions orbiting the ledger.
+      Every sigil, whatever it logs, is a flip-medallion: the front
+      is a large glowing rune face; a tap turns it in the light to
+      reveal its logging rite on the back.
+   --------------------------------------------------------------- */
+.habit-orbit {
+    position: relative;
+    z-index: 3;
+}
+
+/* Registered so they interpolate — unregistered custom properties
+   snap between values instead of transitioning. */
+@property --fade-l {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+@property --fade-r {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+
+/* ---- RAIL MODE (narrow) — medallions strung on a swipeable rail
+   directly beneath the ledger, with a soft fade at each end so it
+   reads as continuing past the edge. ---- */
+.habit-orbit:not(.is-orbiting) {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(620px, 94vw);
+    margin: 0 auto;
+    padding: 8px 2px 14px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    /* Fade only the edges that actually continue off-screen — a fixed
+       mask dims the first tile even when the rail is already at its
+       start. --fade-l/--fade-r are toggled by the scroll handler. */
+    --fade-l: 0px;
+    --fade-r: 26px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l),
+                        #000 calc(100% - var(--fade-r)), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l),
+                        #000 calc(100% - var(--fade-r)), transparent);
+    transition: --fade-l 200ms linear, --fade-r 200ms linear;
+}
+.habit-orbit.rail-scrolled  { --fade-l: 26px; }
+.habit-orbit.rail-at-end    { --fade-r: 0px; }
+.habit-orbit:not(.is-orbiting)::-webkit-scrollbar { display: none; }
+.habit-orbit:not(.is-orbiting) .habit-card:not(.docked) {
+    position: relative;
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    width: 152px;
+    height: 152px;
+}
+/* a gentler sway on the rail — full orbit bob reads as jitter in a row */
+.habit-orbit:not(.is-orbiting) .habit-card { --bob: -3px; }
+
+/* ---- ORBIT MODE (wide) — tiles hang in the page margins at
+   coordinates measured by layoutOrbit(); --tx/--ty are written per
+   tile from script.js, parallax included. ---- */
+.habit-orbit.is-orbiting {
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+}
+.habit-orbit.is-orbiting .habit-card:not(.docked) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translate3d(var(--tx, 0px), var(--ty, 0px), 0);
+    transition: transform 420ms var(--ease-out), filter var(--fast) var(--ease);
+}
+
+.habit-card {
+    /* an explicit height (not min-height) so the flip faces, which
+       are absolutely positioned, size themselves off the card itself */
+    width: clamp(130px, 30vw, 168px);
+    height: clamp(130px, 30vw, 168px);
+    perspective: 1300px;
+    pointer-events: auto;
+    cursor: pointer;
+    --bob: -7px;
+    animation: chip-bob 5.5s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -0.4s);
+    transition: filter var(--fast) var(--ease), scale 260ms var(--spring);
+}
+@keyframes chip-bob {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 var(--bob, -7px); }
+}
+.habit-draggable { cursor: grab; }
+.habit-card.dragging { opacity: 0.35; animation: none; }
+
+/* The orbit's own z-index (3) opens a stacking context, so a docked
+   tile's z-index: 60 is trapped inside it and lands *under* the
+   backdrop at 55 — the tile came up dimmed along with everything it
+   was supposed to stand out from. Lift the whole orbit past the
+   backdrop while something is docked, and suppress its other tiles
+   with filter/opacity rather than relying on the veil to cover them. */
+.habit-orbit.has-docked { z-index: 56; }
+.habit-orbit.has-docked .habit-card:not(.docked) {
+    filter: blur(2.5px) brightness(0.34);
+    opacity: 0.45;
+}
+
+/* Arrival: sigils settle into their places just after the ledger
+   lands, each one a beat behind the last. */
+.habit-card { animation-name: chip-bob, sigil-arrive; }
+.habit-card {
+    animation-duration: 5.5s, 620ms;
+    animation-timing-function: ease-in-out, var(--spring);
+    animation-iteration-count: infinite, 1;
+    animation-delay: calc(var(--i, 0) * -0.4s), calc(240ms + var(--i, 0) * 70ms);
+    animation-fill-mode: none, backwards;
+}
+@keyframes sigil-arrive {
+    from { opacity: 0; scale: 0.4; }
+    to   { opacity: 1; scale: 1; }
+}
+
+/* Tactile lift + shimmering aura on hover — shared by every face of
+   every tile (front and back both carry .card-face-wrapper). */
+.habit-card:hover { scale: 1.045; }
+.card-face-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(201,162,75,0.07), transparent 60%),
+        var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.015);
+    transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease),
+                transform 260ms var(--spring), box-shadow var(--fast) var(--ease);
+}
+/* a slow glint travelling across the face of each medallion */
+.card-face-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 38%, rgba(255,244,212,0.15) 48%, transparent 58%);
+    background-size: 260% 100%;
+    background-position: 160% 0;
+    pointer-events: none;
+    transition: background-position 700ms var(--ease-out);
+}
+.habit-card:hover .card-face-wrapper::after { background-position: -60% 0; }
+.habit-card:hover .card-face-wrapper {
+    transform: translateY(-6px) rotateX(5deg);
+    border-color: var(--border-strong);
+    box-shadow: 0 16px 34px rgba(0,0,0,0.5), 0 0 26px rgba(201,162,75,0.26);
+}
+.habit-card:active { scale: 0.985; }
+/* the sigil itself turns to meet you */
+.habit-icon-wrapper { transition: transform 320ms var(--spring); }
+.habit-card:hover .habit-icon-wrapper { transform: scale(1.16) rotate(-6deg); }
+
+/* ---- Docked: tapping a sigil pulls it into the light to log ---- */
+.habit-dock-close {
+    display: none;
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-solid);
+    color: var(--text-dim);
+    font-size: 13px;
+    z-index: 2;
+    align-items: center;
+    justify-content: center;
+}
+.habit-dock-close:hover { color: var(--text); background: var(--surface-raised); }
+.habit-card.docked .habit-dock-close { display: flex; }
+.habit-card.docked {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(360px, 90vw) !important;
+    height: auto !important;
+    min-height: 250px !important;
+    z-index: 60;
+    animation: dock-in 320ms var(--ease);
+    cursor: default;
+}
+.habit-card.docked:hover { scale: 1; }
+.habit-card.docked .flip-card-inner { min-height: 250px; }
+.habit-card.docked .flip-card-front,
+.habit-card.docked .flip-card-back { padding: 22px; }
+
+/* Pulled into the light: the tile's normal surface is translucent,
+   which vanishes against the dimmed backdrop — so a docked tile gets
+   an opaque, lamplit face and a gold rim to lift it clear. */
+.habit-card.docked .flip-card-front,
+.habit-card.docked .flip-card-back {
+    background:
+        radial-gradient(ellipse 120% 70% at 50% -10%, rgba(201,162,75,0.18), transparent 62%),
+        var(--surface-solid);
+    border-color: var(--border-strong);
+    box-shadow: 0 34px 76px rgba(0,0,0,0.7), 0 0 50px rgba(201,162,75,0.22);
+}
+/* no hover tricks once it's the centre of attention */
+.habit-card.docked .card-face-wrapper::after { display: none; }
+.habit-card.docked:hover .card-face-wrapper { transform: none; }
+.habit-card.docked .habit-info h3 { font-size: 17px; letter-spacing: 0.04em; }
+.habit-card.docked .habit-icon-wrapper { width: 52px; height: 52px; font-size: 22px; }
+
+@keyframes dock-in {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotateY(-25deg); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .habit-card { animation: none; }
+}
+
+/* Compact sigil face: icon + label only until docked */
+.habit-card:not(.docked) .flip-card-front {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    padding: 14px 10px;
+}
+.habit-card:not(.docked) .habit-info { text-align: center; width: 100%; }
+.habit-card:not(.docked) .habit-icon-wrapper { margin: 0 auto; }
+.habit-card:not(.docked) .habit-info h3 {
+    font-size: 14.5px;
+    line-height: 1.28;
+    letter-spacing: 0.02em;
+}
+.habit-card:not(.docked) .habit-desc { font-size: 11px; }
+/* the logging controls themselves only surface once the sigil is
+   pulled into the light — idle, it's a rune face: icon, label, state */
+.habit-card:not(.docked) .action-trigger-btn,
+.habit-card:not(.docked) .toggle-flip-row,
+.habit-card:not(.docked) .habit-counter,
+.habit-card:not(.docked) .flip-card-back h4 {
+    display: none;
+}
+
+.habit-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex: 0 0 auto;
+    border: 1px solid currentColor;
+    position: relative;
+}
+.habit-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    opacity: 0.25;
+}
+.color-coffee { background: rgba(201,162,75,0.14); color: var(--c-coffee); }
+.color-skincare { background: rgba(201,139,171,0.14); color: var(--c-skincare); }
+.color-jobs { background: rgba(111,155,199,0.14); color: var(--c-jobs); }
+.color-projects { background: rgba(160,132,196,0.14); color: var(--c-projects); }
+.color-nutrition { background: rgba(126,163,92,0.14); color: var(--c-nutrition); }
+.color-workout { background: rgba(191,122,69,0.14); color: var(--c-workout); }
+.color-salesforce { background: rgba(110,198,193,0.14); color: var(--c-salesforce); }
+
+.habit-info { flex: 1 1 auto; min-width: 0; }
+.habit-info h3 { font-size: 14.5px; letter-spacing: 0.03em; font-weight: 600; }
+.habit-desc { font-size: 12.5px; font-style: italic; color: var(--text-faint); margin-top: 2px; line-height: 1.4; }
+
+/* ---- Back-face controls, shared sizing baseline ---- */
+.flip-card-back h4 {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: var(--accent-2);
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+.toggle-flip-row {
+    width: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.toggle-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.toggle-btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+.habit-card.completed .toggle-btn { background: var(--success); border-color: var(--success); color: #0f230a; }
+.habit-card.completed .card-face-wrapper { border-color: rgba(126,163,92,0.45); box-shadow: 0 0 26px rgba(126,163,92,0.18), 0 6px 20px rgba(0,0,0,0.4); }
+
+.habit-counter {
+    width: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.counter-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 13px;
+    transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.counter-btn:hover { background: var(--surface-raised); border-color: var(--border-strong); color: var(--accent); transform: translateY(-1px); }
+.counter-value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: 'Cinzel', serif; }
+.habit-card.active .card-face-wrapper { border-color: rgba(160,132,196,0.45); }
+
+.action-trigger-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.action-trigger-btn:hover { background: var(--surface-raised); color: var(--accent-2); border-color: rgba(123,196,187,0.4); }
+.habit-card.active-nutrition .card-face-wrapper,
+.habit-card.active-workout .card-face-wrapper,
+.habit-card.active-salesforce .card-face-wrapper {
+    border-color: rgba(123,196,187,0.45);
+    box-shadow: 0 0 26px rgba(123,196,187,0.16), 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* Quick-complete: a checkmark badge sitting right on the tile itself,
+   so a toggle habit (coffee/skincare) can be sealed with one tap —
+   no need to dock the tile and flip it just to reach "Mark Complete". */
+.quick-complete-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-solid);
+    color: var(--text-dim);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    z-index: 2;
+    transition: background var(--fast) var(--ease), color var(--fast) var(--ease),
+                border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.quick-complete-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
+.habit-card.completed .quick-complete-btn {
+    background: var(--success);
+    border-color: var(--success);
+    color: #0f230a;
+}
+.habit-card.docked .quick-complete-btn {
+    bottom: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+}
+
+/* ---- The flip mechanic itself ---- */
+.flip-card { perspective: 1300px; }
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 620ms var(--ease-out);
+    transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+/* backface-visibility only hides the paint, not the hit-test box — without
+   this, the back face's controls sit exactly on top of the front face's
+   (both position:absolute/inset:0) and can swallow clicks meant for it. */
+.flip-card:not(.flipped) .flip-card-back { pointer-events: none; }
+.flip-card.flipped .flip-card-front { pointer-events: none; }
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(circle at 30% 20%, rgba(201,162,75,0.07), transparent 60%),
+        var(--surface);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.015);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+    transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+.flip-card-front:hover, .flip-card-back:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 16px 34px rgba(0,0,0,0.5), 0 0 26px rgba(201,162,75,0.26);
+}
+.flip-card-back {
+    transform: rotateY(180deg);
+    background: var(--surface-solid);
+    overflow-y: auto;
+}
+/* A brief mithril-gold pulse when a tile turns, either direction —
+   makes the flip itself feel like a small rite rather than a UI toggle. */
+.habit-card.flip-pulse .flip-card-front,
+.habit-card.flip-pulse .flip-card-back {
+    animation: flip-glow 640ms var(--ease);
+}
+@keyframes flip-glow {
+    0%   { box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 0 0 rgba(201,162,75,0); }
+    45%  { box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 34px 4px rgba(201,162,75,0.45); }
+    100% { box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 0 0 rgba(201,162,75,0); }
+}
+
+.input-row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.input-row label { font-size: 12.5px; color: var(--text-faint); font-style: italic; }
+.input-row input {
+    width: 76px;
+    background: rgba(7,8,5,0.4);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 9px;
+    font-size: 14px;
+    text-align: right;
+    color: var(--text);
+}
+.input-row input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.workout-pill-container { display: flex; flex-wrap: wrap; gap: 7px; }
+.workout-pill {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.workout-pill:hover { transform: translateY(-1px); }
+.workout-pill.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.select-wrapper { width: 100%; }
+.select-wrapper select {
+    width: 100%;
+    background: rgba(7,8,5,0.4);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 9px;
+    font-size: 14px;
+    color: var(--text);
+}
+.select-wrapper select:focus { outline: none; border-color: var(--accent); }
+.save-flip-btn {
+    margin-top: auto;
+    align-self: stretch;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(201,162,75,0.5);
+    background: linear-gradient(135deg, var(--accent), #a9812f);
+    color: #221904;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+    transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+.save-flip-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(201,162,75,0.3); }
+
+/* ---- runic completion pulse + particle burst, layered on top of
+   the existing .completed / .active-* state classes above ---- */
+.habit-card.completed .habit-icon-wrapper,
+.habit-card.active .habit-icon-wrapper,
+.habit-card.active-nutrition .habit-icon-wrapper,
+.habit-card.active-workout .habit-icon-wrapper,
+.habit-card.active-salesforce .habit-icon-wrapper {
+    animation: rune-pulse 2.6s ease-in-out infinite;
+}
+@keyframes rune-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+    50% { box-shadow: 0 0 12px 2px currentColor; }
+}
+.habit-card.rune-flash .card-face-wrapper { animation: rune-flash 620ms var(--ease); }
+@keyframes rune-flash {
+    0% { box-shadow: 0 0 0 0 rgba(201,162,75,0); }
+    35% { box-shadow: 0 0 36px 5px rgba(201,162,75,0.6); }
+    100% { box-shadow: 0 0 0 0 rgba(201,162,75,0); }
+}
+.mote-burst {
+    position: fixed;
+    z-index: 70;
+    pointer-events: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--mote-color, var(--accent)) 0%, transparent 70%);
+    animation: mote-fly var(--mote-dur, 900ms) ease-out forwards;
+}
+@keyframes mote-fly {
+    0% { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--mote-x, 0), var(--mote-y, -60px)) scale(0.3); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .habit-card.completed .habit-icon-wrapper,
+    .habit-card.active .habit-icon-wrapper,
+    .habit-card.active-nutrition .habit-icon-wrapper,
+    .habit-card.active-workout .habit-icon-wrapper,
+    .habit-card.active-salesforce .habit-icon-wrapper,
+    .habit-card.rune-flash .card-face-wrapper,
+    .habit-card.flip-pulse .flip-card-front,
+    .habit-card.flip-pulse .flip-card-back,
+    .mote-burst { animation: none; }
+}
+
+/* ---------------------------------------------------------------
+   9b. SHARED DIM BACKDROP
+   --------------------------------------------------------------- */
+.orbit-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(5,6,3,0.62), rgba(3,4,2,0.9)),
+        rgba(5, 6, 3, 0.8);
+    backdrop-filter: blur(5px) saturate(0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--med) var(--ease);
+}
+.orbit-backdrop.is-active { opacity: 1; pointer-events: auto; }
+
+/* ---------------------------------------------------------------
+   10. THE PALANTÍR — a glowing seeing-stone that opens the vigil
+       (focus timer) overlay
+   --------------------------------------------------------------- */
+.focus-pod {
+    position: fixed;
+    right: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 50;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid rgba(123,196,187,0.45);
+    background:
+        radial-gradient(circle at 32% 28%, rgba(255,255,255,0.16), transparent 40%),
+        radial-gradient(circle at 60% 65%, rgba(123,196,187,0.4), var(--surface-solid) 72%);
+    color: var(--text);
+    font-size: 19px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.55), 0 0 22px rgba(123,196,187,0.28), inset 0 0 14px rgba(123,196,187,0.2);
+    animation: pod-float 4.5s ease-in-out infinite, palantir-swirl 7s linear infinite;
+    transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+.focus-pod:hover { transform: scale(1.07); }
+.focus-pod.is-running {
+    border-color: rgba(201,162,75,0.6);
+    background:
+        radial-gradient(circle at 32% 28%, rgba(255,255,255,0.2), transparent 40%),
+        radial-gradient(circle at 60% 65%, rgba(201,162,75,0.45), var(--surface-solid) 72%);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.55), 0 0 30px rgba(201,162,75,0.5), inset 0 0 16px rgba(201,162,75,0.28);
+    animation: pod-float 4.5s ease-in-out infinite, palantir-swirl 4s linear infinite, pod-pulse 1.6s ease-in-out infinite;
+}
+@keyframes pod-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+@keyframes pod-pulse { 0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,0.55), 0 0 18px rgba(201,162,75,0.35); } 50% { box-shadow: 0 8px 24px rgba(0,0,0,0.55), 0 0 34px rgba(201,162,75,0.62); } }
+@keyframes palantir-swirl { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(14deg); } }
+.focus-pod-badge {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9.5px;
+    font-weight: 700;
+    font-family: 'Cinzel', serif;
+    font-variant-numeric: tabular-nums;
+    background: var(--surface-solid);
+    color: var(--accent);
+    border: 1px solid rgba(201,162,75,0.45);
+    border-radius: 999px;
+    padding: 2px 7px;
+    white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+    .focus-pod { animation: none; }
+}
+
+.timer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--med) var(--ease);
+}
+.timer-overlay.is-open { opacity: 1; pointer-events: auto; }
+/* The overlay's veil is an .orbit-backdrop, which is transparent and
+   click-through until it gets .is-active — a class only the habit
+   docking code applies. So the timer opened over an undimmed page,
+   and the click-outside-to-close handler never received a click.
+   Drive it from the overlay's own open state instead. */
+.timer-overlay-backdrop { z-index: 0; }
+.timer-overlay.is-open .timer-overlay-backdrop { opacity: 1; pointer-events: auto; }
+.timer-overlay .timer-stage { position: relative; z-index: 1; }
+.timer-overlay-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-solid);
+    color: var(--text-dim);
+    font-size: 13px;
+    z-index: 2;
+}
+.timer-overlay-close:hover { color: var(--text); background: var(--surface-raised); }
+
+.timer-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.timer-card {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 18px;
+    /* opaque: over a merely dimmed page a translucent card let the
+       ledger's columns read straight through the dial */
+    background:
+        radial-gradient(ellipse 120% 60% at 50% 0%, rgba(123,196,187,0.12), transparent 58%),
+        var(--surface-solid);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.7), 0 0 40px rgba(123,196,187,0.12);
+    transition: border-color var(--med) var(--ease), box-shadow var(--med) var(--ease), background var(--med) var(--ease);
+    animation: dock-in 380ms var(--spring);
+}
+.timer-card.running {
+    background:
+        radial-gradient(ellipse 120% 60% at 50% 0%, rgba(201,162,75,0.14), transparent 58%),
+        var(--surface-solid);
+    border-color: rgba(201,162,75,0.55);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.7), 0 0 44px rgba(201,162,75,0.24);
+}
+.timer-card.inactive-day { opacity: 0.55; }
+.timer-phase-badge {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    color: var(--accent-2);
+    padding: 4px 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(123,196,187,0.4);
+    background: var(--accent-2-soft);
+}
+.timer-ring-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    max-width: 100%;
+}
+/* a halo behind the dial that swells while the vigil is kept */
+.timer-ring-container::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(123,196,187,0.14), transparent 68%);
+    opacity: 0;
+    transition: opacity var(--med) var(--ease);
+}
+.timer-card.running .timer-ring-container::before {
+    background: radial-gradient(circle, rgba(201,162,75,0.20), transparent 68%);
+    opacity: 1;
+    animation: halo-breathe 3.4s ease-in-out infinite;
+}
+@keyframes halo-breathe {
+    0%, 100% { transform: scale(0.92); opacity: 0.55; }
+    50%      { transform: scale(1.06); opacity: 1; }
+}
+.progress-ring { transform: rotate(-90deg); width: 100%; height: 100%; }
+.progress-ring__background { stroke: var(--border); }
+.progress-ring__circle {
+    stroke: url(#ring-grad);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s var(--ease);
+    filter: drop-shadow(0 0 7px rgba(123,196,187,0.6));
+}
+.timer-card.running .progress-ring__circle {
+    stroke: url(#ring-grad-run);
+    filter: drop-shadow(0 0 9px rgba(201,162,75,0.7));
+}
+.timer-icon-field { position: absolute; inset: 0; }
+.drift-icon {
+    position: absolute;
+    opacity: 0;
+    animation: drift-fade var(--drift-dur, 4s) ease-in-out infinite;
+    transform: translate(-50%, -50%);
+}
+@keyframes drift-fade {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+    50% { opacity: var(--drift-op, 0.5); transform: translate(-50%, -50%) scale(1) rotate(8deg); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+}
+.timer-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+#timer-display {
+    font-size: 36px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 16px rgba(123,196,187,0.35);
+}
+.timer-card.running #timer-display { text-shadow: 0 0 18px rgba(201,162,75,0.4); }
+#timer-status { font-size: 11.5px; letter-spacing: 0.12em; color: var(--text-faint); font-style: italic; }
+.timer-card.running #timer-status { color: var(--accent); font-style: normal; }
+.timer-stats-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+.timer-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.timer-stat-value { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.timer-stat-label { font-size: 10.5px; color: var(--text-faint); letter-spacing: 0.04em; font-style: italic; }
+
+/* ---------------------------------------------------------------
+   11. SCROLLBARS (webkit) — thin, unobtrusive
+   --------------------------------------------------------------- */
+.view::-webkit-scrollbar, .kanban-column-body::-webkit-scrollbar { width: 6px; }
+.view::-webkit-scrollbar-thumb, .kanban-column-body::-webkit-scrollbar-thumb {
+    background: rgba(201,162,75,0.18);
+    border-radius: 999px;
+}
+.view::-webkit-scrollbar-track, .kanban-column-body::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------------------------------------------------------------
+   11b. SHARED MOTION UTILITIES
+   --------------------------------------------------------------- */
+/* Any tally that changes gives a short gold flare, so a count going
+   up is felt rather than just read. Applied by script.js. */
+.value-pop { animation: value-pop 460ms var(--spring); }
+@keyframes value-pop {
+    0%   { transform: scale(1); }
+    38%  { transform: scale(1.32); filter: brightness(1.5); }
+    100% { transform: scale(1); }
+}
+
+/* Rows/columns dealt out one after another on first paint. */
+.kanban-column { animation: column-in 560ms var(--ease-out) backwards; }
+.kanban-column[data-status="not-started"] { animation-delay: 180ms; }
+.kanban-column[data-status="doing"]       { animation-delay: 260ms; }
+.kanban-column[data-status="done"]        { animation-delay: 340ms; }
+@keyframes column-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ---------------------------------------------------------------
+   12. FOCUS-VISIBLE
+   --------------------------------------------------------------- */
+button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------
+   13. RESPONSIVE
+   --------------------------------------------------------------- */
+@media (min-width: 900px) {
+    .app-shell { max-width: 1080px; margin: 0 auto; }
+}
+
+@media (max-width: 720px) {
+    .reset-label { display: none; }
+    .sync-status span:not(:first-child) { max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .kanban-tabs { display: flex; }
+    .kanban-board {
+        display: flex;
+        grid-template-columns: none;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 10px;
+        scrollbar-width: none;
+    }
+    .kanban-board::-webkit-scrollbar { display: none; }
+    .kanban-column {
+        flex: 0 0 100%;
+        scroll-snap-align: start;
+        min-height: 100%;
+    }
+}
+
+/* Below ~620px the three header clusters can't all keep their text:
+   the brand collapsed to an ellipsis ("S…"), which is worse than
+   showing nothing. The mark carries the identity, and the day is
+   already named by the trail marker beside it. */
+@media (max-width: 620px) {
+    .app-header { gap: 8px; padding: 8px 12px; }
+    .brand { flex: 0 0 auto; }
+    .brand-text { display: none; }
+    .trail-nav { flex: 1 1 auto; justify-content: center; }
+    .trail-nav-marker { max-width: none; }
+    #sync-status-text { display: none; }
+    .sync-status { padding: 6px 8px; }
+}
+
+@media (max-width: 480px) {
+    .trail-nav-marker { padding: 4px 8px; }
+    .marker-text small { display: none; }
+}
+
+/* ---------------------------------------------------------------
+   14. MOTION PREFERENCES
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

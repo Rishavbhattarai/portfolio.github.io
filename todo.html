@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c0e08" />
+    <title>The Steward's Ledger</title>
+    <link rel="stylesheet" href="../css/todo_style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Spectral:wght@300;400;500;600;700&family=Spectral+SC:wght@500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+    <!-- App shell: fixed to the viewport height. Nothing here causes the
+         page itself to scroll — each tab panel below owns its own,
+         independent scroll area instead. -->
+    <div class="app-shell" id="app">
+
+        <!-- ============================================================
+             HEADER — compact single strip: identity, day-trail nav, sync
+             ============================================================ -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="brand-mark"><i class="fa-solid fa-ring" aria-hidden="true"></i></span>
+                <div class="brand-text">
+                    <h1>Steward&rsquo;s Ledger</h1>
+                    <p id="current-date">Kindling the light&hellip;</p>
+                </div>
+            </div>
+
+            <div class="trail-nav">
+                <button id="date-prev" class="trail-nav-arrow" aria-label="Previous day">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button id="date-today-toggle" class="trail-nav-marker is-today" aria-label="Jump to today">
+                    <i class="fa-solid fa-tree marker-icon"></i>
+                    <span class="marker-text">
+                        <span id="viewing-date-label">Today</span>
+                        <small id="viewing-date-sub">The present hour</small>
+                    </span>
+                </button>
+                <button id="date-next" class="trail-nav-arrow" aria-label="Next day">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="header-right">
+                <span id="sync-status" class="sync-status">
+                    <i class="fa-solid fa-eye"></i> <span id="sync-status-text">Seeking&hellip;</span>
+                </span>
+                <button id="reset-btn" class="reset-btn" aria-label="Reset day">
+                    <i class="fa-solid fa-scroll"></i><span class="reset-label">Unmake</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ============================================================
+             COSMOS — single continuous view, no tab switching. The
+             Checkpoints console sits at the top/center; habit tiles
+             orbit around it (full ring on wide screens, a low arc
+             beneath it on phones); the focus timer floats as a
+             satellite pod and opens as a docked overlay.
+             ============================================================ -->
+        <main class="cosmos" id="cosmos">
+            <div class="orbit-system" id="orbit-system">
+
+                <!-- decorative orbit ring, purely ambient -->
+                <div class="orbit-decor" aria-hidden="true">
+                    <div class="orbit-ring"></div>
+                    <div class="orbit-ring orbit-ring-inner"></div>
+                </div>
+
+                <!-- ---------- CHECKPOINTS (the table) ---------- -->
+                <section class="core-console" id="core-console" aria-label="Mission checkpoints">
+                    <div class="core-console-heading">
+                        <h2><i class="fa-solid fa-scroll"></i> The Ledger</h2>
+                        <span class="core-console-count" id="todo-count">0</span>
+                    </div>
+                    <div class="todo-input-wrapper">
+                        <input type="text" id="todo-input" placeholder="Inscribe a new task&hellip;" autocomplete="off" />
+                        <button id="todo-add-btn"><i class="fa-solid fa-feather"></i> Inscribe</button>
+                    </div>
+
+                    <!-- Mobile-only segmented control: swaps which column is
+                         in view instead of shrinking three columns to fit. -->
+                    <div class="kanban-tabs" id="kanban-tabs">
+                        <button class="kanban-tab-btn is-active" data-status="not-started">
+                            <span class="kanban-dot dot-not-started"></span> Unbegun
+                            <span class="kanban-tab-count" id="tab-count-not-started">0</span>
+                        </button>
+                        <button class="kanban-tab-btn" data-status="doing">
+                            <span class="kanban-dot dot-doing"></span> In hand
+                            <span class="kanban-tab-count" id="tab-count-doing">0</span>
+                        </button>
+                        <button class="kanban-tab-btn" data-status="done">
+                            <span class="kanban-dot dot-done"></span> Fulfilled
+                            <span class="kanban-tab-count" id="tab-count-done">0</span>
+                        </button>
+                    </div>
+
+                    <div class="kanban-board" id="kanban-board">
+                        <div class="kanban-column" data-status="not-started">
+                            <div class="kanban-column-header">
+                                <span class="kanban-dot dot-not-started"></span>
+                                <h3>Unbegun</h3>
+                                <span class="kanban-column-count" id="count-not-started">0</span>
+                            </div>
+                            <div class="kanban-column-body" id="col-not-started"></div>
+                        </div>
+                        <div class="kanban-column" data-status="doing">
+                            <div class="kanban-column-header">
+                                <span class="kanban-dot dot-doing"></span>
+                                <h3>In Hand</h3>
+                                <span class="kanban-column-count" id="count-doing">0</span>
+                            </div>
+                            <div class="kanban-column-body" id="col-doing"></div>
+                        </div>
+                        <div class="kanban-column" data-status="done">
+                            <div class="kanban-column-header">
+                                <span class="kanban-dot dot-done"></span>
+                                <h3>Fulfilled</h3>
+                                <span class="kanban-column-count" id="count-done">0</span>
+                            </div>
+                            <div class="kanban-column-body" id="col-done"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ---------- HABITS (orbiting the table) ---------- -->
+                <div class="habit-orbit" id="habit-grid" aria-label="Habit metrics, orbiting the checkpoints table"></div>
+
+            </div>
+        </main>
+
+        <!-- Dimming layer behind any docked/expanded habit tile -->
+        <div class="orbit-backdrop" id="orbit-backdrop" aria-hidden="true"></div>
+
+        <!-- ---------- FOCUS — floating satellite pod + docked overlay ---------- -->
+        <button class="focus-pod" id="focus-pod-btn" aria-label="Open focus timer">
+            <i class="fa-solid fa-circle-nodes" id="palantir-orb-icon"></i>
+            <span class="focus-pod-badge" id="focus-pod-badge" hidden>00:00</span>
+        </button>
+
+        <div class="timer-overlay" id="timer-overlay" aria-hidden="true">
+            <div class="orbit-backdrop timer-overlay-backdrop" id="timer-overlay-backdrop"></div>
+            <div class="timer-stage">
+                <div class="timer-card" id="timer-box">
+                    <button class="timer-overlay-close" id="timer-overlay-close" aria-label="Close timer"><i class="fa-solid fa-xmark"></i></button>
+                    <span class="timer-phase-badge" id="timer-phase-badge">VIGIL</span>
+                    <div class="timer-ring-container">
+                        <div class="timer-icon-field" id="timer-icon-field"></div>
+                        <svg class="progress-ring" width="220" height="220" viewBox="0 0 220 220">
+                            <defs>
+                                <linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#a8ded7" />
+                                    <stop offset="100%" stop-color="#5aa9a0" />
+                                </linearGradient>
+                                <linearGradient id="ring-grad-run" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#f0d590" />
+                                    <stop offset="100%" stop-color="#a9812f" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring__background" stroke-width="8" fill="transparent" r="100" cx="110" cy="110"/>
+                            <circle class="progress-ring__circle" stroke-width="10" fill="transparent" r="100" cx="110" cy="110"/>
+                        </svg>
+                        <div class="timer-content">
+                            <span id="timer-display">00:00</span>
+                            <span id="timer-status">TAP TO LAUNCH</span>
+                        </div>
+                    </div>
+                    <div class="timer-stats-row">
+                        <div class="timer-stat"><span class="timer-stat-value" id="pomodoro-count">0</span><span class="timer-stat-label">Vigils Kept</span></div>
+                        <div class="timer-stat"><span class="timer-stat-value" id="productive-minutes">0</span><span class="timer-stat-label">Minutes Watched</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="..//js/config.js"></script>
+    <script src="..//js/todo.js"></script>
+</body>
+</html>
