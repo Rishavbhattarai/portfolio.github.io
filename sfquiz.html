@@ -57,6 +57,14 @@
             </div>
             <i class="ti ti-chevron-right reference-tile-arrow"></i>
           </button>
+          <button type="button" class="reference-tile" data-ref="guide">
+            <div class="reference-tile-icon"><i class="ti ti-cards"></i></div>
+            <div class="reference-tile-text">
+              <span class="reference-tile-name">Guide</span>
+              <span class="reference-tile-meta" id="refGuideMeta">Spaced repetition</span>
+            </div>
+            <i class="ti ti-chevron-right reference-tile-arrow"></i>
+          </button>
           <button type="button" class="reference-tile" data-ref="beginnerdev">
             <div class="reference-tile-icon"><i class="ti ti-code"></i></div>
             <div class="reference-tile-text">
@@ -128,6 +136,104 @@
             </div>
           </div>
         </div>
+
+      </div>
+
+      <!-- ===== Guide panel: spaced repetition flashcards ===== -->
+      <div id="refPanelGuide" class="reference-panel">
+
+      <header class="quiz-header">
+        <span class="section-eyebrow">Spaced Repetition</span>
+        <h2>Guide</h2>
+        <p>318 flashcards across 12 chapters — review daily for mastery.</p>
+      </header>
+
+      <!-- Dashboard -->
+      <div id="guide-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-value" id="stat-due">0</div><div class="stat-label">Due Today</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-new">0</div><div class="stat-label">New Cards</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-reviewed">0</div><div class="stat-label">Reviewed Today</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total Cards</div></div>
+        </div>
+
+        <div class="guide-controls">
+          <div class="guide-setting">
+            <label for="new-cards-cap">New cards / day</label>
+            <input type="number" id="new-cards-cap" min="1" max="100" value="20">
+          </div>
+          <button class="start-btn guide-start-btn" id="btn-start-review"><i class="ti ti-player-play"></i> Start Review</button>
+        </div>
+
+        <div class="chapter-filter" id="chapter-pills"></div>
+      </div>
+
+      <!-- Card View -->
+      <div id="guide-card-view" class="hidden">
+        <div class="guide-progress-bar"><div class="guide-progress-fill" id="guide-progress-fill"></div></div>
+        <div class="guide-progress-text" id="guide-progress-text">0 / 0</div>
+
+        <div class="srs-card" id="srs-card">
+          <div class="srs-card-header">
+            <span class="card-badge" id="srs-card-chapter"></span>
+            <span class="srs-card-heading" id="srs-card-heading"></span>
+          </div>
+          <div class="srs-card-body" id="srs-card-body"></div>
+          <div class="srs-card-extra hidden" id="srs-card-extra"></div>
+        </div>
+
+        <div id="srs-actions">
+          <button class="start-btn srs-show-btn" id="btn-show-answer"><i class="ti ti-eye"></i> Show Answer</button>
+        </div>
+
+        <div class="srs-grade-buttons hidden" id="srs-grade-buttons">
+          <button class="btn-grade btn-grade-again" data-quality="0">Again</button>
+          <button class="btn-grade btn-grade-hard" data-quality="3">Hard</button>
+          <button class="btn-grade btn-grade-good" data-quality="4">Good</button>
+          <button class="btn-grade btn-grade-easy" data-quality="5">Easy</button>
+        </div>
+
+        <div class="srs-edit-row hidden" id="srs-edit-row">
+          <button class="exit-btn" id="btn-edit-extra" title="Edit extra notes (E)"><i class="ti ti-pencil"></i></button>
+        </div>
+
+        <div class="srs-edit-form hidden" id="srs-edit-form">
+          <textarea id="extra-textarea" placeholder="Add your own notes or mnemonics..."></textarea>
+          <div class="edit-form-actions">
+            <button class="secondary-btn" id="btn-cancel-edit">Cancel</button>
+            <button class="start-btn" id="btn-save-edit">Save</button>
+          </div>
+        </div>
+
+        <button class="secondary-btn" id="btn-end-session" style="width:100%;justify-content:center;margin-top:12px;"><i class="ti ti-player-stop"></i> End Session</button>
+      </div>
+
+      <!-- Session Summary -->
+      <div id="guide-summary" class="hidden">
+        <div class="result-card">
+          <div class="guide-summary-icon"><i class="ti ti-circle-check"></i></div>
+          <h3>Session Complete</h3>
+          <div class="stats-grid" style="margin-top:20px;">
+            <div class="stat-card"><div class="stat-value" id="summary-total">0</div><div class="stat-label">Reviewed</div></div>
+            <div class="stat-card"><div class="stat-value guide-again-color" id="summary-again">0</div><div class="stat-label">Again</div></div>
+            <div class="stat-card"><div class="stat-value guide-hard-color" id="summary-hard">0</div><div class="stat-label">Hard</div></div>
+            <div class="stat-card"><div class="stat-value guide-good-color" id="summary-good">0</div><div class="stat-label">Good</div></div>
+            <div class="stat-card"><div class="stat-value guide-easy-color" id="summary-easy">0</div><div class="stat-label">Easy</div></div>
+          </div>
+          <div class="result-actions">
+            <button class="start-btn" id="btn-back-dashboard"><i class="ti ti-arrow-left"></i> Back to Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="guide-empty" class="hidden">
+        <div class="empty-state">
+          <i class="ti ti-circle-check" style="font-size:2.5rem;color:var(--accent);display:block;margin-bottom:12px;"></i>
+          <h3 style="color:var(--text);font-size:1.1rem;margin-bottom:6px;">All caught up</h3>
+          <p>Nothing due for review right now. Come back tomorrow!</p>
+        </div>
+      </div>
 
       </div>
 
@@ -245,6 +351,25 @@
         <div id="categoryProgressList"></div>
       </div>
 
+      <div class="heatmap-section">
+        <h3 class="section-subtitle">Guide Review Activity</h3>
+        <div class="heatmap-legend">
+          <span class="heatmap-legend-label">Less</span>
+          <div class="heatmap-cell" data-level="0"></div>
+          <div class="heatmap-cell" data-level="1"></div>
+          <div class="heatmap-cell" data-level="2"></div>
+          <div class="heatmap-cell" data-level="3"></div>
+          <div class="heatmap-cell" data-level="4"></div>
+          <span class="heatmap-legend-label">More</span>
+        </div>
+        <div class="heatmap-grid" id="heatmap-grid"></div>
+      </div>
+
+      <div class="stats-grid" style="margin-top:16px;">
+        <div class="stat-card"><div class="stat-value" id="profile-current-streak">0</div><div class="stat-label">Current Streak</div></div>
+        <div class="stat-card"><div class="stat-value" id="profile-longest-streak">0</div><div class="stat-label">Longest Streak</div></div>
+      </div>
+
       <button class="reset-btn" id="resetProgressBtn"><i class="ti ti-trash"></i> Reset Progress</button>
 
     </section>
@@ -253,6 +378,6 @@
 
 </div>
 
-<script src="../js/quizzlet.js"></script>
+<script src="..//js/quizzlet.js"></script>
 </body>
 </html>

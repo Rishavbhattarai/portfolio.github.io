@@ -1,0 +1,3182 @@
+[
+  {
+    "id": "ch1-strongly-typed",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.1 What is Apex?",
+    "type": "cloze",
+    "text": "{{c1::Strongly typed}}: All variables and expressions have a data type, checked at compile time. Invalid references fail fast.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-on-demand",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.1 What is Apex?",
+    "type": "cloze",
+    "text": "{{c1::On-demand}}: Runs entirely on Salesforce's multitenant Lightning Platform — written, compiled, and executed in the cloud.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-java-like-syntax",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.1 What is Apex?",
+    "type": "cloze",
+    "text": "{{c1::Java-like syntax}}: Familiar for developers who know Java, JavaScript, C#, or similar languages.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-transaction-control",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.1 What is Apex?",
+    "type": "cloze",
+    "text": "{{c1::Transaction control}}: Supports Savepoints and rollback — you can control the atomic unit of work.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-built-in-support",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.1 What is Apex?",
+    "type": "cloze",
+    "text": "{{c1::Built-in support}}: DML, SOQL, SOSL, locking, custom public API calls, and metadata dependency tracking are all native.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-integrated",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Integrated}}: DML, inline SOQL/SOSL, bulk processing, locking, public API calls, and dependency warnings are built in.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-easy-to-use",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Easy to use}}: Based on familiar Java idioms — variables, conditionals, loops, objects, arrays.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-data-focused",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Data focused}}: Threads multiple query and DML statements into one unit of work, like database stored procedures.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-rigorous",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Rigorous}}: Direct references to schema objects. Fails at compile time if references are invalid.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-hosted",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Hosted}}: Interpreted, executed, and controlled entirely by the Lightning Platform.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-multitenant-aware",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Multitenant aware}}: Runtime engine guards against runaway code to prevent monopolizing shared resources.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-easy-to-test",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Easy to test}}: Built-in support for unit test creation, execution, and code coverage.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-versioned",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.2 The 8 Core Characteristics of Apex",
+    "type": "cloze",
+    "text": "{{c1::Versioned}}: You can save Apex against different API versions to maintain behavior over time.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-use-apex-when",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.3 When to Use Apex (vs Flow / LWC / Visualforce)",
+    "type": "cloze",
+    "text": "{{c1::Use Apex when}}: You need to create web services, email services, complex multi-object validation, complex business processes Flow can't handle, custom transactional logic, or logic that must run regardless of UI origin.",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch1-use-lightning-web-components",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.3 When to Use Apex (vs Flow / LWC / Visualforce)",
+    "type": "cloze",
+    "text": "{{c1::Use Lightning Web Components}}: For custom user interfaces in Lightning Experience, the Salesforce mobile app, or standalone apps. LWC follows W3C web standards.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-use-visualforce",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.3 When to Use Apex (vs Flow / LWC / Visualforce)",
+    "type": "cloze",
+    "text": "{{c1::Use Visualforce}}: For wizards, multi-step processes, custom flow control, or specialized data-driven UI patterns.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-use-soap-api",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.3 When to Use Apex (vs Flow / LWC / Visualforce)",
+    "type": "cloze",
+    "text": "{{c1::Use SOAP API}}: When you only process one type of record at a time and don't need transactional control.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-what-apex-cannot-do-1",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.4 What Apex Cannot Do",
+    "type": "cloze",
+    "text": "What Apex Cannot Do: {{c1::Render UI elements other than error messages.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch1-what-apex-cannot-do-2",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.4 What Apex Cannot Do",
+    "type": "cloze",
+    "text": "What Apex Cannot Do: {{c1::Change standard functionality — it can only prevent it or add to it.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch1-what-apex-cannot-do-3",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.4 What Apex Cannot Do",
+    "type": "cloze",
+    "text": "What Apex Cannot Do: {{c1::Create temporary files.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch1-what-apex-cannot-do-4",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.4 What Apex Cannot Do",
+    "type": "cloze",
+    "text": "What Apex Cannot Do: {{c1::Spawn threads.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch1-what-apex-cannot-do-5",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.4 What Apex Cannot Do",
+    "type": "cloze",
+    "text": "What Apex Cannot Do: {{c1::It is NOT a general-purpose programming language — it is tailored to Salesforce data access and manipulation.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch1-1-choose-an-org",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.5 The Apex Development Process",
+    "type": "cloze",
+    "text": "{{c1::1. Choose an org}}: Sandbox, scratch org, or Developer Edition. Never develop directly in production.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-2-learn-apex",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.5 The Apex Development Process",
+    "type": "cloze",
+    "text": "{{c1::2. Learn Apex}}: Use Trailhead, Apex Developer Center, and this study guide.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-3-write-apex",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.5 The Apex Development Process",
+    "type": "cloze",
+    "text": "{{c1::3. Write Apex}}: Use VS Code + Salesforce Extensions, Code Builder, or Developer Console.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-4-write-tests",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.5 The Apex Development Process",
+    "type": "cloze",
+    "text": "{{c1::4. Write tests}}: Use test-driven development — write tests at the same time as code.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-5-deploy-to-sandbox",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.5 The Apex Development Process",
+    "type": "cloze",
+    "text": "{{c1::5. Deploy to sandbox}}: Run final unit tests in an isolated environment.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-6-deploy-to-production",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.5 The Apex Development Process",
+    "type": "cloze",
+    "text": "{{c1::6. Deploy to production}}: Via change sets, Salesforce CLI, or Metadata API.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-sandbox-recommended",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.6 Choosing a Salesforce Org for Development",
+    "type": "cloze",
+    "text": "{{c1::Sandbox (Recommended)}}: Copy of production metadata, isolated. Developer and Developer Pro sandboxes support source tracking, Salesforce CLI, Code Builder, and DevOps Center.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-scratch-orgs-recommended",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.6 Choosing a Salesforce Org for Development",
+    "type": "cloze",
+    "text": "{{c1::Scratch orgs (Recommended)}}: Source-driven, temporary, fully configurable deployment. Max 30-day lifespan, default 7 days. Great for emulating different editions.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-developer-edition",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.6 Choosing a Salesforce Org for Development",
+    "type": "cloze",
+    "text": "{{c1::Developer Edition}}: Free org with Enterprise Edition features. Can become outdated and expire. No source tracking, can't be used in DevOps Center.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-trial-edition",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.6 Choosing a Salesforce Org for Development",
+    "type": "cloze",
+    "text": "{{c1::Trial Edition}}: 30-day expiration. Good for evaluation. Triggers are disabled when you convert to another edition.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-production-not-supported",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.6 Choosing a Salesforce Org for Development",
+    "type": "cloze",
+    "text": "{{c1::Production (Not supported)}}: Never develop directly in production — live users can destabilize data or corrupt the application.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-vs-code-extensions",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.7 Development Environments",
+    "type": "cloze",
+    "text": "{{c1::VS Code + Extensions}}: The primary modern environment. Supports scratch orgs, sandboxes, and DE orgs. Works with Apex, LWC, and Visualforce.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-code-builder",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.7 Development Environments",
+    "type": "cloze",
+    "text": "{{c1::Code Builder}}: Browser-based VS Code with everything pre-installed — work from any computer.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-developer-console",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.7 Development Environments",
+    "type": "cloze",
+    "text": "{{c1::Developer Console}}: Built-in IDE in Salesforce. Supports writing, compiling, debugging, testing, SOQL queries, and code coverage inspection.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-setup-code-editors",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.7 Development Environments",
+    "type": "cloze",
+    "text": "{{c1::Setup Code Editors}}: View and edit Apex classes and triggers from Salesforce Setup. Auto-compile on save. Not available in production orgs.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch1-agentforce-for-developers",
+    "chapter": 1,
+    "chapterTitle": "Introducing Apex",
+    "heading": "1.7 Development Environments",
+    "type": "cloze",
+    "text": "{{c1::Agentforce for Developers}}: AI-powered code generation from natural language prompts, inline auto-complete, and test case generation. Available in VS Code.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-primitives",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::Primitives}}: Integer, Double, Long, Decimal, Boolean, String, ID, Date, Datetime, Time, Blob, Object.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-sobjects",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::sObjects}}: Generic sObject or specific types like Account, Contact, MyCustomObject__c.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-collections",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::Collections}}: Lists, Sets, and Maps of primitives, sObjects, or user-defined types.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-enums",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::Enums}}: A typed list of identifiers for values that don't have a numerical order.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-user-defined-types",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::User-defined types}}: Objects created from your own Apex classes.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-system-supplied-types",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::System-supplied types}}: Objects from Salesforce-provided classes like Database, UserInfo, Schema.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-null",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.1 All Apex Data Types",
+    "type": "cloze",
+    "text": "{{c1::Null}}: Can be assigned to any variable. All Apex variables are initialized to null by default.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-blob",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Blob}}: Binary data stored as a single object. Use toString() and valueOf() to convert. Used for document bodies, attachments, and crypto.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-boolean",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Boolean}}: true, false, or null. Example: Boolean isWinner = true;",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-date",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Date}}: A particular day with no time. Always create via system static method. Only Integer addition/subtraction works on Date.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-datetime",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Datetime}}: A day and time (timestamp). Use system static methods. Supports Integer and Double addition/subtraction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-decimal",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Decimal}}: Arbitrary precision number. Currency fields are Decimal. Use setScale() to control decimal places. Two numerically-equal Decimals with different scale (1.1 vs 1.10) have different hashcodes.",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-double",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Double}}: 64-bit number with decimal point. Range is -2^63 to 2^63-1. Scientific notation (e) not supported.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-id",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::ID}}: Any valid 18-character Salesforce record ID. Auto-converts 15-char to 18-char. Invalid IDs throw runtime exception.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-integer",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Integer}}: 32-bit number without decimal. Range: -2,147,483,648 to 2,147,483,647.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-long",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Long}}: 64-bit number without decimal. Range: -2^63 to 2^63-1. Use when wider range than Integer is needed. Append L: 2147483648L.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-object",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Object}}: Any supported Apex data type. All types inherit from Object. Cast to a specific type to access its members.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-string",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::String}}: Any set of characters in single quotes. Supports ==, !=, <, <=, >, >=. Comparison is NOT case-sensitive and uses the context user's locale.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-time",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.2 Primitive Data Types",
+    "type": "cloze",
+    "text": "{{c1::Time}}: A particular time. Always create via system static method.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-escape-sequences",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.3 String Escapes and Multiline Strings",
+    "type": "cloze",
+    "text": "{{c1::Escape sequences}}: \\b (backspace), \\t (tab), \\n (line feed), \\f (form feed), \\r (carriage return), \\s (space), \\\" (double quote), \\' (single quote), \\\\ (backslash).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-sobject-string-rules",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.3 String Escapes and Multiline Strings",
+    "type": "cloze",
+    "text": "{{c1::sObject String rules}}: sObject String fields can never be empty (only null) and cannot have leading/trailing whitespace — required for database storage.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-apex-string-rules",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.3 String Escapes and Multiline Strings",
+    "type": "cloze",
+    "text": "{{c1::Apex String rules}}: Apex Strings CAN be null, empty, or have leading/trailing whitespace — useful for building messages.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-multiline-string",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.3 String Escapes and Multiline Strings",
+    "type": "cloze",
+    "text": "{{c1::Multiline string}}: Starts with three single quotes (''') followed by a newline. Ends with three single quotes. Leading whitespace is stripped, trailing whitespace is stripped unless you use \\s.",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-multiline-concatenation",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.3 String Escapes and Multiline Strings",
+    "type": "cloze",
+    "text": "{{c1::Multiline concatenation}}: Use \\ at the end of a line to concatenate lines without inserting newlines.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-create-empty-list",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::Create empty list}}: Use the new keyword and List keyword with the element type in <>.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-add-elements",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::Add elements}}: Use the .add() method, or use literal notation with braces.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-get-set",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::Get / Set}}: Use .get(index) and .set(index, value). Square brackets also work: colors[0] = 'Green'.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-array-notation",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::Array notation}}: For one-dimensional lists, you can use Java-style array notation: String[] colors = new String[3];",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-nested-lists",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::Nested lists}}: Up to 7 levels of nested collections (8 levels overall). Example: List<List<Set<Integer>>>.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-list-sort",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::List.sort()}}: Sorts in ascending order for primitives. For custom types, implement Comparable. For SelectOption, sorts by value first, then label.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-elastic-vs-array",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.4 Lists",
+    "type": "cloze",
+    "text": "{{c1::Elastic vs array}}: When you add via .add(), the list grows as needed. When you assign via square brackets, the list behaves like a fixed-size array.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-no-duplicates",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.5 Sets",
+    "type": "cloze",
+    "text": "{{c1::No duplicates}}: Adding an existing element has no effect. Highly optimized for .contains() checks.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-unordered",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.5 Sets",
+    "type": "cloze",
+    "text": "{{c1::Unordered}}: You cannot access a set element by index. You can only iterate.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-hash-structure",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.5 Sets",
+    "type": "cloze",
+    "text": "{{c1::Hash structure}}: Unlike Java, Apex uses a hash structure for all sets. You don't specify HashSet vs TreeSet.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-create-with-literal",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.5 Sets",
+    "type": "cloze",
+    "text": "{{c1::Create with literal}}: Set<String> s = new Set<String>{'a', 'b', 'c'};",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-core-methods",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.5 Sets",
+    "type": "cloze",
+    "text": "{{c1::Core methods}}: .add(value), .contains(value), .remove(value), .size(), .clear().",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-keys",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.6 Maps",
+    "type": "cloze",
+    "text": "{{c1::Keys}}: Can be any primitive data type. Each key must be unique.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-values",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.6 Maps",
+    "type": "cloze",
+    "text": "{{c1::Values}}: Can be any data type — primitives, sObjects, collections. Values can be duplicated.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-create-with-literal-2",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.6 Maps",
+    "type": "cloze",
+    "text": "{{c1::Create with literal}}: Use => to separate key and value pairs.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-core-methods-2",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.6 Maps",
+    "type": "cloze",
+    "text": "{{c1::Core methods}}: .put(key, value), .get(key), .containsKey(key), .keySet(), .values(), .remove(key), .size().",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-purpose",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.7 Enums",
+    "type": "cloze",
+    "text": "{{c1::Purpose}}: An abstract data type whose values each take on exactly one of a finite set of identifiers you specify.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-when-to-use",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.7 Enums",
+    "type": "cloze",
+    "text": "{{c1::When to use}}: For sets of possible values that don't have a numerical order — e.g., seasons, card suits, order statuses.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-switch-friendly",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.7 Enums",
+    "type": "cloze",
+    "text": "{{c1::Switch-friendly}}: Enums work especially well with switch statements in Apex.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-declaration",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.8 Variables, Constants, and Assignment",
+    "type": "cloze",
+    "text": "{{c1::Declaration}}: datatype variable_name [= value]; — always end statements with a semicolon.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-pass-by-value-primitives",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.8 Variables, Constants, and Assignment",
+    "type": "cloze",
+    "text": "{{c1::Pass-by-value (primitives)}}: Integer, String, etc. are passed into methods by value. Changes inside the method are lost when the method returns.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-pass-by-reference-sobjects",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.8 Variables, Constants, and Assignment",
+    "type": "cloze",
+    "text": "{{c1::Pass-by-reference (sObjects)}}: sObjects are passed by reference. Changes to field values persist after the method returns.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-constants",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.8 Variables, Constants, and Assignment",
+    "type": "cloze",
+    "text": "{{c1::Constants}}: Use the final keyword. Once initialized, the value cannot change.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-assignment-operators",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.8 Variables, Constants, and Assignment",
+    "type": "cloze",
+    "text": "{{c1::Assignment operators}}: Valid: =, +=, -=, *=, /=, |=, &=, ++, --.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-safe-navigation",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.9 Operators and Expressions",
+    "type": "cloze",
+    "text": "{{c1::Safe navigation ?.}}: Returns null instead of throwing NullPointerException when navigating a chain. Example: account?.Contact?.Email.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-null-coalescing",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.9 Operators and Expressions",
+    "type": "cloze",
+    "text": "{{c1::Null coalescing ??}}: Returns the right-hand operand when the left-hand is null. Replaces verbose null checks.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-string-comparison",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.9 Operators and Expressions",
+    "type": "cloze",
+    "text": "{{c1::String comparison}}: Apex Strings support ==, !=, <, <=, >, >=. NOT case-sensitive, uses context user's locale.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-ternary",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.9 Operators and Expressions",
+    "type": "cloze",
+    "text": "{{c1::Ternary}}: boolean ? valueIfTrue : valueIfFalse",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-instanceof",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.9 Operators and Expressions",
+    "type": "cloze",
+    "text": "{{c1::instanceof}}: Check if an sObject is a specific type: if (sobj instanceof Account) { ... }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-operator-precedence-top-1",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::1. Grouping and prefix: {} () ++ --}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-2",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::2. Unary, type cast, new: ~ ! -x +x (type) new}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-3",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::3. Multiplication/division: * /}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-4",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::4. Addition/subtraction: + -}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-5",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::5. Shift: << >> >>>}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-6",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::6. Comparison: < <= > >= instanceof}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-7",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::7. Equality: == !=}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-8",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::8-10. Bitwise: & ^ |}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-9",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::11-12. Logical: && ||}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-10",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::13. Null coalescing: ??}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-11",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::14. Ternary: ?:}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-operator-precedence-top-12",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.10 Operator Precedence (Top to Bottom)",
+    "type": "cloze",
+    "text": "Operator Precedence (Top to Bottom): {{c1::15. Assignment: = += -= *= /= &= <<= >>= >>>=}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch2-implicit-numeric-promotion",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.11 Rules of Conversion",
+    "type": "cloze",
+    "text": "{{c1::Implicit numeric promotion}}: Hierarchy: Integer → Long → Double → Decimal. Lower types can be assigned to higher types without explicit conversion.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-id-string",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.11 Rules of Conversion",
+    "type": "cloze",
+    "text": "{{c1::ID ↔ String}}: IDs can be assigned to Strings. Strings can be assigned to IDs but throw runtime exception if invalid.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-date-datetime",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.11 Rules of Conversion",
+    "type": "cloze",
+    "text": "{{c1::Date → Datetime}}: Both implicit and explicit casting work. Time component is zeroed out.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-overflow-warning",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.11 Rules of Conversion",
+    "type": "cloze",
+    "text": "{{c1::Overflow warning}}: Apex does NOT throw an exception for overflow/underflow — Integer i = 2147483647 + 1; yields -2147483648. Use Long (append L) for larger computations.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch2-integer-division",
+    "chapter": 2,
+    "chapterTitle": "Data Types and Variables",
+    "heading": "2.11 Rules of Conversion",
+    "type": "cloze",
+    "text": "{{c1::Integer division}}: 5/3 returns 1 (Integer) before implicit conversion. Use 5.0/3.0 to preserve fractions.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-basic-syntax",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.1 If-Else Statements",
+    "type": "cloze",
+    "text": "{{c1::Basic syntax}}: Works just like Java. The else is always optional and groups with the closest if.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-else-if-chains",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.1 If-Else Statements",
+    "type": "cloze",
+    "text": "{{c1::else if chains}}: Chain multiple conditions. else is always optional.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-braces",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.1 If-Else Statements",
+    "type": "cloze",
+    "text": "{{c1::Braces}}: Curly braces are required for multi-statement blocks, optional for single-statement blocks.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-syntax",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.2 Switch Statements (Modern Apex)",
+    "type": "cloze",
+    "text": "{{c1::Syntax}}: switch on expression { when value { ... } when else { ... } }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-no-fall-through",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.2 Switch Statements (Modern Apex)",
+    "type": "cloze",
+    "text": "{{c1::No fall-through}}: After a when block executes, the switch exits. This is different from C/Java switch.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-allowed-expression-types",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.2 Switch Statements (Modern Apex)",
+    "type": "cloze",
+    "text": "{{c1::Allowed expression types}}: Integer, Long, sObject, String, Enum.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-multiple-values",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.2 Switch Statements (Modern Apex)",
+    "type": "cloze",
+    "text": "{{c1::Multiple values}}: A when clause can have multiple comma-separated literals: when 2, 3, 4 { ... }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-sobject-type-matching",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.2 Switch Statements (Modern Apex)",
+    "type": "cloze",
+    "text": "{{c1::sObject type matching}}: switch on sobject { when Account a { ... } when Contact c { ... } } — implicit instanceof + cast.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-when-else",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.2 Switch Statements (Modern Apex)",
+    "type": "cloze",
+    "text": "{{c1::when else}}: Optional default block. Salesforce recommends including it, especially with enums (in case a managed package adds new values).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-do-while",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.3 The Five Loop Types",
+    "type": "cloze",
+    "text": "{{c1::do-while}}: Runs the body first, then checks the condition. Always executes at least once. Curly braces are required.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-while",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.3 The Five Loop Types",
+    "type": "cloze",
+    "text": "{{c1::while}}: Checks the condition before the body. May execute zero times.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-for-classic",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.3 The Five Loop Types",
+    "type": "cloze",
+    "text": "{{c1::for (classic)}}: Three-part: initialization; exit condition; increment.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-for-collection",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.3 The Five Loop Types",
+    "type": "cloze",
+    "text": "{{c1::for (collection)}}: Iterates a list or set. Enhanced for-each loop.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-for-soql",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.3 The Five Loop Types",
+    "type": "cloze",
+    "text": "{{c1::for (SOQL)}}: Iterates query results directly. Best for bulk processing — heap-efficient.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-break",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.4 Loop Control",
+    "type": "cloze",
+    "text": "{{c1::break}}: Exits the entire loop immediately.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch3-continue",
+    "chapter": 3,
+    "chapterTitle": "Control Flow Statements",
+    "heading": "3.4 Loop Control",
+    "type": "cloze",
+    "text": "{{c1::continue}}: Skips the rest of the current iteration and proceeds to the next.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-basic-syntax",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.1 Defining a Class",
+    "type": "cloze",
+    "text": "{{c1::Basic syntax}}: public class MyClass { ... }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-default-access",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.1 Defining a Class",
+    "type": "cloze",
+    "text": "{{c1::Default access}}: If you omit a modifier, the class is private (only visible within the same namespace).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-public",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::public}}: Visible to any Apex in the application or namespace.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-private-default",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::private (default)}}: Only visible within the same class. Not accessible from other classes.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-global",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::global}}: Visible to all Apex code everywhere, including code in other namespaces. Required for exposed web services and managed package APIs.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-abstract",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::abstract}}: Class cannot be instantiated. Used as a base class. Can contain abstract methods (no body).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-virtual",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::virtual}}: Class can be extended. Use virtual when subclasses need to override methods.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-with-sharing",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::with sharing}}: Enforces the running user's sharing rules and record-level access.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-without-sharing",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::without sharing}}: Bypasses sharing rules. Use carefully — typically for system-level utilities.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-inherited-sharing",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.2 Class Modifiers",
+    "type": "cloze",
+    "text": "{{c1::inherited sharing}}: Inherits sharing context from the calling code. Available in API v48.0+.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-static",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.3 Static vs Instance",
+    "type": "cloze",
+    "text": "{{c1::Static}}: Belongs to the class, not an instance. Accessed via ClassName.method(). Only one copy exists.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-instance",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.3 Static vs Instance",
+    "type": "cloze",
+    "text": "{{c1::Instance}}: Belongs to an object. Requires an instance to call. Each object has its own copy.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-static-initialization",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.3 Static vs Instance",
+    "type": "cloze",
+    "text": "{{c1::Static initialization}}: Static variables are initialized when the class is first loaded. Use static { } block for static initialization code.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-static-methods",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.3 Static vs Instance",
+    "type": "cloze",
+    "text": "{{c1::Static methods}}: Cannot access instance variables or methods. Often used for utility/helper methods.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-access-modifiers",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.4 Methods",
+    "type": "cloze",
+    "text": "{{c1::Access modifiers}}: public, private, protected, global — control visibility.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-static-vs-instance",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.4 Methods",
+    "type": "cloze",
+    "text": "{{c1::Static vs instance}}: Static methods belong to the class; instance methods require an object.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-return-type",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.4 Methods",
+    "type": "cloze",
+    "text": "{{c1::Return type}}: Specify a return type (Integer, String, void, sObject, etc.) or void for no return.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-overloading",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.4 Methods",
+    "type": "cloze",
+    "text": "{{c1::Overloading}}: Apex supports method overloading — multiple methods with the same name but different parameter lists.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-pass-by-value-vs-reference",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.4 Methods",
+    "type": "cloze",
+    "text": "{{c1::Pass-by-value vs reference}}: Primitives pass by value. sObjects pass by reference (field changes persist).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-purpose",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.5 Constructors",
+    "type": "cloze",
+    "text": "{{c1::Purpose}}: Initialize an object when it is created via new.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-default-constructor",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.5 Constructors",
+    "type": "cloze",
+    "text": "{{c1::Default constructor}}: If you don't write a constructor, Apex provides a no-argument constructor automatically.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-overloaded-constructors",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.5 Constructors",
+    "type": "cloze",
+    "text": "{{c1::Overloaded constructors}}: You can write multiple constructors with different parameter lists.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-no-return-type",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.5 Constructors",
+    "type": "cloze",
+    "text": "{{c1::No return type}}: Constructors don't have a return type, not even void.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-purpose-2",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.6 Interfaces",
+    "type": "cloze",
+    "text": "{{c1::Purpose}}: Define a contract — methods that implementing classes must provide. Apex supports interfaces and abstract classes.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-method-signatures",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.6 Interfaces",
+    "type": "cloze",
+    "text": "{{c1::Method signatures}}: Interface methods have no body. Implementing class must provide the body.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-multiple-interfaces",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.6 Interfaces",
+    "type": "cloze",
+    "text": "{{c1::Multiple interfaces}}: A class can implement multiple interfaces (use commas), but can only extend one class.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-common-interfaces",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.6 Interfaces",
+    "type": "cloze",
+    "text": "{{c1::Common interfaces}}: Database.Batchable<SObject>, Schedulable, Queueable, Comparable, Iterator, Iterable.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-what-is-a-property",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.7 Properties",
+    "type": "cloze",
+    "text": "{{c1::What is a property?}}: A property looks like a field but is actually a pair of get/set accessors. Cleaner than explicit getter/setter methods.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-auto-properties",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.7 Properties",
+    "type": "cloze",
+    "text": "{{c1::Auto-properties}}: public Integer Count { get; set; } — Apex auto-generates the backing field and accessors.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-custom-get-set",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.7 Properties",
+    "type": "cloze",
+    "text": "{{c1::Custom get/set}}: You can provide custom getter and setter logic blocks.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-extends",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.8 Inheritance and Polymorphism",
+    "type": "cloze",
+    "text": "{{c1::extends}}: A class can extend exactly one parent class. Use 'virtual' on the parent to allow overriding.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-override",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.8 Inheritance and Polymorphism",
+    "type": "cloze",
+    "text": "{{c1::override}}: Use the override keyword to override a virtual or abstract method from a parent.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-virtual-2",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.8 Inheritance and Polymorphism",
+    "type": "cloze",
+    "text": "{{c1::virtual}}: Methods marked virtual can be overridden. Abstract methods MUST be overridden.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch4-super",
+    "chapter": 4,
+    "chapterTitle": "Classes, Objects, and Interfaces",
+    "heading": "4.8 Inheritance and Polymorphism",
+    "type": "cloze",
+    "text": "{{c1::super}}: Call the parent implementation with super.methodName().",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-what-is-an-sobject",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.1 sObject Basics",
+    "type": "cloze",
+    "text": "{{c1::What is an sObject?}}: Any data type that represents a Salesforce record — standard (Account, Contact) or custom (MyObject__c).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-generic-sobject",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.1 sObject Basics",
+    "type": "cloze",
+    "text": "{{c1::Generic sObject}}: sObject generic type can hold any record. Use specific types (Account, Contact) whenever possible for type safety.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-custom-objects",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.1 sObject Basics",
+    "type": "cloze",
+    "text": "{{c1::Custom objects}}: Always end with __c. Custom fields end with __c.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-creating-records",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.1 sObject Basics",
+    "type": "cloze",
+    "text": "{{c1::Creating records}}: Use the new keyword and the sObject type name. Pass field values as named parameters.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-insert",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.2 DML Statements",
+    "type": "cloze",
+    "text": "{{c1::insert}}: Adds new records. Sets Id automatically.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-update",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.2 DML Statements",
+    "type": "cloze",
+    "text": "{{c1::update}}: Modifies existing records. Must have Id populated.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-upsert",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.2 DML Statements",
+    "type": "cloze",
+    "text": "{{c1::upsert}}: Updates if record with matching external/Id field exists; otherwise inserts. Requires an external ID field or Id.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-delete",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.2 DML Statements",
+    "type": "cloze",
+    "text": "{{c1::delete}}: Removes records. Goes to Recycle Bin for 15 days; can be undeleted within that window.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-undelete",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.2 DML Statements",
+    "type": "cloze",
+    "text": "{{c1::undelete}}: Restores records from the Recycle Bin.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-merge",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.2 DML Statements",
+    "type": "cloze",
+    "text": "{{c1::merge}}: Combines up to 3 records of the same sObject type into one. Merges child records too.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-statement-form",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.3 DML Syntax — Two Forms",
+    "type": "cloze",
+    "text": "{{c1::Statement form}}: Direct DML — runs 'all or nothing'. If one record fails, the entire transaction rolls back.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-database-class-form",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.3 DML Syntax — Two Forms",
+    "type": "cloze",
+    "text": "{{c1::Database class form}}: Database.insert(records, allOrNone). Use false to allow partial success.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-when-to-use-database-class",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.3 DML Syntax — Two Forms",
+    "type": "cloze",
+    "text": "{{c1::When to use Database class}}: When you need partial-success behavior or to inspect individual record errors. Returns Database.SaveResult[] or Database.DeleteResult[].",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-savepoint",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.4 Savepoints and Rollback",
+    "type": "cloze",
+    "text": "{{c1::Savepoint}}: Marks a point in the transaction you can roll back to.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-limits",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.4 Savepoints and Rollback",
+    "type": "cloze",
+    "text": "{{c1::Limits}}: Only 10 active savepoints per request. Each rollback decrements the count.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-use-case",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.4 Savepoints and Rollback",
+    "type": "cloze",
+    "text": "{{c1::Use case}}: Try a DML operation, roll back if it fails, and continue with logic.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-for-update",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.5 Locking Records (FOR UPDATE)",
+    "type": "cloze",
+    "text": "{{c1::FOR UPDATE}}: Locks sObject records during the transaction to prevent race conditions.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-when-to-use",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.5 Locking Records (FOR UPDATE)",
+    "type": "cloze",
+    "text": "{{c1::When to use}}: When subsequent code will update the records and you need to prevent other transactions from modifying them.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-parent-to-child",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.6 Field Relationships",
+    "type": "cloze",
+    "text": "{{c1::Parent-to-child}}: Traverse a lookup using dot notation: account.Owner.Name.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-child-to-parent",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.6 Field Relationships",
+    "type": "cloze",
+    "text": "{{c1::Child-to-parent}}: Query through a relationship: SELECT Account.Owner.Name FROM Contact.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch5-custom-relationship",
+    "chapter": 5,
+    "chapterTitle": "Working with sObjects and DML",
+    "heading": "5.6 Field Relationships",
+    "type": "cloze",
+    "text": "{{c1::Custom relationship}}: For custom __r: SELECT My_Custom_Child__r.Name FROM Account.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-what-is-soql",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.1 SOQL Basics",
+    "type": "cloze",
+    "text": "{{c1::What is SOQL?}}: Salesforce Object Query Language. Query relational data from a single object or related objects.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-basic-syntax",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.1 SOQL Basics",
+    "type": "cloze",
+    "text": "{{c1::Basic syntax}}: SELECT field1, field2 FROM ObjectName WHERE condition",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-query-all-fields",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.1 SOQL Basics",
+    "type": "cloze",
+    "text": "{{c1::Query all fields}}: Don't use SELECT * — always list fields explicitly for performance and clarity.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-child-to-parent",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.1 SOQL Basics",
+    "type": "cloze",
+    "text": "{{c1::Child-to-parent}}: SELECT Id, Account.Name FROM Contact",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-parent-to-child",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.1 SOQL Basics",
+    "type": "cloze",
+    "text": "{{c1::Parent-to-child}}: SELECT Id, (SELECT Id, LastName FROM Contacts) FROM Account",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-where",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::WHERE}}: Filter records. Use bind variables for user input: WHERE Name = :varName",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-order-by",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::ORDER BY}}: Sort results: ORDER BY Name ASC, CreatedDate DESC",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-limit",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::LIMIT}}: Cap returned records: LIMIT 100",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-offset",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::OFFSET}}: Skip records for pagination: OFFSET 200",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-group-by-having",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::GROUP BY / HAVING}}: Aggregate. SELECT COUNT(Id), Industry FROM Account GROUP BY Industry HAVING COUNT(Id) > 5",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-for-update",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::FOR UPDATE}}: Lock records: SELECT Id FROM Account WHERE Name = 'Acme' FOR UPDATE",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-for-reference",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::FOR REFERENCE}}: Used in trigger context variables to get old values without locking.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-update-tracking-viewstat",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.2 SOQL Clauses",
+    "type": "cloze",
+    "text": "{{c1::UPDATE TRACKING / VIEWSTAT}}: Enable tracking for change data capture events.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-with-user-mode",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.3 SOQL with SECURITY_ENFORCED / WITH USER_MODE",
+    "type": "cloze",
+    "text": "{{c1::WITH USER_MODE}}: Enforces field-level security (FLS) and sharing rules. Recommended over WITH SECURITY_ENFORCED.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-with-system-mode",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.3 SOQL with SECURITY_ENFORCED / WITH USER_MODE",
+    "type": "cloze",
+    "text": "{{c1::WITH SYSTEM_MODE}}: Bypasses FLS and sharing. Use for system code only (e.g., setup operations).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-without-sharing-context",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.3 SOQL with SECURITY_ENFORCED / WITH USER_MODE",
+    "type": "cloze",
+    "text": "{{c1::WITHOUT sharing context}}: Use UserMode/AccessLevel enums: WITH USER_MODE or [SELECT Id FROM Account AS USER] or [AS SYSTEM].",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-count",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.4 Aggregate Functions",
+    "type": "cloze",
+    "text": "{{c1::COUNT()}}: Returns Integer. SELECT COUNT(Id) FROM Account",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-sum-avg-min-max",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.4 Aggregate Functions",
+    "type": "cloze",
+    "text": "{{c1::SUM(), AVG(), MIN(), MAX()}}: Numeric aggregates. SELECT MAX(Amount), MIN(Amount) FROM Opportunity",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-group-by",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.4 Aggregate Functions",
+    "type": "cloze",
+    "text": "{{c1::GROUP BY}}: Required for most aggregates. SELECT Industry, COUNT(Id) cnt FROM Account GROUP BY Industry",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-child-relationship-name",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.5 Relationship Queries",
+    "type": "cloze",
+    "text": "{{c1::Child relationship name}}: Find the relationship name via object manager. For Contacts on Account, it's 'Contacts' (plural).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-custom-relationship",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.5 Relationship Queries",
+    "type": "cloze",
+    "text": "{{c1::Custom relationship}}: Ends with __r for the parent reference. SELECT My_Child__c FROM Parent__c",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-filter-on-related-fields",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.5 Relationship Queries",
+    "type": "cloze",
+    "text": "{{c1::Filter on related fields}}: WHERE Account.Industry = 'Tech' — filter using a related object's field.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-what-is-sosl",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.6 SOSL Basics",
+    "type": "cloze",
+    "text": "{{c1::What is SOSL?}}: Salesforce Object Search Language. Free-text search across multiple, unrelated objects at once.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-syntax",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.6 SOSL Basics",
+    "type": "cloze",
+    "text": "{{c1::Syntax}}: FIND 'searchTerm' IN ALL FIELDS RETURNING Object(field1, field2)",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-return-type",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.6 SOSL Basics",
+    "type": "cloze",
+    "text": "{{c1::Return type}}: List<List<SObject>> — a list of result lists, one per object type.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-when-to-use",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.6 SOSL Basics",
+    "type": "cloze",
+    "text": "{{c1::When to use}}: When you don't know which object has the data, or need to search many objects at once. Faster for free-text than SOQL on large text fields.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-database-query",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.7 Dynamic SOQL and SOSL",
+    "type": "cloze",
+    "text": "{{c1::Database.query()}}: Build SOQL as a String at runtime. Use bind variables to prevent SOQL injection.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-search-query",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.7 Dynamic SOQL and SOSL",
+    "type": "cloze",
+    "text": "{{c1::Search.query()}}: Same idea for SOSL. Returns List<List<SObject>>.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch6-security",
+    "chapter": 6,
+    "chapterTitle": "SOQL and SOSL",
+    "heading": "6.7 Dynamic SOQL and SOSL",
+    "type": "cloze",
+    "text": "{{c1::Security}}: Use String.escapeSingleQuotes() and Database.query with bind variables to prevent injection.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-definition",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.1 Trigger Syntax",
+    "type": "cloze",
+    "text": "{{c1::Definition}}: trigger TriggerName on ObjectName (events) { ... }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-events",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.1 Trigger Syntax",
+    "type": "cloze",
+    "text": "{{c1::Events}}: before insert, before update, before delete, after insert, after update, after delete, after undelete.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-combine-events",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.1 Trigger Syntax",
+    "type": "cloze",
+    "text": "{{c1::Combine events}}: A single trigger can handle multiple events. Branch with Trigger.operationType.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-new",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.new}}: List of new sObject versions. Available in all events. Read-only in after triggers.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-old",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.old}}: List of old sObject versions. Available in update, delete, undelete.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-newmap",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.newMap}}: Map<Id, sObject> of new versions, keyed by Id. Available in update, insert, delete, undelete (post-save).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-oldmap",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.oldMap}}: Map<Id, sObject> of old versions, keyed by Id. Available in update, delete.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-isinsert",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.isInsert}}: Boolean. True if the trigger fired on insert.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-isupdate-isdelete-isundelete-isb",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.isUpdate / isDelete / isUndelete / isBefore / isAfter}}: Booleans for the current context.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-size",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.size}}: Number of records in the trigger invocation — useful for bulk handling.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-trigger-operationtype",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.2 Trigger Context Variables",
+    "type": "cloze",
+    "text": "{{c1::Trigger.operationType}}: Enum: BEFORE_INSERT, BEFORE_UPDATE, BEFORE_DELETE, AFTER_INSERT, AFTER_UPDATE, AFTER_DELETE, AFTER_UNDELETE.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-before-insert-before-update",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.3 Trigger Events and What They Allow",
+    "type": "cloze",
+    "text": "{{c1::Before insert / before update}}: Modify field values on Trigger.new directly. No DML needed. Use for validation and data normalization.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-after-insert-after-update",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.3 Trigger Events and What They Allow",
+    "type": "cloze",
+    "text": "{{c1::After insert / after update}}: Trigger.new is read-only. Use for related record creation and other side effects. DML allowed.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-before-delete",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.3 Trigger Events and What They Allow",
+    "type": "cloze",
+    "text": "{{c1::Before delete}}: Use Trigger.old to inspect. Can call addError() to block deletion.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-after-delete-undelete",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.3 Trigger Events and What They Allow",
+    "type": "cloze",
+    "text": "{{c1::After delete / undelete}}: Use Trigger.old or Trigger.new. Good for cleanup or restoration logic.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-bulkify",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.4 Trigger Best Practices",
+    "type": "cloze",
+    "text": "{{c1::Bulkify}}: Never put SOQL or DML inside a for loop. Collect criteria into Sets/Lists, query once, iterate results.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-one-trigger-per-object",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.4 Trigger Best Practices",
+    "type": "cloze",
+    "text": "{{c1::One trigger per object}}: Use a single trigger per object with a handler class to keep logic organized.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-avoid-recursion",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.4 Trigger Best Practices",
+    "type": "cloze",
+    "text": "{{c1::Avoid recursion}}: Use a static Boolean flag or Set<Id> to prevent recursive firing from cascading updates.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch7-logic-less-triggers",
+    "chapter": 7,
+    "chapterTitle": "Triggers",
+    "heading": "7.4 Trigger Best Practices",
+    "type": "cloze",
+    "text": "{{c1::Logic-less triggers}}: Best practice: put logic in a handler class, keep the trigger a one-liner that calls it.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-soql-queries",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::SOQL queries}}: 100 queries per synchronous transaction. 200 in async (Batch/Future/Queueable/Schedulable).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-soql-query-rows",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::SOQL query rows}}: 50,000 rows retrieved in a single transaction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-dml-statements",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::DML statements}}: 150 statements per synchronous transaction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-dml-rows",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::DML rows}}: 10,000 records processed per transaction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-heap-size",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::Heap size}}: 6 MB synchronous, 12 MB asynchronous.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-cpu-time",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::CPU time}}: 10,000 ms synchronous, 60,000 ms asynchronous.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-callouts",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::Callouts}}: 100 HTTP callouts per transaction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-email",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::Email}}: 100 sendEmail methods per transaction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-future-methods",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::Future methods}}: 50 per transaction.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-queueable-jobs",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.1 Per-Transaction Limits (Synchronous)",
+    "type": "cloze",
+    "text": "{{c1::Queueable jobs}}: 1 per transaction (50 with TransactionFinalizers in chain).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-what-it-means",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.2 Bulkification",
+    "type": "cloze",
+    "text": "{{c1::What it means}}: Code that processes a List of 200 records with the same number of SOQL/DML as 1 record.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-bad-pattern",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.2 Bulkification",
+    "type": "cloze",
+    "text": "{{c1::Bad pattern}}: for (Account a : Trigger.new) { List<Contact> cs = [SELECT Id FROM Contact WHERE AccountId = :a.Id]; } — hits SOQL limit fast.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-good-pattern",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.2 Bulkification",
+    "type": "cloze",
+    "text": "{{c1::Good pattern}}: Collect all AccountIds into a Set, run ONE SOQL, iterate.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-dml-at-the-end",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.2 Bulkification",
+    "type": "cloze",
+    "text": "{{c1::DML at the end}}: Build lists of records to update/insert, then perform ONE DML on the whole list at the end of the trigger.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch8-the-order-of-execution-1",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::1. System validation rules (required fields, field format)}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-2",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::2. Before triggers run}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-3",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::3. Custom validation rules}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-4",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::4. Record saved to database (but not committed)}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-5",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::5. After triggers run}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-6",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::6. Assignment rules}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-7",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::7. Auto-response rules}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-8",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::8. Workflow rules}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-9",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::9. Processes (Flows, Process Builder — being retired)}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-10",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::10. Escalation rules}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-11",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::11. Entitlement rules}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-12",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::12. Roll-up summary fields update child records}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-13",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::13. Criteria-based sharing evaluation}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-the-order-of-execution-14",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.3 The Order of Execution",
+    "type": "cloze",
+    "text": "The Order of Execution: {{c1::14. DML commits to database}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-why-limits-matter-1",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.4 Why Limits Matter",
+    "type": "cloze",
+    "text": "Why Limits Matter: {{c1::All Apex code runs on shared, multitenant infrastructure.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-why-limits-matter-2",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.4 Why Limits Matter",
+    "type": "cloze",
+    "text": "Why Limits Matter: {{c1::Limits prevent one tenant's runaway code from degrading the platform for everyone.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-why-limits-matter-3",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.4 Why Limits Matter",
+    "type": "cloze",
+    "text": "Why Limits Matter: {{c1::All Apex requests return 1 to 50,000 records — you must design for bulk.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch8-why-limits-matter-4",
+    "chapter": 8,
+    "chapterTitle": "Governor Limits and Bulkification",
+    "heading": "8.4 Why Limits Matter",
+    "type": "cloze",
+    "text": "Why Limits Matter: {{c1::If you don't, you'll hit governor limits in production with real data.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch9-syntax",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.1 Try-Catch-Finally",
+    "type": "cloze",
+    "text": "{{c1::Syntax}}: try { ... } catch (ExceptionType e) { ... } finally { ... }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-finally-block",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.1 Try-Catch-Finally",
+    "type": "cloze",
+    "text": "{{c1::finally block}}: Always runs, even if an exception is thrown. Use for cleanup (Database.rollback, logging).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-dmlexception",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.2 Common Built-in Exceptions",
+    "type": "cloze",
+    "text": "{{c1::DmlException}}: Thrown when a DML operation fails. Use getDmlMessage(i) and getDmlId(i) to inspect each error.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-queryexception",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.2 Common Built-in Exceptions",
+    "type": "cloze",
+    "text": "{{c1::QueryException}}: Thrown when a SOQL query fails — invalid SOQL, query assigned to single sObject but returns 0 or many rows.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-nullpointerexception",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.2 Common Built-in Exceptions",
+    "type": "cloze",
+    "text": "{{c1::NullPointerException}}: Thrown when dereferencing a null variable. Use safe navigation (?. ) to avoid.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-listexception",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.2 Common Built-in Exceptions",
+    "type": "cloze",
+    "text": "{{c1::ListException}}: Thrown on invalid list operations — index out of bounds, modifying list during for-each.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-limitexception",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.2 Common Built-in Exceptions",
+    "type": "cloze",
+    "text": "{{c1::LimitException}}: Thrown when a governor limit is exceeded.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-mathexception",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.2 Common Built-in Exceptions",
+    "type": "cloze",
+    "text": "{{c1::MathException}}: Thrown on arithmetic errors like division by zero.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-define",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.3 Custom Exceptions",
+    "type": "cloze",
+    "text": "{{c1::Define}}: Extend the Exception class. Optionally pass a message to the constructor.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-throw",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.3 Custom Exceptions",
+    "type": "cloze",
+    "text": "{{c1::Throw}}: throw new MyException('Something went wrong');",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-catch",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.3 Custom Exceptions",
+    "type": "cloze",
+    "text": "{{c1::Catch}}: catch (MyException e) { System.debug(e.getMessage()); }",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-adderror-in-triggers",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.4 addError() vs Exceptions",
+    "type": "cloze",
+    "text": "{{c1::addError() in triggers}}: In a trigger, call e.addError('msg') to roll back the transaction and display the error to the user.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-adderror-on-fields",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.4 addError() vs Exceptions",
+    "type": "cloze",
+    "text": "{{c1::addError() on fields}}: acc.Name.addError('Name is required'); — error attached to a specific field.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch9-when-to-use-what",
+    "chapter": 9,
+    "chapterTitle": "Exception Handling",
+    "heading": "9.4 addError() vs Exceptions",
+    "type": "cloze",
+    "text": "{{c1::When to use what}}: Use addError() in triggers for user-facing validation. Use try-catch for programmatic error handling.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-istest-annotation",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.1 Test Class Basics",
+    "type": "cloze",
+    "text": "{{c1::@IsTest annotation}}: Mark the class and methods as test code. @IsTest classes don't count against the 6 MB Apex code limit.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-static-test-methods",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.1 Test Class Basics",
+    "type": "cloze",
+    "text": "{{c1::Static test methods}}: Test methods must be static, return void, and take no arguments.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-testmethod-keyword",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.1 Test Class Basics",
+    "type": "cloze",
+    "text": "{{c1::testMethod keyword}}: Equivalent to @IsTest. Salesforce recommends @IsTest — testMethod may be versioned out.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-required-coverage",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.1 Test Class Basics",
+    "type": "cloze",
+    "text": "{{c1::Required coverage}}: At least 75% of Apex code must be covered by tests. All tests must pass. Every trigger must have some coverage.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-purpose",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.2 The @TestSetup Pattern",
+    "type": "cloze",
+    "text": "{{c1::Purpose}}: Create test data once for the entire class. Re-runs before each test method to ensure isolation.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-usage",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.2 The @TestSetup Pattern",
+    "type": "cloze",
+    "text": "{{c1::Usage}}: Annotate a method with @TestSetup. It must be static.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-access-in-tests",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.2 The @TestSetup Pattern",
+    "type": "cloze",
+    "text": "{{c1::Access in tests}}: Use [SELECT Id FROM Account LIMIT 1] to fetch the records created by @TestSetup.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-why",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.3 Test.startTest / Test.stopTest",
+    "type": "cloze",
+    "text": "{{c1::Why}}: Apex sets a new governor limit boundary inside startTest/stopTest. Use to simulate large data and isolate async code.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-pattern",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.3 Test.startTest / Test.stopTest",
+    "type": "cloze",
+    "text": "{{c1::Pattern}}: Wrap the code under test between startTest and stopTest. After stopTest, async code has completed.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-required-for-async",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.3 Test.startTest / Test.stopTest",
+    "type": "cloze",
+    "text": "{{c1::Required for async}}: Future methods, Batch Apex, and Queueable jobs only execute inside a startTest/stopTest block.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-system-assert",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.4 Assertions",
+    "type": "cloze",
+    "text": "{{c1::System.assert}}: assert(condition) — fails if false.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-system-assertequals",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.4 Assertions",
+    "type": "cloze",
+    "text": "{{c1::System.assertEquals}}: assertEquals(expected, actual) — fails if not equal.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-system-assertnotequals",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.4 Assertions",
+    "type": "cloze",
+    "text": "{{c1::System.assertNotEquals}}: assertNotEquals(unexpected, actual)",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-assert-areequal",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.4 Assertions",
+    "type": "cloze",
+    "text": "{{c1::Assert.areEqual}}: Assert class with areEqual, areNotEqual, isTrue, isFalse, isNull, isNotNull.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-best-practice",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.4 Assertions",
+    "type": "cloze",
+    "text": "{{c1::Best practice}}: One logical assertion per test. Test one thing at a time.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-default-isolation",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.5 Test Data and SeeAllData",
+    "type": "cloze",
+    "text": "{{c1::Default isolation}}: By default, tests cannot see pre-existing org data. They only see data they create.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-istest-seealldata-true",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.5 Test Data and SeeAllData",
+    "type": "cloze",
+    "text": "{{c1::@IsTest(SeeAllData=true)}}: Test can see existing org data. Avoid — makes tests fragile and dependent on org state.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-best-practice-2",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.5 Test Data and SeeAllData",
+    "type": "cloze",
+    "text": "{{c1::Best practice}}: Always create your own test data. Don't depend on org data existing.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-insert-test-records",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.6 Testing Triggers",
+    "type": "cloze",
+    "text": "{{c1::Insert test records}}: Insert sObjects in your test, then re-query and verify field values reflect trigger logic.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-test-bulk",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.6 Testing Triggers",
+    "type": "cloze",
+    "text": "{{c1::Test bulk}}: Insert a list of 200+ records to verify your trigger handles bulk correctly.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch10-test-all-paths",
+    "chapter": 10,
+    "chapterTitle": "Testing Apex",
+    "heading": "10.6 Testing Triggers",
+    "type": "cloze",
+    "text": "{{c1::Test all paths}}: Test before insert, before update, after insert, after update — every branch of your trigger.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-what",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.1 @future Methods",
+    "type": "cloze",
+    "text": "{{c1::What}}: A simple way to run Apex asynchronously. Mark a static method with @future.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-must-be-static",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.1 @future Methods",
+    "type": "cloze",
+    "text": "{{c1::Must be static}}: Future methods must be static, return void, and accept only primitive or collection of primitive parameters.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-limits",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.1 @future Methods",
+    "type": "cloze",
+    "text": "{{c1::Limits}}: 50 future calls per transaction. Async limits are higher than sync (200 SOQL, 12 MB heap, 60s CPU).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-use-case",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.1 @future Methods",
+    "type": "cloze",
+    "text": "{{c1::Use case}}: Make a web service callout, do work that shouldn't block the user, fire-and-forget logic.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-what-2",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.2 Queueable Apex",
+    "type": "cloze",
+    "text": "{{c1::What}}: A more powerful async option that supports non-primitive types and job chaining.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-interface",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.2 Queueable Apex",
+    "type": "cloze",
+    "text": "{{c1::Interface}}: Implement Queueable and the execute(QueueableContext) method.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-chaining",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.2 Queueable Apex",
+    "type": "cloze",
+    "text": "{{c1::Chaining}}: Call System.enqueueJob() at the end of execute() to chain jobs together.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-limits-2",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.2 Queueable Apex",
+    "type": "cloze",
+    "text": "{{c1::Limits}}: 1 queueable job per transaction (50 with chaining via TransactionFinalizers).",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-what-3",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.3 Batch Apex",
+    "type": "cloze",
+    "text": "{{c1::What}}: Process millions of records in chunks. Each chunk runs in its own transaction with its own governor limits.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-interface-2",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.3 Batch Apex",
+    "type": "cloze",
+    "text": "{{c1::Interface}}: Implement Database.Batchable<SObject> with three methods: start, execute, finish.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-database-stateful",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.3 Batch Apex",
+    "type": "cloze",
+    "text": "{{c1::Database.Stateful}}: Implement to maintain state (instance variables) across execute() calls. Default is stateless.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-batch-size",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.3 Batch Apex",
+    "type": "cloze",
+    "text": "{{c1::Batch size}}: Up to 2000 per chunk (default 200). Larger chunks may hit heap limits.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-what-4",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.4 Scheduled Apex",
+    "type": "cloze",
+    "text": "{{c1::What}}: Run Apex at a specific time. Cron-like scheduling.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-interface-3",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.4 Scheduled Apex",
+    "type": "cloze",
+    "text": "{{c1::Interface}}: Implement Schedulable and the execute(SchedulableContext) method.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch11-schedule-expression",
+    "chapter": 11,
+    "chapterTitle": "Asynchronous Apex",
+    "heading": "11.4 Scheduled Apex",
+    "type": "cloze",
+    "text": "{{c1::Schedule expression}}: Cron syntax: 'Seconds Minutes Hours DayOfMonth Month DayOfWeek Year'. Use System.schedule().",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch12-what-it-looks-like",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.1 The ApexDoc Block",
+    "type": "cloze",
+    "text": "{{c1::What it looks like}}: /** Description followed by tags. */ placed immediately above classes, methods, or properties.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch12-param",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.1 The ApexDoc Block",
+    "type": "cloze",
+    "text": "{{c1::@param}}: Describes a method parameter. One per parameter.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch12-return",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.1 The ApexDoc Block",
+    "type": "cloze",
+    "text": "{{c1::@return}}: Describes what the method returns.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch12-throws",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.1 The ApexDoc Block",
+    "type": "cloze",
+    "text": "{{c1::@throws}}: Documents the exception types a method can throw.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch12-author-since-see-deprecated",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.1 The ApexDoc Block",
+    "type": "cloze",
+    "text": "{{c1::@author, @since, @see, @deprecated}}: Additional descriptive tags.",
+    "extra": "",
+    "reversible": true
+  },
+  {
+    "id": "ch12-why-document-1",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.2 Why Document?",
+    "type": "cloze",
+    "text": "Why Document?: {{c1::AI agents and code-completion tools use doc comments to understand intent.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch12-why-document-2",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.2 Why Document?",
+    "type": "cloze",
+    "text": "Why Document?: {{c1::Future developers (including future you) will thank you.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch12-why-document-3",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.2 Why Document?",
+    "type": "cloze",
+    "text": "Why Document?: {{c1::Auto-generated documentation tools can produce reference docs from your comments.}}",
+    "extra": "",
+    "reversible": false
+  },
+  {
+    "id": "ch12-why-document-4",
+    "chapter": 12,
+    "chapterTitle": "ApexDoc and Code Documentation",
+    "heading": "12.2 Why Document?",
+    "type": "cloze",
+    "text": "Why Document?: {{c1::ApexDoc tags are required by Salesforce for managed packages and AppExchange apps.}}",
+    "extra": "",
+    "reversible": false
+  }
+]

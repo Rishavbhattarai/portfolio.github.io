@@ -148,6 +148,7 @@
     const tiles = Array.from(document.querySelectorAll('.reference-tile'));
     const panels = {
       apexlearn: qs('refPanelApexlearn'),
+      guide: qs('refPanelGuide'),
       beginnerdev: qs('refPanelBeginnerdev'),
     };
 
@@ -561,6 +562,11 @@
     if (btn) btn.click();
   }
 
+  function switchToReferenceTile(refKey) {
+    const tile = document.querySelector(`.reference-tile[data-ref="${refKey}"]`);
+    if (tile) tile.click();
+  }
+
   function initLearnControls() {
     const list = qs('chapterSummaryList');
 
@@ -570,6 +576,7 @@
         const chapter = state.chapters.find((c) => c.key === quizBtn.dataset.key);
         const cat = chapter ? resolveCategoryForChapter(chapter) : null;
         if (cat) selectQuizCategory(cat.key);
+        switchToReferenceTile('apexlearn');
         switchToSection('quizz');
         return;
       }
@@ -745,6 +752,476 @@
     if (refApexMeta) refApexMeta.textContent = 'Could not load';
   }
 
+  /* =====================================================
+     GUIDE TAB — SPACED REPETITION (SRS) ENGINE
+  ===================================================== */
+  const SRS = {
+    STORAGE_SRS: 'apexlearn_srs_state_v1',
+    STORAGE_SETTINGS: 'apexlearn_srs_settings_v1',
+    STORAGE_OVERRIDES: 'apexlearn_card_overrides_v1',
+    STORAGE_REVIEWLOG: 'apexlearn_srs_reviewlog_v1',
+
+    allCards: [],
+    allItems: [],
+    selectedChapter: null,
+    sessionQueue: [],
+    currentIndex: 0,
+    sessionGrades: { again: 0, hard: 0, good: 0, easy: 0 },
+    sessionReviewed: 0,
+    requeueBuffer: [],
+    showingAnswer: false,
+    currentItemId: null,
+
+    todayStr() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    },
+
+    addDays(dateStr, days) {
+      const d = new Date(dateStr + 'T00:00:00');
+      d.setDate(d.getDate() + days);
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    },
+
+    loadJSON(key, fallback) {
+      try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : fallback; }
+      catch { return fallback; }
+    },
+
+    saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); },
+
+    getSrsData() { return this.loadJSON(this.STORAGE_SRS, {}); },
+    saveSrsData(d) { this.saveJSON(this.STORAGE_SRS, d); },
+    getSettings() { return this.loadJSON(this.STORAGE_SETTINGS, { newCardsPerDay: 20 }); },
+    saveSettings(s) { this.saveJSON(this.STORAGE_SETTINGS, s); },
+    getOverrides() { return this.loadJSON(this.STORAGE_OVERRIDES, {}); },
+    saveOverrides(o) { this.saveJSON(this.STORAGE_OVERRIDES, o); },
+    getReviewLog() { return this.loadJSON(this.STORAGE_REVIEWLOG, {}); },
+    saveReviewLog(l) { this.saveJSON(this.STORAGE_REVIEWLOG, l); },
+
+    logReview(count) {
+      const log = this.getReviewLog();
+      const today = this.todayStr();
+      log[today] = (log[today] || 0) + count;
+      this.saveReviewLog(log);
+    },
+
+    /* SM-2 Algorithm */
+    sm2Update(state, quality) {
+      const s = Object.assign({}, state);
+      if (quality < 3) {
+        s.repetitions = 0;
+        s.interval = 1;
+        s.lapses = (s.lapses || 0) + 1;
+      } else {
+        s.repetitions += 1;
+        if (s.repetitions === 1) s.interval = 1;
+        else if (s.repetitions === 2) s.interval = 6;
+        else s.interval = Math.round(s.interval * s.easeFactor);
+        s.easeFactor = Math.max(1.3,
+          s.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+        );
+      }
+      s.dueDate = this.addDays(this.todayStr(), s.interval);
+      return s;
+    },
+
+    getSrsState(cardId, srsData) {
+      if (srsData[cardId]) return srsData[cardId];
+      return { interval: 0, repetitions: 0, easeFactor: 2.5, dueDate: this.todayStr(), lapses: 0 };
+    },
+
+    /* Expand cards into forward + reverse items */
+    expandCards(rawCards) {
+      const items = [];
+      for (const card of rawCards) {
+        items.push(Object.assign({}, card, { direction: 'forward', itemId: card.id }));
+        if (card.reversible) {
+          const rev = this.buildReverseItem(card);
+          if (rev) items.push(rev);
+        }
+      }
+      return items;
+    },
+
+    buildReverseItem(card) {
+      if (card.type !== 'cloze' || !card.text) return null;
+      const match = card.text.match(/\{\{c1::(.+?)\}\}/);
+      if (!match) return null;
+      const answer = match[1];
+      const fullText = card.text.replace(/\{\{c1::(.+?)\}\}/, '<span class="cloze-reveal">$1</span>');
+      return {
+        id: card.id + '::rev',
+        chapter: card.chapter,
+        chapterTitle: card.chapterTitle,
+        heading: card.heading,
+        type: card.type,
+        reversible: false,
+        direction: 'reverse',
+        itemId: card.id,
+        _revAnswer: answer,
+        _revFullText: fullText,
+        _forwardCard: card,
+      };
+    },
+
+    parseCloze(text) {
+      const match = text.match(/\{\{c1::(.+?)\}\}/);
+      if (!match) return { blank: text, answer: '', fullRevealed: text };
+      const answer = match[1];
+      const blank = text.replace(/\{\{c1::(.+?)\}\}/, '______');
+      const fullRevealed = text.replace(/\{\{c1::(.+?)\}\}/, '<span class="cloze-reveal">$1</span>');
+      return { blank, answer, fullRevealed };
+    },
+
+    /* Dashboard */
+    updateDashboard() {
+      const srsData = this.getSrsData();
+      const today = this.todayStr();
+      const settings = this.getSettings();
+      let dueCount = 0, newCount = 0;
+      const items = this.selectedChapter
+        ? this.allItems.filter(i => i.chapter === this.selectedChapter)
+        : this.allItems;
+      for (const item of items) {
+        const state = this.getSrsState(item.itemId, srsData);
+        if (state.repetitions === 0 && state.interval === 0) newCount++;
+        else if (state.dueDate <= today) dueCount++;
+      }
+      const effectiveNew = Math.min(newCount, settings.newCardsPerDay);
+      const log = this.getReviewLog();
+      qs('stat-due').textContent = dueCount;
+      qs('stat-new').textContent = effectiveNew;
+      qs('stat-reviewed').textContent = log[today] || 0;
+      qs('stat-total').textContent = items.length;
+      qs('new-cards-cap').value = settings.newCardsPerDay;
+    },
+
+    /* Chapter pills */
+    renderChapterPills() {
+      const chapters = {};
+      for (const card of this.allCards) {
+        if (!chapters[card.chapter]) chapters[card.chapter] = card.chapterTitle;
+      }
+      const container = qs('chapter-pills');
+      container.innerHTML = '';
+      const allPill = document.createElement('button');
+      allPill.className = 'chapter-pill' + (this.selectedChapter === null ? ' active' : '');
+      allPill.textContent = 'All';
+      allPill.addEventListener('click', () => { this.selectedChapter = null; this.renderChapterPills(); this.updateDashboard(); });
+      container.appendChild(allPill);
+      for (const [num, title] of Object.entries(chapters).sort((a, b) => a[0] - b[0])) {
+        const pill = document.createElement('button');
+        pill.className = 'chapter-pill' + (this.selectedChapter === Number(num) ? ' active' : '');
+        pill.textContent = 'Ch ' + num;
+        pill.title = title;
+        pill.addEventListener('click', () => { this.selectedChapter = Number(num); this.renderChapterPills(); this.updateDashboard(); });
+        container.appendChild(pill);
+      }
+    },
+
+    /* Build session queue */
+    buildSessionQueue() {
+      const srsData = this.getSrsData();
+      const settings = this.getSettings();
+      const today = this.todayStr();
+      const candidates = this.selectedChapter
+        ? this.allItems.filter(i => i.chapter === this.selectedChapter)
+        : this.allItems.slice();
+      const due = [], newCards = [];
+      for (const item of candidates) {
+        const state = this.getSrsState(item.itemId, srsData);
+        if (state.repetitions === 0 && state.interval === 0) newCards.push(item);
+        else if (state.dueDate <= today) due.push(item);
+      }
+      const cappedNew = this.shuffle(newCards).slice(0, settings.newCardsPerDay);
+      return this.shuffle(due.concat(cappedNew));
+    },
+
+    shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    },
+
+    /* View switching */
+    showView(id) {
+      ['guide-dashboard', 'guide-card-view', 'guide-summary', 'guide-empty'].forEach(elId => {
+        qs(elId).classList.add('hidden');
+      });
+      qs(id).classList.remove('hidden');
+    },
+
+    /* Start review */
+    startReview() {
+      this.sessionQueue = this.buildSessionQueue();
+      if (this.sessionQueue.length === 0) { this.showView('guide-empty'); return; }
+      this.currentIndex = 0;
+      this.sessionGrades = { again: 0, hard: 0, good: 0, easy: 0 };
+      this.sessionReviewed = 0;
+      this.requeueBuffer = [];
+      this.showView('guide-card-view');
+      this.renderCard();
+    },
+
+    /* Render card */
+    renderCard() {
+      if (this.currentIndex >= this.sessionQueue.length) {
+        if (this.requeueBuffer.length > 0) {
+          const insertAt = Math.min(this.currentIndex + 3, this.sessionQueue.length);
+          while (this.requeueBuffer.length > 0) this.sessionQueue.splice(insertAt, 0, this.requeueBuffer.shift());
+        }
+        if (this.currentIndex >= this.sessionQueue.length) { this.endSession(); return; }
+      }
+      const item = this.sessionQueue[this.currentIndex];
+      if (!item) { this.endSession(); return; }
+      this.currentItemId = item.itemId;
+      this.showingAnswer = false;
+
+      const total = this.sessionQueue.length;
+      qs('guide-progress-fill').style.width = (total > 0 ? (this.currentIndex / total * 100) : 0) + '%';
+      qs('guide-progress-text').textContent = (this.currentIndex + 1) + ' / ' + total;
+      qs('srs-card-chapter').textContent = 'Chapter ' + item.chapter;
+      qs('srs-card-heading').textContent = item.heading;
+
+      const body = qs('srs-card-body');
+      if (item.direction === 'reverse') {
+        body.innerHTML = '<div class="reverse-front">' + item._revAnswer + '</div><hr class="reverse-divider"><div class="reverse-back">' + item._revFullText + '</div>';
+      } else if (item.type === 'cloze') {
+        const parsed = this.parseCloze(item.text);
+        body.innerHTML = parsed.blank.replace(/______/g, '<span class="cloze-blank">?</span>');
+      } else if (item.type === 'basic') {
+        body.textContent = item.front || '';
+      } else {
+        body.textContent = item.text || '';
+      }
+
+      const overrides = this.getOverrides();
+      const extra = overrides[item.id] && overrides[item.id].extra ? overrides[item.id].extra : (item.extra || '');
+      const extraEl = qs('srs-card-extra');
+      if (extra) { extraEl.textContent = extra; extraEl.classList.remove('hidden'); }
+      else { extraEl.classList.add('hidden'); }
+
+      qs('srs-actions').classList.remove('hidden');
+      qs('btn-show-answer').classList.remove('hidden');
+      qs('srs-grade-buttons').classList.add('hidden');
+      qs('srs-edit-row').classList.add('hidden');
+      qs('srs-edit-form').classList.add('hidden');
+    },
+
+    /* Show answer */
+    showAnswer() {
+      this.showingAnswer = true;
+      const item = this.sessionQueue[this.currentIndex];
+      const body = qs('srs-card-body');
+      if (item.direction === 'reverse') { /* already shown */ }
+      else if (item.type === 'cloze') {
+        const parsed = this.parseCloze(item.text);
+        body.innerHTML = parsed.fullRevealed;
+      } else if (item.type === 'basic') {
+        body.innerHTML = '<div style="font-weight:700;margin-bottom:12px;">' + (item.front || '') + '</div><hr style="border:none;border-top:1px solid var(--border);margin:12px 0;"><div>' + (item.back || '') + '</div>';
+      }
+      qs('srs-actions').classList.add('hidden');
+      qs('srs-grade-buttons').classList.remove('hidden');
+      qs('srs-edit-row').classList.remove('hidden');
+    },
+
+    /* Grade card */
+    gradeCard(quality) {
+      const item = this.sessionQueue[this.currentIndex];
+      if (!item) return;
+      const srsData = this.getSrsData();
+      const itemId = item.itemId;
+      const currentState = this.getSrsState(itemId, srsData);
+      srsData[itemId] = this.sm2Update(currentState, quality);
+      this.saveSrsData(srsData);
+      this.logReview(1);
+      if (quality === 0) this.sessionGrades.again++;
+      else if (quality === 3) this.sessionGrades.hard++;
+      else if (quality === 4) this.sessionGrades.good++;
+      else if (quality === 5) this.sessionGrades.easy++;
+      this.sessionReviewed++;
+      if (quality === 0) this.requeueBuffer.push(item);
+      if (item.direction === 'forward' && item.reversible) {
+        const revId = item.id + '::rev';
+        if (!srsData[revId]) {
+          srsData[revId] = { interval: 0, repetitions: 0, easeFactor: 2.5, dueDate: this.todayStr(), lapses: 0 };
+          this.saveSrsData(srsData);
+        }
+      }
+      if (item.direction === 'reverse') {
+        const fwdId = item.id.replace('::rev', '');
+        if (!srsData[fwdId]) {
+          srsData[fwdId] = { interval: 0, repetitions: 0, easeFactor: 2.5, dueDate: this.todayStr(), lapses: 0 };
+          this.saveSrsData(srsData);
+        }
+      }
+      this.currentIndex++;
+      this.renderCard();
+    },
+
+    /* End session */
+    endSession() {
+      this.showView('guide-summary');
+      qs('summary-total').textContent = this.sessionReviewed;
+      qs('summary-again').textContent = this.sessionGrades.again;
+      qs('summary-hard').textContent = this.sessionGrades.hard;
+      qs('summary-good').textContent = this.sessionGrades.good;
+      qs('summary-easy').textContent = this.sessionGrades.easy;
+      qs('guide-progress-fill').style.width = '100%';
+      this.updateDashboard();
+      this.renderHeatmap();
+      this.updateProfileStreaks();
+    },
+
+    /* Edit in place */
+    openEditForm() {
+      const item = this.sessionQueue[this.currentIndex];
+      if (!item) return;
+      const overrides = this.getOverrides();
+      qs('extra-textarea').value = (overrides[item.id] && overrides[item.id].extra) ? overrides[item.id].extra : (item.extra || '');
+      qs('srs-edit-form').classList.remove('hidden');
+      qs('extra-textarea').focus();
+    },
+
+    saveEdit() {
+      const item = this.sessionQueue[this.currentIndex];
+      if (!item) return;
+      const overrides = this.getOverrides();
+      if (!overrides[item.id]) overrides[item.id] = {};
+      overrides[item.id].extra = qs('extra-textarea').value;
+      this.saveOverrides(overrides);
+      qs('srs-edit-form').classList.add('hidden');
+      this.renderCard();
+    },
+
+    cancelEdit() { qs('srs-edit-form').classList.add('hidden'); },
+
+    /* Heatmap */
+    renderHeatmap() {
+      const log = this.getReviewLog();
+      const grid = qs('heatmap-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const today = new Date();
+      const todayD = today.getDay();
+      const startDate = new Date(today);
+      startDate.setDate(startDate.getDate() - (52 * 7) - todayD);
+      let maxCount = 0;
+      for (const val of Object.values(log)) { if (val > maxCount) maxCount = val; }
+      const current = new Date(startDate);
+      while (current <= today) {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+        const ds = current.getFullYear() + '-' + String(current.getMonth() + 1).padStart(2, '0') + '-' + String(current.getDate()).padStart(2, '0');
+        const count = log[ds] || 0;
+        let level = 0;
+        if (count > 0 && maxCount > 0) {
+          const ratio = count / maxCount;
+          if (ratio <= 0.25) level = 1;
+          else if (ratio <= 0.5) level = 2;
+          else if (ratio <= 0.75) level = 3;
+          else level = 4;
+        }
+        cell.setAttribute('data-level', level);
+        cell.title = ds + ': ' + count + ' reviews';
+        grid.appendChild(cell);
+        current.setDate(current.getDate() + 1);
+      }
+    },
+
+    /* Profile streaks */
+    updateProfileStreaks() {
+      const log = this.getReviewLog();
+      const today = new Date();
+      let currentStreak = 0, longestStreak = 0, tempStreak = 0;
+      const d = new Date(today);
+      while (true) {
+        const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        if (log[ds]) {
+          if (d.getTime() === today.getTime() || currentStreak > 0) currentStreak++;
+          tempStreak++;
+        } else {
+          if (tempStreak > longestStreak) longestStreak = tempStreak;
+          tempStreak = 0;
+          if (d.getTime() < today.getTime()) break;
+        }
+        d.setDate(d.getDate() - 1);
+      }
+      if (tempStreak > longestStreak) longestStreak = tempStreak;
+      const csEl = qs('profile-current-streak');
+      const lsEl = qs('profile-longest-streak');
+      if (csEl) csEl.textContent = currentStreak;
+      if (lsEl) lsEl.textContent = longestStreak;
+    },
+
+    /* Bind events */
+    bindEvents() {
+      qs('btn-start-review').addEventListener('click', () => this.startReview());
+      qs('btn-show-answer').addEventListener('click', () => this.showAnswer());
+      qs('btn-end-session').addEventListener('click', () => this.endSession());
+      qs('btn-back-dashboard').addEventListener('click', () => { this.updateDashboard(); this.showView('guide-dashboard'); });
+      qs('srs-grade-buttons').addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-grade');
+        if (btn) this.gradeCard(Number(btn.dataset.quality));
+      });
+      qs('btn-edit-extra').addEventListener('click', () => this.openEditForm());
+      qs('btn-save-edit').addEventListener('click', () => this.saveEdit());
+      qs('btn-cancel-edit').addEventListener('click', () => this.cancelEdit());
+      qs('new-cards-cap').addEventListener('change', (e) => {
+        const val = Math.max(1, Math.min(100, parseInt(e.target.value) || 20));
+        e.target.value = val;
+        const settings = this.getSettings();
+        settings.newCardsPerDay = val;
+        this.saveSettings(settings);
+        this.updateDashboard();
+      });
+
+      /* Keyboard shortcuts */
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const guideActive = qs('refPanelGuide').classList.contains('active');
+        if (!guideActive) return;
+        if (e.key === ' ' || e.key === 'Enter') {
+          if (!this.showingAnswer && !qs('guide-card-view').classList.contains('hidden')) {
+            e.preventDefault();
+            this.showAnswer();
+          }
+        } else if (e.key === '1') this.gradeCard(0);
+        else if (e.key === '2') this.gradeCard(3);
+        else if (e.key === '3') this.gradeCard(4);
+        else if (e.key === '4') this.gradeCard(5);
+        else if ((e.key === 'e' || e.key === 'E') && this.showingAnswer) {
+          this.openEditForm();
+        }
+      });
+    },
+
+    /* Init */
+    async init() {
+      try {
+        const resp = await fetch('../data/apex_guide_cards.json', { cache: 'no-store' });
+        this.allCards = await resp.json();
+        this.allItems = this.expandCards(this.allCards);
+      } catch (err) {
+        console.error('Failed to load guide cards:', err);
+        return;
+      }
+      const refGuideMeta = qs('refGuideMeta');
+      if (refGuideMeta) {
+        refGuideMeta.textContent = `${this.allCards.length} cards`;
+      }
+
+      this.bindEvents();
+      this.renderChapterPills();
+      this.updateDashboard();
+      this.showView('guide-dashboard');
+    }
+  };
+
   /* ---------------------------------------------------
      INIT
   --------------------------------------------------- */
@@ -753,47 +1230,76 @@
     initReferenceTiles();
     state.progress = loadProgress();
 
+    let questionsLoaded = false;
     try {
       await loadQuestions();
+      questionsLoaded = true;
     } catch (err) {
       console.error(err);
       showLoadError();
-      return;
     }
 
-    const refApexMeta = qs('refApexMeta');
-    if (refApexMeta) {
-      refApexMeta.textContent = `${state.allQuestions.length} questions · ${state.categories.length} topics`;
+    if (questionsLoaded) {
+      const refApexMeta = qs('refApexMeta');
+      if (refApexMeta) {
+        refApexMeta.textContent = `${state.allQuestions.length} questions · ${state.categories.length} topics`;
+      }
+
+      const firstCategoryKey = state.categories[0].key;
+
+      // Quizz tab
+      renderCategoryPills(qs('quizCategoryNav'), firstCategoryKey, selectQuizCategory);
+      selectQuizCategory(firstCategoryKey);
+      quizEngine = createQuizEngine({
+        setupView: qs('quizSetupView'),
+        gameView: qs('quizGameView'),
+        resultsView: qs('quizResultsView'),
+        progressFill: qs('quizProgressFill'),
+        questionMeta: qs('quizQuestionMeta'),
+        scorePill: qs('quizScorePill'),
+        timerPill: qs('quizTimerPill'),
+        questionText: qs('quizQuestionText'),
+        optionsList: qs('quizOptionsList'),
+        explanationBox: qs('quizExplanationBox'),
+        explanationLabel: qs('quizExplanationLabel'),
+        explanationText: qs('quizExplanationText'),
+        nextBtn: qs('quizNextBtn'),
+        exitBtn: qs('exitQuizBtn'),
+        resultScore: qs('quizResultScore'),
+        resultTitle: qs('quizResultTitle'),
+        resultSubtitle: qs('quizResultSubtitle'),
+        breakdown: null,
+        retryBtn: qs('quizRetryBtn'),
+        backBtn: qs('quizBackBtn'),
+      });
+      qs('startQuizBtn').addEventListener('click', startPracticeQuiz);
+
+      // Test tab
+      renderExamSetup();
+      examEngine = createQuizEngine({
+        setupView: qs('examSetupView'),
+        gameView: qs('examGameView'),
+        resultsView: qs('examResultsView'),
+        progressFill: qs('examProgressFill'),
+        questionMeta: qs('examQuestionMeta'),
+        scorePill: null,
+        timerPill: qs('examTimerPill'),
+        questionText: qs('examQuestionText'),
+        optionsList: qs('examOptionsList'),
+        explanationBox: qs('examExplanationBox'),
+        explanationLabel: qs('examExplanationLabel'),
+        explanationText: qs('examExplanationText'),
+        nextBtn: qs('examNextBtn'),
+        exitBtn: qs('exitExamBtn'),
+        resultScore: qs('examResultScore'),
+        resultTitle: qs('examResultTitle'),
+        resultSubtitle: qs('examResultSubtitle'),
+        breakdown: qs('examBreakdown'),
+        retryBtn: qs('examRetryBtn'),
+        backBtn: qs('examBackBtn'),
+      });
+      qs('startExamBtn').addEventListener('click', startMockExam);
     }
-
-    const firstCategoryKey = state.categories[0].key;
-
-    // Quizz tab
-    renderCategoryPills(qs('quizCategoryNav'), firstCategoryKey, selectQuizCategory);
-    selectQuizCategory(firstCategoryKey);
-    quizEngine = createQuizEngine({
-      setupView: qs('quizSetupView'),
-      gameView: qs('quizGameView'),
-      resultsView: qs('quizResultsView'),
-      progressFill: qs('quizProgressFill'),
-      questionMeta: qs('quizQuestionMeta'),
-      scorePill: qs('quizScorePill'),
-      timerPill: qs('quizTimerPill'),
-      questionText: qs('quizQuestionText'),
-      optionsList: qs('quizOptionsList'),
-      explanationBox: qs('quizExplanationBox'),
-      explanationLabel: qs('quizExplanationLabel'),
-      explanationText: qs('quizExplanationText'),
-      nextBtn: qs('quizNextBtn'),
-      exitBtn: qs('exitQuizBtn'),
-      resultScore: qs('quizResultScore'),
-      resultTitle: qs('quizResultTitle'),
-      resultSubtitle: qs('quizResultSubtitle'),
-      breakdown: null,
-      retryBtn: qs('quizRetryBtn'),
-      backBtn: qs('quizBackBtn'),
-    });
-    qs('startQuizBtn').addEventListener('click', startPracticeQuiz);
 
     try {
       await loadChapters();
@@ -806,35 +1312,16 @@
     renderChapterSummaries();
     initLearnControls();
 
-    // Test tab
-    renderExamSetup();
-    examEngine = createQuizEngine({
-      setupView: qs('examSetupView'),
-      gameView: qs('examGameView'),
-      resultsView: qs('examResultsView'),
-      progressFill: qs('examProgressFill'),
-      questionMeta: qs('examQuestionMeta'),
-      scorePill: null,
-      timerPill: qs('examTimerPill'),
-      questionText: qs('examQuestionText'),
-      optionsList: qs('examOptionsList'),
-      explanationBox: qs('examExplanationBox'),
-      explanationLabel: qs('examExplanationLabel'),
-      explanationText: qs('examExplanationText'),
-      nextBtn: qs('examNextBtn'),
-      exitBtn: qs('exitExamBtn'),
-      resultScore: qs('examResultScore'),
-      resultTitle: qs('examResultTitle'),
-      resultSubtitle: qs('examResultSubtitle'),
-      breakdown: qs('examBreakdown'),
-      retryBtn: qs('examRetryBtn'),
-      backBtn: qs('examBackBtn'),
-    });
-    qs('startExamBtn').addEventListener('click', startMockExam);
-
     // Profile tab
     renderProfile();
     initProfileControls();
+
+    // Guide (SRS) tab — independent of quiz/exam data, must init even if it failed to load
+    SRS.init();
+
+    // Heatmap & streaks (for Profile)
+    SRS.renderHeatmap();
+    SRS.updateProfileStreaks();
   }
 
   document.addEventListener('DOMContentLoaded', init);
