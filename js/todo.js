@@ -2,7 +2,6 @@
 // 1. CONFIGURATION – pulled from config.js (APP_CONFIG.WEB_APP_URL)
 // ============================================================
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby2l-HNuSoIMr16j-wYz7H7iq64txWKGOxQzi1aOQcZ9GsoFzYw2sQ8lJgha7KSs-Gy1g/exec'
-
 // ============================================================
 // 2. HELPERS & STATE
 // ============================================================
@@ -292,7 +291,8 @@ const HABIT_CONFIG = [
     { id:'projects', icon:'fa-hammer',         label:'Forged Today',    desc:'Tasks completed',             type:'counter', field:'Projects_Count' },
     { id:'nutrition',icon:'fa-wheat-awn',      label:'The Feast',       desc:'Log macros',                  type:'flip', flipId:'nutrition', fields:['Nutrition_Carbs','Nutrition_Protein','Nutrition_Completed'] },
     { id:'workout',  icon:'fa-shield-halved',  label:'Sparring',        desc:'Log muscle groups',           type:'flip', flipId:'workout', fields:['Workout_Muscles','Workout_Completed'] },
-    { id:'salesforce',icon:'fa-book-open',     label:'Lore Studied',    desc:'Log chapter reviewed',        type:'flip', flipId:'salesforce', fields:['Salesforce_Chapter','Salesforce_Completed'] }
+    { id:'salesforce',icon:'fa-book-open',     label:'Lore Studied',    desc:'Log chapter reviewed',        type:'flip', flipId:'salesforce', fields:['Salesforce_Chapter','Salesforce_Completed'] },
+    { id:'ritual',   icon:'fa-fire',           label:'The Kindling Rite', desc:'Prime the mind before the Vigil', type:'ritual' }
 ];
 
 // A small runic flash + a scatter of drifting motes from the icon,
@@ -329,6 +329,10 @@ function triggerRuneCelebration(card) {
 
 // Every habit tile, whatever it logs, flips to reveal its logging
 // controls — a brief gold pulse plays on each turn either direction.
+function updateRitualDots(card, stepsDone) {
+    card.querySelectorAll('.ritual-dot').forEach((dot, i) => dot.classList.toggle('lit', i < stepsDone));
+}
+
 function flipPulse(card) {
     card.classList.remove('flip-pulse');
     void card.offsetWidth;
@@ -551,6 +555,222 @@ function buildHabitGrid() {
                     }});
                 });
             }
+        } else if (cfg.type === 'ritual') {
+            card.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front card-face-wrapper">
+                        <div class="habit-icon-wrapper color-ritual ritual-flame"><i class="fa-solid ${cfg.icon}"></i></div>
+                        <div class="habit-info">
+                            <h3>${cfg.label}</h3>
+                            <p class="habit-desc" id="ritual-summary">${cfg.desc}</p>
+                            <div class="ritual-progress-dots" id="ritual-progress-dots">
+                                <span class="ritual-dot" data-step="1"></span>
+                                <span class="ritual-dot" data-step="2"></span>
+                                <span class="ritual-dot" data-step="3"></span>
+                                <span class="ritual-dot" data-step="4"></span>
+                                <span class="ritual-dot" data-step="5"></span>
+                            </div>
+                        </div>
+                        <button class="action-trigger-btn ritual-flip-trigger">Log</button>
+                    </div>
+                    <div class="flip-card-back card-face-wrapper ritual-back">
+                        <h4>${cfg.label}</h4>
+                        <div class="ritual-wizard">
+                            <div class="ritual-nodes">
+                                <button class="ritual-node" data-step="1" type="button" aria-label="Set Your Baseline"><i class="fa-solid fa-book-open"></i></button>
+                                <span class="ritual-node-line" data-line="1"></span>
+                                <button class="ritual-node" data-step="2" type="button" aria-label="No-Phone Zone"><i class="fa-solid fa-mobile-screen-button"></i></button>
+                                <span class="ritual-node-line" data-line="2"></span>
+                                <button class="ritual-node" data-step="3" type="button" aria-label="The Rite"><i class="fa-solid fa-fire"></i></button>
+                                <span class="ritual-node-line" data-line="3"></span>
+                                <button class="ritual-node" data-step="4" type="button" aria-label="Why This Matters"><i class="fa-solid fa-feather"></i></button>
+                                <span class="ritual-node-line" data-line="4"></span>
+                                <button class="ritual-node" data-step="5" type="button" aria-label="Begin the Vigil"><i class="fa-solid fa-hourglass-start"></i></button>
+                            </div>
+                            <div class="ritual-panels">
+                                <div class="ritual-panel is-active" data-panel="1">
+                                    <p class="ritual-panel-title">Set Your Baseline</p>
+                                    <div class="input-row"><label>Pages read</label><input type="number" id="ritual-pages" placeholder="0" min="0"></div>
+                                    <div class="ritual-stopwatch-row">
+                                        <span class="ritual-stopwatch" id="ritual-stopwatch-display">00:00</span>
+                                        <button class="ritual-stopwatch-btn" id="ritual-stopwatch-toggle" type="button">Start</button>
+                                        <button class="ritual-stopwatch-btn ritual-stopwatch-reset" id="ritual-stopwatch-reset" type="button">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="ritual-panel" data-panel="2">
+                                    <p class="ritual-panel-title">No-Phone Zone</p>
+                                    <button class="toggle-btn" id="ritual-nophone-btn" type="button"><i class="fa-solid fa-mobile-screen-button"></i><span>Phone Banished</span></button>
+                                </div>
+                                <div class="ritual-panel" data-panel="3">
+                                    <p class="ritual-panel-title">The Rite</p>
+                                    <p class="ritual-flavor">Three breaths. Spine straight. Begin.</p>
+                                    <button class="toggle-btn" id="ritual-primed-btn" type="button"><i class="fa-solid fa-check"></i><span>Rite Performed</span></button>
+                                </div>
+                                <div class="ritual-panel" data-panel="4">
+                                    <p class="ritual-panel-title">Why This Matters</p>
+                                    <textarea id="ritual-why" rows="3" placeholder="Why does this session matter today?"></textarea>
+                                </div>
+                                <div class="ritual-panel" data-panel="5">
+                                    <p class="ritual-panel-title">Begin the Vigil</p>
+                                    <p class="ritual-flavor" id="ritual-vigil-status">The Vigil has not yet begun.</p>
+                                    <button class="save-flip-btn" id="ritual-begin-vigil-btn" type="button">Kindle the Vigil</button>
+                                </div>
+                            </div>
+                            <div class="ritual-wizard-nav">
+                                <button class="ritual-nav-btn" id="ritual-back-btn" type="button"><i class="fa-solid fa-chevron-left"></i> Back</button>
+                                <button class="save-flip-btn ritual-nav-save" id="ritual-save-btn" type="button">Done</button>
+                                <button class="ritual-nav-btn" id="ritual-next-btn" type="button">Next <i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            wireFlipTrigger(`${cfg.id}-flip-trigger`);
+
+            const nodes = Array.from(card.querySelectorAll('.ritual-node'));
+            const lines = Array.from(card.querySelectorAll('.ritual-node-line'));
+            const panels = Array.from(card.querySelectorAll('.ritual-panel'));
+            const backBtn = card.querySelector('#ritual-back-btn');
+            const nextBtn = card.querySelector('#ritual-next-btn');
+
+            let activeStep = 1;
+            const goToStep = (n) => {
+                activeStep = Math.min(5, Math.max(1, n));
+                panels.forEach(p => p.classList.toggle('is-active', Number(p.dataset.panel) === activeStep));
+                nodes.forEach(node => node.classList.toggle('is-active', Number(node.dataset.step) === activeStep));
+                backBtn.classList.toggle('is-hidden', activeStep === 1);
+                nextBtn.classList.toggle('is-hidden', activeStep === 5);
+            };
+            card.__ritualGoToStep = goToStep;
+            nodes.forEach(node => node.addEventListener('click', e => { e.stopPropagation(); goToStep(Number(node.dataset.step)); }));
+            backBtn.addEventListener('click', e => { e.stopPropagation(); goToStep(activeStep - 1); });
+            nextBtn.addEventListener('click', e => { e.stopPropagation(); goToStep(activeStep + 1); });
+
+            // Local stopwatch for the baseline reading step — deliberately
+            // separate from the main Vigil timer below.
+            let ritualElapsed = 0;
+            let ritualInterval = null;
+            const swDisplay = card.querySelector('#ritual-stopwatch-display');
+            const swToggle = card.querySelector('#ritual-stopwatch-toggle');
+            const swReset = card.querySelector('#ritual-stopwatch-reset');
+            swToggle.addEventListener('click', e => {
+                e.stopPropagation();
+                if (ritualInterval) {
+                    clearInterval(ritualInterval);
+                    ritualInterval = null;
+                    swToggle.textContent = 'Start';
+                } else {
+                    swToggle.textContent = 'Stop';
+                    ritualInterval = setInterval(() => {
+                        ritualElapsed++;
+                        swDisplay.textContent = formatTime(ritualElapsed);
+                        updateProgress();
+                    }, 1000);
+                }
+                updateProgress();
+            });
+            swReset.addEventListener('click', e => {
+                e.stopPropagation();
+                clearInterval(ritualInterval);
+                ritualInterval = null;
+                ritualElapsed = 0;
+                swDisplay.textContent = '00:00';
+                swToggle.textContent = 'Start';
+                updateProgress();
+            });
+            // applyDailyState restores elapsed time through this hook,
+            // since ritualElapsed otherwise only lives in this closure.
+            card.__ritualSetElapsed = (secs) => {
+                ritualElapsed = Number(secs) || 0;
+                swDisplay.textContent = formatTime(ritualElapsed);
+            };
+
+            const wireStepToggle = (btnId, onText, offText, stepNum) => {
+                const btn = card.querySelector(`#${btnId}`);
+                const label = btn.querySelector('span');
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const on = !btn.classList.contains('completed');
+                    btn.classList.toggle('completed', on);
+                    label.textContent = on ? onText : offText;
+                    updateProgress();
+                    // A single decisive tap — carry the ritual forward
+                    // instead of waiting for another click.
+                    if (on) setTimeout(() => { if (activeStep === stepNum) goToStep(stepNum + 1); }, 500);
+                });
+                return btn;
+            };
+            const noPhoneBtn = wireStepToggle('ritual-nophone-btn', 'Phone Banished ✓', 'Phone Banished', 2);
+            const primedBtn = wireStepToggle('ritual-primed-btn', 'Rite Performed ✓', 'Rite Performed', 3);
+
+            const pagesInput = card.querySelector('#ritual-pages');
+            const whyInput = card.querySelector('#ritual-why');
+            pagesInput.addEventListener('input', () => updateProgress());
+            whyInput.addEventListener('input', () => updateProgress());
+
+            // Recomputes which steps are satisfied and reflects that on the
+            // node trail, the front-face dots, and the Vigil status line —
+            // called after every edit so the wizard never looks stale.
+            function updateProgress() {
+                const pages = pagesInput.value || '';
+                const why = whyInput.value || '';
+                const noPhone = noPhoneBtn.classList.contains('completed');
+                const primed = primedBtn.classList.contains('completed');
+                const vigilStarted = !!(Number(dailyData.Pomodoros_Completed) > 0 || Number(dailyData.Focus_Minutes) > 0);
+                // One flag per step/node, in step order: baseline (pages OR
+                // stopwatch), no-phone, the rite, why-it-matters, the Vigil.
+                const doneFlags = [
+                    Number(pages) > 0 || ritualElapsed > 0,
+                    noPhone,
+                    primed,
+                    !!why.trim(),
+                    vigilStarted
+                ];
+                nodes.forEach((node, i) => node.classList.toggle('is-lit', doneFlags[i]));
+                lines.forEach((line, i) => line.classList.toggle('is-lit', doneFlags[i]));
+                const stepsDone = doneFlags.filter(Boolean).length;
+                updateRitualDots(card, stepsDone);
+                const vigilStatus = card.querySelector('#ritual-vigil-status');
+                if (vigilStatus) vigilStatus.textContent = vigilStarted ? 'The Vigil has been kindled today ✓' : 'The Vigil has not yet begun.';
+                return stepsDone;
+            }
+            card.__ritualUpdateProgress = updateProgress;
+            updateProgress();
+
+            const saveRitual = () => {
+                const pages = pagesInput.value || '';
+                const noPhone = noPhoneBtn.classList.contains('completed');
+                const primed = primedBtn.classList.contains('completed');
+                const why = whyInput.value || '';
+                const stepsDone = updateProgress();
+                const summary = card.querySelector('#ritual-summary');
+                summary.textContent = stepsDone >= 5 ? 'The Rite is complete ✓' : `${stepsDone}/5 steps kindled`;
+                card.classList.toggle('active-ritual', stepsDone >= 5);
+                if (stepsDone >= 5) triggerRuneCelebration(card);
+                apiPost({ action:'updateHabitFields', date:viewDate, fields: {
+                    Ritual_Pages: pages,
+                    Ritual_Baseline_Seconds: ritualElapsed,
+                    Ritual_NoPhone: noPhone,
+                    Ritual_Primed: primed,
+                    Ritual_Why: why
+                }});
+            };
+
+            card.querySelector('#ritual-save-btn').addEventListener('click', e => {
+                e.stopPropagation();
+                saveRitual();
+                card.classList.remove('flipped');
+                goToStep(1);
+                if (window.__undockHabitCard) window.__undockHabitCard(card);
+            });
+            card.querySelector('#ritual-begin-vigil-btn').addEventListener('click', e => {
+                e.stopPropagation();
+                saveRitual();
+                card.classList.remove('flipped');
+                goToStep(1);
+                if (window.__undockHabitCard) window.__undockHabitCard(card);
+                if (window.__openTimerOverlay) window.__openTimerOverlay();
+            });
         }
 
         const closeBtn = document.createElement('button');
@@ -625,6 +845,49 @@ function applyDailyState(daily) {
     if (daily.Salesforce_Chapter) sfSelect.value = daily.Salesforce_Chapter;
     document.getElementById('pomodoro-count').textContent = daily.Pomodoros_Completed || 0;
     document.getElementById('productive-minutes').textContent = daily.Focus_Minutes || 0;
+
+    [1, 2, 3].forEach(n => {
+        const box = document.getElementById(`inspiration-${n}`);
+        if (box) box.value = daily[`Inspiration_${n}`] || '';
+    });
+
+    const ritualCard = document.getElementById('habit-ritual');
+    if (ritualCard) {
+        const pages = daily.Ritual_Pages || '';
+        const elapsed = Number(daily.Ritual_Baseline_Seconds) || 0;
+        const noPhone = !!daily.Ritual_NoPhone;
+        const primed = !!daily.Ritual_Primed;
+        const why = daily.Ritual_Why || '';
+
+        const pagesInput = document.getElementById('ritual-pages');
+        if (pagesInput) pagesInput.value = pages;
+        if (ritualCard.__ritualSetElapsed) ritualCard.__ritualSetElapsed(elapsed);
+
+        const noPhoneBtn = document.getElementById('ritual-nophone-btn');
+        if (noPhoneBtn) {
+            noPhoneBtn.classList.toggle('completed', noPhone);
+            const label = noPhoneBtn.querySelector('span');
+            if (label) label.textContent = noPhone ? 'Phone Banished ✓' : 'Phone Banished';
+        }
+        const primedBtn = document.getElementById('ritual-primed-btn');
+        if (primedBtn) {
+            primedBtn.classList.toggle('completed', primed);
+            const label = primedBtn.querySelector('span');
+            if (label) label.textContent = primed ? 'Rite Performed ✓' : 'Rite Performed';
+        }
+        const whyInput = document.getElementById('ritual-why');
+        if (whyInput) whyInput.value = why;
+
+        // The wizard's own closure (pagesInput/toggles/textarea/elapsed)
+        // now holds the source of truth for lit nodes and the Vigil line —
+        // just point it at a fresh day and let it recompute.
+        if (ritualCard.__ritualGoToStep) ritualCard.__ritualGoToStep(1);
+        const stepsDone = ritualCard.__ritualUpdateProgress ? ritualCard.__ritualUpdateProgress() : 0;
+        const ritualCfg = HABIT_CONFIG.find(h => h.id === 'ritual');
+        const summary = document.getElementById('ritual-summary');
+        if (summary) summary.textContent = stepsDone >= 5 ? 'The Rite is complete ✓' : (stepsDone > 0 ? `${stepsDone}/5 steps kindled` : ritualCfg.desc);
+        ritualCard.classList.toggle('active-ritual', stepsDone >= 5);
+    }
 }
 
 // ============================================================
@@ -986,6 +1249,28 @@ init();
     }
 })();
 
+// ---- Inspiration strip: three standing, always-visible verses the
+// steward writes for themself. Autosaves on blur — no dock, no modal,
+// just three big boxes above the ledger. ----
+(function initInspirationBoxes() {
+    [1, 2, 3].forEach(n => {
+        const box = document.getElementById(`inspiration-${n}`);
+        if (!box) return;
+        const wrapper = box.closest('.inspiration-box');
+        let lastSaved = box.value;
+        box.addEventListener('blur', () => {
+            if (box.value === lastSaved) return;
+            lastSaved = box.value;
+            apiPost({ action: 'updateHabit', date: viewDate, field: `Inspiration_${n}`, value: box.value });
+            if (wrapper) {
+                wrapper.classList.remove('flash');
+                void wrapper.offsetWidth;
+                wrapper.classList.add('flash');
+            }
+        });
+    });
+})();
+
 // ---- Habit orbit docking: everything lives on one screen now, so
 // tapping a satellite tile pulls it into the center to log it instead
 // of switching to a separate "Habits" tab. First tap always docks
@@ -1052,6 +1337,7 @@ init();
         overlay.classList.remove('is-open');
         overlay.setAttribute('aria-hidden', 'true');
     }
+    window.__openTimerOverlay = open;
 
     podBtn.addEventListener('click', open);
     if (overlayBackdrop) overlayBackdrop.addEventListener('click', close);

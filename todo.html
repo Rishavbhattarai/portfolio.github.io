@@ -12,6 +12,7 @@
 </head>
 <body>
 
+
     <!-- App shell: fixed to the viewport height. Nothing here causes the
          page itself to scroll — each tab panel below owns its own,
          independent scroll area instead. -->
@@ -63,6 +64,36 @@
              satellite pod and opens as a docked overlay.
              ============================================================ -->
         <main class="cosmos" id="cosmos">
+
+            <!-- ---------- INSPIRATION — three standing verses, always in
+                 view above the ledger. Purely user-written, autosaved. ---------- -->
+            <section class="inspiration-strip" aria-label="Daily inspiration">
+                <div class="inspiration-box" data-slot="1">
+                    <div class="inspiration-box-head">
+                        <span class="inspiration-icon"><i class="fa-solid fa-feather"></i></span>
+                        <h3>Verse I</h3>
+                    </div>
+                    <textarea id="inspiration-1" class="inspiration-text" placeholder="What calls you forward today?" rows="3"></textarea>
+                    <span class="inspiration-saved-flash" aria-hidden="true">Inscribed ✓</span>
+                </div>
+                <div class="inspiration-box" data-slot="2">
+                    <div class="inspiration-box-head">
+                        <span class="inspiration-icon"><i class="fa-solid fa-compass"></i></span>
+                        <h3>Verse II</h3>
+                    </div>
+                    <textarea id="inspiration-2" class="inspiration-text" placeholder="What are you working toward?" rows="3"></textarea>
+                    <span class="inspiration-saved-flash" aria-hidden="true">Inscribed ✓</span>
+                </div>
+                <div class="inspiration-box" data-slot="3">
+                    <div class="inspiration-box-head">
+                        <span class="inspiration-icon"><i class="fa-solid fa-star"></i></span>
+                        <h3>Verse III</h3>
+                    </div>
+                    <textarea id="inspiration-3" class="inspiration-text" placeholder="Who are you doing this for?" rows="3"></textarea>
+                    <span class="inspiration-saved-flash" aria-hidden="true">Inscribed ✓</span>
+                </div>
+            </section>
+
             <div class="orbit-system" id="orbit-system">
 
                 <!-- decorative orbit ring, purely ambient -->
