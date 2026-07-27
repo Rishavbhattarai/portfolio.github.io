@@ -1,5 +1,5 @@
 // ============================================================
-// 1. CONFIGURATION – pulled from config.js (APP_CONFIG.WEB_APP_URL)
+// 1. CONFIGURATION
 // ============================================================
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby2l-HNuSoIMr16j-wYz7H7iq64txWKGOxQzi1aOQcZ9GsoFzYw2sQ8lJgha7KSs-Gy1g/exec'
 // ============================================================
@@ -289,11 +289,27 @@ const HABIT_CONFIG = [
     { id:'skincare', icon:'fa-leaf',           label:'Elven Care',      desc:'Morning & night rite',        type:'toggle', field:'Skincare_Completed' },
     { id:'jobs',     icon:'fa-scroll',         label:'Scrolls Sent',    desc:'Applications count',          type:'counter', field:'Jobs_Count' },
     { id:'projects', icon:'fa-hammer',         label:'Forged Today',    desc:'Tasks completed',             type:'counter', field:'Projects_Count' },
-    { id:'nutrition',icon:'fa-wheat-awn',      label:'The Feast',       desc:'Log macros',                  type:'flip', flipId:'nutrition', fields:['Nutrition_Carbs','Nutrition_Protein','Nutrition_Completed'] },
-    { id:'workout',  icon:'fa-shield-halved',  label:'Sparring',        desc:'Log muscle groups',           type:'flip', flipId:'workout', fields:['Workout_Muscles','Workout_Completed'] },
-    { id:'salesforce',icon:'fa-book-open',     label:'Lore Studied',    desc:'Log chapter reviewed',        type:'flip', flipId:'salesforce', fields:['Salesforce_Chapter','Salesforce_Completed'] },
-    { id:'ritual',   icon:'fa-fire',           label:'The Kindling Rite', desc:'Prime the mind before the Vigil', type:'ritual' }
+    { id:'nutrition',icon:'fa-wheat-awn',      label:'The Feast',       desc:'Log macros',                  type:'input', flipId:'nutrition', fields:['Nutrition_Carbs','Nutrition_Protein','Nutrition_Completed'] },
+    { id:'workout',  icon:'fa-shield-halved',  label:'Sparring',        desc:'Log muscle groups',           type:'input', flipId:'workout', fields:['Workout_Muscles','Workout_Completed'] },
+    { id:'salesforce',icon:'fa-book-open',     label:'Lore Studied',    desc:'Log chapter reviewed',        type:'input', flipId:'salesforce', fields:['Salesforce_Chapter','Salesforce_Completed'] },
+    { id:'ritual',   icon:'fa-fire',           label:'The Kindling Rite', desc:'Prime the mind before the Vigil', type:'ritual', long:true }
 ];
+
+// Debounced autosave for text/number fields: fires `delay` ms after the
+// last edit, or immediately on flush() (used on blur) so a field never
+// gets stranded unsaved if the person clicks away right after typing.
+function makeAutosave(fn, delay = 600) {
+    let timer = null;
+    const trigger = (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+    const flush = (...args) => {
+        clearTimeout(timer);
+        fn(...args);
+    };
+    return { trigger, flush };
+}
 
 // A small runic flash + a scatter of drifting motes from the icon,
 // fired whenever a habit is logged/completed. Purely decorative —
@@ -327,106 +343,87 @@ function triggerRuneCelebration(card) {
     }
 }
 
-// Every habit tile, whatever it logs, flips to reveal its logging
-// controls — a brief gold pulse plays on each turn either direction.
 function updateRitualDots(card, stepsDone) {
     card.querySelectorAll('.ritual-dot').forEach((dot, i) => dot.classList.toggle('lit', i < stepsDone));
 }
 
-function flipPulse(card) {
-    card.classList.remove('flip-pulse');
+// Every field autosaves on its own — this is the small non-blocking
+// "Saved ✓" flash each card shows after one of its controls fires.
+function flashSaved(card) {
+    card.classList.remove('saved-flash');
     void card.offsetWidth;
-    card.classList.add('flip-pulse');
-    setTimeout(() => card.classList.remove('flip-pulse'), 650);
+    card.classList.add('saved-flash');
 }
 
 function buildHabitGrid() {
-    const grid = document.getElementById('habit-grid');
-    if (grid.children.length > 0) return;
-    grid.style.setProperty('--n', HABIT_CONFIG.length);
+    const flankLeft = document.getElementById('habit-flank-left');
+    const flankRight = document.getElementById('habit-flank-right');
+    const below = document.getElementById('habit-below');
+    if (flankLeft.children.length > 0 || flankRight.children.length > 0 || below.children.length > 0) return;
+
+    // Short tiles (toggle/counter/input) flank the ledger left and right;
+    // long tiles (currently just the Kindling Rite) sit in their own row
+    // below, since a 5-group card would tower over its neighbors.
+    let shortIndex = 0;
 
     HABIT_CONFIG.forEach((cfg, index) => {
         const card = document.createElement('div');
-        card.className = 'habit-card flip-card';
+        card.className = 'habit-card';
         card.id = `habit-${cfg.id}`;
         card.style.setProperty('--i', index);
 
-        const wireFlipTrigger = (triggerClass) => {
-            const trigger = card.querySelector(`.${triggerClass}`);
-            trigger.addEventListener('click', e => {
-                e.stopPropagation();
-                card.classList.toggle('flipped');
-                flipPulse(card);
-            });
-        };
+        // Idle drift so the flanking tiles read as gently alive rather than
+        // static — pure CSS keyframes below, no per-frame JS or pointer
+        // tracking. Values vary a little per tile so they don't move in
+        // lockstep.
+        const driftX = (index % 2 === 0 ? 1 : -1) * (5 + (index % 3) * 3);
+        const driftY = -(6 + (index % 4) * 3);
+        card.style.setProperty('--drift-x', `${driftX}px`);
+        card.style.setProperty('--drift-y', `${driftY}px`);
+        card.style.setProperty('--float-dur', `${5 + (index % 5)}s`);
 
         if (cfg.type === 'toggle') {
             card.innerHTML = `
-                <div class="flip-card-inner">
-                    <div class="flip-card-front card-face-wrapper">
+                <div class="card-face-wrapper">
+                    <div class="habit-card-head">
                         <div class="habit-icon-wrapper color-${cfg.id}"><i class="fa-solid ${cfg.icon}"></i></div>
                         <div class="habit-info"><h3>${cfg.label}</h3><p class="habit-desc" id="${cfg.id}-summary">${cfg.desc}</p></div>
-                        <button class="action-trigger-btn ${cfg.id}-flip-trigger">Log</button>
-                        <button class="quick-complete-btn" aria-label="Mark ${cfg.label} complete"><i class="fa-solid fa-check"></i></button>
                     </div>
-                    <div class="flip-card-back card-face-wrapper">
-                        <h4>${cfg.label}</h4>
-                        <div class="toggle-flip-row">
-                            <button class="toggle-btn" id="btn-${cfg.id}"><i class="fa-solid fa-check"></i><span>Mark Complete</span></button>
-                        </div>
-                        <button class="save-flip-btn" id="${cfg.id}-save-btn">Done</button>
-                    </div>
+                    <button class="toggle-btn" id="btn-${cfg.id}"><i class="fa-solid fa-check"></i><span>Mark Complete</span></button>
+                    <span class="habit-saved-flash" aria-hidden="true">Saved ✓</span>
                 </div>
             `;
-            wireFlipTrigger(`${cfg.id}-flip-trigger`);
             const btn = card.querySelector('.toggle-btn');
             const btnLabel = btn.querySelector('span');
-            const quickBtn = card.querySelector('.quick-complete-btn');
             const summary = card.querySelector(`#${cfg.id}-summary`);
 
-            // Shared by the back-face toggle and the on-tile quick-complete
-            // button, so both stay in sync however the habit gets sealed.
-            const toggleComplete = () => {
+            btn.addEventListener('click', () => {
                 const completed = !card.classList.contains('completed');
                 card.classList.toggle('completed', completed);
                 btnLabel.textContent = completed ? 'Completed' : 'Mark Complete';
                 summary.textContent = completed ? 'Sealed for today ✓' : cfg.desc;
                 if (completed) triggerRuneCelebration(card);
+                flashSaved(card);
                 apiPost({ action:'updateHabit', date:viewDate, field:cfg.field, value:completed });
-            };
-            btn.addEventListener('click', e => { e.stopPropagation(); toggleComplete(); });
-            quickBtn.addEventListener('click', e => { e.stopPropagation(); toggleComplete(); });
-
-            const save = card.querySelector(`#${cfg.id}-save-btn`);
-            save.addEventListener('click', e => {
-                e.stopPropagation();
-                card.classList.remove('flipped');
-                if (window.__undockHabitCard) window.__undockHabitCard(card);
             });
         } else if (cfg.type === 'counter') {
             card.innerHTML = `
-                <div class="flip-card-inner">
-                    <div class="flip-card-front card-face-wrapper">
+                <div class="card-face-wrapper">
+                    <div class="habit-card-head">
                         <div class="habit-icon-wrapper color-${cfg.id}"><i class="fa-solid ${cfg.icon}"></i></div>
                         <div class="habit-info"><h3>${cfg.label}</h3><p class="habit-desc" id="${cfg.id}-summary">${cfg.desc}</p></div>
-                        <button class="action-trigger-btn ${cfg.id}-flip-trigger">Log</button>
                     </div>
-                    <div class="flip-card-back card-face-wrapper">
-                        <h4>${cfg.label}</h4>
-                        <div class="habit-counter">
-                            <button class="counter-btn minus" data-id="${cfg.id}"><i class="fa-solid fa-minus"></i></button>
-                            <span class="counter-value" id="val-${cfg.id}">0</span>
-                            <button class="counter-btn plus" data-id="${cfg.id}"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                        <button class="save-flip-btn" id="${cfg.id}-save-btn">Done</button>
+                    <div class="habit-counter">
+                        <button class="counter-btn minus" data-id="${cfg.id}"><i class="fa-solid fa-minus"></i></button>
+                        <span class="counter-value" id="val-${cfg.id}">0</span>
+                        <button class="counter-btn plus" data-id="${cfg.id}"><i class="fa-solid fa-plus"></i></button>
                     </div>
+                    <span class="habit-saved-flash" aria-hidden="true">Saved ✓</span>
                 </div>
             `;
-            wireFlipTrigger(`${cfg.id}-flip-trigger`);
             const summary = card.querySelector(`#${cfg.id}-summary`);
             card.querySelectorAll('.counter-btn').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    e.stopPropagation();
+                btn.addEventListener('click', () => {
                     const delta = btn.classList.contains('plus') ? 1 : -1;
                     const valSpan = document.getElementById(`val-${cfg.id}`);
                     let val = parseInt(valSpan.textContent, 10) || 0;
@@ -435,112 +432,93 @@ function buildHabitGrid() {
                     card.classList.toggle('active', val > 0);
                     summary.textContent = val > 0 ? `${val} logged today` : cfg.desc;
                     if (delta > 0) triggerRuneCelebration(card);
+                    flashSaved(card);
                     apiPost({ action:'updateHabit', date:viewDate, field:cfg.field, value:val });
                 });
             });
-            const save = card.querySelector(`#${cfg.id}-save-btn`);
-            save.addEventListener('click', e => {
-                e.stopPropagation();
-                card.classList.remove('flipped');
-                if (window.__undockHabitCard) window.__undockHabitCard(card);
-            });
-        } else if (cfg.type === 'flip') {
+        } else if (cfg.type === 'input') {
             const flipId = cfg.flipId;
-            let backContent = '';
+            let fieldsHtml = '';
             if (flipId === 'nutrition') {
-                backContent = `
-                    <h4>Log Nutrition</h4>
+                fieldsHtml = `
                     <div class="input-row"><label>Carbs (g)</label><input type="number" id="nutrition-carbs" placeholder="0" min="0"></div>
                     <div class="input-row"><label>Protein (g)</label><input type="number" id="nutrition-protein" placeholder="0" min="0"></div>
-                    <button class="save-flip-btn" id="nutrition-save-btn">Done</button>
                 `;
             } else if (flipId === 'workout') {
                 const muscles = ['Leg','Shoulder','Chest','Biceps','Triceps','Abs','Back'];
                 const pills = muscles.map(m => `<button class="workout-pill" data-muscle="${m}">${m}</button>`).join('');
-                backContent = `
-                    <h4>Target Areas</h4>
-                    <div class="workout-pill-container">${pills}</div>
-                    <button class="save-flip-btn" id="workout-save-btn">Done</button>
-                `;
+                fieldsHtml = `<div class="workout-pill-container">${pills}</div>`;
             } else if (flipId === 'salesforce') {
                 const chapters = Array.from({length:10}, (_,i) => `Chapter ${i+1}`);
                 const options = chapters.map(c => `<option value="${c}">${c}</option>`).join('');
-                backContent = `
-                    <h4>Chapter Reviewed</h4>
-                    <div class="select-wrapper"><select id="salesforce-chapter-select"><option value="" disabled selected>Select...</option>${options}</select></div>
-                    <button class="save-flip-btn" id="salesforce-save-btn">Done</button>
-                `;
+                fieldsHtml = `<div class="select-wrapper"><select id="salesforce-chapter-select"><option value="" disabled selected>Select...</option>${options}</select></div>`;
             }
             card.innerHTML = `
-                <div class="flip-card-inner">
-                    <div class="flip-card-front card-face-wrapper">
+                <div class="card-face-wrapper">
+                    <div class="habit-card-head">
                         <div class="habit-icon-wrapper color-${cfg.id}"><i class="fa-solid ${cfg.icon}"></i></div>
                         <div class="habit-info"><h3>${cfg.label}</h3><p class="habit-desc" id="${flipId}-summary">${cfg.desc}</p></div>
-                        <button class="action-trigger-btn ${flipId}-flip-trigger">Log</button>
                     </div>
-                    <div class="flip-card-back card-face-wrapper">${backContent}</div>
+                    ${fieldsHtml}
+                    <span class="habit-saved-flash" aria-hidden="true">Saved ✓</span>
                 </div>
             `;
-            const trigger = card.querySelector(`.${flipId}-flip-trigger`);
-            trigger.addEventListener('click', e => { e.stopPropagation(); card.classList.toggle('flipped'); flipPulse(card); });
             if (flipId === 'nutrition') {
-                const save = card.querySelector('#nutrition-save-btn');
-                save.addEventListener('click', e => {
-                    e.stopPropagation();
+                const saveNutrition = () => {
                     const carbs = document.getElementById('nutrition-carbs').value || '';
                     const protein = document.getElementById('nutrition-protein').value || '';
                     const completed = !!(carbs || protein);
-                    card.classList.remove('flipped');
-                    if (window.__undockHabitCard) window.__undockHabitCard(card);
+                    const wasCompleted = card.classList.contains('active-nutrition');
                     if (completed) {
                         card.classList.add('active-nutrition');
                         document.getElementById('nutrition-summary').textContent = `Carbs: ${carbs||0}g | Protein: ${protein||0}g`;
-                        triggerRuneCelebration(card);
+                        if (!wasCompleted) triggerRuneCelebration(card);
                     } else {
                         card.classList.remove('active-nutrition');
                         document.getElementById('nutrition-summary').textContent = 'Break bread and log the feast';
                     }
+                    flashSaved(card);
                     apiPost({ action:'updateHabitFields', date:viewDate, fields: {
                         Nutrition_Carbs: carbs,
                         Nutrition_Protein: protein,
                         Nutrition_Completed: completed
                     }});
+                };
+                const autosave = makeAutosave(saveNutrition);
+                ['nutrition-carbs','nutrition-protein'].forEach(id => {
+                    const input = card.querySelector(`#${id}`);
+                    input.addEventListener('input', () => autosave.trigger());
+                    input.addEventListener('blur', () => autosave.flush());
                 });
             } else if (flipId === 'workout') {
-                const save = card.querySelector('#workout-save-btn');
-                save.addEventListener('click', e => {
-                    e.stopPropagation();
+                const saveWorkout = () => {
                     const pills = card.querySelectorAll('.workout-pill.active');
                     const muscles = Array.from(pills).map(p => p.dataset.muscle);
                     const completed = muscles.length > 0;
                     const str = muscles.join(', ');
-                    card.classList.remove('flipped');
-                    if (window.__undockHabitCard) window.__undockHabitCard(card);
+                    const wasCompleted = card.classList.contains('active-workout');
                     if (completed) {
                         card.classList.add('active-workout');
                         document.getElementById('workout-summary').textContent = str;
-                        triggerRuneCelebration(card);
+                        if (!wasCompleted) triggerRuneCelebration(card);
                     } else {
                         card.classList.remove('active-workout');
                         document.getElementById('workout-summary').textContent = 'Log the day\'s sparring';
                     }
+                    flashSaved(card);
                     apiPost({ action:'updateHabitFields', date:viewDate, fields: {
                         Workout_Muscles: str,
                         Workout_Completed: completed
                     }});
-                });
+                };
                 card.querySelectorAll('.workout-pill').forEach(p => {
-                    p.addEventListener('click', e => { e.stopPropagation(); p.classList.toggle('active'); });
+                    p.addEventListener('click', () => { p.classList.toggle('active'); saveWorkout(); });
                 });
             } else if (flipId === 'salesforce') {
-                const save = card.querySelector('#salesforce-save-btn');
-                save.addEventListener('click', e => {
-                    e.stopPropagation();
+                const saveSalesforce = () => {
                     const select = document.getElementById('salesforce-chapter-select');
                     const chapter = select.value;
                     const completed = !!chapter;
-                    card.classList.remove('flipped');
-                    if (window.__undockHabitCard) window.__undockHabitCard(card);
                     if (completed) {
                         card.classList.add('active-salesforce');
                         document.getElementById('salesforce-summary').textContent = `Learned: ${chapter}`;
@@ -549,16 +527,18 @@ function buildHabitGrid() {
                         card.classList.remove('active-salesforce');
                         document.getElementById('salesforce-summary').textContent = 'Log the lore studied';
                     }
+                    flashSaved(card);
                     apiPost({ action:'updateHabitFields', date:viewDate, fields: {
                         Salesforce_Chapter: chapter,
                         Salesforce_Completed: completed
                     }});
-                });
+                };
+                card.querySelector('#salesforce-chapter-select').addEventListener('change', saveSalesforce);
             }
         } else if (cfg.type === 'ritual') {
             card.innerHTML = `
-                <div class="flip-card-inner">
-                    <div class="flip-card-front card-face-wrapper">
+                <div class="card-face-wrapper">
+                    <div class="habit-card-head">
                         <div class="habit-icon-wrapper color-ritual ritual-flame"><i class="fa-solid ${cfg.icon}"></i></div>
                         <div class="habit-info">
                             <h3>${cfg.label}</h3>
@@ -571,80 +551,39 @@ function buildHabitGrid() {
                                 <span class="ritual-dot" data-step="5"></span>
                             </div>
                         </div>
-                        <button class="action-trigger-btn ritual-flip-trigger">Log</button>
                     </div>
-                    <div class="flip-card-back card-face-wrapper ritual-back">
-                        <h4>${cfg.label}</h4>
-                        <div class="ritual-wizard">
-                            <div class="ritual-nodes">
-                                <button class="ritual-node" data-step="1" type="button" aria-label="Set Your Baseline"><i class="fa-solid fa-book-open"></i></button>
-                                <span class="ritual-node-line" data-line="1"></span>
-                                <button class="ritual-node" data-step="2" type="button" aria-label="No-Phone Zone"><i class="fa-solid fa-mobile-screen-button"></i></button>
-                                <span class="ritual-node-line" data-line="2"></span>
-                                <button class="ritual-node" data-step="3" type="button" aria-label="The Rite"><i class="fa-solid fa-fire"></i></button>
-                                <span class="ritual-node-line" data-line="3"></span>
-                                <button class="ritual-node" data-step="4" type="button" aria-label="Why This Matters"><i class="fa-solid fa-feather"></i></button>
-                                <span class="ritual-node-line" data-line="4"></span>
-                                <button class="ritual-node" data-step="5" type="button" aria-label="Begin the Vigil"><i class="fa-solid fa-hourglass-start"></i></button>
-                            </div>
-                            <div class="ritual-panels">
-                                <div class="ritual-panel is-active" data-panel="1">
-                                    <p class="ritual-panel-title">Set Your Baseline</p>
-                                    <div class="input-row"><label>Pages read</label><input type="number" id="ritual-pages" placeholder="0" min="0"></div>
-                                    <div class="ritual-stopwatch-row">
-                                        <span class="ritual-stopwatch" id="ritual-stopwatch-display">00:00</span>
-                                        <button class="ritual-stopwatch-btn" id="ritual-stopwatch-toggle" type="button">Start</button>
-                                        <button class="ritual-stopwatch-btn ritual-stopwatch-reset" id="ritual-stopwatch-reset" type="button">Reset</button>
-                                    </div>
-                                </div>
-                                <div class="ritual-panel" data-panel="2">
-                                    <p class="ritual-panel-title">No-Phone Zone</p>
-                                    <button class="toggle-btn" id="ritual-nophone-btn" type="button"><i class="fa-solid fa-mobile-screen-button"></i><span>Phone Banished</span></button>
-                                </div>
-                                <div class="ritual-panel" data-panel="3">
-                                    <p class="ritual-panel-title">The Rite</p>
-                                    <p class="ritual-flavor">Three breaths. Spine straight. Begin.</p>
-                                    <button class="toggle-btn" id="ritual-primed-btn" type="button"><i class="fa-solid fa-check"></i><span>Rite Performed</span></button>
-                                </div>
-                                <div class="ritual-panel" data-panel="4">
-                                    <p class="ritual-panel-title">Why This Matters</p>
-                                    <textarea id="ritual-why" rows="3" placeholder="Why does this session matter today?"></textarea>
-                                </div>
-                                <div class="ritual-panel" data-panel="5">
-                                    <p class="ritual-panel-title">Begin the Vigil</p>
-                                    <p class="ritual-flavor" id="ritual-vigil-status">The Vigil has not yet begun.</p>
-                                    <button class="save-flip-btn" id="ritual-begin-vigil-btn" type="button">Kindle the Vigil</button>
-                                </div>
-                            </div>
-                            <div class="ritual-wizard-nav">
-                                <button class="ritual-nav-btn" id="ritual-back-btn" type="button"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                                <button class="save-flip-btn ritual-nav-save" id="ritual-save-btn" type="button">Done</button>
-                                <button class="ritual-nav-btn" id="ritual-next-btn" type="button">Next <i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="ritual-groups">
+                        <div class="ritual-group">
+                            <p class="ritual-group-title">Set Your Baseline</p>
+                            <div class="input-row"><label>Pages read</label><input type="number" id="ritual-pages" placeholder="0" min="0"></div>
+                            <div class="ritual-stopwatch-row">
+                                <span class="ritual-stopwatch" id="ritual-stopwatch-display">00:00</span>
+                                <button class="ritual-stopwatch-btn" id="ritual-stopwatch-toggle" type="button">Start</button>
+                                <button class="ritual-stopwatch-btn ritual-stopwatch-reset" id="ritual-stopwatch-reset" type="button">Reset</button>
                             </div>
                         </div>
+                        <div class="ritual-group">
+                            <p class="ritual-group-title">No-Phone Zone</p>
+                            <button class="toggle-btn" id="ritual-nophone-btn" type="button"><i class="fa-solid fa-mobile-screen-button"></i><span>Phone Banished</span></button>
+                        </div>
+                        <div class="ritual-group">
+                            <p class="ritual-group-title">The Rite</p>
+                            <p class="ritual-flavor">Three breaths. Spine straight. Begin.</p>
+                            <button class="toggle-btn" id="ritual-primed-btn" type="button"><i class="fa-solid fa-check"></i><span>Rite Performed</span></button>
+                        </div>
+                        <div class="ritual-group">
+                            <p class="ritual-group-title">Why This Matters</p>
+                            <textarea id="ritual-why" rows="3" placeholder="Why does this session matter today?"></textarea>
+                        </div>
+                        <div class="ritual-group">
+                            <p class="ritual-group-title">Begin the Vigil</p>
+                            <p class="ritual-flavor" id="ritual-vigil-status">The Vigil has not yet begun.</p>
+                            <button class="save-flip-btn" id="ritual-begin-vigil-btn" type="button">Kindle the Vigil</button>
+                        </div>
                     </div>
+                    <span class="habit-saved-flash" aria-hidden="true">Saved ✓</span>
                 </div>
             `;
-            wireFlipTrigger(`${cfg.id}-flip-trigger`);
-
-            const nodes = Array.from(card.querySelectorAll('.ritual-node'));
-            const lines = Array.from(card.querySelectorAll('.ritual-node-line'));
-            const panels = Array.from(card.querySelectorAll('.ritual-panel'));
-            const backBtn = card.querySelector('#ritual-back-btn');
-            const nextBtn = card.querySelector('#ritual-next-btn');
-
-            let activeStep = 1;
-            const goToStep = (n) => {
-                activeStep = Math.min(5, Math.max(1, n));
-                panels.forEach(p => p.classList.toggle('is-active', Number(p.dataset.panel) === activeStep));
-                nodes.forEach(node => node.classList.toggle('is-active', Number(node.dataset.step) === activeStep));
-                backBtn.classList.toggle('is-hidden', activeStep === 1);
-                nextBtn.classList.toggle('is-hidden', activeStep === 5);
-            };
-            card.__ritualGoToStep = goToStep;
-            nodes.forEach(node => node.addEventListener('click', e => { e.stopPropagation(); goToStep(Number(node.dataset.step)); }));
-            backBtn.addEventListener('click', e => { e.stopPropagation(); goToStep(activeStep - 1); });
-            nextBtn.addEventListener('click', e => { e.stopPropagation(); goToStep(activeStep + 1); });
 
             // Local stopwatch for the baseline reading step — deliberately
             // separate from the main Vigil timer below.
@@ -653,12 +592,12 @@ function buildHabitGrid() {
             const swDisplay = card.querySelector('#ritual-stopwatch-display');
             const swToggle = card.querySelector('#ritual-stopwatch-toggle');
             const swReset = card.querySelector('#ritual-stopwatch-reset');
-            swToggle.addEventListener('click', e => {
-                e.stopPropagation();
+            swToggle.addEventListener('click', () => {
                 if (ritualInterval) {
                     clearInterval(ritualInterval);
                     ritualInterval = null;
                     swToggle.textContent = 'Start';
+                    saveRitual();
                 } else {
                     swToggle.textContent = 'Stop';
                     ritualInterval = setInterval(() => {
@@ -669,14 +608,14 @@ function buildHabitGrid() {
                 }
                 updateProgress();
             });
-            swReset.addEventListener('click', e => {
-                e.stopPropagation();
+            swReset.addEventListener('click', () => {
                 clearInterval(ritualInterval);
                 ritualInterval = null;
                 ritualElapsed = 0;
                 swDisplay.textContent = '00:00';
                 swToggle.textContent = 'Start';
                 updateProgress();
+                saveRitual();
             });
             // applyDailyState restores elapsed time through this hook,
             // since ritualElapsed otherwise only lives in this closure.
@@ -685,39 +624,40 @@ function buildHabitGrid() {
                 swDisplay.textContent = formatTime(ritualElapsed);
             };
 
-            const wireStepToggle = (btnId, onText, offText, stepNum) => {
+            const wireStepToggle = (btnId, onText, offText) => {
                 const btn = card.querySelector(`#${btnId}`);
                 const label = btn.querySelector('span');
-                btn.addEventListener('click', e => {
-                    e.stopPropagation();
+                btn.addEventListener('click', () => {
                     const on = !btn.classList.contains('completed');
                     btn.classList.toggle('completed', on);
                     label.textContent = on ? onText : offText;
                     updateProgress();
-                    // A single decisive tap — carry the ritual forward
-                    // instead of waiting for another click.
-                    if (on) setTimeout(() => { if (activeStep === stepNum) goToStep(stepNum + 1); }, 500);
+                    saveRitual();
                 });
                 return btn;
             };
-            const noPhoneBtn = wireStepToggle('ritual-nophone-btn', 'Phone Banished ✓', 'Phone Banished', 2);
-            const primedBtn = wireStepToggle('ritual-primed-btn', 'Rite Performed ✓', 'Rite Performed', 3);
+            const noPhoneBtn = wireStepToggle('ritual-nophone-btn', 'Phone Banished ✓', 'Phone Banished');
+            const primedBtn = wireStepToggle('ritual-primed-btn', 'Rite Performed ✓', 'Rite Performed');
 
             const pagesInput = card.querySelector('#ritual-pages');
             const whyInput = card.querySelector('#ritual-why');
-            pagesInput.addEventListener('input', () => updateProgress());
-            whyInput.addEventListener('input', () => updateProgress());
+            const pagesAutosave = makeAutosave(() => { updateProgress(); saveRitual(); });
+            pagesInput.addEventListener('input', () => pagesAutosave.trigger());
+            pagesInput.addEventListener('blur', () => pagesAutosave.flush());
+            const whyAutosave = makeAutosave(() => { updateProgress(); saveRitual(); });
+            whyInput.addEventListener('input', () => whyAutosave.trigger());
+            whyInput.addEventListener('blur', () => whyAutosave.flush());
 
             // Recomputes which steps are satisfied and reflects that on the
-            // node trail, the front-face dots, and the Vigil status line —
-            // called after every edit so the wizard never looks stale.
+            // front-face dots and the Vigil status line — called after
+            // every edit so the card never looks stale.
             function updateProgress() {
                 const pages = pagesInput.value || '';
                 const why = whyInput.value || '';
                 const noPhone = noPhoneBtn.classList.contains('completed');
                 const primed = primedBtn.classList.contains('completed');
                 const vigilStarted = !!(Number(dailyData.Pomodoros_Completed) > 0 || Number(dailyData.Focus_Minutes) > 0);
-                // One flag per step/node, in step order: baseline (pages OR
+                // One flag per group, in group order: baseline (pages OR
                 // stopwatch), no-phone, the rite, why-it-matters, the Vigil.
                 const doneFlags = [
                     Number(pages) > 0 || ritualElapsed > 0,
@@ -726,8 +666,6 @@ function buildHabitGrid() {
                     !!why.trim(),
                     vigilStarted
                 ];
-                nodes.forEach((node, i) => node.classList.toggle('is-lit', doneFlags[i]));
-                lines.forEach((line, i) => line.classList.toggle('is-lit', doneFlags[i]));
                 const stepsDone = doneFlags.filter(Boolean).length;
                 updateRitualDots(card, stepsDone);
                 const vigilStatus = card.querySelector('#ritual-vigil-status');
@@ -744,9 +682,11 @@ function buildHabitGrid() {
                 const why = whyInput.value || '';
                 const stepsDone = updateProgress();
                 const summary = card.querySelector('#ritual-summary');
+                const wasComplete = card.classList.contains('active-ritual');
                 summary.textContent = stepsDone >= 5 ? 'The Rite is complete ✓' : `${stepsDone}/5 steps kindled`;
                 card.classList.toggle('active-ritual', stepsDone >= 5);
-                if (stepsDone >= 5) triggerRuneCelebration(card);
+                if (stepsDone >= 5 && !wasComplete) triggerRuneCelebration(card);
+                flashSaved(card);
                 apiPost({ action:'updateHabitFields', date:viewDate, fields: {
                     Ritual_Pages: pages,
                     Ritual_Baseline_Seconds: ritualElapsed,
@@ -756,34 +696,17 @@ function buildHabitGrid() {
                 }});
             };
 
-            card.querySelector('#ritual-save-btn').addEventListener('click', e => {
-                e.stopPropagation();
+            card.querySelector('#ritual-begin-vigil-btn').addEventListener('click', () => {
                 saveRitual();
-                card.classList.remove('flipped');
-                goToStep(1);
-                if (window.__undockHabitCard) window.__undockHabitCard(card);
-            });
-            card.querySelector('#ritual-begin-vigil-btn').addEventListener('click', e => {
-                e.stopPropagation();
-                saveRitual();
-                card.classList.remove('flipped');
-                goToStep(1);
-                if (window.__undockHabitCard) window.__undockHabitCard(card);
                 if (window.__openTimerOverlay) window.__openTimerOverlay();
             });
         }
 
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'habit-dock-close';
-        closeBtn.setAttribute('aria-label', 'Close');
-        closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (window.__undockHabitCard) window.__undockHabitCard(card);
-        });
-        card.appendChild(closeBtn);
-
-        grid.appendChild(card);
+        if (cfg.long) {
+            below.appendChild(card);
+        } else {
+            (shortIndex++ % 2 === 0 ? flankLeft : flankRight).appendChild(card);
+        }
     });
 }
 
@@ -878,10 +801,9 @@ function applyDailyState(daily) {
         const whyInput = document.getElementById('ritual-why');
         if (whyInput) whyInput.value = why;
 
-        // The wizard's own closure (pagesInput/toggles/textarea/elapsed)
-        // now holds the source of truth for lit nodes and the Vigil line —
-        // just point it at a fresh day and let it recompute.
-        if (ritualCard.__ritualGoToStep) ritualCard.__ritualGoToStep(1);
+        // The card's own closure (pagesInput/toggles/textarea/elapsed) now
+        // holds the source of truth for the progress dots and the Vigil
+        // line — just point it at a fresh day and let it recompute.
         const stepsDone = ritualCard.__ritualUpdateProgress ? ritualCard.__ritualUpdateProgress() : 0;
         const ritualCfg = HABIT_CONFIG.find(h => h.id === 'ritual');
         const summary = document.getElementById('ritual-summary');
@@ -1039,12 +961,13 @@ circle.style.strokeDashoffset = circumference;
 // One lap of the ring = 25 minutes kept, purely a visual cue.
 const RING_LAP_SECONDS = 25 * 60;
 
+// UI-ONLY CHANGE: Swapped to House Targaryen / dragon fire iconography
 const SPACE_ICONS = [
-    'fa-ring', 'fa-shield-halved', 'fa-scroll', 'fa-book-open', 'fa-feather',
-    'fa-leaf', 'fa-tree', 'fa-mountain', 'fa-fire-flame-curved', 'fa-gem',
-    'fa-crown', 'fa-hat-wizard', 'fa-wand-magic-sparkles', 'fa-dove', 'fa-moon',
-    'fa-sun', 'fa-compass', 'fa-map', 'fa-hammer', 'fa-key',
-    'fa-eye', 'fa-star', 'fa-wind', 'fa-mug-hot', 'fa-khanda'
+    'fa-dragon', 'fa-fire', 'fa-fire-flame-curved', 'fa-crown', 'fa-scroll',
+    'fa-shield-halved', 'fa-sword', 'fa-feather-pointed', 'fa-gem', 'fa-star',
+    'fa-crow', 'fa-khanda', 'fa-bolt', 'fa-eye', 'fa-key',
+    'fa-wind', 'fa-skull', 'fa-compass', 'fa-map', 'fa-dagger',
+    'fa-staff-snake', 'fa-landmark', 'fa-hammer', 'fa-moon', 'fa-sun'
 ];
 
 function formatTime(totalSeconds) {
@@ -1208,10 +1131,10 @@ init();
 
 // ---- Ambient motes (a handful of twinkling dots over the ambient glow) ----
 (function buildStarfield() {
-    const field = document.createElement('div');
-    field.className = 'starfield';
-    field.setAttribute('aria-hidden', 'true');
-    document.body.prepend(field);
+    const field = document.querySelector('.starfield') || document.createElement('div');
+    // class already set on static element
+    // aria-hidden already set
+    // starfield div already present in HTML
 
     // Kept deliberately light (a few dozen elements, CSS-only keyframes)
     // so it stays smooth on low-powered phones and GitHub Pages' static
@@ -1233,7 +1156,7 @@ init();
 
     // Forge-ash: a slow updraft of embers crossing the whole hall.
     // Long, staggered durations keep any two from pulsing in sync.
-    const EMBER_COLORS = ['var(--accent)', 'var(--accent-2)', '#d99a52'];
+    const EMBER_COLORS = ['var(--accent)', 'var(--accent-2)', '#d06030', '#c84010'];
     const emberCount = small ? 10 : 18;
     for (let i = 0; i < emberCount; i++) {
         const ember = document.createElement('span');
@@ -1268,55 +1191,6 @@ init();
                 wrapper.classList.add('flash');
             }
         });
-    });
-})();
-
-// ---- Habit orbit docking: everything lives on one screen now, so
-// tapping a satellite tile pulls it into the center to log it instead
-// of switching to a separate "Habits" tab. First tap always docks
-// (even if it lands on an inner button); once docked, the tile's own
-// toggle/counter/flip controls behave exactly as before. ----
-(function setupHabitDocking() {
-    const orbit = document.getElementById('habit-grid');
-    const backdrop = document.getElementById('orbit-backdrop');
-    if (!orbit || !backdrop) return;
-
-    function dock(card) {
-        const already = orbit.querySelector('.habit-card.docked');
-        if (already && already !== card) undock(already);
-        card.classList.add('docked');
-        orbit.classList.add('has-docked');
-        backdrop.classList.add('is-active');
-    }
-    function undock(card) {
-        card.classList.remove('docked');
-        card.classList.remove('flipped');
-        orbit.classList.remove('has-docked');
-        backdrop.classList.remove('is-active');
-    }
-    window.__undockHabitCard = undock;
-
-    Array.from(orbit.children).forEach(card => {
-        card.addEventListener('click', (e) => {
-            // The quick-complete badge acts straight away, no docking
-            // detour required — let its own click handler run instead.
-            if (e.target.closest('.quick-complete-btn')) return;
-            if (!card.classList.contains('docked')) {
-                e.preventDefault();
-                e.stopPropagation();
-                dock(card);
-            }
-        }, true); // capture: intercept before the tile's own button handlers
-    });
-
-    backdrop.addEventListener('click', () => {
-        const docked = orbit.querySelector('.habit-card.docked');
-        if (docked) undock(docked);
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key !== 'Escape') return;
-        const docked = orbit.querySelector('.habit-card.docked');
-        if (docked) undock(docked);
     });
 })();
 
@@ -1417,227 +1291,6 @@ init();
     }, 1000);
 })();
 
-// ---- Orbit placement ----
-// The sigils used to be pinned to a circle by a pure-CSS angle
-// formula. A circle can't clear a rectangle, though: the ledger is
-// ~560x490, so tiles landing near the diagonals sat right on top of
-// its corners, and on a phone (a 345px console inside a 375px
-// viewport) an orbit is geometrically impossible — the tiles simply
-// piled onto the task list.
-//
-// So placement is measured instead of assumed:
-//   wide  — two gently bowed columns hanging in the page margins,
-//           positions written to --tx/--ty per tile
-//   narrow— no orbit at all; CSS lays the tiles out as a swipeable
-//           rail beneath the ledger (see .habit-orbit:not(.is-orbiting))
-// Purely visual: nothing here reads or writes habit state.
-(function layoutOrbit() {
-    const system = document.getElementById('orbit-system');
-    const orbit = document.getElementById('habit-grid');
-    const consoleEl = document.getElementById('core-console');
-    if (!system || !orbit || !consoleEl) return;
-
-    const wideQuery = window.matchMedia('(min-width: 1024px)');
-    const BOW = 26;      // how far the middle of each column bulges outward
-    const MIN_GAP = 16;
-    const MAX_GAP = 64;
-
-    let placements = [];  // { card, x, y, depth } in orbit mode; empty otherwise
-    let pointerX = 0, pointerY = 0;
-    let frame = 0;
-
-    function cards() {
-        return Array.from(orbit.children).filter(el => el.classList.contains('habit-card'));
-    }
-
-    function place() {
-        const list = cards();
-        placements = [];
-
-        if (!wideQuery.matches) {
-            orbit.classList.remove('is-orbiting');
-            list.forEach(card => {
-                card.style.removeProperty('--tx');
-                card.style.removeProperty('--ty');
-            });
-            system.style.removeProperty('--decor-px');
-            system.style.removeProperty('--decor-py');
-            return;
-        }
-
-        orbit.classList.add('is-orbiting');
-        if (!list.length) return;
-
-        const consoleBox = consoleEl.getBoundingClientRect();
-        const tileW = list[0].offsetWidth || 112;
-        const tileH = list[0].offsetHeight || 112;
-        const availHalf = system.clientWidth / 2;
-
-        // Push the columns as far into the margin as the page allows,
-        // never closer than MIN_GAP to the console's edge.
-        const spare = availHalf - (consoleBox.width / 2 + tileW + BOW);
-        const gap = Math.max(MIN_GAP, Math.min(MAX_GAP, spare));
-        const baseX = consoleBox.width / 2 + tileW / 2 + gap;
-
-        // Same vertical rhythm on both sides, each column centred, so
-        // the shorter column doesn't read as stretched.
-        // Spread to match a tall console, but never tighter than one
-        // tile plus breathing room — an empty ledger is short enough
-        // that a pure "divide the height" step would stack them.
-        const perSide = Math.ceil(list.length / 2);
-        const span = Math.max(0, consoleBox.height - tileH);
-        // Never let a column's spread outgrow the room actually on
-        // screen — bigger sigils otherwise push the outer tiles of a
-        // short column above/below the viewport on a compact window.
-        const availV = Math.max(tileH, (system.parentElement ? system.parentElement.clientHeight : window.innerHeight) - 40);
-        const heightCap = perSide > 1 ? Math.max(40, (availV - tileH) / (perSide - 1)) : Infinity;
-        const step = perSide > 1
-            ? Math.min(heightCap, Math.max(tileH + 14, Math.min(tileH + 34, span / (perSide - 1))))
-            : 0;
-
-        const leftCount = perSide;
-        list.forEach((card, i) => {
-            const onLeft = i < leftCount;
-            const j = onLeft ? i : i - leftCount;
-            const count = onLeft ? leftCount : list.length - leftCount;
-
-            const y = (j - (count - 1) / 2) * step;
-            // bulge outward toward the middle of the column
-            const t = count > 1 ? j / (count - 1) : 0.5;
-            const bow = BOW * Math.sin(Math.PI * t);
-            const x = (baseX + bow) * (onLeft ? -1 : 1);
-
-            // nearer tiles drift further under the pointer
-            const depth = 0.6 + (j % 3) * 0.28;
-            placements.push({ card, x, y, depth });
-        });
-
-        applyParallax();
-    }
-
-    function applyParallax() {
-        placements.forEach(({ card, x, y, depth }) => {
-            card.style.setProperty('--tx', `${(x + pointerX * depth).toFixed(1)}px`);
-            card.style.setProperty('--ty', `${(y + pointerY * depth).toFixed(1)}px`);
-        });
-        system.style.setProperty('--decor-px', `${(pointerX * 1.8).toFixed(1)}px`);
-        system.style.setProperty('--decor-py', `${(pointerY * 1.8).toFixed(1)}px`);
-    }
-
-    // Pointer parallax. The tiles carry a 420ms ease-out transition, so
-    // they trail the cursor rather than tracking it — reads as weight.
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    window.addEventListener('pointermove', (e) => {
-        if (!placements.length || reduceMotion.matches || e.pointerType !== 'mouse') return;
-        pointerX = ((e.clientX / window.innerWidth) - 0.5) * 22;
-        pointerY = ((e.clientY / window.innerHeight) - 0.5) * 16;
-        if (frame) return;
-        frame = requestAnimationFrame(() => { frame = 0; applyParallax(); });
-    }, { passive: true });
-
-    // In rail mode, only fade the edge the tiles actually continue past.
-    function syncRailFades() {
-        if (orbit.classList.contains('is-orbiting')) return;
-        const max = orbit.scrollWidth - orbit.clientWidth;
-        orbit.classList.toggle('rail-scrolled', orbit.scrollLeft > 4);
-        orbit.classList.toggle('rail-at-end', orbit.scrollLeft >= max - 4);
-    }
-
-    function relayout() {
-        place();
-        syncRailFades();
-    }
-
-    orbit.addEventListener('scroll', syncRailFades, { passive: true });
-
-    // The console grows and shrinks as tasks come and go, and the
-    // columns are measured off it, so follow its size.
-    if ('ResizeObserver' in window) {
-        new ResizeObserver(relayout).observe(consoleEl);
-    }
-    window.addEventListener('resize', relayout);
-    wideQuery.addEventListener('change', relayout);
-
-    window.__layoutOrbit = relayout;
-    relayout();
-})();
-
-// ---- Draggable habit tiles (visual reorder only) ----
-// Reordering only changes the DOM position of the cards already built
-// by buildHabitGrid() above — it never touches HABIT_CONFIG, dailyData,
-// or fires any apiPost. The chosen order is remembered locally so it
-// stays put next time the page loads.
-(function enableHabitDrag() {
-    const grid = document.getElementById('habit-grid');
-    if (!grid) return;
-
-    const ORDER_KEY = 'focus_dashboard_habit_order';
-
-    function applySavedOrder() {
-        try {
-            const order = JSON.parse(localStorage.getItem(ORDER_KEY) || 'null');
-            if (!Array.isArray(order)) return;
-            order.forEach(id => {
-                const el = document.getElementById(`habit-${id}`);
-                if (el) grid.appendChild(el);
-            });
-        } catch (_) { /* ignore */ }
-    }
-
-    function saveOrder() {
-        const order = Array.from(grid.children).map(c => c.id.replace('habit-', ''));
-        try { localStorage.setItem(ORDER_KEY, JSON.stringify(order)); } catch (_) {}
-    }
-
-    // --i drives each tile's animation stagger; the actual coordinates
-    // come from layoutOrbit(), which reads DOM order — so a reorder has
-    // to refresh both.
-    function reindexOrbit() {
-        Array.from(grid.children).forEach((card, i) => card.style.setProperty('--i', i));
-        if (window.__layoutOrbit) window.__layoutOrbit();
-    }
-
-    function getDragAfterElement(container, x, y) {
-        const cards = [...container.querySelectorAll('.habit-card:not(.dragging)')];
-        return cards.reduce((closest, card) => {
-            const box = card.getBoundingClientRect();
-            const dx = x - (box.left + box.width / 2);
-            const dy = y - (box.top + box.height / 2);
-            const offset = Math.hypot(dx, dy);
-            if (offset < closest.offset) return { offset, element: card };
-            return closest;
-        }, { offset: Number.POSITIVE_INFINITY, element: null }).element;
-    }
-
-    applySavedOrder();
-    reindexOrbit();
-
-    Array.from(grid.children).forEach(card => {
-        card.setAttribute('draggable', 'true');
-        card.classList.add('habit-draggable');
-
-        card.addEventListener('dragstart', () => {
-            card.classList.add('dragging');
-            grid.classList.add('reordering');
-        });
-        card.addEventListener('dragend', () => {
-            card.classList.remove('dragging');
-            grid.classList.remove('reordering');
-            reindexOrbit();
-            saveOrder();
-        });
-    });
-
-    grid.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const draggingCard = grid.querySelector('.habit-card.dragging');
-        if (!draggingCard) return;
-        const after = getDragAfterElement(grid, e.clientX, e.clientY);
-        if (after == null) grid.appendChild(draggingCard);
-        else grid.insertBefore(draggingCard, after);
-    });
-})();
-
 // ---- Task cards glide between columns (FLIP) ----
 // renderTodos() tears the board down and rebuilds it, so a task
 // changing status used to blink from one column to the other. Wrap
@@ -1721,7 +1374,7 @@ init();
 // A single delegated listener; the ripple element removes itself.
 (function rippleOnPress() {
     const SELECTOR = '#todo-add-btn, .save-flip-btn, .reset-btn, .trail-nav-arrow,'
-        + ' .kanban-tab-btn, .toggle-btn, .counter-btn, .action-trigger-btn, .workout-pill';
+        + ' .kanban-tab-btn, .toggle-btn, .counter-btn, .workout-pill';
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     document.addEventListener('pointerdown', (e) => {
