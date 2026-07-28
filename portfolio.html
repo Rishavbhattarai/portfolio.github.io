@@ -59,7 +59,7 @@
       "addressCountry": "US"
     },
     "knowsAbout": ["Salesforce", "Apex", "Lightning Web Components", "Salesforce Flow", "Java", "Spring Boot", "REST APIs", "MuleSoft"],
-    "sameAs": []
+    "sameAs": ["https://github.com/Rishavbhattarai"]
   }
   </script>
 </head>
@@ -75,6 +75,7 @@
           <li><a href="portfolio.html">Portfolio</a></li>
           <li><a href="aboutme.html">About Me</a></li>
           <li><a href="blog.html">Writing & Research</a></li>
+          <li><a href="https://github.com/Rishavbhattarai" target="_blank" rel="noopener">GitHub</a></li>
         </ul>
       </nav>
     </div>
@@ -138,6 +139,8 @@
 
       <div class="header-summary__cta">
         <a href="#projects" class="btn btn--primary">View My Work</a>
+        <a href="assets/Rishav_Bhattarai_CV.pdf" class="btn btn--ghost" target="_blank" rel="noopener">Download CV</a>
+        <a href="https://github.com/Rishavbhattarai" class="btn btn--ghost" target="_blank" rel="noopener">GitHub ↗</a>
         <a href="mailto:bhattarai.rishav@gmail.com" class="btn btn--ghost">Get In Touch</a>
       </div>
     </div>
@@ -154,7 +157,11 @@
 
       <!-- Filter Bar -->
       <div class="filter-bar" role="tablist" aria-label="Project categories">
-        <button class="filter-btn active" data-filter="dashboards" role="tab" aria-selected="true">
+        <button class="filter-btn active" data-filter="ai-infra" role="tab" aria-selected="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>
+          AI &amp; Security Infra
+        </button>
+        <button class="filter-btn" data-filter="dashboards" role="tab" aria-selected="false">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           Dashboards
         </button>
@@ -469,6 +476,115 @@
           <div class="card__stack">Screen Flow · Custom Objects · Sales Hierarchies</div>
           <div class="card__footer">
             <span class="card__badge card__badge--sf">MIS Project · Fall 2025</span>
+          </div>
+        </article>
+
+        <article class="card card--wide card--salesforce" data-category="salesforce">
+          <div class="card__sf-glow"></div>
+          <div class="card__cloud-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            Salesforce Ecosystem
+          </div>
+          <div class="card__header">
+            <div class="card__icon-wrap card__icon-wrap--sf">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8.5-3.5 8.5-10V5l-8.5-3-8.5 3v7c0 6.5 8.5 10 8.5 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--sf">Apex</span>
+              <span class="tag tag--sf">LWC</span>
+              <span class="tag tag--sf">Agentforce</span>
+              <span class="tag tag--sf">CI/CD</span>
+            </div>
+          </div>
+          <h3 class="card__title">Warranty Claims Management App</h3>
+          <p class="card__desc">End-to-end Salesforce Platform portfolio project modeling a real warranty-claims business process — from customer submission through technician resolution — built to demonstrate the full Salesforce development stack in one coherent system rather than disconnected samples.</p>
+          <ul class="card__bullets">
+            <li>Trigger framework, Batch/Queueable/Schedulable Apex, and a custom Error Log for exception tracking</li>
+            <li>Multi-step LWC claim wizard, technician dashboard, and Lightning Message Service for cross-component comms</li>
+            <li>Screen Flows, dollar-threshold Approval Processes, Platform Events, and Named Credentials/External Services integration</li>
+            <li>Agentforce conversational agent that checks claim status and creates/updates claims via invocable Apex</li>
+            <li>SFDX project structure with GitHub Actions CI running Apex tests &amp; coverage checks on every push</li>
+          </ul>
+          <div class="card__stack">Apex · LWC · Flow Builder · Agentforce · Platform Events · GitHub Actions</div>
+          <div class="card__footer">
+            <span class="card__badge card__badge--sf">Portfolio Project</span>
+          </div>
+        </article>
+
+        <!-- ── AI & SECURITY INFRA ── -->
+        <article class="card card--wide" data-category="ai-infra">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M16 16h.01"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--purple">MCP</span>
+              <span class="tag tag--dark">WebSockets</span>
+              <span class="tag tag--red">AI Security</span>
+            </div>
+          </div>
+          <h3 class="card__title">Zenith — Enterprise AI Security &amp; Observability Gateway</h3>
+          <p class="card__desc">Open-source security and observability gateway for the Model Context Protocol (MCP) — a centralized middleware proxy that eliminates the risk of fragmented, client-side safety assumptions in AI-agentic systems.</p>
+          <ul class="card__bullets">
+            <li>Built a 6-step connection handler managing real-time JSON-RPC 2.0 streams over WebSockets/stdio</li>
+            <li>Monitors AI execution times, token usage, and payloads in detail</li>
+            <li>Decoupled middleware architecture built to scale AI-agentic workflows without latency/state bottlenecks</li>
+          </ul>
+          <div class="card__stack">Python · WebSockets · JSON-RPC 2.0 · MCP</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/Zenith" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Open Source · Summer 2026</span>
+          </div>
+        </article>
+
+        <article class="card card--wide" data-category="ai-infra">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--purple">Zero-Trust</span>
+              <span class="tag tag--dark">RBAC</span>
+              <span class="tag tag--red">PII Redaction</span>
+            </div>
+          </div>
+          <h3 class="card__title">Hyperion — AI-Native SRE Mesh</h3>
+          <p class="card__desc">Autonomous "Air Traffic Control" for massive-scale distributed infrastructure. A zero-trust middleware gateway that validates every AI-generated action against RBAC, PII redaction, and Safety Intent Analysis before execution.</p>
+          <ul class="card__bullets">
+            <li>Mitigates catastrophic production risk by gating AI actions before they touch live systems</li>
+            <li>Real-time infrastructure dashboard over WebSockets — live node health grids, single pane of glass</li>
+            <li>Automated audit log scoring every proxied request and AI decision</li>
+          </ul>
+          <div class="card__stack">JavaScript · WebSockets · RBAC · Claude</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/Hyperion" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Open Source · Summer 2026</span>
+          </div>
+        </article>
+
+        <article class="card" data-category="ai-infra">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--purple">GraphRAG</span>
+              <span class="tag tag--dark">FastAPI</span>
+            </div>
+          </div>
+          <h3 class="card__title">AI Knowledge Assistant (GraphRAG)</h3>
+          <p class="card__desc">Retrieval-augmented generation assistant combining semantic document search, a knowledge graph layer, and webhook-based workflow automation for organizational knowledge bases.</p>
+          <ul class="card__bullets">
+            <li>Vector-based semantic search over ingested docs via ChromaDB</li>
+            <li>Entity extraction and relationship storage in Neo4j</li>
+            <li>FastAPI chat endpoint returning source-attributed answers, with webhook automation hooks</li>
+          </ul>
+          <div class="card__stack">Python · FastAPI · ChromaDB · Neo4j</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/ai-knowledge-assistant" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
           </div>
         </article>
 

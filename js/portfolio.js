@@ -74,7 +74,7 @@ filterBtns.forEach(btn => {
 });
 
 // Init with first tab
-activateFilter('dashboards');
+activateFilter('ai-infra');
 
 /* ── TIMELINE INTERACTION ───────────────────────────── */
 const tnodes = document.querySelectorAll('.tnode');
