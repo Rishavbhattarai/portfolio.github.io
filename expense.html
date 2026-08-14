@@ -143,6 +143,39 @@
 
   .panel{ display:none; }
   .panel.active{ display:block; }
+
+  /* ---- iPad mini / tablet-portrait tuning (768px and down) ---- */
+  @media (max-width:768px){
+    body{ padding:20px 16px 36px; }
+    h1{ font-size:28px; }
+
+    .pseudo-total{ flex-direction:column; align-items:flex-start; padding:18px 20px; }
+    .pseudo-total .amount{ font-size:32px; }
+    .pseudo-total .note{ max-width:none; }
+    .pseudo-total .split{ width:100%; gap:16px; justify-content:space-between; }
+    .pseudo-total .split div{ text-align:left; }
+
+    .tabs{ display:flex; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .tab-btn{ flex:1; white-space:nowrap; padding:10px 14px; font-size:13px; }
+
+    .stats{ gap:10px; }
+    .stat{ min-width:calc(50% - 5px); flex:none; padding:14px 14px; }
+    .stat .v{ font-size:22px; }
+
+    .grid{ grid-template-columns:1fr; gap:16px; }
+    .card{ padding:16px; }
+    .chart-box{ height:220px; }
+
+    .list-head{ align-items:flex-start; }
+    table{ font-size:12.5px; }
+    thead th{ padding:6px 6px 8px 2px; }
+    td{ padding:10px 6px; }
+    .scroll{ max-height:none; }
+
+    .order-card{ padding:10px; }
+    .order-top{ flex-wrap:wrap; gap:4px; }
+    .order-rest{ flex-wrap:wrap; }
+  }
 </style>
 </head>
 <body>
