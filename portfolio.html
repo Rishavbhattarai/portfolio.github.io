@@ -231,6 +231,33 @@
           </div>
         </article>
 
+        <article class="card card--wide" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--python">Python</span>
+              <span class="tag tag--dark">Streamlit</span>
+              <span class="tag tag--orange">Causal Inference</span>
+            </div>
+          </div>
+          <h3 class="card__title">PCVI Atlas — Heatwave Vulnerability Research</h3>
+          <p class="card__desc">Public-health research pipeline testing whether U.S. communities with high prescriptions of heat-sensitizing medications face greater vulnerability during heatwaves — linking 8.79M Medicare Part D claims to summer heat exposure across Hospital Referral Regions.</p>
+          <ul class="card__bullets">
+            <li>Four-stage pipeline: drug crosswalk (276 medications resolved to RxCUI/ATC), claims processing, evidence weighting, and causal analysis</li>
+            <li>6-year daily panel with conditional Poisson regression and 200-permutation placebo testing to separate correlation from causation</li>
+            <li>Identified and corrected a prescriber-vs-patient-location denominator artifact by reattributing claims via hospital catchment areas</li>
+            <li>Interactive Streamlit app for exploring results across NASA POWER, NOAA, and Census data sources</li>
+          </ul>
+          <div class="card__stack">Python · Streamlit · Pandas · RxNorm/RxClass API · Dartmouth Atlas HRR</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/pcvi-atlas" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Research · 2026</span>
+          </div>
+        </article>
+
         <!-- ── ENTERPRISE ── -->
         <article class="card" data-category="enterprise">
           <div class="card__glow"></div>
@@ -560,6 +587,60 @@
           <div class="card__stack">JavaScript · WebSockets · RBAC · Claude</div>
           <div class="card__footer">
             <a href="https://github.com/Rishavbhattarai/Hyperion" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Open Source · Summer 2026</span>
+          </div>
+        </article>
+
+        <article class="card card--wide" data-category="ai-infra">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--purple">Hybrid RAG</span>
+              <span class="tag tag--dark">Knowledge Graph</span>
+              <span class="tag tag--python">Ollama</span>
+            </div>
+          </div>
+          <h3 class="card__title">CAFE-RAG — Climate-Health Dataset Discovery Layer</h3>
+          <p class="card__desc">Agentic, retrieval-augmented search over 1,300+ Harvard Dataverse climate-health datasets (CAFE, CIESIN, HELD), turning natural-language queries into ranked, DOI-linked results with joinable-dataset suggestions — no more manual metadata browsing.</p>
+          <ul class="card__bullets">
+            <li>Seven-stage pipeline: harvest → structure → dual-index (FTS5 + Chroma) → knowledge graph → hybrid retrieval → evaluation → Streamlit UI</li>
+            <li>Hybrid retrieval combining lexical (SQLite FTS5) and semantic (Chroma) search via Reciprocal Rank Fusion</li>
+            <li>Local LLM (Ollama) query-intent extraction and metadata classification — fully offline inference</li>
+            <li>Reproducible evaluation harness with synthetic gold queries: recall@10 of 0.773, MRR of 0.635</li>
+          </ul>
+          <div class="card__stack">Python · SQLite (FTS5) · ChromaDB · Ollama · Pydantic · Streamlit</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/CAFE-RAG" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Open Source · Summer 2026</span>
+          </div>
+        </article>
+
+        <article class="card card--wide" data-category="ai-infra">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--red">RBAC</span>
+              <span class="tag tag--purple">Intent Analysis</span>
+              <span class="tag tag--dark">PII Redaction</span>
+            </div>
+          </div>
+          <h3 class="card__title">Project Aegis — Enterprise MCP Security Gateway</h3>
+          <p class="card__desc">WebSocket proxy sitting between AI agents and MCP servers, enforcing three gates — RBAC, AI-driven intent analysis, and PII redaction — on every JSON-RPC call, with a full audit trail and live observability dashboard.</p>
+          <ul class="card__bullets">
+            <li>Agent-specific allowlists restrict which MCP methods each agent can invoke</li>
+            <li>Local LLM (Ollama) evaluates destructive operations (delete/drop/write/merge) before execution; fail-closed if the model is unreachable</li>
+            <li>PII scrubbed from payloads sent to the model while original data still reaches backend servers</li>
+            <li>Supabase-backed audit log with an HTTP API and dashboard for allowed/denied/blocked decisions</li>
+          </ul>
+          <div class="card__stack">Node.js · WebSockets · Supabase (PostgreSQL) · Ollama</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/Project-Aegis" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
             <span class="card__badge">Open Source · Summer 2026</span>
           </div>
         </article>

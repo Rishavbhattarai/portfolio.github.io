@@ -2,609 +2,391 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Writing & Research | Rishav Bhattarai</title>
-  <meta name="description" content="Technical writing, conference papers, and research by Rishav Bhattarai. Published work on cybersecurity risk management and disaster recovery strategies." />
+  <meta name="description" content="Technical writing, conference papers, and interactive data dashboards by Rishav Bhattarai — Salesforce Developer & Software Engineer." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavunlv.github.io/blog.html" />
 
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Writing & Research | Rishav Bhattarai" />
+  <meta property="og:description" content="Technical writing, conference papers, and interactive data dashboards by Rishav Bhattarai." />
+  <meta property="og:url" content="https://rishavunlv.github.io/blog.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Writing & Research | Rishav Bhattarai" />
+  <meta name="twitter:description" content="Technical writing, conference papers, and interactive data dashboards by Rishav Bhattarai." />
 
-  <!-- Custom CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portfolio.css" />
   <link rel="stylesheet" href="css/blog.css" />
-  <style>
-    :root {
-      --primary-color: #667eea;
-      --secondary-color: #764ba2;
-      --accent-color: #00a1e0;
-      --dark-bg: #1a1a2e;
-      --text-dark: #333;
-    }
-
-    body {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    /* Hero Section */
-    .hero-section {
-      background: linear-gradient(135deg, var(--dark-bg) 0%, #16213e 100%);
-      color: white;
-      padding: 80px 0 60px;
-      margin-bottom: 40px;
-    }
-
-    .hero-section h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 15px;
-    }
-
-    .hero-section .lead {
-      font-size: 1.25rem;
-      opacity: 0.9;
-      max-width: 700px;
-    }
-
-    .graduation-badge {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
-      display: inline-block;
-      margin-top: 20px;
-      font-weight: 600;
-    }
-
-    /* Featured Paper Card */
-    .featured-paper {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      padding: 40px;
-      margin-bottom: 40px;
-      border-left: 5px solid #e74c3c;
-    }
-
-    .paper-badge {
-      background: #e74c3c;
-      color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: inline-block;
-      margin-bottom: 15px;
-    }
-
-    .paper-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 15px;
-      line-height: 1.3;
-    }
-
-    .paper-meta {
-      color: #666;
-      margin-bottom: 20px;
-      font-size: 0.95rem;
-    }
-
-    .paper-abstract {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 25px;
-      margin: 20px 0;
-      border-left: 4px solid var(--accent-color);
-    }
-
-    .paper-abstract h4 {
-      color: var(--accent-color);
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 15px;
-    }
-
-    /* Dashboard Showcase Section */
-    .dashboards-section {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      padding: 40px;
-      margin-bottom: 40px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #eee;
-    }
-
-    .section-icon {
-      font-size: 2rem;
-      margin-right: 15px;
-    }
-
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin: 0;
-    }
-
-    /* Dashboard Cards */
-    .dashboard-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 12px;
-      padding: 25px;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dashboard-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
-    }
-
-    .dashboard-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .dashboard-card:hover::before {
-      opacity: 1;
-    }
-
-    .dashboard-card.secondary {
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    }
-
-    .dashboard-card.tertiary {
-      background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
-    }
-
-    .dashboard-card.quaternary {
-      background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
-    }
-
-    .dashboard-card.dark {
-      background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-    }
-
-    .dashboard-card h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .dashboard-card p {
-      opacity: 0.9;
-      margin: 0;
-      font-size: 0.9rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .dashboard-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 15px;
-    }
-
-    .dashboard-tag {
-      background: rgba(255,255,255,0.2);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      backdrop-filter: blur(10px);
-    }
-
-    /* Tech Writing Cards */
-    .writing-card {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 25px;
-      height: 100%;
-      transition: all 0.3s ease;
-      border: 1px solid #e0e0e0;
-    }
-
-    .writing-card:hover {
-      background: white;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      transform: translateY(-3px);
-    }
-
-    .writing-card h4 {
-      color: var(--text-dark);
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .writing-card p {
-      color: #666;
-      font-size: 0.9rem;
-      margin: 0;
-    }
-
-    .writing-meta {
-      color: #999;
-      font-size: 0.8rem;
-      margin-top: 15px;
-    }
-
-    /* CTA Section */
-    .cta-section {
-      background: linear-gradient(135deg, var(--dark-bg) 0%, #16213e 100%);
-      color: white;
-      padding: 60px 0;
-      border-radius: 16px;
-      margin-top: 40px;
-      text-align: center;
-    }
-
-    .cta-section h2 {
-      font-size: 2rem;
-      margin-bottom: 15px;
-    }
-
-    .cta-section p {
-      opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto 25px;
-    }
-
-    /* Buttons */
-    .btn-primary-custom {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      padding: 12px 30px;
-      border-radius: 30px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary-custom:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-outline-custom {
-      border: 2px solid white;
-      color: white;
-      padding: 12px 30px;
-      border-radius: 30px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      background: transparent;
-    }
-
-    .btn-outline-custom:hover {
-      background: white;
-      color: var(--dark-bg);
-    }
-
-    /* Navbar Customization */
-    .navbar {
-      background: rgba(26, 26, 46, 0.95) !important;
-      backdrop-filter: blur(10px);
-    }
-
-    .navbar-brand {
-      font-weight: 700;
-      color: white !important;
-    }
-
-    .nav-link {
-      color: rgba(255,255,255,0.8) !important;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .nav-link:hover {
-      color: white !important;
-    }
-
-    .nav-link.active {
-      color: #667eea !important;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero-section h1 {
-        font-size: 2rem;
-      }
-
-      .featured-paper {
-        padding: 25px;
-      }
-
-      .paper-title {
-        font-size: 1.4rem;
-      }
-    }
-  </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top px-4">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Rishav</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="portfolio.html">Portfolio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="aboutme.html">About Me</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="blog.html">Writing & Research</a>
-          </li>
+  <!-- ░░ HORIZONTAL TOP NAVIGATION ░░ -->
+  <header class="nav-top">
+    <div class="nav-top__container">
+      <a href="index.html" class="nav-top__logo"><strong>Rishav</strong></a>
+      <nav class="nav-top__menu">
+        <ul class="nav-top__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="aboutme.html">About Me</a></li>
+          <li><a href="blog.html">Writing & Research</a></li>
+          <li><a href="https://github.com/Rishavbhattarai" target="_blank" rel="noopener">GitHub</a></li>
         </ul>
-      </div>
+      </nav>
     </div>
+  </header>
+
+  <!-- ░░ NAVIGATION - RIGHT SIDEBAR ░░ -->
+  <nav class="nav-sidebar" id="navSidebar">
+    <div class="nav-sidebar__content">
+      <ul class="nav-sidebar__list">
+        <li>
+          <a href="#home" class="nav-sidebar__link" data-label="Home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12v4H6z"/><rect x="5" y="8" width="14" height="10" rx="1"/><path d="M8 8v10M12 8v10M16 8v10"/><path d="M4 18h16v2H4z"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="#research" class="nav-sidebar__link" data-label="Research">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="#dashboards" class="nav-sidebar__link" data-label="Dashboards">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="#writing" class="nav-sidebar__link" data-label="Writing">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <button class="nav-sidebar__toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="container text-center">
-      <h1>Writing & Research</h1>
-      <p class="lead mx-auto">Technical writing, conference papers, and data-driven insights. Transforming complex concepts into accessible knowledge.</p>
+  <main id="main-content">
+
+  <!-- ░░ HEADER - HERO ░░ -->
+  <header id="home" class="header-summary">
+    <div class="header-summary__content">
+      <div class="header-summary__intro">
+        <p class="header-summary__eyebrow">Writing &amp; Research</p>
+        <h1 class="header-summary__title">Papers, Dashboards &amp; Field Notes</h1>
+      </div>
+
+      <p class="header-summary__description">
+        Technical writing, a published conference paper, and a collection of interactive data dashboards — transforming complex datasets and research questions into accessible, decision-ready tools for journalists, executives, and researchers.
+      </p>
+
+      <div class="header-summary__cta">
+        <a href="#research" class="btn btn--primary">Read the Paper</a>
+        <a href="#dashboards" class="btn btn--ghost">Explore Dashboards</a>
+        <a href="mailto:bhattarai.rishav@gmail.com" class="btn btn--ghost">Get In Touch</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ░░ FEATURED RESEARCH ░░ -->
+  <section id="research" class="section">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__eyebrow">Published</p>
+        <h2 class="section__title">Conference Paper</h2>
+        <p class="section__subtitle">Peer-reviewed research on translating cybersecurity risk into financial decision-making.</p>
+      </div>
+
+      <article class="card card--wide">
+        <div class="card__glow"></div>
+        <div class="card__header">
+          <div class="card__icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="card__tags">
+            <span class="tag tag--red">Disaster Recovery</span>
+            <span class="tag tag--purple">TCO Analysis</span>
+            <span class="tag tag--green">CISO Strategy</span>
+          </div>
         </div>
+        <h3 class="card__title">Cost-Benefit Analysis of Cold Site vs. Hot Site Disaster Recovery Strategies: A Framework for CISO Decision Making</h3>
+        <p class="card__desc">
+          A comprehensive analytical framework for CISOs to evaluate and justify disaster recovery investments — comparing Cold Site (slower recovery, lower cost) and Hot Site (immediate recovery, higher cost) strategies through an interactive cost-benefit model.
+        </p>
+        <ul class="card__bullets">
+          <li>Quantifies total cost of ownership including infrastructure, downtime costs tied to RTO/RPO, and opportunity costs</li>
+          <li>Interactive calculator for real-time scenario analysis and board-ready reporting</li>
+          <li>Evidence-based recommendations for CISO budget defense and executive presentations</li>
+        </ul>
+        <div class="card__stack">Risk Quantification · TCO Modeling · RTO/RPO Analysis · Executive Reporting</div>
+        <div class="card__footer">
+          <a href="https://rishavunlv.github.io/ciso_budget.html" class="card__link card__link--primary" target="_blank" rel="noopener">Launch the Calculator →</a>
+          <span class="card__badge">Published Conference Paper · 2025</span>
+        </div>
+      </article>
+    </div>
   </section>
 
-  <!-- Main Content -->
-  <div class="container">
-
-    <!-- Featured Conference Paper -->
-    <div class="featured-paper">
-      <span class="paper-badge">📄 Published Conference Paper</span>
-      <h2 class="paper-title">Cost-Benefit Analysis of Cold Site vs. Hot Site Disaster Recovery Strategies: A Framework for CISO Decision Making</h2>
-
-      <div class="paper-meta">
-        <strong>Authors:</strong> Rishav Bhattarai, [Co-author if applicable] |
-        <strong>Conference:</strong> [Conference Name] |
-        <strong>Year:</strong> 2025
-      </div>
-
-      <div class="paper-abstract">
-        <h4>📝 Abstract</h4>
-        <p>This paper presents a comprehensive analytical framework for Chief Information Security Officers (CISOs) to evaluate and justify disaster recovery (DR) investments. We develop an interactive cost-benefit model comparing Cold Site (slower recovery, lower operational cost) and Hot Site (immediate recovery, higher operational cost) strategies.</p>
-
-        <p style="margin-top: 15px;">Our methodology quantifies the total cost of ownership (TCO) including infrastructure costs, downtime costs based on Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO), and opportunity costs. The framework enables executives to make data-driven DR investment decisions by translating technical recovery metrics into financial impact.</p>
-
-        <p style="margin-top: 15px;"><strong>Key Contributions:</strong> (1) A mathematical model for TCO comparison of DR strategies, (2) An interactive calculator tool for real-time scenario analysis, (3) Evidence-based recommendations for CISO budget defense and board presentations.</p>
-      </div>
-
-      <div class="row mt-4">
-        <div class="col-md-8">
-          <h5>🔑 Keywords</h5>
-          <div class="dashboard-tags">
-            <span class="dashboard-tag" style="background: #e74c3c; color: white;">Disaster Recovery</span>
-            <span class="dashboard-tag" style="background: #3498db; color: white;">Cold Site vs Hot Site</span>
-            <span class="dashboard-tag" style="background: #27ae60; color: white;">TCO Analysis</span>
-            <span class="dashboard-tag" style="background: #9b59b6; color: white;">CISO Strategy</span>
-            <span class="dashboard-tag" style="background: #f39c12; color: white;">Risk Management</span>
-          </div>
-        </div>
-        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-          <a href="[LINK_TO_PAPER]" class="btn btn-primary-custom" target="_blank">Read Full Paper</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Interactive Dashboards Showcase -->
-    <div class="dashboards-section">
-      <div class="section-header">
-        <span class="section-icon">📊</span>
-        <h2 class="section-title">Interactive Data Dashboards</h2>
-      </div>
-
-      <p class="text-muted mb-4">Explore my collection of interactive visualizations that transform complex datasets into actionable insights. These dashboards demonstrate my expertise in data visualization, JavaScript, and user-centric design.</p>
-
-      <div class="row g-4">
-        <!-- Dashboard 1: Election 2082 -->
-        <div class="col-md-6 col-lg-4">
-          <div class="dashboard-card" onclick="openDashboard('election-2082')">
-            <h3>🗳️ Election 2082 Dashboard</h3>
-            <p>Comprehensive candidate listings and constituency details for Nepal's electoral process.</p>
-            <div class="dashboard-tags">
-              <span class="dashboard-tag">Election Data</span>
-              <span class="dashboard-tag">Interactive</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dashboard 2: Election Commission -->
-        <div class="col-md-6 col-lg-4">
-          <div class="dashboard-card secondary" onclick="openDashboard('election-commission')">
-            <h3>🏛️ Election Commission Portal</h3>
-            <p>Constituency mapping, historical results, and demographic analysis for electoral research.</p>
-            <div class="dashboard-tags">
-              <span class="dashboard-tag">Data Viz</span>
-              <span class="dashboard-tag">Maps</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dashboard 3: Financial Chaos -->
-        <div class="col-md-6 col-lg-4">
-          <div class="dashboard-card tertiary" onclick="openDashboard('financial')">
-            <h3>💰 Financial Chaos Dashboard</h3>
-            <p>Budget tracking, receipts, and payment visualization for financial management.</p>
-            <div class="dashboard-tags">
-              <span class="dashboard-tag">Finance</span>
-              <span class="dashboard-tag">Charts</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dashboard 4: GVA Report -->
-        <div class="col-md-6 col-lg-4">
-          <div class="dashboard-card quaternary" onclick="openDashboard('gva')">
-            <h3>📈 Gross Value Added Report</h3>
-            <p>Sector-wise economic contribution analysis with interactive filtering capabilities.</p>
-            <div class="dashboard-tags">
-              <span class="dashboard-tag">Economics</span>
-              <span class="dashboard-tag">GVA</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dashboard 5: GDP Growth -->
-        <div class="col-md-6 col-lg-4">
-          <div class="dashboard-card dark" onclick="openDashboard('gdp')">
-            <h3>🌍 GDP Growth: 15 Years</h3>
-            <p>Long-term economic trend analysis with year-over-year growth comparisons.</p>
-            <div class="dashboard-tags">
-              <span class="dashboard-tag">Time Series</span>
-              <span class="dashboard-tag">Macro</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dashboard 6: Redistricting -->
-        <div class="col-md-6 col-lg-4">
-          <div class="dashboard-card" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);" onclick="openDashboard('redistricting')">
-            <h3>🗺️ Nepal Redistricting Simulator</h3>
-            <p>Fair representation analysis comparing current vs. simulated parliamentary seat distribution.</p>
-            <div class="dashboard-tags">
-              <span class="dashboard-tag">Simulation</span>
-              <span class="dashboard-tag">Policy</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Additional Writing Section -->
-    <div class="row g-4 mb-5">
-      <div class="col-12">
-        <div class="section-header" style="border-bottom: none;">
-          <span class="section-icon">✍️</span>
-          <h2 class="section-title">Technical Writing & Documentation</h2>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="writing-card">
-          <h4>🔒 Annual Loss Expectancy (ALE) Methodology</h4>
-          <p>A comprehensive guide to calculating cybersecurity risk using the ALE formula, with practical examples for small business owners.</p>
-          <div class="writing-meta">📅 March 2025 | 🏷️ Risk Assessment</div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="writing-card">
-          <h4>🤖 Salesforce Agentforce AI: First Impressions</h4>
-          <p>My experience experimenting with Agentforce AI for workflow automation and the potential impact on CRM development.</p>
-          <div class="writing-meta">📅 February 2025 | 🏷️ Salesforce</div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="writing-card">
-          <h4>☕ Java Spring Boot Best Practices</h4>
-          <p>Lessons learned from building production-grade digital wallet applications with Spring Boot microservices.</p>
-          <div class="writing-meta">📅 December 2024 | 🏷️ Java</div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="writing-card">
-          <h4>📊 Building Interactive Data Dashboards</h4>
-          <p>A technical walkthrough of creating election visualization dashboards using D3.js and modern web technologies.</p>
-          <div class="writing-meta">📅 October 2024 | 🏷️ Data Viz</div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="writing-card">
-          <h4>🎓 From Nepal to UNLV: My Graduate Journey</h4>
-          <p>Reflections on transitioning from enterprise Java development to graduate studies in Management Information Systems.</p>
-          <div class="writing-meta">📅 August 2024 | 🏷️ Personal</div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="writing-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-          <h4 style="color: white;">💼 Career Updates</h4>
-          <p style="color: rgba(255,255,255,0.9);">Stay tuned for more technical writing.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- CTA Section -->
-    <div class="cta-section">
-      <h2>Let's Collaborate</h2>
-      <p>Interested in discussing my research, cybersecurity tools, or full-time opportunities starting Summer 2026? I'd love to connect.</p>
-      <div class="d-flex justify-content-center gap-3 flex-wrap">
-        <a href="portfolio.html" class="btn btn-outline-custom">View My Portfolio</a>
-        <a href="mailto:bhattarai.rishav@gmail.com" class="btn btn-primary-custom">Get In Touch</a>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Footer -->
-  <footer class="mt-5 py-4 text-center text-muted" style="border-top: 1px solid #ddd;">
+  <!-- ░░ INTERACTIVE DASHBOARDS ░░ -->
+  <section id="dashboards" class="section">
     <div class="container">
-      <p class="mb-0">© 2025 Rishav Bhattarai | <a href="/privacy-policy.html">Privacy Policy</a></p>
+      <div class="section__header">
+        <p class="section__eyebrow">Data Viz</p>
+        <h2 class="section__title">Interactive Dashboards</h2>
+        <p class="section__subtitle">Complex datasets transformed into intuitive, explorable visualizations.</p>
+      </div>
+
+      <div class="projects-grid">
+
+        <article class="card" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--blue">Election Data</span>
+              <span class="tag tag--green">Interactive</span>
+            </div>
+          </div>
+          <h3 class="card__title">Election 2082 Dashboard</h3>
+          <p class="card__desc">Comprehensive candidate listings and constituency details for Nepal's electoral process.</p>
+          <div class="card__stack">JavaScript · Chart.js · JSON</div>
+          <div class="card__footer">
+            <a href="2082_candidates.html" class="card__link card__link--primary" target="_blank">Open Dashboard →</a>
+          </div>
+        </article>
+
+        <article class="card" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><polyline points="18 9 12 15 8 11 3 16"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--red">Data Viz</span>
+              <span class="tag tag--blue">Maps</span>
+            </div>
+          </div>
+          <h3 class="card__title">Election Commission Portal</h3>
+          <p class="card__desc">Constituency mapping, historical results, and demographic analysis for electoral research.</p>
+          <div class="card__stack">D3.js · Leaflet.js · Chart.js</div>
+          <div class="card__footer">
+            <a href="Election_Commission.html" class="card__link card__link--primary" target="_blank">Open Dashboard →</a>
+          </div>
+        </article>
+
+        <article class="card" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--orange">Finance</span>
+              <span class="tag tag--teal">Charts</span>
+            </div>
+          </div>
+          <h3 class="card__title">Financial Chaos Dashboard</h3>
+          <p class="card__desc">Budget tracking, receipts, and payment visualization for personal financial management.</p>
+          <div class="card__stack">JavaScript · Chart.js</div>
+          <div class="card__footer">
+            <a href="financial_chaos.html" class="card__link card__link--primary" target="_blank">Open Dashboard →</a>
+          </div>
+        </article>
+
+        <article class="card" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--purple">Economics</span>
+              <span class="tag tag--blue">GVA</span>
+            </div>
+          </div>
+          <h3 class="card__title">Gross Value Added Report</h3>
+          <p class="card__desc">Sector-wise economic contribution analysis with interactive filtering capabilities.</p>
+          <div class="card__stack">JavaScript · D3.js</div>
+          <div class="card__footer">
+            <a href="21_22_gva_report.html" class="card__link card__link--primary" target="_blank">Open Dashboard →</a>
+          </div>
+        </article>
+
+        <article class="card" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--green">Time Series</span>
+              <span class="tag tag--dark">Macro</span>
+            </div>
+          </div>
+          <h3 class="card__title">GDP Growth: 15 Years</h3>
+          <p class="card__desc">Long-term economic trend analysis with year-over-year growth comparisons.</p>
+          <div class="card__stack">JavaScript · Chart.js</div>
+          <div class="card__footer">
+            <a href="gdp_growth.html" class="card__link card__link--primary" target="_blank">Open Dashboard →</a>
+          </div>
+        </article>
+
+        <article class="card" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l7-3 8 3 7-3v15l-7 3-8-3-1 3z"/><line x1="8" y1="3" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="21"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--red">Simulation</span>
+              <span class="tag tag--orange">Policy</span>
+            </div>
+          </div>
+          <h3 class="card__title">Nepal Redistricting Simulator</h3>
+          <p class="card__desc">Fair representation analysis comparing current vs. simulated parliamentary seat distribution.</p>
+          <div class="card__stack">JavaScript · D3.js</div>
+          <div class="card__footer">
+            <a href="realityCheck.html" class="card__link card__link--primary" target="_blank">Open Dashboard →</a>
+          </div>
+        </article>
+
+      </div><!-- /projects-grid -->
+    </div>
+  </section>
+
+  <!-- ░░ TECHNICAL WRITING ░░ -->
+  <section id="writing" class="section">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__eyebrow">Field Notes</p>
+        <h2 class="section__title">Technical Writing</h2>
+        <p class="section__subtitle">Notes and lessons from Salesforce, Java, and data visualization work.</p>
+      </div>
+
+      <div class="projects-grid">
+
+        <article class="card">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="card__tags"><span class="tag tag--orange">Risk Assessment</span></div>
+          </div>
+          <h3 class="card__title">Annual Loss Expectancy (ALE) Methodology</h3>
+          <p class="card__desc">A comprehensive guide to calculating cybersecurity risk using the ALE formula, with practical examples for small business owners.</p>
+          <div class="card__stack">March 2025</div>
+        </article>
+
+        <article class="card card--salesforce">
+          <div class="card__sf-glow"></div>
+          <div class="card__cloud-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            Salesforce Ecosystem
+          </div>
+          <div class="card__header">
+            <div class="card__icon-wrap card__icon-wrap--sf">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M9 18v-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </div>
+            <div class="card__tags"><span class="tag tag--sf">Agentforce</span></div>
+          </div>
+          <h3 class="card__title">Salesforce Agentforce AI: First Impressions</h3>
+          <p class="card__desc">My experience experimenting with Agentforce AI for workflow automation and the potential impact on CRM development.</p>
+          <div class="card__stack">February 2025</div>
+        </article>
+
+        <article class="card">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="card__tags"><span class="tag tag--green">Java</span></div>
+          </div>
+          <h3 class="card__title">Java Spring Boot Best Practices</h3>
+          <p class="card__desc">Lessons learned from building production-grade digital wallet applications with Spring Boot microservices.</p>
+          <div class="card__stack">December 2024</div>
+        </article>
+
+        <article class="card">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="card__tags"><span class="tag tag--blue">Data Viz</span></div>
+          </div>
+          <h3 class="card__title">Building Interactive Data Dashboards</h3>
+          <p class="card__desc">A technical walkthrough of creating election visualization dashboards using D3.js and modern web technologies.</p>
+          <div class="card__stack">October 2024</div>
+        </article>
+
+        <article class="card">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <div class="card__tags"><span class="tag tag--purple">Personal</span></div>
+          </div>
+          <h3 class="card__title">From Nepal to UNLV: My Graduate Journey</h3>
+          <p class="card__desc">Reflections on transitioning from enterprise Java development to graduate studies in Management Information Systems.</p>
+          <div class="card__stack">August 2024</div>
+        </article>
+
+        <article class="card">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+            </div>
+            <div class="card__tags"><span class="tag tag--muted">Coming Soon</span></div>
+          </div>
+          <h3 class="card__title">Career Updates</h3>
+          <p class="card__desc">Stay tuned for more technical writing on Salesforce, AI infrastructure, and research projects.</p>
+        </article>
+
+      </div><!-- /projects-grid -->
+    </div>
+  </section>
+
+  <!-- ░░ CONTACT CTA ░░ -->
+  <section class="section contact-section">
+    <div class="container">
+      <div class="contact-card">
+        <div class="contact-card__glow"></div>
+        <p class="section__eyebrow">Let's Collaborate</p>
+        <h2 class="contact-card__title">Interested in My Research or Work?</h2>
+        <p class="contact-card__body">
+          Open to discussing my research, cybersecurity tools, or full-time opportunities starting Summer 2026. I'd love to connect.
+        </p>
+        <div class="contact-card__actions">
+          <a href="portfolio.html" class="btn btn--ghost">View My Portfolio</a>
+          <a href="mailto:bhattarai.rishav@gmail.com" class="btn btn--primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__copy">© 2026 Rishav Bhattarai · Salesforce Developer &amp; Software Engineer</p>
     </div>
   </footer>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Dashboard Navigation Script -->
-  <script>
-    function openDashboard(type) {
-      const dashboardMap = {
-        'election-2082': '2082_candidates.html',
-        'election-commission': 'Election_Commission.html',
-        'financial': 'financial_chaos.html',
-        'gva': '21_22_gva_report.html',
-        'gdp': 'gdp_growth.html',
-        'redistricting': 'realityCheck.html'
-      };
-
-      const url = dashboardMap[type];
-      if (url) {
-        window.open(url, '_blank');
-      }
-    }
-  </script>
+  <script src="js/portfolio.js"></script>
 </body>
 </html>

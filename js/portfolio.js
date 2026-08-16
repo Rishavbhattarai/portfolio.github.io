@@ -73,8 +73,10 @@ filterBtns.forEach(btn => {
   btn.addEventListener('click', () => activateFilter(btn.dataset.filter));
 });
 
-// Init with first tab
-activateFilter('ai-infra');
+// Init with first tab (only on pages that actually have a filter bar)
+if (filterBtns.length) {
+  activateFilter('ai-infra');
+}
 
 /* ── TIMELINE INTERACTION ───────────────────────────── */
 const tnodes = document.querySelectorAll('.tnode');
