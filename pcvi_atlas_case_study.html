@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharmaco-Climatic Vulnerability Atlas | Rishav Bhattarai</title>
+  <meta name="description" content="Case study: a national pipeline linking 8.79M Medicare Part D claims to heat exposure to test whether heat-sensitizing prescriptions predict heatwave vulnerability — four shipping bugs caught, and an honest null causal result." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavbhattarai.com.np/pcvi_atlas_case_study.html" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Pharmaco-Climatic Vulnerability Atlas" />
+  <meta property="og:description" content="A national data pipeline built from scratch, four silent bugs caught before they shipped, and an honest null result instead of an easy yes." />
+  <meta property="og:url" content="https://rishavbhattarai.com.np/pcvi_atlas_case_study.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Pharmaco-Climatic Vulnerability Atlas" />
+  <meta name="twitter:description" content="A national data pipeline built from scratch, four silent bugs caught before they shipped, and an honest null result instead of an easy yes." />
+
+  <style>
+    :root{
+      --paper:#E7EBE6;
+      --paper-raised:#F3F5F1;
+      --ink:#16241F;
+      --ink-soft:#3D4C46;
+      --line:#C7D0C6;
+      --teal:#1F6F6B;
+      --teal-deep:#154F4C;
+      --rust:#A8462C;
+      --rust-soft:#C97556;
+      --mono-chip:#DDE4DC;
+      --focus:#1F6F6B;
+      --good:#3F7A4A;
+      --null:#8A6D2E;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#121C19;
+        --paper-raised:#182420;
+        --ink:#E7EFEA;
+        --ink-soft:#A9BDB4;
+        --line:#2B3D36;
+        --teal:#5FBDB5;
+        --teal-deep:#8ED9D1;
+        --rust:#E08054;
+        --rust-soft:#E8A582;
+        --mono-chip:#1E2C27;
+        --focus:#5FBDB5;
+        --good:#78C688;
+        --null:#D9B85E;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#121C19;
+      --paper-raised:#182420;
+      --ink:#E7EFEA;
+      --ink-soft:#A9BDB4;
+      --line:#2B3D36;
+      --teal:#5FBDB5;
+      --teal-deep:#8ED9D1;
+      --rust:#E08054;
+      --rust-soft:#E8A582;
+      --mono-chip:#1E2C27;
+      --focus:#5FBDB5;
+      --good:#78C688;
+      --null:#D9B85E;
+    }
+
+    *{box-sizing:border-box;}
+    ::selection{background:var(--teal); color:var(--paper);}
+
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--teal-deep);}
+    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+    /* ---------- Site integration bar ---------- */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:800px; margin:0 auto; padding:14px 24px;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--teal-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--teal-deep);}
+
+    .wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+
+    header.hero{padding:56px 0 40px; border-bottom:1px solid var(--line); margin-bottom:56px;}
+    .kicker{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--teal-deep); display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    }
+    .kicker::before{content:""; width:8px; height:8px; background:var(--teal); border-radius:50%; flex:none;}
+    h1{
+      font-family:"Fraunces", Georgia, serif;
+      font-optical-sizing:auto; font-weight:600;
+      font-size:clamp(2.1rem, 5.5vw, 3.15rem);
+      line-height:1.06; letter-spacing:-0.01em; margin:0 0 20px; text-wrap:balance;
+    }
+    .dek{font-size:1.15rem; line-height:1.55; color:var(--ink-soft); max-width:58ch; margin:0 0 30px;}
+
+    .statrow{display:flex; flex-wrap:wrap; gap:0;}
+    .stat{
+      flex:1 1 140px; padding:14px 20px 14px 0; border-right:1px solid var(--line); margin-right:20px;
+    }
+    .stat:last-child{border-right:none; margin-right:0;}
+    .stat .n{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:1.5rem; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; display:block;
+    }
+    .stat .l{font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.02em;}
+
+    h2{
+      font-family:"Fraunces", Georgia, serif; font-weight:600;
+      font-size:1.65rem; letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
+    }
+    .divider{
+      display:flex; align-items:center; gap:14px; margin:64px 0 32px;
+      color:var(--ink-soft); font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
+    }
+    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+    section:first-of-type .divider{margin-top:0;}
+
+    .prose{font-size:1.06rem; line-height:1.68;}
+    .prose p{margin:0 0 1.3em;}
+    .prose > p:last-child{margin-bottom:0;}
+    strong{color:var(--ink); font-weight:650;}
+    code{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.88em;
+      background:var(--mono-chip); padding:0.12em 0.4em; border-radius:4px;
+    }
+
+    ol.build{list-style:none; margin:0; padding:0; counter-reset:step;}
+    ol.build li{
+      counter-increment:step;
+      position:relative;
+      padding:0 0 26px 46px;
+      margin-bottom:26px;
+      border-bottom:1px solid var(--line);
+    }
+    ol.build li:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+    ol.build li::before{
+      content:counter(step);
+      position:absolute; left:0; top:0.05em;
+      width:30px; height:30px;
+      border:1.5px solid var(--teal);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.85rem; font-weight:600; color:var(--teal-deep);
+    }
+    ol.build h3{margin:0 0 8px; font-size:1.05rem; font-weight:700;}
+    ol.build p{margin:0; color:var(--ink-soft); line-height:1.62; font-size:0.98rem;}
+
+    .bugs{display:grid; grid-template-columns:1fr; gap:18px;}
+    @media (min-width:620px){.bugs{grid-template-columns:1fr 1fr;}}
+    .bug{
+      background:var(--paper-raised);
+      border:1px solid var(--line);
+      border-left:3px solid var(--rust);
+      border-radius:10px;
+      padding:20px 22px;
+    }
+    .bug .tag{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem;
+      letter-spacing:0.09em; text-transform:uppercase; color:var(--rust); margin-bottom:10px; display:block;
+    }
+    .bug h3{margin:0 0 8px; font-size:1rem; font-weight:700;}
+    .bug p{margin:0; color:var(--ink-soft); font-size:0.94rem; line-height:1.58;}
+
+    .results{display:grid; grid-template-columns:1fr; gap:16px;}
+    @media (min-width:620px){.results{grid-template-columns:1fr 1fr;}}
+    .result-card{
+      background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:24px 26px;
+    }
+    .result-card .tag{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem;
+      letter-spacing:0.09em; text-transform:uppercase; margin-bottom:12px; display:block;
+    }
+    .result-card.descriptive .tag{color:var(--good);}
+    .result-card.causal .tag{color:var(--null);}
+    .result-card .n{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums;
+      font-size:1.7rem; font-weight:600; display:block; margin-bottom:6px;
+    }
+    .result-card p{margin:0; color:var(--ink-soft); font-size:0.94rem; line-height:1.58;}
+
+    .callout{
+      background:var(--paper-raised);
+      border:1px solid var(--line);
+      border-left:3px solid var(--teal);
+      border-radius:10px;
+      padding:24px 26px;
+    }
+    .callout p{margin:0; font-size:1.02rem; line-height:1.66;}
+    .callout p + p{margin-top:1em;}
+
+    footer{
+      margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+      display:flex; flex-wrap:wrap; gap:8px 20px;
+    }
+    footer a{color:var(--teal-deep);}
+
+    @media (prefers-reduced-motion: no-preference){
+      header.hero, section{animation:rise 0.5s ease both;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="site-topbar">
+    <div class="site-topbar__inner">
+      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+      <nav class="site-topbar__links">
+        <a href="portfolio.html">Portfolio</a>
+        <a href="blog.html">Writing &amp; Research</a>
+        <a href="pcvi_atlas_case_study.html" class="is-active">Case Study</a>
+        <a href="winchester_artifact.html">Debug Log</a>
+        <a href="hvid_crosswalk.html">Dataset</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="kicker">Case study · PCVI Atlas</div>
+      <h1>Pharmaco-Climatic Vulnerability Atlas</h1>
+      <p class="dek">Which American communities are pharmacologically primed to die in a heatwave — and can you trust that answer? A national data pipeline built from scratch, four silent bugs caught before they shipped, and an honest null result instead of an easy yes.</p>
+      <div class="statrow">
+        <div class="stat"><span class="n">8.79M</span><span class="l">claim rows, 50 states</span></div>
+        <div class="stat"><span class="n">276</span><span class="l">drugs crosswalked</span></div>
+        <div class="stat"><span class="n">236</span><span class="l">HRRs in final analysis</span></div>
+        <div class="stat"><span class="n">4</span><span class="l">shipping bugs caught</span></div>
+      </div>
+    </header>
+
+    <section>
+      <div class="divider">The problem</div>
+      <div class="prose">
+        <p>Certain common medications — blood pressure drugs, diuretics, some psychiatric and antiepileptic drugs — impair the body's ability to regulate core temperature. As heatwaves intensify, public health agencies and health systems need to know <em>where</em> this risk concentrates: not just where it's hot, but where hot overlaps with a population taking heat-sensitizing drugs at scale. No existing public dataset answers this at a national, sub-state level.</p>
+        <p>This case study is about taking on an ambiguous question with no existing tooling, building the pipeline to answer it end to end — and, the harder part, being honest when the rigorous analysis doesn't confirm the easy answer.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">What I built</div>
+      <ol class="build">
+        <li>
+          <h3>Evidence-based drug crosswalk</h3>
+          <p>Combined two peer-reviewed sources — an RCT meta-analysis and a pharmacovigilance study — into a 276-drug table, resolved to standard drug codes (RxNorm / ATC) so it could be matched against real prescribing data. <a href="hvid_crosswalk.html">Full dataset card →</a></p>
+        </li>
+        <li>
+          <h3>National claims pipeline</h3>
+          <p>Pulled and matched 8.79M Medicare Part D claim rows across all 50 states against the crosswalk, resolved 768K prescriber locations, and aggregated to the county and Hospital Referral Region (HRR) level.</p>
+        </li>
+        <li>
+          <h3>Heat exposure join</h3>
+          <p>Pulled NASA's public reanalysis data for every US county, computed the standard NWS heat index, and joined it to the prescribing burden data, population-normalized.</p>
+        </li>
+        <li>
+          <h3>A causal test, not just a correlation</h3>
+          <p>Built a 6-year daily panel (2019–2024) and ran a conditional Poisson case-crossover model with a 200-permutation placebo check — the standard rigor bar for claiming a heat-health effect is real rather than confounded.</p>
+        </li>
+        <li>
+          <h3>Deployed tool</h3>
+          <p>A Streamlit app for exploring any HRR's burden index, heat exposure, and national ranking.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="divider">What went wrong, and what I did about it</div>
+      <div class="prose" style="margin-bottom:24px;">
+        <p>The value of this project is less the pipeline and more the debugging along the way — each of these was a silent failure mode that would have shipped a wrong number if not caught.</p>
+      </div>
+      <div class="bugs">
+        <div class="bug">
+          <span class="tag">Geographic attribution</span>
+          <h3>An 8x inflation from hospital catchment areas</h3>
+          <p>Small counties with regional hospitals (e.g. Winchester, VA) looked like extreme outliers — 56,438 claims per 1,000 residents vs. a national median around 6,500 — because a wide catchment area was being counted against one small home county. Fixed by re-aggregating to Hospital Referral Regions instead of patching the symptom; Winchester's number dropped to 6,535, right at the median. <a href="winchester_artifact.html">Full debug log →</a></p>
+        </div>
+        <div class="bug">
+          <span class="tag">Data source failure</span>
+          <h3>Two blocked sources, diagnosed not assumed</h3>
+          <p>CDC's mortality API refuses geographic grouping below the national level (a disclosure policy, confirmed by a live test request), and a second CDC source rate-limited every call without a token. Pivoted to NOAA's Storm Events data and documented the resulting undercount limitation honestly.</p>
+        </div>
+        <div class="bug">
+          <span class="tag">Model fit failure</span>
+          <h3>Silent numerical failures in the causal model</h3>
+          <p>A perfect-separation issue (78% of regions had zero recorded deaths across 6 years, correctly excluded rather than left to blow up the fit) and a memory limit requiring restriction to the warm season — checked first that 98.6% of deaths already fell in that window before applying it.</p>
+        </div>
+        <div class="bug">
+          <span class="tag">Formula bug</span>
+          <h3>A heat index formula applied outside its valid range</h3>
+          <p>Producing 697°F values on winter days. Caught before it fed into the causal model, fixed, and the full 6.9M-row panel was rebuilt from scratch.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">The result</div>
+      <div class="results">
+        <div class="result-card descriptive">
+          <span class="tag">Descriptive finding — real</span>
+          <span class="n">r = 0.325</span>
+          <p>p &lt; 0.0001, n = 236 HRRs. A statistically significant correlation between heat-sensitizing prescription burden and summer heat exposure, with a plausible geographic pattern — hot Sunbelt regions at the top, cooler coastal regions at the bottom.</p>
+        </div>
+        <div class="result-card causal">
+          <span class="tag">Causal finding — does not hold</span>
+          <span class="n">p = 0.17–0.47</span>
+          <p>Across outcomes and weighting schemes, a 200-permutation placebo check. The descriptive correlation does not survive a proper causal test.</p>
+        </div>
+      </div>
+      <div class="prose" style="margin-top:24px;">
+        <p>The honest headline: a real, interesting descriptive pattern, and a properly-run causal check that doesn't confirm it. That's the harder, less flattering thing to report — and it's the right one.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">Why this matters for the role</div>
+      <div class="callout">
+        <p>This project is a small model of what deployed, customer-facing technical work requires: taking an ambiguous problem with no off-the-shelf data, building the full pipeline to answer it, catching the failure modes that would otherwise ship a confidently-wrong number, and reporting a null result instead of the more impressive one.</p>
+        <p>That combination — engineering judgment plus the discipline to not overclaim — is the same bar a forward-deployed engineering role holds a delivered analysis to.</p>
+      </div>
+    </section>
+
+    <footer>
+      <span>Related: <a href="winchester_artifact.html">The Winchester Artifact</a></span>
+      <span><a href="hvid_crosswalk.html">HVID Drug Crosswalk</a></span>
+      <span>Code: <a href="https://github.com/Rishavbhattarai/pcvi-atlas" target="_blank" rel="noopener">github.com/Rishavbhattarai/pcvi-atlas</a></span>
+    </footer>
+
+  </div>
+
+</body>
+</html>

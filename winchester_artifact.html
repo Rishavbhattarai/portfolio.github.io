@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Winchester Artifact | Rishav Bhattarai</title>
+  <meta name="description" content="A debug log: a small Virginia city topped a national health-risk ranking by 8x — not because it was the sickest place in America, but because a hospital catchment area was misattributed to one small county." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavbhattarai.com.np/winchester_artifact.html" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="The Winchester Artifact" />
+  <meta property="og:description" content="A small Virginia city topped a national health-risk ranking by a factor of eight. It wasn't the sickest place in America — it was a denominator in the wrong place." />
+  <meta property="og:url" content="https://rishavbhattarai.com.np/winchester_artifact.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="The Winchester Artifact" />
+  <meta name="twitter:description" content="A small Virginia city topped a national health-risk ranking by a factor of eight. It wasn't the sickest place in America — it was a denominator in the wrong place." />
+
+  <style>
+    :root{
+      --paper:#E7EBE6;
+      --paper-raised:#F3F5F1;
+      --ink:#16241F;
+      --ink-soft:#3D4C46;
+      --line:#C7D0C6;
+      --teal:#1F6F6B;
+      --teal-deep:#154F4C;
+      --rust:#A8462C;
+      --rust-soft:#C97556;
+      --mono-chip:#DDE4DC;
+      --focus:#1F6F6B;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#121C19;
+        --paper-raised:#182420;
+        --ink:#E7EFEA;
+        --ink-soft:#A9BDB4;
+        --line:#2B3D36;
+        --teal:#5FBDB5;
+        --teal-deep:#8ED9D1;
+        --rust:#E08054;
+        --rust-soft:#E8A582;
+        --mono-chip:#1E2C27;
+        --focus:#5FBDB5;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#121C19;
+      --paper-raised:#182420;
+      --ink:#E7EFEA;
+      --ink-soft:#A9BDB4;
+      --line:#2B3D36;
+      --teal:#5FBDB5;
+      --teal-deep:#8ED9D1;
+      --rust:#E08054;
+      --rust-soft:#E8A582;
+      --mono-chip:#1E2C27;
+      --focus:#5FBDB5;
+    }
+
+    *{box-sizing:border-box;}
+    ::selection{background:var(--teal);color:var(--paper);}
+
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{color:var(--teal-deep);}
+    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+    /* ---------- Site integration bar ---------- */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:760px; margin:0 auto; padding:14px 24px;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--teal-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--teal-deep);}
+
+    .wrap{max-width:760px; margin:0 auto; padding:0 24px 96px;}
+
+    /* ---------- Hero ---------- */
+    header.hero{
+      padding:56px 0 44px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:52px;
+    }
+    .kicker{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.78rem;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      color:var(--rust);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:22px;
+    }
+    .kicker::before{
+      content:"";
+      width:8px; height:8px;
+      background:var(--rust);
+      border-radius:50%;
+      flex:none;
+    }
+    h1{
+      font-family:"Fraunces", Georgia, serif;
+      font-optical-sizing:auto;
+      font-weight:600;
+      font-size:clamp(2.1rem, 5.5vw, 3.1rem);
+      line-height:1.06;
+      letter-spacing:-0.01em;
+      margin:0 0 20px;
+      text-wrap:balance;
+      color:var(--ink);
+    }
+    .dek{
+      font-size:1.15rem;
+      line-height:1.55;
+      color:var(--ink-soft);
+      max-width:56ch;
+      margin:0 0 26px;
+    }
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 18px;
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem;
+      color:var(--ink-soft);
+    }
+    .meta span{white-space:nowrap;}
+    .meta strong{color:var(--ink); font-weight:600;}
+
+    /* ---------- Prose ---------- */
+    .prose{font-size:1.06rem; line-height:1.68;}
+    .prose p{margin:0 0 1.3em;}
+    .prose > p:last-child{margin-bottom:0;}
+    strong{color:var(--ink); font-weight:650;}
+    code{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.88em;
+      background:var(--mono-chip);
+      padding:0.12em 0.4em;
+      border-radius:4px;
+    }
+
+    /* ---------- Log entries ---------- */
+    .log{
+      position:relative;
+      margin:0 0 48px;
+      padding-left:26px;
+      border-left:2px solid var(--line);
+    }
+    .entry{position:relative; margin-bottom:38px;}
+    .entry:last-child{margin-bottom:0;}
+    .entry::before{
+      content:"";
+      position:absolute;
+      left:-33px;
+      top:0.45em;
+      width:9px; height:9px;
+      border-radius:50%;
+      background:var(--paper);
+      border:2px solid var(--teal);
+    }
+    .entry.flag::before{
+      background:var(--rust);
+      border-color:var(--rust);
+      width:11px; height:11px;
+      left:-34px;
+    }
+    .stamp{
+      display:inline-block;
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.74rem;
+      letter-spacing:0.09em;
+      text-transform:uppercase;
+      color:var(--teal-deep);
+      background:var(--paper-raised);
+      border:1px solid var(--line);
+      border-radius:5px;
+      padding:3px 9px;
+      margin-bottom:12px;
+    }
+    .entry.flag .stamp{color:var(--rust); border-color:color-mix(in srgb, var(--rust) 40%, var(--line));}
+    .entry .prose{font-size:1.03rem;}
+
+    /* ---------- Table ---------- */
+    .table-scroll{overflow-x:auto; margin:1.6em 0 2em; border:1px solid var(--line); border-radius:10px;}
+    table{
+      border-collapse:collapse;
+      width:100%;
+      min-width:520px;
+      font-size:0.92rem;
+      background:var(--paper-raised);
+    }
+    caption{
+      text-align:left;
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+      padding:12px 16px 0;
+    }
+    th, td{
+      padding:11px 16px;
+      text-align:right;
+      border-bottom:1px solid var(--line);
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;
+    }
+    th:first-child, td:first-child{text-align:left; white-space:normal;}
+    thead th{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.74rem;
+      letter-spacing:0.04em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+      font-weight:600;
+    }
+    tbody tr:last-child td{border-bottom:none;}
+    tr.headline td{color:var(--teal-deep); font-weight:700; background:color-mix(in srgb, var(--teal) 9%, transparent);}
+
+    /* ---------- Section headings ---------- */
+    h2{
+      font-family:"Fraunces", Georgia, serif;
+      font-weight:600;
+      font-size:1.7rem;
+      letter-spacing:-0.005em;
+      margin:0 0 22px;
+      text-wrap:balance;
+    }
+    .divider{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin:64px 0 40px;
+      color:var(--ink-soft);
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+    }
+    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+
+    /* ---------- Lesson list ---------- */
+    .lessons{
+      background:var(--paper-raised);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:8px 28px 8px;
+    }
+    .lesson{
+      padding:26px 0;
+      border-bottom:1px solid var(--line);
+    }
+    .lesson:last-child{border-bottom:none;}
+    .lesson h3{
+      font-family:"Source Sans 3", sans-serif;
+      font-size:1.02rem;
+      font-weight:700;
+      margin:0 0 8px;
+      color:var(--teal-deep);
+    }
+    .lesson p{margin:0; color:var(--ink-soft); line-height:1.62; font-size:0.98rem;}
+
+    footer{
+      margin-top:64px;
+      padding-top:28px;
+      border-top:1px solid var(--line);
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem;
+      color:var(--ink-soft);
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 20px;
+    }
+    footer a{color:var(--teal-deep);}
+
+    @media (prefers-reduced-motion: no-preference){
+      .entry, header.hero{animation:rise 0.5s ease both;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="site-topbar">
+    <div class="site-topbar__inner">
+      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+      <nav class="site-topbar__links">
+        <a href="portfolio.html">Portfolio</a>
+        <a href="blog.html">Writing &amp; Research</a>
+        <a href="pcvi_atlas_case_study.html">Case Study</a>
+        <a href="winchester_artifact.html" class="is-active">Debug Log</a>
+        <a href="hvid_crosswalk.html">Dataset</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="kicker">Debug log · PCVI Atlas</div>
+      <h1>The Winchester Artifact</h1>
+      <p class="dek">A small Virginia city topped a national health-risk ranking by a factor of eight. It wasn't the sickest place in America — it was a denominator in the wrong place. A field log of finding out why, written as it happened.</p>
+      <div class="meta">
+        <span><strong>2,553</strong> counties</span>
+        <span><strong>8.79M</strong> claim rows</span>
+        <span><strong>306</strong> hospital referral regions</span>
+        <span><strong>1</strong> bug, caught before it shipped</span>
+      </div>
+    </header>
+
+    <div class="log">
+
+      <div class="entry">
+        <div class="stamp">Context</div>
+        <div class="prose">
+          <p>National scale-up run just finished: 8.79M Medicare Part D claims, matched against a 276-drug heat-sensitizing crosswalk, aggregated to county level, normalized per 1,000 residents 65+. Sanity-checking the top of the per-capita ranking before trusting it for anything.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">First look at the ranking</div>
+        <div class="prose">
+          <p>Top of the list is dominated by tiny counties — Yukon-Koyukuk Census Area, AK (pop. 65+ = 913), Greeley County, KS (pop. 65+ = 232) — sitting at &gt;35,000 claims per 1,000 residents 65+, several multiples above the p99 (24,055). Small-N per-capita noise, the kind you expect and can filter with a population floor.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Applied a population floor</div>
+        <div class="prose">
+          <p><code>POP_65PLUS_FLOOR = 1000</code>. Flagged rather than dropped (198/2,553 counties, 7.8%, fall below it — kept auditable in the output). Correlation moves from r = 0.1311 to r = 0.1405 — modestly <em>strengthens</em>, consistent with the excluded counties being noise, not signal. Good sign the floor is doing real work.</p>
+        </div>
+      </div>
+
+      <div class="entry flag">
+        <div class="stamp">⚑ Checked the ranking again, post-floor</div>
+        <div class="prose">
+          <p>Still wrong at the top. <strong>Winchester city, VA</strong> leads at <strong>56,438 claims per 1,000 residents 65+</strong> — with 4,874 residents 65+, more than 4x the floor threshold. This isn't a small-N artifact. The floor caught the extreme small counties; it can't distinguish a legitimately high-burden mid-sized county from something else entirely.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Stopped to look, instead of raising the floor again</div>
+        <div class="prose">
+          <p>Winchester City is a small independent city — Virginia's independent-city structure means it isn't part of any surrounding county — and it has a regional medical center serving a much larger catchment area than its own population. That's the "something else": patients from outside Winchester are being treated and prescribed there, and every one of those claims is attributed to Winchester's own tiny population, because the pipeline joins on <code>prescriber ZIP → prescriber's own county</code>, with no notion of where the patient lives.</p>
+        </div>
+      </div>
+
+      <div class="entry flag">
+        <div class="stamp">⚑ Named the bug</div>
+        <div class="prose">
+          <p><strong>Prescriber location ≠ patient location.</strong> Any regional hospital or pharmacy hub inflates its own home county's per-capita rate by construction — the numerator (claims) reflects a wide catchment area, the denominator (population) reflects only the hub's own small county. This is exactly the risk the project's original scoping document had flagged, and recommended a Hospital Referral Region sensitivity check for — it just hadn't bitten yet, so it hadn't been forced to the front of the queue until this ranking made it undeniable.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">The fix — re-aggregate to Hospital Referral Region</div>
+        <div class="prose">
+          <p>HRRs (Dartmouth Atlas, 306 nationally) are built around actual hospital catchment and referral patterns — the standard health-services-research geography for exactly this mismatch. Two things needed reattributing:</p>
+          <p><strong>Claims</strong> — prescriber ZIP → HRR directly (Dartmouth's <code>ZipHsaHrr19</code> crosswalk, free, no login), bypassing county entirely.<br>
+          <strong>Population</strong> — no ZCTA-level population file on hand, so each county is assigned to its plurality HRR (the HRR most of its ZCTAs map to) and county populations are summed per HRR — a minor approximation, since most counties don't actually split across HRR boundaries.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Result, checked directly</div>
+        <div class="prose">
+          <p>Winchester's rate dropped from <strong>56,438</strong> claims/1k-65+ (its own 4,874-person county-level denominator) to <strong>6,535.5</strong> (HRR-level, 105,269 people across its real 14-county catchment) — right at the national median. The artifact is gone specifically because the denominator now matches the population the claims came from, not because of any smoothing or exclusion.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Didn't stop there — checked whether the fix broke something new</div>
+        <div class="prose">
+          <p>At HRR level, unfiltered, the correlation initially looked <em>weaker</em> than the county-level number (r ≈ 0.08 vs 0.13–0.14). That's informative on its own: part of the county-level "signal" may have been the same misattribution artifact in disguise — hot Sunbelt regional-hub counties being both genuinely hot <em>and</em> spuriously claims-inflated, correlating with heat for the wrong reason. But the unfiltered HRR number turned out to have its own small-N problem: some HRRs are still single-county with modest populations — New Haven, CT (pop. 65+ = 20,019) topped the unfiltered HRR ranking at ~117,800/1k-65+.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Before excluding New Haven, checked it wasn't the same bug again</div>
+        <div class="prose">
+          <p>Verified the individual prescribers behind the number were real, distinct physicians — not a mail-order pharmacy or PBM artifact routing claims through one address. It wasn't the attribution bug; it was a genuinely small population getting swung by a handful of high-volume prescribers. A different problem — small-N variance — needing a different fix: a population floor, this time at HRR level.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Final numbers, both fixes together</div>
+        <div class="prose">
+          <p>An HRR-level floor of <code>≥40,000</code> (≈p10 of the 293-HRR distribution) excluded 25/261 HRRs, flagged not dropped.</p>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Pearson r, burden vs. summer heat exposure</caption>
+            <thead>
+              <tr><th>Geography</th><th>mean-HI r</th><th>days ≥105°F r</th><th>n</th><th>p</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>County-level, unfiltered</td><td>0.1311</td><td>0.1240</td><td>2,553</td><td>—</td></tr>
+              <tr><td>County-level, pop floor</td><td>0.1405</td><td>0.1365</td><td>2,355</td><td>—</td></tr>
+              <tr><td>HRR-level, unfiltered</td><td>0.0841</td><td>0.0742</td><td>261</td><td>0.176 (n.s.)</td></tr>
+              <tr class="headline"><td>HRR-level, pop floor</td><td>0.3247</td><td>0.3001</td><td>236</td><td>&lt;0.0001</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="prose">
+          <p>Once both the geography and the small-N problem are fixed, a moderate, statistically significant correlation shows up (r ≈ 0.32) that neither the raw county numbers nor the unfiltered HRR numbers showed cleanly. It also looks qualitatively sane in a way the earlier rankings didn't: hot Sunbelt HRRs (Hudson FL, Mesa AZ, Monroe LA, Metairie LA, Rome GA) at the top, cooler coastal and temperate HRRs (San Jose, Santa Rosa, Everett WA, Chicago) at the bottom — the first ranking in this project that looks like a real geographic pattern instead of a data-quality artifact.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider">The lesson, generalized</div>
+
+    <div class="prose" style="margin-bottom:28px;">
+      <p>If you're working with prescriber-level, hospital-level, or any facility-anchored geographic health data, and aggregating up to a "where does this population live" geography — this failure mode will eventually find you too.</p>
+    </div>
+
+    <div class="lessons">
+      <div class="lesson">
+        <h3>A population floor catches small-N noise. It does not catch catchment-area mismatch.</h3>
+        <p>Those are different failure modes and need different fixes — don't assume one floor fixes both just because both show up as extreme values at the top of a ranking.</p>
+      </div>
+      <div class="lesson">
+        <h3>When a fix changes the correlation you're chasing, check <em>why</em> before trusting the new number.</h3>
+        <p>The HRR fix weakened the correlation before it strengthened it (unfiltered HRR: 0.08). The instinct to read that as "the fix isn't working" would have been wrong — it was revealing that part of the original signal was itself an artifact.</p>
+      </div>
+      <div class="lesson">
+        <h3>A population floor is a screen for hub effects, not a fix.</h3>
+        <p>It only catches the extreme small end. Winchester (pop. 65+ = 4,874, more than 4x a floor of 1,000) sailed straight through a population floor while still being a pure catchment-area artifact. The actual fix had to match the geography to how the data is really generated, not just filter on population size.</p>
+      </div>
+      <div class="lesson">
+        <h3>When something looks like the same bug reappearing, verify that before applying the same fix.</h3>
+        <p>New Haven, after the HRR fix, looked like Winchester all over again. It wasn't — checking the underlying prescribers first avoided over-filtering a genuinely small but real signal.</p>
+      </div>
+    </div>
+
+    <footer>
+      <span>Related: <a href="pcvi_atlas_case_study.html">Pharmaco-Climatic Vulnerability Atlas — Case Study</a></span>
+      <span><a href="hvid_crosswalk.html">HVID Drug Crosswalk</a></span>
+      <span>Code: <a href="https://github.com/Rishavbhattarai/pcvi-atlas" target="_blank" rel="noopener">github.com/Rishavbhattarai/pcvi-atlas</a></span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
