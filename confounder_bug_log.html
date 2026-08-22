@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Confounder That Wasn't There | Rishav Bhattarai</title>
+  <meta name="description" content="A debug log: a causal model ran clean, fit without error, and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to control for — a confounder column silently absorbed into a fixed-effects model." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavbhattarai.com.np/confounder_bug_log.html" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="The Confounder That Wasn't There" />
+  <meta property="og:description" content="A causal model ran clean, fit without error, and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to control for." />
+  <meta property="og:url" content="https://rishavbhattarai.com.np/confounder_bug_log.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="The Confounder That Wasn't There" />
+  <meta name="twitter:description" content="A causal model ran clean, fit without error, and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to control for." />
+
+  <style>
+    :root{
+      --paper:#EFEAE0;
+      --paper-raised:#F8F4EB;
+      --ink:#241C2E;
+      --ink-soft:#4E4358;
+      --line:#D9CDB8;
+      --violet:#5B3A8C;
+      --violet-deep:#3F2861;
+      --rust:#A8462C;
+      --mono-chip:#E4DCC9;
+      --focus:#5B3A8C;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
+        --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
+        --mono-chip:#2A2233; --focus:#A98CD9;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
+      --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
+      --mono-chip:#2A2233; --focus:#A98CD9;
+    }
+
+    *{box-sizing:border-box;}
+    ::selection{background:var(--violet); color:var(--paper);}
+    body{
+      margin:0; background:var(--paper); color:var(--ink);
+      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--violet-deep);}
+    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+    /* ---------- Site integration bar ---------- */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:760px; margin:0 auto; padding:14px 24px;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--violet-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--violet-deep);}
+
+    .wrap{max-width:760px; margin:0 auto; padding:0 24px 96px;}
+
+    header.hero{padding:56px 0 44px; border-bottom:1px solid var(--line); margin-bottom:52px;}
+    .kicker{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--rust);
+      display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    }
+    .kicker::before{content:""; width:8px; height:8px; background:var(--rust); border-radius:50%; flex:none;}
+    h1{
+      font-family:"Fraunces", Georgia, serif; font-optical-sizing:auto; font-weight:600;
+      font-size:clamp(2.1rem, 5.5vw, 3.1rem); line-height:1.06; letter-spacing:-0.01em;
+      margin:0 0 20px; text-wrap:balance; color:var(--ink);
+    }
+    .dek{font-size:1.15rem; line-height:1.55; color:var(--ink-soft); max-width:56ch; margin:0 0 26px;}
+    .meta{
+      display:flex; flex-wrap:wrap; gap:8px 18px;
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+    }
+    .meta span{white-space:nowrap;}
+    .meta strong{color:var(--ink); font-weight:600;}
+
+    .prose{font-size:1.06rem; line-height:1.68;}
+    .prose p{margin:0 0 1.3em;}
+    .prose > p:last-child{margin-bottom:0;}
+    strong{color:var(--ink); font-weight:650;}
+    code{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.88em;
+      background:var(--mono-chip); padding:0.12em 0.4em; border-radius:4px;
+    }
+    pre{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.86em;
+      background:var(--mono-chip); padding:14px 16px; border-radius:8px;
+      overflow-x:auto; margin:0 0 1.2em; line-height:1.5;
+    }
+
+    .log{position:relative; margin:0 0 48px; padding-left:26px; border-left:2px solid var(--line);}
+    .entry{position:relative; margin-bottom:38px;}
+    .entry:last-child{margin-bottom:0;}
+    .entry::before{
+      content:""; position:absolute; left:-33px; top:0.45em;
+      width:9px; height:9px; border-radius:50%; background:var(--paper); border:2px solid var(--violet);
+    }
+    .entry.flag::before{background:var(--rust); border-color:var(--rust); width:11px; height:11px; left:-34px;}
+    .stamp{
+      display:inline-block; font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.74rem;
+      letter-spacing:0.09em; text-transform:uppercase; color:var(--violet-deep);
+      background:var(--paper-raised); border:1px solid var(--line); border-radius:5px;
+      padding:3px 9px; margin-bottom:12px;
+    }
+    .entry.flag .stamp{color:var(--rust); border-color:color-mix(in srgb, var(--rust) 40%, var(--line));}
+    .entry .prose{font-size:1.03rem;}
+
+    h2{
+      font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.7rem;
+      letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
+    }
+    .divider{
+      display:flex; align-items:center; gap:14px; margin:64px 0 40px;
+      color:var(--ink-soft); font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
+    }
+    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+
+    .lessons{background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; padding:8px 28px 8px;}
+    .lesson{padding:26px 0; border-bottom:1px solid var(--line);}
+    .lesson:last-child{border-bottom:none;}
+    .lesson h3{font-family:"Source Sans 3", sans-serif; font-size:1.02rem; font-weight:700; margin:0 0 8px; color:var(--violet-deep);}
+    .lesson p{margin:0; color:var(--ink-soft); line-height:1.62; font-size:0.98rem;}
+
+    footer{
+      margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+      display:flex; flex-wrap:wrap; gap:8px 20px;
+    }
+    footer a{color:var(--violet-deep);}
+
+    @media (prefers-reduced-motion: no-preference){
+      .entry, header.hero{animation:rise 0.5s ease both;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="site-topbar">
+    <div class="site-topbar__inner">
+      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+      <nav class="site-topbar__links">
+        <a href="portfolio.html">Portfolio</a>
+        <a href="blog.html">Writing &amp; Research</a>
+        <a href="amr_climate_case_study.html">Case Study</a>
+        <a href="confounder_bug_log.html" class="is-active">Debug Log</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="kicker">Debug log · AMR-Climate Atlas</div>
+      <h1>The Confounder That Wasn't There</h1>
+      <p class="dek">A causal model ran clean, fit without error, and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to control for. A field log of finding out why, written as it happened.</p>
+      <div class="meta">
+        <span><strong>4</strong> pathogen-antibiotic combos</span>
+        <span><strong>29</strong> countries</span>
+        <span><strong>0</strong> errors thrown by the bug</span>
+        <span><strong>1</strong> silently absorbed column</span>
+      </div>
+    </header>
+
+    <div class="log">
+
+      <div class="entry">
+        <div class="stamp">Context</div>
+        <div class="prose">
+          <p>Phase 3's causal model is done: a two-way fixed-effects panel regression across four pathogen-antibiotic combinations, with antibiotic-consumption data added as a confounder, since heat and prescribing norms are plausibly correlated with each other. One combination, K. pneumoniae resistance to carbapenems, survives the mandatory placebo test. Standard next step before trusting a Phase 3 result: an independent pass tries to reproduce it from scratch.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">The robustness pass stalls</div>
+        <div class="prose">
+          <p>Rebuilding the consumption-adjusted model independently, the confounder's own coefficient doesn't look right — the antibiotic-consumption term isn't behaving like a real regressor with real explanatory pull. Worth a closer look at exactly which column is going into the fit.</p>
+        </div>
+      </div>
+
+      <div class="entry flag">
+        <div class="stamp">⚑ Found the line</div>
+        <div class="prose">
+          <p>The confounder column was being selected like this:</p>
+          <pre>[c for c in esac.columns if c not in ("country_code","year")][0]</pre>
+          <p>The source file's columns are <code>country_code, country_name, year, indicator, value</code>. Filtering out <code>country_code</code> and <code>year</code>, then taking the first remaining column, doesn't land on <code>value</code> — the actual consumption figure. It lands on <code>country_name</code>, a text label.</p>
+        </div>
+      </div>
+
+      <div class="entry flag">
+        <div class="stamp">⚑ Named the bug</div>
+        <div class="prose">
+          <p><strong>The model was being fit on a country's own name, not its antibiotic use.</strong> And because <code>country_name</code> is identical for every year within a given country, the fixed-effects model's own machinery — <code>drop_absorbed=True</code> — silently folded it entirely into the country fixed effect it was already estimating. No crash. No warning. No NaN. The regression still ran, still produced a coefficient table, and every result built on it was captioned "consumption-adjusted" while controlling for nothing beyond what the country fixed effect was already doing.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Before touching the code, reproduced the wrong number</div>
+        <div class="prose">
+          <p>Ran the buggy selection deliberately, to confirm this was really the mechanism — not a different bug that happened to produce a similarly odd-looking coefficient. It reproduced exactly: same buggy numbers as the original run, same silent absorption. Confirmed cause, not just a plausible theory of one.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">The fix</div>
+        <div class="prose">
+          <p>Select the confounder column by name — <code>value</code> — not position. Reran all four pathogen-antibiotic combinations end to end, not just the one combination that had looked significant, since the same bug had silently touched every "consumption-adjusted" number in the draft.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Result, checked directly</div>
+        <div class="prose">
+          <p>Three of four combinations barely moved — expected, since swapping a no-op regressor for a real but weak one shouldn't move much. The fourth, K. pneumoniae/carbapenems, moved from a pre-fix coefficient of −2.0061 (permutation p = 0.0131) to a corrected −1.7308 (permutation p = 0.0000). Different number. Same conclusion: still the one real, placebo-surviving result in the panel. The fix mattered enough to change the coefficient, not enough to overturn the finding.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Didn't stop there — checked whether the confounder was doing anything</div>
+        <div class="prose">
+          <p>Fixing the column meant antibiotic consumption was, for the first time, in the model. So: is it doing real confounding work? Checked its own coefficient directly — <strong>+0.9120, p = 0.1051</strong>. Not significant. The consumption confounder isn't meaningfully explaining anything in this fit, correctly wired in or not. The real reason this narrow 2010–2022 subsample shows a result the full 2000–2023 panel doesn't is most likely the narrower sample window itself, not the confounder. Reframed the write-up to say exactly that, instead of letting a fixed bug get credited with a discovery it didn't make.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="stamp">Closed the loop</div>
+        <div class="prose">
+          <p>The bug shipped in the first place because the placebo test was a manual step — someone runs the script, reads the console, trusts it. Built <code>validate_pipeline.py</code> to turn that into a gate: it refits every model, checks the permutation shuffle itself isn't degenerate, and flags drift against a stored baseline. Wired to GitHub Actions so it runs on every push, not only when someone remembers to run it by hand.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider">The lesson, generalized</div>
+
+    <div class="prose" style="margin-bottom:28px;">
+      <p>If you're joining external data into a fixed-effects or any absorbing-effects model, this failure mode is worth checking for directly — it doesn't announce itself.</p>
+    </div>
+
+    <div class="lessons">
+      <div class="lesson">
+        <h3>A silently-absorbed regressor is a bug with no error message.</h3>
+        <p>Fixed-effects models can make a wrong column vanish cleanly — no crash, no NaN, a plausible-looking fit. Select confounder columns by name, never position, especially anywhere near <code>drop_absorbed=True</code> or an equivalent.</p>
+      </div>
+      <div class="lesson">
+        <h3>Reproduce the wrong number before you patch the code.</h3>
+        <p>Confirming the buggy run reproduces exactly, on demand, is what separates "I found the cause" from "I found a plausible theory." Only fix after that confirmation.</p>
+      </div>
+      <div class="lesson">
+        <h3>A fix that changes the coefficient doesn't automatically validate the finding.</h3>
+        <p>After the fix, the confounder was finally in the model — and still not significant. The real explanation for the result was the sample window, not the confounder. Check what the newly-correct model is actually doing, not just whether the number moved.</p>
+      </div>
+      <div class="lesson">
+        <h3>A manual QA step you run "when you remember to" is a bug waiting to ship again.</h3>
+        <p>The permutation test existed and was rigorous — it just wasn't automated yet. Turning it into a CI gate is what stops the same class of bug from shipping silently a second time.</p>
+      </div>
+    </div>
+
+    <footer>
+      <span>Related: <a href="amr_climate_case_study.html">AMR-Climate Atlas — Case Study</a></span>
+      <span>Code: <code>src/amr_climate_atlas/stage3_identification.py</code> · <code>validate_pipeline.py</code></span>
+      <span>Full write-up: <code>docs/paper.md</code></span>
+    </footer>
+
+  </div>
+
+</body>
+</html>

@@ -261,6 +261,34 @@
           </div>
         </article>
 
+        <article class="card card--wide" data-category="dashboards">
+          <div class="card__glow"></div>
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--python">Python</span>
+              <span class="tag tag--orange">Causal Inference</span>
+              <span class="tag tag--blue">MCP Server</span>
+            </div>
+          </div>
+          <h3 class="card__title">AMR-Climate Atlas — Antimicrobial Resistance Research</h3>
+          <p class="card__desc">Causal panel testing whether a hotter year makes antibiotic resistance worse across 29 EU/EEA countries — joining four government data sources into a 2000–2023 panel, with a mandatory 200-permutation placebo test gating every result.</p>
+          <ul class="card__bullets">
+            <li>Two-way fixed-effects regression across four pathogen-antibiotic combinations, cross-checked against independent genomic resistance data via BigQuery</li>
+            <li>Live MCP server (Anthropic's official SDK) exposing live weather and genomic-resistance data, plus an eval-gated CI pipeline that refits every model on push</li>
+            <li>Caught and documented a confounder column silently absorbed into the model's fixed effects — a bug with no error message</li>
+            <li>Reported an honest mostly-null result: three of four combinations show nothing, the fourth a narrow, independently-corroborated exception</li>
+          </ul>
+          <div class="card__stack">Python · Streamlit · MCP SDK · BigQuery · Fixed-Effects Panel Regression</div>
+          <div class="card__footer">
+            <a href="amr_climate_case_study.html" class="card__link card__link--primary" target="_blank">Read the Case Study →</a>
+            <a href="confounder_bug_log.html" class="card__link" target="_blank">The Confounder That Wasn't There</a>
+            <span class="card__badge">Research · 2026</span>
+          </div>
+        </article>
+
         <!-- ── ENTERPRISE ── -->
         <article class="card" data-category="enterprise">
           <div class="card__glow"></div>

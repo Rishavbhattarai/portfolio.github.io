@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMR-Climate Atlas | Rishav Bhattarai</title>
+  <meta name="description" content="Case study: a causal panel testing whether a hotter year makes antibiotic resistance worse across 29 EU/EEA countries — a mandatory placebo test on every result, a live MCP server, and an eval-gated CI pipeline, reported with an honest mostly-null result." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavbhattarai.com.np/amr_climate_case_study.html" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AMR-Climate Atlas" />
+  <meta property="og:description" content="Does a hotter year make antibiotic resistance worse across Europe? A causal panel, a mandatory placebo test, a live MCP server, and a CI pipeline built to catch its own next bug." />
+  <meta property="og:url" content="https://rishavbhattarai.com.np/amr_climate_case_study.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AMR-Climate Atlas" />
+  <meta name="twitter:description" content="Does a hotter year make antibiotic resistance worse across Europe? A causal panel, a mandatory placebo test, a live MCP server, and a CI pipeline built to catch its own next bug." />
+
+  <style>
+    :root{
+      --paper:#EFEAE0;
+      --paper-raised:#F8F4EB;
+      --ink:#241C2E;
+      --ink-soft:#4E4358;
+      --line:#D9CDB8;
+      --violet:#5B3A8C;
+      --violet-deep:#3F2861;
+      --rust:#A8462C;
+      --mono-chip:#E4DCC9;
+      --focus:#5B3A8C;
+      --good:#3F7A4A;
+      --null:#8A6D2E;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
+        --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
+        --mono-chip:#2A2233; --focus:#A98CD9; --good:#78C688; --null:#D9B85E;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
+      --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
+      --mono-chip:#2A2233; --focus:#A98CD9; --good:#78C688; --null:#D9B85E;
+    }
+
+    *{box-sizing:border-box;}
+    ::selection{background:var(--violet); color:var(--paper);}
+    body{
+      margin:0; background:var(--paper); color:var(--ink);
+      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--violet-deep);}
+    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+    /* ---------- Site integration bar ---------- */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:800px; margin:0 auto; padding:14px 24px;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--violet-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--violet-deep);}
+
+    .wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+
+    header.hero{padding:56px 0 40px; border-bottom:1px solid var(--line); margin-bottom:56px;}
+    .kicker{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--violet-deep);
+      display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    }
+    .kicker::before{content:""; width:8px; height:8px; background:var(--violet); border-radius:50%; flex:none;}
+    h1{
+      font-family:"Fraunces", Georgia, serif; font-optical-sizing:auto; font-weight:600;
+      font-size:clamp(2.1rem, 5.5vw, 3.15rem); line-height:1.06; letter-spacing:-0.01em;
+      margin:0 0 20px; text-wrap:balance;
+    }
+    .dek{font-size:1.15rem; line-height:1.55; color:var(--ink-soft); max-width:58ch; margin:0 0 30px;}
+
+    .statrow{display:flex; flex-wrap:wrap; gap:0;}
+    .stat{flex:1 1 140px; padding:14px 20px 14px 0; border-right:1px solid var(--line); margin-right:20px;}
+    .stat:last-child{border-right:none; margin-right:0;}
+    .stat .n{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:1.5rem; font-weight:600;
+      color:var(--ink); font-variant-numeric:tabular-nums; display:block;
+    }
+    .stat .l{font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.02em;}
+
+    h2{
+      font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.65rem;
+      letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
+    }
+    .divider{
+      display:flex; align-items:center; gap:14px; margin:64px 0 32px;
+      color:var(--ink-soft); font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
+    }
+    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+    section:first-of-type .divider{margin-top:0;}
+
+    .prose{font-size:1.06rem; line-height:1.68;}
+    .prose p{margin:0 0 1.3em;}
+    .prose > p:last-child{margin-bottom:0;}
+    strong{color:var(--ink); font-weight:650;}
+    code{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.88em;
+      background:var(--mono-chip); padding:0.12em 0.4em; border-radius:4px;
+    }
+
+    ol.build{list-style:none; margin:0; padding:0; counter-reset:step;}
+    ol.build li{
+      counter-increment:step; position:relative; padding:0 0 26px 46px;
+      margin-bottom:26px; border-bottom:1px solid var(--line);
+    }
+    ol.build li:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+    ol.build li::before{
+      content:counter(step); position:absolute; left:0; top:0.05em;
+      width:30px; height:30px; border:1.5px solid var(--violet); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.85rem;
+      font-weight:600; color:var(--violet-deep);
+    }
+    ol.build h3{margin:0 0 8px; font-size:1.05rem; font-weight:700;}
+    ol.build p{margin:0; color:var(--ink-soft); line-height:1.62; font-size:0.98rem;}
+
+    .bugs{display:grid; grid-template-columns:1fr; gap:18px;}
+    @media (min-width:620px){.bugs{grid-template-columns:1fr 1fr;}}
+    .bug{
+      background:var(--paper-raised); border:1px solid var(--line);
+      border-left:3px solid var(--rust); border-radius:10px; padding:20px 22px;
+    }
+    .bug .tag{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem;
+      letter-spacing:0.09em; text-transform:uppercase; color:var(--rust); margin-bottom:10px; display:block;
+    }
+    .bug h3{margin:0 0 8px; font-size:1rem; font-weight:700;}
+    .bug p{margin:0; color:var(--ink-soft); font-size:0.94rem; line-height:1.58;}
+
+    .results{display:grid; grid-template-columns:1fr; gap:16px;}
+    @media (min-width:620px){.results{grid-template-columns:1fr 1fr;}}
+    .result-card{background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:24px 26px;}
+    .result-card .tag{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem;
+      letter-spacing:0.09em; text-transform:uppercase; margin-bottom:12px; display:block;
+    }
+    .result-card.main .tag{color:var(--null);}
+    .result-card.exception .tag{color:var(--good);}
+    .result-card .n{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums;
+      font-size:1.55rem; font-weight:600; display:block; margin-bottom:6px;
+    }
+    .result-card p{margin:0; color:var(--ink-soft); font-size:0.94rem; line-height:1.58;}
+
+    .callout{
+      background:var(--paper-raised); border:1px solid var(--line);
+      border-left:3px solid var(--violet); border-radius:10px; padding:24px 26px;
+    }
+    .callout p{margin:0; font-size:1.02rem; line-height:1.66;}
+    .callout p + p{margin-top:1em;}
+
+    footer{
+      margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+      display:flex; flex-wrap:wrap; gap:8px 20px;
+    }
+    footer a{color:var(--violet-deep);}
+
+    @media (prefers-reduced-motion: no-preference){
+      header.hero, section{animation:rise 0.5s ease both;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="site-topbar">
+    <div class="site-topbar__inner">
+      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+      <nav class="site-topbar__links">
+        <a href="portfolio.html">Portfolio</a>
+        <a href="blog.html">Writing &amp; Research</a>
+        <a href="amr_climate_case_study.html" class="is-active">Case Study</a>
+        <a href="confounder_bug_log.html">Debug Log</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="kicker">Case study · AMR-Climate Atlas</div>
+      <h1>AMR-Climate Atlas</h1>
+      <p class="dek">Does a hotter year make antibiotic resistance worse across Europe? A causal panel built from four government data sources, a mandatory placebo test on every result, a live MCP server, and a CI pipeline built to catch its own next bug before a human has to.</p>
+      <div class="statrow">
+        <div class="stat"><span class="n">29</span><span class="l">EU/EEA countries</span></div>
+        <div class="stat"><span class="n">2000–23</span><span class="l">years covered</span></div>
+        <div class="stat"><span class="n">200+</span><span class="l">permutations per gate</span></div>
+        <div class="stat"><span class="n">2</span><span class="l">live MCP data sources</span></div>
+      </div>
+    </header>
+
+    <section>
+      <div class="divider">The problem</div>
+      <div class="prose">
+        <p>Heat and antibiotic resistance are both rising, and it's tempting to link them: warmer years, more bacterial growth and horizontal gene transfer, more resistance. Raw correlations across countries and years will show you almost anything you want. What's missing is a test built to say no — a model that starts from the assumption there's nothing here, and makes the data work to overturn it.</p>
+        <p>This project builds that test for four major pathogen-antibiotic combinations across Europe, then does the harder thing: reports what it finds, including the parts of its own analysis that were wrong the first time.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">What I built</div>
+      <ol class="build">
+        <li>
+          <h3>A 29-country causal panel</h3>
+          <p>Joined four government and research data sources — ECDC resistance surveillance, NASA weather reanalysis, EU antibiotic-consumption reporting, and a global health-index confounder — into a single country-year panel spanning 2000–2023, for four pathogen-antibiotic combinations.</p>
+        </li>
+        <li>
+          <h3>A causal model with a mandatory placebo test</h3>
+          <p>Two-way fixed-effects regression, country and year, clustered standard errors. Every coefficient gets refit on 200 permuted datasets before it's allowed to be called significant — not a footnote, a gate. A one-year-lag check runs alongside it, since resistance effects plausibly lag their trigger by a season.</p>
+        </li>
+        <li>
+          <h3>An independent genomic cross-check</h3>
+          <p>The one finding that survived the placebo test was checked again against a completely different data source: gene-level resistance markers from sequenced bacterial isolates, pulled live via BigQuery, rather than the phenotypic lab measurements the main model uses.</p>
+        </li>
+        <li>
+          <h3>A live MCP server</h3>
+          <p>Built on Anthropic's official MCP SDK, exposing live weather and live genomic-resistance data — not the frozen CSV — to any MCP-compatible client. Tested against a real external process, not just an in-process call.</p>
+        </li>
+        <li>
+          <h3>An eval-gated CI pipeline</h3>
+          <p>Turned the placebo test from a step someone has to remember to run into a gate that refits every model, checks the permutation shuffle itself isn't broken, and flags drift from a stored baseline — wired to run on every push.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="divider">What went wrong, and what I did about it</div>
+      <div class="prose" style="margin-bottom:24px;">
+        <p>A causal claim is only as trustworthy as the QA process that tried to break it. Two bugs shipped in an earlier draft of this analysis before independent review caught them — both are documented here rather than quietly fixed and forgotten.</p>
+      </div>
+      <div class="bugs">
+        <div class="bug">
+          <span class="tag">Confounder bug</span>
+          <h3>A confounder that was never in the model</h3>
+          <p>An earlier version selected the antibiotic-consumption confounder column by position, not name. It picked a country label instead of the actual consumption figure — a bug with no error message, because the wrong column got silently absorbed into the model's own fixed effects instead of crashing. Every "consumption-adjusted" result in that draft was never adjusted for consumption. <a href="confounder_bug_log.html">Full debug log →</a></p>
+        </div>
+        <div class="bug">
+          <span class="tag">QA gap</span>
+          <h3>A missing placebo test, caught before publication</h3>
+          <p>An independent testing pass found that the consumption-adjusted model had skipped the mandatory 200-permutation check entirely — the exact safeguard the rest of the project treats as non-negotiable. Caught and closed before any result relying on it was reported.</p>
+        </div>
+        <div class="bug">
+          <span class="tag">Undocumented API behavior</span>
+          <h3>Two data sources that silently reject the obvious approach</h3>
+          <p>ECDC's resistance-data export looks manual-UI-only but is scriptable once you notice its download-token parameter isn't validated server-side. Harvard Dataverse's API, separately, 403s the default Python HTTP client's user-agent string with no documentation saying so. Both found by testing directly against the live services, not by trusting their docs.</p>
+        </div>
+        <div class="bug">
+          <span class="tag">Model-fit caveat</span>
+          <h3>Flagging a zero-inflated outcome before it gets overtrusted</h3>
+          <p>The one combination that shows a real effect has resistance rates sitting exactly at zero for roughly a fifth of its rows — a shape a linear model isn't built for. The finding's direction and significance are corroborated by two independent checks, but its exact magnitude is flagged as provisional rather than reported with false precision.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">The result</div>
+      <div class="results">
+        <div class="result-card main">
+          <span class="tag">Main panel, all 4 combinations — null</span>
+          <span class="n">p = 0.51–0.89</span>
+          <p>Across the full 2000–2023 panel, no pathogen-antibiotic combination shows a statistically significant weather effect. Every parametric p-value sits well above 0.05 before the placebo test is even run.</p>
+        </div>
+        <div class="result-card exception">
+          <span class="tag">One narrow exception — real, not confirmatory</span>
+          <span class="n">p = 0.0084</span>
+          <p>K. pneumoniae/carbapenem resistance, in a 2010–2022 subsample: a real, leave-one-country-out-stable effect, directionally confirmed by independent genomic data. It does not appear in the full panel, and the confounder meant to explain it isn't itself significant.</p>
+        </div>
+      </div>
+      <div class="prose" style="margin-top:24px;">
+        <p>Read plainly: three of four combinations show nothing, anywhere, at any lag. The fourth shows something real but narrow — a pattern specific to one sample window, corroborated by an independent data source, not a confirmed climate-drives-resistance mechanism. That's the honest headline, and it's the one the write-up leads with.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">Why this matters for the role</div>
+      <div class="callout">
+        <p>This project pairs two things a deployed engineering role needs: production infrastructure — a live MCP server, a CI-gated model pipeline that catches its own regressions — and the discipline to report a mostly-null result instead of the more exciting one, including the two bugs that shipped before independent review caught them.</p>
+        <p>Building the pipeline is the easy half. Trusting it enough to publish what it says, bugs and all, is the harder one — and the one a customer-facing engineering role holds every delivered result to.</p>
+      </div>
+    </section>
+
+    <footer>
+      <span>Related: <a href="confounder_bug_log.html">The Confounder That Wasn't There</a></span>
+      <span>Full technical write-up: <code>docs/paper.md</code></span>
+      <span>Live app: <code>streamlit run app.py</code></span>
+      <span>MCP server: <code>mcp_server/</code></span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
