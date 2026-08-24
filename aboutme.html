@@ -1,270 +1,283 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <title>About Me | Rishav Bhattarai</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Syne:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --bg-color: #0d1117; /* GitHub Dark bg */
-            --term-bg: #161b22;
-            --term-border: #30363d;
-            --text-main: #c9d1d9;
-            --cmd-color: #58a6ff; /* Blue */
-            --user-color: #3fb950; /* Green */
-            --path-color: #d2a8ff; /* Purple */
-            --highlight: #f0883e; /* Orange */
-            --accent: #00a1e0; /* Salesforce Blue */
-        }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>About Me | Rishav Bhattarai</title>
+	<meta name="description" content="The story behind Rishav Bhattarai — Software Engineer and Salesforce Developer, from Nepal to UNLV, told as a running terminal session." />
+	<link rel="canonical" href="https://rishavbhattarai.com.np/aboutme.html" />
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Fira Code', monospace;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+	<link rel="stylesheet" href="css/portfolio.css" />
 
-        /* Top Navigation */
-        header.nav-top {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1100px;
-            margin: 0 auto;
-            font-family: 'Syne', sans-serif;
-        }
-        .nav-top__logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
-        .nav-top__links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        .nav-top__links a { color: #8b949e; text-decoration: none; transition: color 0.3s; font-weight: 500; }
-        .nav-top__links a:hover, .nav-top__links a.active { color: white; }
+	<style>
+		/* ── ABOUT PAGE: terminal card, built on the shared design tokens ── */
+		.about-hero {
+			padding: clamp(140px, 18vw, 190px) 0 40px;
+		}
+		.about-hero__eyebrow {
+			font-family: var(--font-body);
+			font-size: 0.78rem;
+			font-weight: 600;
+			letter-spacing: 0.22em;
+			text-transform: uppercase;
+			color: var(--electric);
+			margin-bottom: 18px;
+		}
+		.about-hero__title {
+			font-family: var(--font-display);
+			font-weight: 800;
+			font-size: clamp(2.2rem, 5vw, 3.4rem);
+			line-height: 1.08;
+			letter-spacing: -0.01em;
+			max-width: 760px;
+			margin-bottom: 18px;
+		}
+		.about-hero__desc {
+			font-family: var(--font-body);
+			font-weight: 300;
+			font-size: 1.05rem;
+			color: var(--text-secondary);
+			max-width: 620px;
+		}
 
-        /* Terminal Window */
-        .terminal-container {
-            max-width: 900px;
-            margin: 40px auto 100px;
-            padding: 0 20px;
-        }
+		.terminal-section { padding: 20px 0 var(--section-gap); }
 
-        .terminal-window {
-            background: var(--term-bg);
-            border: 1px solid var(--term-border);
-            border-radius: 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
+		.terminal-shell {
+			background: var(--paper);
+			border: 1px solid var(--glass-border);
+			border-radius: var(--radius-xl);
+			padding: 6px;
+			box-shadow: var(--shadow-lg);
+		}
 
-        .terminal-header {
-            background: #010409;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--term-border);
-        }
+		.terminal-window {
+			background: var(--navy-800);
+			border: 1px solid rgba(255,255,255,0.07);
+			border-radius: calc(var(--radius-xl) - 6px);
+			overflow: hidden;
+			box-shadow: inset 0 1px 1px rgba(255,255,255,0.06);
+		}
 
-        .terminal-buttons { display: flex; gap: 8px; }
-        .btn-mac { width: 12px; height: 12px; border-radius: 50%; }
-        .btn-close { background: #ff5f56; }
-        .btn-min { background: #ffbd2e; }
-        .btn-max { background: #27c93f; }
+		.terminal-header {
+			background: var(--navy-700);
+			padding: 14px 18px;
+			display: flex;
+			align-items: center;
+			border-bottom: 1px solid rgba(255,255,255,0.07);
+		}
+		.terminal-buttons { display: flex; gap: 8px; }
+		.btn-mac { width: 11px; height: 11px; border-radius: 50%; }
+		.btn-close { background: #ff5f56; }
+		.btn-min { background: #ffbd2e; }
+		.btn-max { background: #27c93f; }
+		.terminal-title {
+			flex-grow: 1;
+			text-align: center;
+			color: rgba(240,246,242,0.45);
+			font-family: var(--font-body);
+			font-size: 0.8rem;
+			margin-right: 54px;
+		}
 
-        .terminal-title {
-            flex-grow: 1;
-            text-align: center;
-            color: #8b949e;
-            font-size: 0.85rem;
-            margin-right: 56px;
-        }
+		.terminal-body {
+			padding: clamp(20px, 4vw, 34px);
+			min-height: 420px;
+			font-family: 'Fira Code', monospace;
+			font-size: 0.92rem;
+			line-height: 1.7;
+			color: #cfe0d6;
+		}
 
-        .terminal-body {
-            padding: 20px;
-            height: auto; /* Auto expands with text */
-            min-height: 400px;
-            font-size: 0.95rem;
-            overflow-y: visible; /* Prevents internal scrollbar */
-        }
+		.line { margin-bottom: 8px; }
+		.prompt { display: inline-block; margin-right: 10px; }
+		.user { color: #4ade80; font-weight: 600; }
+		.path { color: #c9a7ff; font-weight: 600; }
+		.cmd { color: #4ade80; }
 
-        .line { margin-bottom: 8px; }
-        .prompt { display: inline-block; margin-right: 10px; }
-        .user { color: var(--user-color); font-weight: bold; }
-        .path { color: var(--path-color); font-weight: bold; }
-        .cmd { color: var(--cmd-color); }
-        
-        .output {
-            color: var(--text-main);
-            margin: 10px 0 25px 0;
-            padding-left: 15px;
-            border-left: 2px solid var(--term-border);
-        }
+		.output {
+			color: #cfe0d6;
+			margin: 10px 0 26px 0;
+			padding-left: 16px;
+			border-left: 2px solid rgba(255,255,255,0.1);
+		}
+		.output strong { color: #f4f9f6; }
+		.output .highlight { color: #f0883e; }
+		.output .salesforce { color: #3fb1e8; }
 
-        .output strong { color: white; }
-        .output .highlight { color: var(--highlight); }
-        .output .salesforce { color: var(--accent); }
+		.social-links { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+		.social-links a {
+			color: #4ade80;
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			transition: var(--transition);
+			width: fit-content;
+			border-bottom: none;
+		}
+		.social-links a i { font-size: 1.1rem; color: #cfe0d6; }
+		.social-links a:hover { color: #f0883e; transform: translateX(5px); }
+		.social-links a:hover i { color: #f0883e; }
 
-        /* Link formatting inside terminal */
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        
-        .social-links a {
-            color: var(--cmd-color);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: color 0.2s, transform 0.2s;
-            width: fit-content;
-        }
+		.cursor {
+			display: inline-block;
+			width: 8px;
+			height: 17px;
+			background-color: #f4f9f6;
+			vertical-align: middle;
+			animation: blink 1s step-end infinite;
+		}
+		@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        .social-links a i {
-            font-size: 1.2rem;
-            color: var(--text-main);
-        }
-
-        .social-links a:hover {
-            color: var(--highlight);
-            transform: translateX(5px);
-        }
-        
-        .social-links a:hover i {
-            color: var(--highlight);
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 18px;
-            background-color: var(--text-main);
-            vertical-align: middle;
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        @media screen and (max-width: 768px) {
-            .nav-top__links { display: none; }
-            .terminal-body { font-size: 0.85rem; padding: 15px; }
-        }
-    </style>
+		@media screen and (max-width: 736px) {
+			.terminal-body { font-size: 0.82rem; padding: 18px; }
+		}
+	</style>
 </head>
 <body>
 
-    <header class="nav-top">
-        <a href="index.html" class="nav-top__logo">Rishav</a>
-        <ul class="nav-top__links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="portfolio.html">Portfolio</a></li>
-            <li><a href="aboutme.html" class="active">About Me</a></li>
-            <li><a href="blog.html">Writing & Research</a></li>
-        </ul>
-    </header>
+	<!-- ░░ HORIZONTAL TOP NAVIGATION ░░ -->
+	<header class="nav-top">
+		<div class="nav-top__container">
+			<a href="index.html" class="nav-top__logo"><strong>Rishav</strong></a>
+			<button class="nav-top__toggle" id="navTopToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navTopMenu">
+				<span></span><span></span><span></span>
+			</button>
+			<nav class="nav-top__menu" id="navTopMenu">
+				<ul class="nav-top__links">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="portfolio.html">Portfolio</a></li>
+					<li><a href="aboutme.html" class="active">About Me</a></li>
+					<li><a href="blog.html">Writing & Research</a></li>
+					<li><a href="https://github.com/Rishavbhattarai" target="_blank" rel="noopener">GitHub</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
 
-    <div class="terminal-container">
-        <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="terminal-buttons">
-                    <div class="btn-mac btn-close"></div>
-                    <div class="btn-mac btn-min"></div>
-                    <div class="btn-mac btn-max"></div>
-                </div>
-                <div class="terminal-title">rishav@macbook-pro:~ - bash - 80x24</div>
-            </div>
-            
-            <div class="terminal-body" id="term-body">
-                </div>
-        </div>
-    </div>
+	<main id="main-content">
 
-    <script>
-        const terminalBody = document.getElementById('term-body');
+		<!-- ░░ ABOUT HERO ░░ -->
+		<header class="about-hero">
+			<div class="container">
+				<p class="about-hero__eyebrow">About Me</p>
+				<h1 class="about-hero__title">From Zest Fest logistics in Nepal to Agentforce automation at UNLV.</h1>
+				<p class="about-hero__desc">The short version, told the way I'd actually tell it — one command at a time.</p>
+			</div>
+		</header>
 
-        const storyScript = [
-            {
-                cmd: "whoami",
-                output: "Rishav Bhattarai<br>Role: Software Engineer & Salesforce Developer<br>Current Location: Las Vegas, NV"
-            },
-            {
-                cmd: "cat ./history/01_The_Spark.md",
-                output: "<strong>[Phase 1: Nepal - St. Xavier's College]</strong><br>Organized <span class='highlight'>Zest Fest</span>, managing logistics, teams, and budgets. Realized my passion lay at the intersection of technology and human connection."
-            },
-            {
-                cmd: "cat ./history/02_The_Builder.md",
-                output: "<strong>[Phase 2: Three Monks Pvt. Ltd.]</strong><br>Leveled up to <strong>Senior Software Developer</strong>.<br>> Built digital wallets: <em>PayMe & AwiPay</em>.<br>> Engineered Java Spring Boot microservices.<br>> Scale: Handled <span class='highlight'>100K+ users</span> and 4,000+ daily transactions."
-            },
-            {
-                cmd: "./execute_journey.sh --destination=USA",
-                output: "<strong>[Phase 3: The Connector - UNLV]</strong><br>Moved to the US for my Master's in MIS.<br>Served as <strong>Treasurer of the Nepalese Student Association (NSA)</strong>. Hosted networking events connecting international students with alumni for mentorships and job placements."
-            },
-            {
-                cmd: "ls -la current_focus/",
-                output: "<strong>[Phase 4: The Architect - UNLV OIT]</strong><br>Currently a <span class='salesforce'>Salesforce Developer</span>.<br>- Architecting Quote-to-Cash processes.<br>- Building Lightning Web Components (LWC).<br>- Integrating <span class='salesforce'>Agentforce AI</span> for automated workflows."
-            },
-            {
-                cmd: "contact --links",
-                output: "<br><strong>Let's connect and build something great. You can find me here:</strong><br>" +
-                        "<div class='social-links'>" +
-                        "<a href='mailto:bhattarai.rishav@gmail.com'><i class='fa-solid fa-envelope'></i> bhattarai.rishav@gmail.com</a>" +
-                        "<a href='https://www.linkedin.com/in/rishav-bhattarai-nepal/' target='_blank'><i class='fa-brands fa-linkedin'></i> linkedin.com/in/rishav-bhattarai-nepal</a>" +
-                        "<a href='https://github.com/rishavunlv' target='_blank'><i class='fa-brands fa-github'></i> github.com/rishavunlv (UNLV Projects)</a>" +
-                        "<a href='https://github.com/Rishavbhattarai' target='_blank'><i class='fa-brands fa-github'></i> github.com/Rishavbhattarai (Personal)</a>" +
-                        "</div><br>"
-            }
-        ];
+		<!-- ░░ TERMINAL STORY ░░ -->
+		<section class="terminal-section">
+			<div class="container">
+				<div class="terminal-shell">
+					<div class="terminal-window">
+						<div class="terminal-header">
+							<div class="terminal-buttons">
+								<div class="btn-mac btn-close"></div>
+								<div class="btn-mac btn-min"></div>
+								<div class="btn-mac btn-max"></div>
+							</div>
+							<div class="terminal-title">rishav@macbook-pro:~ - bash - 80x24</div>
+						</div>
 
-        const getPrompt = () => `<span class="prompt"><span class="user">rishav@macbook</span>:<span class="path">~/about-me</span>$</span>`;
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+						<div class="terminal-body" id="term-body"></div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        async function runTerminal() {
-            for (let i = 0; i < storyScript.length; i++) {
-                const step = storyScript[i];
-                
-                const lineDiv = document.createElement('div');
-                lineDiv.className = 'line';
-                lineDiv.innerHTML = getPrompt() + `<span class="cmd"></span><span class="cursor"></span>`;
-                terminalBody.appendChild(lineDiv);
-                
-                const cmdSpan = lineDiv.querySelector('.cmd');
-                const cursor = lineDiv.querySelector('.cursor');
+	</main>
 
-                await sleep(200); 
-                for (let char of step.cmd) {
-                    cmdSpan.innerHTML += char;
-                    await sleep(20); 
-                }
-                
-                await sleep(100); 
-                cursor.remove(); 
+	<!-- ░░ FOOTER ░░ -->
+	<footer class="footer">
+		<div class="container">
+			<p class="footer__copy">© 2026 Rishav Bhattarai · Software Engineer &amp; Salesforce Developer</p>
+		</div>
+	</footer>
 
-                const outputDiv = document.createElement('div');
-                outputDiv.className = 'output';
-                outputDiv.innerHTML = step.output;
-                terminalBody.appendChild(outputDiv);
+	<script>
+		const terminalBody = document.getElementById('term-body');
 
-                window.scrollTo(0, document.body.scrollHeight);
-                
-                await sleep(300); 
-            }
+		const storyScript = [
+			{
+				cmd: "whoami",
+				output: "Rishav Bhattarai<br>Role: Software Engineer & Salesforce Developer<br>Current Location: Las Vegas, NV"
+			},
+			{
+				cmd: "cat ./history/01_The_Spark.md",
+				output: "<strong>[Phase 1: Nepal - St. Xavier's College]</strong><br>Organized <span class='highlight'>Zest Fest</span>, managing logistics, teams, and budgets. Realized my passion lay at the intersection of technology and human connection."
+			},
+			{
+				cmd: "cat ./history/02_The_Builder.md",
+				output: "<strong>[Phase 2: Three Monks Pvt. Ltd.]</strong><br>Leveled up to <strong>Senior Software Developer</strong>.<br>> Built digital wallets: <em>PayMe & AwiPay</em>.<br>> Engineered Java Spring Boot microservices.<br>> Scale: Handled <span class='highlight'>100K+ users</span> and 4,000+ daily transactions."
+			},
+			{
+				cmd: "./execute_journey.sh --destination=USA",
+				output: "<strong>[Phase 3: The Connector - UNLV]</strong><br>Moved to the US for my Master's in MIS.<br>Served as <strong>Treasurer of the Nepalese Student Association (NSA)</strong>. Hosted networking events connecting international students with alumni for mentorships and job placements."
+			},
+			{
+				cmd: "ls -la current_focus/",
+				output: "<strong>[Phase 4: The Architect - UNLV OIT]</strong><br>Currently a <span class='salesforce'>Salesforce Developer</span>.<br>- Architecting Quote-to-Cash processes.<br>- Building Lightning Web Components (LWC).<br>- Integrating <span class='salesforce'>Agentforce AI</span> for automated workflows."
+			},
+			{
+				cmd: "contact --links",
+				output: "<br><strong>Let's connect and build something great. You can find me here:</strong><br>" +
+						"<div class='social-links'>" +
+						"<a href='mailto:bhattarai.rishav@gmail.com'><i class='fa-solid fa-envelope'></i> bhattarai.rishav@gmail.com</a>" +
+						"<a href='https://www.linkedin.com/in/rishav-bhattarai-nepal/' target='_blank'><i class='fa-brands fa-linkedin'></i> linkedin.com/in/rishav-bhattarai-nepal</a>" +
+						"<a href='https://github.com/rishavunlv' target='_blank'><i class='fa-brands fa-github'></i> github.com/rishavunlv (UNLV Projects)</a>" +
+						"<a href='https://github.com/Rishavbhattarai' target='_blank'><i class='fa-brands fa-github'></i> github.com/Rishavbhattarai (Personal)</a>" +
+						"</div><br>"
+			}
+		];
 
-            const finalLine = document.createElement('div');
-            finalLine.className = 'line';
-            finalLine.innerHTML = getPrompt() + `<span class="cursor"></span>`;
-            terminalBody.appendChild(finalLine);
-            window.scrollTo(0, document.body.scrollHeight);
-        }
+		const getPrompt = () => `<span class="prompt"><span class="user">rishav@macbook</span>:<span class="path">~/about-me</span>$</span>`;
+		const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        window.onload = () => {
-            setTimeout(runTerminal, 500); 
-        };
-    </script>
+		async function runTerminal() {
+			for (let i = 0; i < storyScript.length; i++) {
+				const step = storyScript[i];
+
+				const lineDiv = document.createElement('div');
+				lineDiv.className = 'line';
+				lineDiv.innerHTML = getPrompt() + `<span class="cmd"></span><span class="cursor"></span>`;
+				terminalBody.appendChild(lineDiv);
+
+				const cmdSpan = lineDiv.querySelector('.cmd');
+				const cursor = lineDiv.querySelector('.cursor');
+
+				await sleep(200);
+				for (let char of step.cmd) {
+					cmdSpan.innerHTML += char;
+					await sleep(20);
+				}
+
+				await sleep(100);
+				cursor.remove();
+
+				const outputDiv = document.createElement('div');
+				outputDiv.className = 'output';
+				outputDiv.innerHTML = step.output;
+				terminalBody.appendChild(outputDiv);
+
+				window.scrollTo(0, document.body.scrollHeight);
+
+				await sleep(300);
+			}
+
+			const finalLine = document.createElement('div');
+			finalLine.className = 'line';
+			finalLine.innerHTML = getPrompt() + `<span class="cursor"></span>`;
+			terminalBody.appendChild(finalLine);
+			window.scrollTo(0, document.body.scrollHeight);
+		}
+
+		window.onload = () => {
+			setTimeout(runTerminal, 500);
+		};
+	</script>
 </body>
 </html>

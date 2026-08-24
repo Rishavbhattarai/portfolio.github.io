@@ -4,31 +4,51 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nepal Election Commission · 2082 Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
+    :root{
+      --paper:#E7EBE6; --paper-raised:#F3F5F1; --ink:#16241F; --ink-soft:#3D4C46; --line:#C7D0C6;
+      --teal:#1F6F6B; --teal-deep:#154F4C; --rust:#A8462C; --rust-soft:#C97556; --mono-chip:#DDE4DC; --focus:#1F6F6B;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4; --line:#2B3D36;
+        --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054; --rust-soft:#E8A582; --mono-chip:#1E2C27; --focus:#5FBDB5;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4; --line:#2B3D36;
+      --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054; --rust-soft:#E8A582; --mono-chip:#1E2C27; --focus:#5FBDB5;
+    }
     :root {
-      --scarlet:   #B91C1C;
-      --scarlet-l: #DC2626;
-      --scarlet-d: #7F1D1D;
-      --gold:      #CA8A04;
-      --gold-l:    #FDE68A;
-      --navy:      #0F172A;
-      --navy-m:    #1E293B;
-      --navy-l:    #334155;
-      --slate:     #64748B;
-      --mist:      #F1F5F9;
-      --paper:     #FAFAF9;
-      --white:     #FFFFFF;
-      --ink:       #0F172A;
-      --border:    #E2E8F0;
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans:  'Syne', sans-serif;
-      --font-mono:  'JetBrains Mono', monospace;
+      /* legacy component aliases → design-system tokens */
+      --scarlet:   var(--teal);
+      --scarlet-l: var(--teal);
+      --scarlet-d: var(--teal-deep);
+      --gold:      var(--rust);
+      --gold-l:    var(--rust-soft);
+      --navy:      #16241F;
+      --navy-m:    #1F2E28;
+      --navy-l:    #3D4C46;
+      --slate:     var(--ink-soft);
+      --mist:      var(--mono-chip);
+      --white:     var(--paper-raised);
+      --border:    var(--line);
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans:  'Source Sans 3', ui-sans-serif, system-ui, "Noto Sans Devanagari", sans-serif;
+      --font-mono:  'IBM Plex Mono', ui-monospace, monospace;
       --radius:     12px;
-      --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-      --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
-      --shadow-lg:  0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-sm:  none;
+      --shadow-md:  0 1px 3px rgba(0,0,0,0.07);
+      --shadow-lg:  0 4px 14px rgba(0,0,0,0.09);
+      --ease: cubic-bezier(0.32,0.72,0,1);
+    }
+    ::selection{ background:var(--teal); color:var(--paper); }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+      outline:2px solid var(--focus); outline-offset:2px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,9 +69,28 @@
     ::-webkit-scrollbar-thumb { background: var(--slate); border-radius: 3px; }
 
     /* ─── NAV ────────────────────────────────────── */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:1400px; margin:0 auto; padding:14px 1.5rem;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:var(--font-mono);
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--teal-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:var(--font-mono);
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--teal-deep);}
+
     .top-nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(15,23,42,0.97);
+      background: rgba(22,36,31,0.97);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.07);
     }
@@ -74,7 +113,7 @@
       display: block; padding: 0 1rem; height: 52px; line-height: 52px;
       font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
       text-transform: uppercase; color: rgba(255,255,255,0.55);
-      text-decoration: none; transition: color 0.2s;
+      text-decoration: none; transition: color 0.2s var(--ease);
       white-space: nowrap;
     }
     .nav-links a:hover, .nav-links a.active { color: #fff; }
@@ -111,13 +150,13 @@
     .hero-grid-bg {
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(185,28,28,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(185,28,28,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(31,111,107,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31,111,107,0.05) 1px, transparent 1px);
       background-size: 40px 40px;
     }
     .hero-glow {
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(185,28,28,0.15) 0%, transparent 70%);
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(168,70,44,0.16) 0%, transparent 70%);
     }
     .hero-inner {
       position: relative; z-index: 2;
@@ -127,14 +166,14 @@
     .hero-emblem { flex-shrink: 0; }
     .emblem-ring {
       width: 80px; height: 80px; border-radius: 50%;
-      border: 2px solid rgba(202,138,4,0.4);
+      border: 2px solid rgba(201,117,86,0.45);
       display: flex; align-items: center; justify-content: center;
       position: relative;
     }
     .emblem-ring::before {
       content: '';
       position: absolute; inset: 4px; border-radius: 50%;
-      border: 1px solid rgba(202,138,4,0.2);
+      border: 1px solid rgba(201,117,86,0.22);
     }
     .emblem-inner {
       width: 56px; height: 56px;
@@ -174,7 +213,7 @@
       padding: 1.25rem 1.75rem;
       text-align: center;
       background: rgba(255,255,255,0.02);
-      transition: background 0.2s;
+      transition: background 0.2s var(--ease);
     }
     .kpi-box:hover { background: rgba(255,255,255,0.05); }
     .kpi-num {
@@ -230,9 +269,9 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow-sm);
       overflow: hidden;
-      transition: box-shadow 0.2s;
+      transition: box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
     }
-    .card:hover { box-shadow: var(--shadow-md); }
+    .card:hover { box-shadow: var(--shadow-md); border-color: var(--teal); }
     .card-head {
       padding: 1.25rem 1.5rem 0;
       display: flex; align-items: center; justify-content: space-between; gap: 1rem;
@@ -257,7 +296,7 @@
       border-radius: var(--radius);
       padding: 1.25rem 1.5rem;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
       position: relative; overflow: hidden;
     }
     .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
@@ -312,7 +351,7 @@
     .pleg-row {
       display: flex; align-items: center; gap: 0.6rem;
       padding: 0.45rem 0.5rem; border-radius: 6px;
-      cursor: default; transition: background 0.15s;
+      cursor: default; transition: background 0.15s var(--ease);
     }
     .pleg-row:hover { background: var(--mist); }
     .pleg-dot {
@@ -345,7 +384,7 @@
       height: 100%; border-radius: 4px;
       display: flex; align-items: center; padding-left: 8px;
       font-size: 0.68rem; font-weight: 700; color: rgba(255,255,255,0.9);
-      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+      transition: width 1.1s var(--ease);
     }
     .pbar-val {
       font-family: var(--font-mono);
@@ -363,7 +402,7 @@
       border: 1px solid var(--border);
       border-radius: 10px; padding: 1.1rem 1.25rem;
       background: var(--white);
-      transition: box-shadow 0.2s, transform 0.2s;
+      transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
       position: relative; overflow: hidden;
       cursor: default;
     }
@@ -401,7 +440,7 @@
     }
     .ps-bar-fill {
       height: 100%; border-radius: 3px;
-      transition: width 1s ease;
+      transition: width 0.9s var(--ease);
     }
 
     /* ─── DISTRICT COMPARISON TABLE ─────────────── */
@@ -419,7 +458,7 @@
     }
     .dtable thead th:first-child { border-radius: 8px 0 0 0; }
     .dtable thead th:last-child { border-radius: 0 8px 0 0; }
-    .dtable tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
+    .dtable tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s var(--ease); }
     .dtable tbody tr:hover { background: var(--mist); }
     .dtable tbody td { padding: 0.65rem 1rem; color: var(--ink); }
     .dtable-rank {
@@ -454,7 +493,7 @@
       display: flex; flex-direction: column; align-items: center;
       flex: 1; cursor: pointer; position: relative;
     }
-    .dbar { width: 100%; min-width: 8px; border-radius: 3px 3px 0 0; transition: opacity 0.2s; }
+    .dbar { width: 100%; min-width: 8px; border-radius: 3px 3px 0 0; transition: opacity 0.2s var(--ease); }
     .dbar-col:hover .dbar { opacity: 0.7; }
     .dbar-val { font-size: 0.58rem; font-weight: 700; color: var(--ink); margin-top: 3px; }
     .dbar-name {
@@ -468,7 +507,7 @@
       background: var(--navy); color: #fff;
       font-size: 0.68rem; padding: 4px 8px; border-radius: 5px;
       white-space: nowrap; pointer-events: none;
-      opacity: 0; transition: opacity 0.15s; z-index: 10;
+      opacity: 0; transition: opacity 0.15s var(--ease); z-index: 10;
     }
     .dbar-col:hover .dbar-tip { opacity: 1; }
 
@@ -481,32 +520,32 @@
       padding: 0.5rem 0.9rem; border: 1.5px solid var(--border);
       border-radius: 8px; font-family: var(--font-sans);
       font-size: 0.8rem; color: var(--ink); background: var(--white);
-      outline: none; transition: border-color 0.2s; min-width: 200px;
+      outline: none; transition: border-color 0.2s var(--ease); min-width: 200px;
     }
-    .search-box:focus { border-color: var(--scarlet); }
+    .search-box:focus-visible { border-color: var(--teal); outline: 2px solid var(--focus); outline-offset: 2px; }
     .filter-select {
       padding: 0.5rem 0.9rem; border: 1.5px solid var(--border);
       border-radius: 8px; font-family: var(--font-sans);
       font-size: 0.8rem; color: var(--ink); background: var(--white);
       outline: none; cursor: pointer;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s var(--ease);
     }
-    .filter-select:focus { border-color: var(--scarlet); }
+    .filter-select:focus-visible { border-color: var(--teal); outline: 2px solid var(--focus); outline-offset: 2px; }
     .toggle-group { display: flex; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
     .toggle-btn {
       padding: 0.5rem 1rem; background: none; border: none;
       font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700;
       letter-spacing: 0.05em; color: var(--slate); cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      transition: background 0.15s var(--ease), color 0.15s var(--ease);
     }
-    .toggle-btn.active, .toggle-btn:hover { background: var(--scarlet); color: #fff; }
+    .toggle-btn.active, .toggle-btn:hover { background: var(--teal); color: #fff; }
 
     /* ─── HORIZONTAL VOTER BARS ──────────────────── */
     .voter-bar-list { display: flex; flex-direction: column; gap: 0.6rem; }
     .vbar-row { display: flex; align-items: center; gap: 0.75rem; }
     .vbar-label { width: 120px; font-size: 0.72rem; font-weight: 700; color: var(--ink); flex-shrink: 0; line-height: 1.3; }
     .vbar-track { flex: 1; height: 20px; background: var(--mist); border-radius: 3px; overflow: hidden; position: relative; }
-    .vbar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; display: flex; align-items: center; padding-left: 8px; }
+    .vbar-fill { height: 100%; border-radius: 3px; transition: width 0.9s var(--ease); display: flex; align-items: center; padding-left: 8px; }
     .vbar-fill span { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.9); white-space: nowrap; }
     .vbar-num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--slate); min-width: 60px; text-align: right; }
 
@@ -517,7 +556,7 @@
     .compare-name { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
     .compare-val { font-family: var(--font-mono); font-size: 0.78rem; color: var(--slate); }
     .compare-track { height: 8px; background: var(--mist); border-radius: 4px; overflow: hidden; }
-    .compare-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+    .compare-fill { height: 100%; border-radius: 4px; transition: width 0.9s var(--ease); }
     .compare-sub { font-size: 0.65rem; color: var(--slate); margin-top: 0.2rem; }
 
     /* ─── SUMMARY INSIGHT BOXES ──────────────────── */
@@ -526,9 +565,9 @@
       background: var(--white); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 1.1rem;
       display: flex; gap: 0.75rem; align-items: flex-start;
-      transition: box-shadow 0.2s;
+      transition: box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
     }
-    .insight-box:hover { box-shadow: var(--shadow-md); }
+    .insight-box:hover { box-shadow: var(--shadow-md); border-color: var(--teal); }
     .insight-icon {
       width: 36px; height: 36px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
@@ -551,17 +590,24 @@
     .footer p { font-size: 0.72rem; line-height: 1.8; }
     .footer strong { color: rgba(255,255,255,0.7); }
 
-    /* ─── ANIMATIONS ─────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ─── SCROLL-ENTRY REVEAL (IntersectionObserver-driven) ──── */
+    .fade-up {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
+      filter: blur(3px);
     }
-    .fade-up { animation: fadeUp 0.5s ease both; }
-    .fade-up-1 { animation-delay: 0.05s; }
-    .fade-up-2 { animation-delay: 0.10s; }
-    .fade-up-3 { animation-delay: 0.15s; }
-    .fade-up-4 { animation-delay: 0.20s; }
-    .fade-up-5 { animation-delay: 0.25s; }
+    .fade-up.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+    .fade-up-1.is-visible { transition-delay: 0.05s; }
+    .fade-up-2.is-visible { transition-delay: 0.10s; }
+    .fade-up-3.is-visible { transition-delay: 0.15s; }
+    .fade-up-4.is-visible { transition-delay: 0.20s; }
+    .fade-up-5.is-visible { transition-delay: 0.25s; }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up, .fade-up.is-visible {
+        opacity: 1 !important; transform: none !important; filter: none !important;
+        transition: none !important;
+      }
+    }
 
     /* ─── RESPONSIVE ─────────────────────────────── */
     @media (max-width: 900px) {
@@ -599,8 +645,8 @@
 
     /* ─── TAB INDICATOR ──────────────────────────── */
     .tab-indicator {
-      height: 3px; background: var(--scarlet);
-      transition: all 0.3s ease;
+      height: 3px; background: var(--teal);
+      transition: all 0.3s var(--ease);
     }
 
     /* ─── CHART LEGEND ───────────────────────────── */
@@ -615,13 +661,26 @@
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
       cursor: pointer; border: 1.5px solid var(--border);
       background: var(--white); color: var(--slate);
-      transition: all 0.15s;
+      transition: all 0.2s var(--ease);
     }
-    .pill.active, .pill:hover { border-color: var(--scarlet); color: var(--scarlet); background: #FEF2F2; }
-    .pill.all.active { background: var(--scarlet); color: #fff; border-color: var(--scarlet); }
+    .pill.active, .pill:hover { border-color: var(--teal); color: var(--teal-deep); background: var(--mono-chip); }
+    .pill.all.active { background: var(--teal); color: #fff; border-color: var(--teal); }
   </style>
 </head>
 <body>
+
+<!-- SITE TOPBAR -->
+<div class="site-topbar">
+  <div class="site-topbar__inner">
+    <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+    <nav class="site-topbar__links">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="blog.html">Writing &amp; Research</a>
+      <a href="2082_candidates.html">2082 Candidates Dataset</a>
+      <a href="Election_Commission.html" class="is-active">This Dashboard</a>
+    </nav>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav class="top-nav">
@@ -704,25 +763,25 @@
 
   <!-- ═══ SECTION 1: OVERVIEW STATS ═══ -->
   <div class="grid-4 fade-up" style="margin-bottom:1.5rem;">
-    <div class="stat-card" style="--accent:#B91C1C;">
+    <div class="stat-card" style="--accent:#A8462C;">
       <div class="stat-card-label">Total Registered Voters</div>
       <div class="stat-card-value">868,711</div>
       <div class="stat-card-sub">Across all tracked constituencies</div>
       <div class="stat-card-icon">🗳</div>
     </div>
-    <div class="stat-card" style="--accent:#CA8A04;">
+    <div class="stat-card" style="--accent:#C97556;">
       <div class="stat-card-label">Polling Stations</div>
       <div class="stat-card-value">361</div>
       <div class="stat-card-sub">Across 11 tracked constituencies</div>
       <div class="stat-card-icon">📍</div>
     </div>
-    <div class="stat-card" style="--accent:#0F766E;">
+    <div class="stat-card" style="--accent:#1F6F6B;">
       <div class="stat-card-label">Polling Centers</div>
       <div class="stat-card-value">1,037</div>
       <div class="stat-card-sub">Individual booths tracked</div>
       <div class="stat-card-icon">🏫</div>
     </div>
-    <div class="stat-card" style="--accent:#6D28D9;">
+    <div class="stat-card" style="--accent:#7A5980;">
       <div class="stat-card-label">Avg Voters / Station</div>
       <div class="stat-card-value">2,406</div>
       <div class="stat-card-sub">Per polling station average</div>
@@ -931,7 +990,7 @@
 
     <div class="insight-grid fade-up fade-up-4 mb-6">
       <div class="insight-box">
-        <div class="insight-icon" style="background:#FEF2F2;">🗳️</div>
+        <div class="insight-icon" style="background:var(--mono-chip);">🗳️</div>
         <div class="insight-content">
           <div class="insight-title">Largest Constituency</div>
           <div class="insight-val">Sunsari 1</div>
@@ -939,7 +998,7 @@
         </div>
       </div>
       <div class="insight-box">
-        <div class="insight-icon" style="background:#F0FDF4;">📍</div>
+        <div class="insight-icon" style="background:var(--mono-chip);">📍</div>
         <div class="insight-content">
           <div class="insight-title">Most Polling Stations</div>
           <div class="insight-val">Morang 2</div>
@@ -947,7 +1006,7 @@
         </div>
       </div>
       <div class="insight-box">
-        <div class="insight-icon" style="background:#FFFBEB;">🏆</div>
+        <div class="insight-icon" style="background:var(--mono-chip);">🏆</div>
         <div class="insight-content">
           <div class="insight-title">Largest Party</div>
           <div class="insight-val">NC</div>
@@ -955,7 +1014,7 @@
         </div>
       </div>
       <div class="insight-box">
-        <div class="insight-icon" style="background:#F5F3FF;">🌐</div>
+        <div class="insight-icon" style="background:var(--mono-chip);">🌐</div>
         <div class="insight-content">
           <div class="insight-title">Most Seats — Province</div>
           <div class="insight-val">Bagmati</div>
@@ -963,7 +1022,7 @@
         </div>
       </div>
       <div class="insight-box">
-        <div class="insight-icon" style="background:#EFF6FF;">📊</div>
+        <div class="insight-icon" style="background:var(--mono-chip);">📊</div>
         <div class="insight-content">
           <div class="insight-title">Smallest Constituency</div>
           <div class="insight-val">Siraha 4</div>
@@ -971,7 +1030,7 @@
         </div>
       </div>
       <div class="insight-box">
-        <div class="insight-icon" style="background:#FFF7ED;">⚖️</div>
+        <div class="insight-icon" style="background:var(--mono-chip);">⚖️</div>
         <div class="insight-content">
           <div class="insight-title">Avg Centers / Station</div>
           <div class="insight-val">2.87</div>
@@ -1012,6 +1071,9 @@
       Tracked constituencies: Kathmandu 1–5, Morang 2 & 6, Rautahat 4, Siraha 4, Sunsari 1 & 3<br>
       Dashboard built for analytical and informational purposes only.
     </p>
+    <p style="margin-top:1rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.03em;">
+      Related: <a href="2082_candidates.html" style="color:rgba(255,255,255,0.7);">2082 Candidates Dataset</a>
+    </p>
   </div>
 </footer>
 
@@ -1021,13 +1083,13 @@
 ══════════════════════════════════════════════ */
 
 const PROVINCE_COLORS = {
-  "Koshi Province":        "#B91C1C",
-  "Madhesh Province":      "#B45309",
-  "Bagmati Province":      "#15803D",
-  "Gandaki Province":      "#1D4ED8",
-  "Lumbini Province":      "#7C3AED",
-  "Karnali Province":      "#0E7490",
-  "Sudurpashchim Province":"#92400E"
+  "Koshi Province":        "#A8462C",
+  "Madhesh Province":      "#8A6D2F",
+  "Bagmati Province":      "#1F6F6B",
+  "Gandaki Province":      "#3D5A73",
+  "Lumbini Province":      "#7A5980",
+  "Karnali Province":      "#2E6B72",
+  "Sudurpashchim Province":"#8B5E34"
 };
 
 const provinceData = {
@@ -1083,71 +1145,75 @@ const districtData = [
 ];
 
 const partyData = [
-  {name:"Nepali Congress", seats:64, color:"#1D4ED8"},
-  {name:"CPN (UML)", seats:42, color:"#B91C1C"},
-  {name:"CPN (Maoist Centre)", seats:20, color:"#DC2626"},
-  {name:"Rastriya Swatantra Party", seats:8, color:"#15803D"},
-  {name:"CPN (Unified Socialist)", seats:7, color:"#B45309"},
-  {name:"Janata Samajbadi Party", seats:6, color:"#7C3AED"},
-  {name:"Rastriya Prajatantra Party", seats:4, color:"#0E7490"},
-  {name:"Loktantrik Samajwadi Party", seats:4, color:"#CA8A04"},
-  {name:"Independent", seats:4, color:"#64748B"},
-  {name:"Nagarik Unmukti Party", seats:3, color:"#0F766E"},
-  {name:"Janamat Party", seats:1, color:"#D97706"},
-  {name:"Nepal Workers Peasants Party", seats:1, color:"#1E3A5F"},
-  {name:"Rastriya Janamorcha", seats:1, color:"#7F1D1D"}
+  {name:"Nepali Congress", seats:64, color:"#1F6F6B"},
+  {name:"CPN (UML)", seats:42, color:"#A8462C"},
+  {name:"CPN (Maoist Centre)", seats:20, color:"#C97556"},
+  {name:"Rastriya Swatantra Party", seats:8, color:"#154F4C"},
+  {name:"CPN (Unified Socialist)", seats:7, color:"#8A6D2F"},
+  {name:"Janata Samajbadi Party", seats:6, color:"#7A5980"},
+  {name:"Rastriya Prajatantra Party", seats:4, color:"#2E6B72"},
+  {name:"Loktantrik Samajwadi Party", seats:4, color:"#8B5E34"},
+  {name:"Independent", seats:4, color:"#3D4C46"},
+  {name:"Nagarik Unmukti Party", seats:3, color:"#3D5A73"},
+  {name:"Janamat Party", seats:1, color:"#B5824F"},
+  {name:"Nepal Workers Peasants Party", seats:1, color:"#4A5D52"},
+  {name:"Rastriya Janamorcha", seats:1, color:"#6B4038"}
 ];
 
 // Polling station data from extracted PDFs
 const pollingData = [
   {
     id:"KTM-1", name:"Kathmandu 1", district:"Kathmandu", province:"Bagmati Province",
-    total_voters:48489, stations:22, centers:57, color:"#15803D"
+    total_voters:48489, stations:22, centers:57, color:"#1F6F6B"
   },
   {
     id:"KTM-2", name:"Kathmandu 2", district:"Kathmandu", province:"Bagmati Province",
-    total_voters:88708, stations:40, centers:100, color:"#15803D"
+    total_voters:88708, stations:40, centers:100, color:"#1F6F6B"
   },
   {
     id:"KTM-3", name:"Kathmandu 3", district:"Kathmandu", province:"Bagmati Province",
-    total_voters:64479, stations:29, centers:72, color:"#15803D"
+    total_voters:64479, stations:29, centers:72, color:"#1F6F6B"
   },
   {
     id:"KTM-4", name:"Kathmandu 4", district:"Kathmandu", province:"Bagmati Province",
-    total_voters:76141, stations:33, centers:88, color:"#15803D"
+    total_voters:76141, stations:33, centers:88, color:"#1F6F6B"
   },
   {
     id:"KTM-5", name:"Kathmandu 5", district:"Kathmandu", province:"Bagmati Province",
-    total_voters:78114, stations:31, centers:90, color:"#15803D"
+    total_voters:78114, stations:31, centers:90, color:"#1F6F6B"
   },
   {
     id:"MOR-2", name:"Morang 2", district:"Morang", province:"Koshi Province",
-    total_voters:129184, stations:68, centers:154, color:"#B91C1C"
+    total_voters:129184, stations:68, centers:154, color:"#A8462C"
   },
   {
     id:"MOR-6", name:"Morang 6", district:"Morang", province:"Koshi Province",
-    total_voters:137832, stations:39, centers:149, color:"#B91C1C"
+    total_voters:137832, stations:39, centers:149, color:"#A8462C"
   },
   {
     id:"RAU-4", name:"Rautahat 4", district:"Rautahat", province:"Madhesh Province",
-    total_voters:110314, stations:61, centers:134, color:"#B45309"
+    total_voters:110314, stations:61, centers:134, color:"#8A6D2F"
   },
   {
     id:"SIR-4", name:"Siraha 4", district:"Siraha", province:"Madhesh Province",
-    total_voters:106686, stations:60, centers:129, color:"#B45309"
+    total_voters:106686, stations:60, centers:129, color:"#8A6D2F"
   },
   {
     id:"SUN-1", name:"Sunsari 1", district:"Sunsari", province:"Koshi Province",
-    total_voters:150393, stations:41, centers:161, color:"#B91C1C"
+    total_voters:150393, stations:41, centers:161, color:"#A8462C"
   },
   {
     id:"SUN-3", name:"Sunsari 3", district:"Sunsari", province:"Koshi Province",
-    total_voters:134302, stations:44, centers:146, color:"#B91C1C"
+    total_voters:134302, stations:44, centers:146, color:"#A8462C"
   }
 ];
 
 const maxVoters = Math.max(...pollingData.map(x => x.total_voters));
 const maxStations = Math.max(...pollingData.map(x => x.stations));
+
+// Theme-aware chart color helper (reads the CSS custom properties defined in :root)
+const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const CHART_FONT = "'Source Sans 3', ui-sans-serif, system-ui, sans-serif";
 
 /* ═══════════════════════════════════════════════
    PROVINCE PIE
@@ -1162,7 +1228,7 @@ new Chart(pieCtx, {
       data: Object.values(provinceData),
       backgroundColor: pieColors,
       borderWidth: 3,
-      borderColor: '#fff',
+      borderColor: cssVar('--paper-raised'),
       hoverOffset: 8
     }]
   },
@@ -1171,6 +1237,8 @@ new Chart(pieCtx, {
     plugins:{
       legend:{display:false},
       tooltip:{
+        backgroundColor: cssVar('--ink'), titleColor: cssVar('--paper'), bodyColor: cssVar('--paper'),
+        titleFont:{family:CHART_FONT}, bodyFont:{family:CHART_FONT},
         callbacks:{
           label: ctx => ` ${ctx.label}: ${ctx.parsed} seats (${((ctx.parsed/165)*100).toFixed(1)}%)`
         }
@@ -1255,7 +1323,7 @@ function buildPSCards(data) {
     const avgPerCenter  = Math.round(c.total_voters / c.centers);
     const shortProv = c.province.replace(' Province','');
     grid.innerHTML += `
-      <div class="ps-card fade-up">
+      <div class="ps-card">
         <div class="ps-card-accent" style="background:${c.color}"></div>
         <div style="padding-left:0.75rem;">
           <div class="ps-card-district">${c.district} · ${shortProv}</div>
@@ -1335,9 +1403,11 @@ new Chart(infraCtx, {
     responsive:true, maintainAspectRatio:false,
     plugins:{
       legend:{
-        labels:{ font:{family:"'Syne', sans-serif", size:11}, color:'#64748B' }
+        labels:{ font:{family:CHART_FONT, size:11}, color:cssVar('--ink-soft') }
       },
       tooltip:{
+        backgroundColor: cssVar('--ink'), titleColor: cssVar('--paper'), bodyColor: cssVar('--paper'),
+        titleFont:{family:CHART_FONT}, bodyFont:{family:CHART_FONT},
         callbacks:{
           afterLabel: (ctx) => {
             const c = pollingData[ctx.dataIndex];
@@ -1348,12 +1418,12 @@ new Chart(infraCtx, {
     },
     scales:{
       x:{
-        ticks:{ font:{size:10}, color:'#64748B', maxRotation:35 },
+        ticks:{ font:{family:CHART_FONT, size:10}, color:cssVar('--ink-soft'), maxRotation:35 },
         grid:{ display:false }
       },
       y:{
-        ticks:{ font:{size:10}, color:'#64748B' },
-        grid:{ color:'rgba(0,0,0,0.05)' }
+        ticks:{ font:{family:CHART_FONT, size:10}, color:cssVar('--ink-soft') },
+        grid:{ color:cssVar('--line') }
       }
     }
   }
@@ -1448,11 +1518,13 @@ new Chart(partyPieCtx, {
       legend:{
         position:'right',
         labels:{
-          font:{family:"'Syne',sans-serif",size:10},
-          color:'#64748B', padding:10, boxWidth:10
+          font:{family:CHART_FONT,size:10},
+          color:cssVar('--ink-soft'), padding:10, boxWidth:10
         }
       },
       tooltip:{
+        backgroundColor: cssVar('--ink'), titleColor: cssVar('--paper'), bodyColor: cssVar('--paper'),
+        titleFont:{family:CHART_FONT}, bodyFont:{family:CHART_FONT},
         callbacks:{
           label: ctx => ` ${ctx.label}: ${ctx.parsed} seats (${((ctx.parsed/165)*100).toFixed(1)}%)`
         }
@@ -1465,14 +1537,14 @@ new Chart(partyPieCtx, {
    COALITION GRID
 ══════════════════════════════════════════════ */
 const coalitions = [
-  {name:"Nepali Congress", seats:64, color:"#1D4ED8"},
-  {name:"CPN (UML)", seats:42, color:"#B91C1C"},
-  {name:"CPN (Maoist)", seats:20, color:"#DC2626"},
-  {name:"RSP", seats:8, color:"#15803D"},
-  {name:"CPN (US)", seats:7, color:"#B45309"},
-  {name:"JSP", seats:6, color:"#7C3AED"},
-  {name:"RPP", seats:4, color:"#0E7490"},
-  {name:"Others", seats:14, color:"#64748B"},
+  {name:"Nepali Congress", seats:64, color:"#1F6F6B"},
+  {name:"CPN (UML)", seats:42, color:"#A8462C"},
+  {name:"CPN (Maoist)", seats:20, color:"#C97556"},
+  {name:"RSP", seats:8, color:"#154F4C"},
+  {name:"CPN (US)", seats:7, color:"#8A6D2F"},
+  {name:"JSP", seats:6, color:"#7A5980"},
+  {name:"RPP", seats:4, color:"#2E6B72"},
+  {name:"Others", seats:14, color:"#3D4C46"},
 ];
 const maxC = 64;
 const coalEl = document.getElementById('coalitionGrid');
@@ -1512,8 +1584,8 @@ new Chart(densityCtx, {
     datasets:[{
       label:'Tracked Voters',
       data:[koshiVoters, madheshVoters, bagmatiVoters],
-      backgroundColor:['#B91C1C99','#B4530999','#15803D99'],
-      borderColor:['#B91C1C','#B45309','#15803D'],
+      backgroundColor:['#A8462C99','#8A6D2F99','#1F6F6B99'],
+      borderColor:['#A8462C','#8A6D2F','#1F6F6B'],
       borderWidth:2, borderRadius:6
     }]
   },
@@ -1522,17 +1594,19 @@ new Chart(densityCtx, {
     plugins:{
       legend:{display:false},
       tooltip:{
+        backgroundColor: cssVar('--ink'), titleColor: cssVar('--paper'), bodyColor: cssVar('--paper'),
+        titleFont:{family:CHART_FONT}, bodyFont:{family:CHART_FONT},
         callbacks:{
           label: ctx => ` ${ctx.parsed.y.toLocaleString()} voters tracked`
         }
       }
     },
     scales:{
-      x:{ grid:{display:false}, ticks:{font:{size:10},color:'#64748B'} },
+      x:{ grid:{display:false}, ticks:{font:{family:CHART_FONT,size:10},color:cssVar('--ink-soft')} },
       y:{
-        grid:{color:'rgba(0,0,0,0.05)'},
+        grid:{color:cssVar('--line')},
         ticks:{
-          font:{size:10},color:'#64748B',
+          font:{family:CHART_FONT,size:10},color:cssVar('--ink-soft'),
           callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v
         }
       }
@@ -1571,19 +1645,39 @@ function closeMenu() {
   document.getElementById('mobileMenu').classList.remove('open');
 }
 
-// Active nav link on scroll
+// Active nav link on scroll — IntersectionObserver-based (no scroll listener)
 const sections = ['overview','polling','districts','parties','analysis'];
 const navLinks = document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll', () => {
-  let current = 'overview';
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 80) current = id;
+const sectionEls = sections.map(id => document.getElementById(id)).filter(Boolean);
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+      });
+    }
   });
-  navLinks.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-}, {passive:true});
+}, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+sectionEls.forEach(el => navObserver.observe(el));
+
+/* ═══════════════════════════════════════════════
+   SCROLL-ENTRY REVEAL (IntersectionObserver)
+══════════════════════════════════════════════ */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealEls = document.querySelectorAll('.fade-up');
+if (prefersReducedMotion) {
+  revealEls.forEach(el => el.classList.add('is-visible'));
+} else {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => revealObserver.observe(el));
+}
 </script>
 </body>
 </html>

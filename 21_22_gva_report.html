@@ -4,350 +4,464 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nepal Provincial GVA Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="description" content="Nepal's seven provinces, fiscal 2018/19 to 2020/21: gross value added by province, decelerating growth rates, and the east-west economic gradient behind the numbers.">
+<meta name="author" content="Rishav Bhattarai">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --ink: #1a1208;
-    --paper: #f5f0e8;
-    --accent: #c8401e;
-    --gold: #d4960a;
-    --muted: #7a6e5f;
-    --light: #e8e0d0;
-    --green: #2d6a4f;
+  :root{
+    --paper:#E7EBE6; --paper-raised:#F3F5F1; --ink:#16241F; --ink-soft:#3D4C46; --line:#C7D0C6;
+    --teal:#1F6F6B; --teal-deep:#154F4C; --rust:#A8462C; --rust-soft:#C97556; --mono-chip:#DDE4DC; --focus:#1F6F6B;
+    --slate:#3B6E8C; --amber:#B98A2E; --plum:#7A4B6B; --olive:#5C6B3E;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4; --line:#2B3D36;
+      --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054; --rust-soft:#E8A582; --mono-chip:#1E2C27; --focus:#5FBDB5;
+      --slate:#7FB3D9; --amber:#E0B563; --plum:#C98FB5; --olive:#A9C97A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4; --line:#2B3D36;
+    --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054; --rust-soft:#E8A582; --mono-chip:#1E2C27; --focus:#5FBDB5;
+    --slate:#7FB3D9; --amber:#E0B563; --plum:#C98FB5; --olive:#A9C97A;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *{box-sizing:border-box;}
+  ::selection{background:var(--teal);color:var(--paper);}
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Mono', monospace;
-    min-height: 100vh;
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
   }
 
-  .masthead {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 48px 60px 36px;
-    position: relative;
-    overflow: hidden;
+  a{color:var(--teal-deep);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+  /* ---------- Site integration bar ---------- */
+  .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+  .site-topbar__inner{
+    max-width:1000px; margin:0 auto; padding:14px 24px;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+  }
+  .site-topbar__home{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+    color:var(--ink); text-decoration:none;
+  }
+  .site-topbar__home:hover{color:var(--teal-deep);}
+  .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+  .site-topbar__links a{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+    color:var(--ink-soft); text-decoration:none;
+  }
+  .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--teal-deep);}
+
+  .wrap{max-width:1000px; margin:0 auto; padding:0 24px 96px;}
+
+  /* ---------- Hero ---------- */
+  header.hero{
+    padding:56px 0 44px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:52px;
+  }
+  .kicker{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--rust);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .kicker::before{
+    content:"";
+    width:8px; height:8px;
+    background:var(--rust);
+    border-radius:50%;
+    flex:none;
+  }
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(2.1rem, 5.5vw, 3.1rem);
+    line-height:1.06;
+    letter-spacing:-0.01em;
+    margin:0 0 20px;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .dek{
+    font-size:1.15rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    max-width:62ch;
+    margin:0 0 26px;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 18px;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+  }
+  .meta span{white-space:nowrap;}
+  .meta strong{color:var(--ink); font-weight:600;}
+
+  /* ---------- Section heads ---------- */
+  section{margin-bottom:64px;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:28px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:12px;
+  }
+  .section-num{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.76rem;
+    letter-spacing:0.1em;
+    color:var(--rust);
+  }
+  h2{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-size:1.5rem;
+    letter-spacing:-0.005em;
+    margin:0;
+    text-wrap:balance;
   }
 
-  .masthead::before {
-    content: 'GVA';
-    position: absolute;
-    right: -20px;
-    top: -40px;
-    font-family: 'Playfair Display', serif;
-    font-size: 240px;
-    font-weight: 900;
-    color: rgba(255,255,255,0.04);
-    line-height: 1;
-    pointer-events: none;
+  /* ---------- KPI row ---------- */
+  .kpi-row{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    margin-bottom:64px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .kpi{
+    background:var(--paper-raised);
+    padding:26px 22px;
+    position:relative;
+  }
+  .kpi-label{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .kpi-value{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:2rem;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1;
+  }
+  .kpi-sub{
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+  .kpi-accent{ border-top:3px solid var(--rust); }
+  .kpi-gold{ border-top:3px solid var(--amber); }
+  .kpi-green{ border-top:3px solid var(--teal); }
+  .kpi-blue{ border-top:3px solid var(--slate); }
+
+  /* ---------- Narrative ---------- */
+  .report-text{
+    font-size:1.05rem;
+    line-height:1.68;
+    color:var(--ink);
+    max-width:72ch;
+  }
+  .report-text p{ margin:0 0 1.3em; }
+  .report-text p:last-child{ margin-bottom:0; }
+
+  .callout{
+    border-left:3px solid var(--rust);
+    padding:16px 20px;
+    background:var(--paper-raised);
+    border-radius:0 10px 10px 0;
+    margin:24px 0;
+    font-size:0.98rem;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+  .callout strong{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.08rem;
+    font-weight:600;
+    display:block;
+    margin-bottom:6px;
+    color:var(--rust);
   }
 
-  .masthead-tag {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
+  /* ---------- Chart wrap ---------- */
+  .chart-wrap{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px 28px;
+  }
+  .chart-caption{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.74rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:20px;
   }
 
-  .masthead h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 5vw, 64px);
-    font-weight: 900;
-    line-height: 1.05;
-    letter-spacing: -1px;
-    max-width: 700px;
+  .bar-chart{ margin-top:16px; }
+
+  .bar-row{
+    display:grid;
+    grid-template-columns:130px 1fr 96px;
+    align-items:center;
+    gap:12px;
+    margin-bottom:10px;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .bar-row{
+      opacity:0;
+      animation:fadeSlide 0.6s cubic-bezier(0.32,0.72,0,1) forwards;
+    }
   }
 
-  .masthead-meta {
-    margin-top: 24px;
-    display: flex;
-    gap: 40px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: rgba(245,240,232,0.5);
+  @keyframes fadeSlide{
+    from{ opacity:0; transform:translateX(-10px); }
+    to{ opacity:1; transform:translateX(0); }
   }
 
-  .rule {
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--gold), transparent);
+  .bar-label{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.76rem; letter-spacing:0.03em; color:var(--ink-soft); text-align:right; }
+  .bar-track{ background:var(--mono-chip); height:26px; border-radius:4px; position:relative; overflow:hidden; }
+
+  .bar-fill{
+    height:100%;
+    position:relative;
+    transition:width 0.9s cubic-bezier(0.32,0.72,0,1);
   }
 
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px;
+  .bar-fill.koshi{ background:var(--rust); }
+  .bar-fill.madhesh{ background:var(--amber); }
+  .bar-fill.bagmati{ background:var(--ink); }
+  .bar-fill.gandaki{ background:var(--slate); }
+  .bar-fill.lumbini{ background:var(--teal-deep); }
+  .bar-fill.karnali{ background:var(--plum); }
+  .bar-fill.sudurpaschim{ background:var(--olive); }
+
+  .bar-val{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem; font-weight:500; color:var(--ink); font-variant-numeric:tabular-nums; }
+
+  /* ---------- Table ---------- */
+  .table-scroll{overflow-x:auto; margin:0; border:1px solid var(--line); border-radius:14px;}
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:520px;
+    font-size:0.92rem;
+    background:var(--paper-raised);
+  }
+  caption{
+    text-align:left;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.74rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:16px 20px 0;
+  }
+  th, td{
+    padding:11px 16px;
+    text-align:right;
+    border-bottom:1px solid var(--line);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  th:first-child, td:first-child{ text-align:left; white-space:normal; }
+  thead th{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover td{ background:color-mix(in srgb, var(--teal) 6%, transparent); }
+
+  .province-dot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    margin-right:8px;
   }
 
-  /* SUMMARY STATS */
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin-bottom: 60px;
-    background: var(--ink);
+  .growth-pill{
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:20px;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.03em;
   }
 
-  .kpi {
-    background: var(--paper);
-    padding: 28px 24px;
-    position: relative;
+  .growth-high{ background:color-mix(in srgb, var(--teal) 16%, transparent); color:var(--teal-deep); }
+  .growth-mid{ background:color-mix(in srgb, var(--amber) 18%, transparent); color:var(--amber); }
+  .growth-low{ background:color-mix(in srgb, var(--rust) 14%, transparent); color:var(--rust); }
+
+  /* ---------- Province cards ---------- */
+  .province-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
   }
 
-  .kpi-label {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
+  .pcard{
+    background:var(--paper-raised);
+    padding:24px;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .pcard{
+      opacity:0;
+      animation:fadeSlide 0.6s cubic-bezier(0.32,0.72,0,1) forwards;
+    }
   }
 
-  .kpi-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1;
+  .pcard-name{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.15rem;
+    font-weight:600;
+    margin-bottom:4px;
   }
 
-  .kpi-sub {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 6px;
+  .pcard-sub{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:16px;
   }
 
-  .kpi-accent { border-top: 3px solid var(--accent); }
-  .kpi-gold { border-top: 3px solid var(--gold); }
-  .kpi-green { border-top: 3px solid var(--green); }
-  .kpi-blue { border-top: 3px solid #3a6ea5; }
+  .spark{ display:flex; align-items:flex-end; gap:4px; height:40px; }
 
-  /* SECTION HEADS */
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin-bottom: 28px;
-    border-bottom: 1px solid var(--light);
-    padding-bottom: 12px;
+  .spark-bar{
+    flex:1;
+    border-radius:2px 2px 0 0;
+    position:relative;
   }
 
-  .section-head h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 700;
+  .spark-years{ display:flex; gap:4px; margin-top:4px; }
+  .spark-year{ flex:1; font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.66rem; color:var(--ink-soft); text-align:center; }
+
+  .pcard-growth{
+    margin-top:14px;
+    font-size:0.85rem;
+    color:var(--ink-soft);
   }
 
-  .section-num {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--accent);
+  .pcard-growth span{
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1.3rem;
+    font-weight:600;
+    color:var(--ink);
   }
 
-  section { margin-bottom: 60px; }
-
-  /* CHART AREA */
-  .chart-wrap {
-    background: white;
-    border: 1px solid var(--light);
-    padding: 32px;
+  .pcard-trend{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.7rem;
+    color:var(--ink-soft);
+    margin-top:6px;
   }
 
-  .bar-chart { margin-top: 16px; }
+  footer{
+    margin-top:16px;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 20px;
+  }
+  footer a{ color:var(--teal-deep); }
 
-  .bar-row {
-    display: grid;
-    grid-template-columns: 120px 1fr 90px;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-    opacity: 0;
-    animation: fadeSlide 0.5s forwards;
+  @media (prefers-reduced-motion: no-preference){
+    .reveal{
+      opacity:0;
+      transform:translateY(16px);
+      transition:opacity 0.8s cubic-bezier(0.32,0.72,0,1), transform 0.8s cubic-bezier(0.32,0.72,0,1);
+    }
+    .reveal.is-visible{ opacity:1; transform:translateY(0); }
   }
 
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
+  @media (max-width: 768px){
+    .kpi-row{ grid-template-columns:1fr 1fr; }
+    .bar-row{ grid-template-columns:100px 1fr 76px; }
+    header.hero{ padding:40px 0 32px; }
   }
-
-  .bar-label { font-size: 11px; letter-spacing: 1px; color: var(--muted); text-align: right; }
-  .bar-track { background: var(--light); height: 28px; position: relative; }
-
-  .bar-fill {
-    height: 100%;
-    background: var(--ink);
-    position: relative;
-    transition: width 1s cubic-bezier(.16,1,.3,1);
-  }
-
-  .bar-fill.koshi { background: #c8401e; }
-  .bar-fill.madhesh { background: #d4960a; }
-  .bar-fill.bagmati { background: #1a1208; }
-  .bar-fill.gandaki { background: #3a6ea5; }
-  .bar-fill.lumbini { background: #2d6a4f; }
-  .bar-fill.karnali { background: #7a4060; }
-  .bar-fill.sudurpaschim { background: #5a6e3a; }
-
-  .bar-val { font-size: 11px; font-weight: 500; color: var(--ink); }
-
-  /* GROWTH TABLE */
-  .data-table { width: 100%; border-collapse: collapse; }
-
-  .data-table thead tr {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .data-table th {
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 14px 16px;
-    text-align: left;
-    font-weight: 400;
-  }
-
-  .data-table tbody tr {
-    border-bottom: 1px solid var(--light);
-    transition: background 0.15s;
-  }
-
-  .data-table tbody tr:hover { background: var(--light); }
-
-  .data-table td {
-    padding: 12px 16px;
-    font-size: 12px;
-  }
-
-  .province-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 8px;
-  }
-
-  .growth-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 2px;
-    font-size: 10px;
-    letter-spacing: 1px;
-  }
-
-  .growth-high { background: rgba(45,106,79,0.12); color: var(--green); }
-  .growth-mid  { background: rgba(212,150,10,0.12); color: #8a6200; }
-  .growth-low  { background: rgba(200,64,30,0.1);  color: var(--accent); }
-
-  /* TREND SPARKLINES */
-  .province-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 2px;
-    background: var(--ink);
-  }
-
-  .pcard {
-    background: var(--paper);
-    padding: 24px;
-    opacity: 0;
-    animation: fadeSlide 0.5s forwards;
-  }
-
-  .pcard-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .pcard-sub { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 14px; }
-
-  .spark { display: flex; align-items: flex-end; gap: 4px; height: 40px; }
-
-  .spark-bar {
-    flex: 1;
-    background: var(--ink);
-    border-radius: 2px 2px 0 0;
-    position: relative;
-  }
-
-  .spark-years { display: flex; gap: 4px; margin-top: 4px; }
-  .spark-year { flex: 1; font-size: 8px; color: var(--muted); text-align: center; letter-spacing: 0; }
-
-  .pcard-growth {
-    margin-top: 12px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .pcard-growth span {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  /* REPORT NARRATIVE */
-  .report-text {
-    font-size: 13px;
-    line-height: 1.9;
-    color: var(--ink);
-    max-width: 780px;
-  }
-
-  .report-text p { margin-bottom: 16px; }
-
-  .callout {
-    border-left: 3px solid var(--accent);
-    padding: 16px 20px;
-    background: white;
-    margin: 24px 0;
-    font-size: 13px;
-    line-height: 1.7;
-  }
-
-  .callout strong {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    display: block;
-    margin-bottom: 4px;
-    color: var(--accent);
-  }
-
-  footer {
-    background: var(--ink);
-    color: rgba(245,240,232,0.4);
-    text-align: center;
-    padding: 24px;
-    font-size: 10px;
-    letter-spacing: 2px;
+  @media (max-width: 480px){
+    .kpi-row{ grid-template-columns:1fr; }
   }
 </style>
 </head>
 <body>
 
-<div class="masthead">
-  <div class="masthead-tag">Economic Intelligence Report</div>
-  <h1>Nepal Provincial GVA & Growth Analysis</h1>
-  <div class="masthead-meta">
-    <span>FISCAL YEARS 2018/19 – 2020/21</span>
-    <span>7 PROVINCES</span>
-    <span>GROSS VALUE ADDED</span>
+<div class="site-topbar">
+  <div class="site-topbar__inner">
+    <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+    <nav class="site-topbar__links">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="blog.html">Writing &amp; Research</a>
+      <a href="gdp_growth.html">GDP Dashboard</a>
+      <a href="financial_chaos.html">Financial Chaos</a>
+      <a href="21_22_gva_report.html" class="is-active">This Report</a>
+    </nav>
   </div>
 </div>
-<div class="rule"></div>
 
-<main>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Economic Intelligence Report</div>
+    <h1>Nepal Provincial GVA &amp; Growth Analysis</h1>
+    <p class="dek">Gross value added across Nepal's seven provinces, fiscal years 2018/19 through 2020/21 — where the economy concentrated, how growth decelerated, and the east-west gradient that runs through both.</p>
+    <div class="meta">
+      <span><strong>2018/19 – 2020/21</strong> fiscal years</span>
+      <span><strong>7</strong> provinces</span>
+      <span>Gross Value Added</span>
+    </div>
+  </header>
 
   <!-- KPIs -->
-  <div class="kpi-row" id="kpis"></div>
+  <div class="kpi-row reveal" id="kpis"></div>
 
   <!-- NARRATIVE REPORT -->
-  <section>
+  <section class="reveal">
     <div class="section-head">
       <span class="section-num">§ 01</span>
       <h2>Executive Summary</h2>
@@ -356,30 +470,30 @@
   </section>
 
   <!-- BAR CHART – Latest GVA -->
-  <section>
+  <section class="reveal">
     <div class="section-head">
       <span class="section-num">§ 02</span>
       <h2>GVA by Province — 2020/21</h2>
     </div>
     <div class="chart-wrap">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:20px;">GVA IN NPR (THOUSANDS)</div>
+      <div class="chart-caption">GVA in NPR (thousands)</div>
       <div class="bar-chart" id="barChart"></div>
     </div>
   </section>
 
   <!-- DATA TABLE -->
-  <section>
+  <section class="reveal">
     <div class="section-head">
       <span class="section-num">§ 03</span>
-      <h2>Full Dataset — All Years & Provinces</h2>
+      <h2>Full Dataset — All Years &amp; Provinces</h2>
     </div>
-    <div class="chart-wrap" style="padding:0;overflow:hidden;">
-      <table class="data-table" id="dataTable"></table>
+    <div class="table-scroll">
+      <table id="dataTable"></table>
     </div>
   </section>
 
   <!-- PROVINCE CARDS -->
-  <section>
+  <section class="reveal">
     <div class="section-head">
       <span class="section-num">§ 04</span>
       <h2>Province-Level GVA Trend</h2>
@@ -387,9 +501,13 @@
     <div class="province-cards" id="provinceCards"></div>
   </section>
 
-</main>
+  <footer>
+    <span>Related: <a href="gdp_growth.html">Nepal GDP Growth Dashboard</a></span>
+    <span><a href="financial_chaos.html">Financial Chaos</a></span>
+    <span>NEPAL PROVINCIAL ECONOMIC DATA · FISCAL 2018/19 – 2020/21 · GVA IN NPR THOUSANDS</span>
+  </footer>
 
-<footer>NEPAL PROVINCIAL ECONOMIC DATA · FISCAL 2018/19 – 2020/21 · GVA IN NPR THOUSANDS</footer>
+</div>
 
 <script>
 const data = [
@@ -417,8 +535,8 @@ const data = [
 ];
 
 const colors = {
-  Koshi: '#c8401e', Madhesh: '#d4960a', Bagmati: '#1a1208',
-  Gandaki: '#3a6ea5', Lumbini: '#2d6a4f', Karnali: '#7a4060', Sudurpaschim: '#5a6e3a'
+  Koshi: '#A8462C', Madhesh: '#B98A2E', Bagmati: '#16241F',
+  Gandaki: '#3B6E8C', Lumbini: '#154F4C', Karnali: '#7A4B6B', Sudurpaschim: '#5C6B3E'
 };
 
 const years = ["2018/19","2019/20","2020/21"];
@@ -482,6 +600,7 @@ document.getElementById('barChart').innerHTML = latest2021.map((d,i) => `
 const growthClass = g => g >= 5 ? 'growth-high' : g >= 3 ? 'growth-mid' : 'growth-low';
 
 document.getElementById('dataTable').innerHTML = `
+<caption>Province &amp; fiscal-year detail</caption>
 <thead><tr>
   <th>Province</th><th>Fiscal Year</th><th>GVA (NPR)</th><th>Growth Rate</th>
 </tr></thead>
@@ -504,13 +623,29 @@ document.getElementById('provinceCards').innerHTML = provinces.map((p, i) => {
   return `
   <div class="pcard" style="animation-delay:${i*0.1}s;border-top:3px solid ${colors[p]}">
     <div class="pcard-name">${p}</div>
-    <div class="pcard-sub">GVA TREND · 3 YEARS</div>
+    <div class="pcard-sub">GVA Trend · 3 Years</div>
     <div class="spark">${bars}</div>
     <div class="spark-years">${yearLabels}</div>
     <div class="pcard-growth">Growth: <span>${latest(p).growth}%</span> in 2020/21</div>
-    <div style="font-size:10px;color:var(--muted);margin-top:4px;">${growthTrend}</div>
+    <div class="pcard-trend">${growthTrend}</div>
   </div>`;
 }).join('');
+
+// Scroll-entry reveal (IntersectionObserver only, no scroll listeners)
+if ('IntersectionObserver' in window) {
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('is-visible'), idx * 60);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+}
 </script>
 </body>
 </html>
