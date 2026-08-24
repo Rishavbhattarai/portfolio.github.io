@@ -667,6 +667,18 @@ body {
   background: radial-gradient(circle, var(--sf-blue-dim), transparent 70%);
   pointer-events: none;
 }
+.card--featured {
+  border-color: rgba(0,161,224,0.32);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0,161,224,0.08), 0 0 48px rgba(0,161,224,0.12);
+}
+.card--featured:hover {
+  border-color: rgba(0,161,224,0.55);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0,161,224,0.14), 0 0 60px rgba(0,161,224,0.18);
+}
+.card--featured .card__cloud-badge {
+  background: linear-gradient(135deg, var(--sf-blue-dim), rgba(0,161,224,0.22));
+  box-shadow: 0 0 0 1px rgba(0,161,224,0.2) inset;
+}
 .card__cloud-badge {
   display: inline-flex;
   align-items: center;

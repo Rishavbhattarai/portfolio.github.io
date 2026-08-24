@@ -208,7 +208,7 @@
           </div>
         </article>
 
-        <article class="card card--wide" data-category="dashboards">
+        <article class="card card--wide" data-category="ai-infra">
           <div class="card__glow"></div>
           <div class="card__header">
             <div class="card__icon-wrap">
@@ -238,7 +238,7 @@
           </div>
         </article>
 
-        <article class="card card--wide" data-category="dashboards">
+        <article class="card card--wide" data-category="ai-infra">
           <div class="card__glow"></div>
           <div class="card__header">
             <div class="card__icon-wrap">
@@ -373,6 +373,66 @@
         </article>
 
         <!-- ── SALESFORCE ── -->
+        <article class="card card--wide card--salesforce card--featured" data-category="salesforce">
+          <div class="card__sf-glow"></div>
+          <div class="card__cloud-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            Salesforce Ecosystem
+          </div>
+          <div class="card__header">
+            <div class="card__icon-wrap card__icon-wrap--sf">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8.5-3.5 8.5-10V5l-8.5-3-8.5 3v7c0 6.5 8.5 10 8.5 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--sf">Apex</span>
+              <span class="tag tag--sf">LWC</span>
+              <span class="tag tag--sf">Agentforce</span>
+              <span class="tag tag--sf">CI/CD</span>
+            </div>
+          </div>
+          <h3 class="card__title">Warranty Claims Management App</h3>
+          <p class="card__desc">A warranty-claims process modeled end-to-end on the Salesforce Platform — customer submission through technician resolution — built as one coherent system, not disconnected samples.</p>
+          <ul class="card__bullets">
+            <li>Trigger framework, Batch/Queueable/Schedulable Apex, and a custom Error Log for exception tracking</li>
+            <li>Multi-step LWC claim wizard, technician dashboard, and Lightning Message Service for cross-component comms</li>
+            <li>Screen Flows, dollar-threshold Approval Processes, Platform Events, and Named Credentials/External Services integration</li>
+            <li>Agentforce conversational agent that checks claim status and creates/updates claims via invocable Apex</li>
+            <li>SFDX project structure with GitHub Actions CI running Apex tests &amp; coverage checks on every push</li>
+          </ul>
+          <div class="card__stack">Apex · LWC · Flow Builder · Agentforce · Platform Events · GitHub Actions</div>
+          <div class="card__footer">
+            <span class="card__badge card__badge--sf">Flagship Project</span>
+          </div>
+        </article>
+
+        <article class="card card--salesforce card--featured" data-category="salesforce">
+          <div class="card__sf-glow"></div>
+          <div class="card__cloud-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            Salesforce Ecosystem
+          </div>
+          <div class="card__header">
+            <div class="card__icon-wrap card__icon-wrap--sf">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--sf">Screen Flow</span>
+              <span class="tag tag--sf">Custom Objects</span>
+            </div>
+          </div>
+          <h3 class="card__title">Harvest Market Platform</h3>
+          <p class="card__desc">Multi-persona Salesforce platform built for the UNLV Management &amp; Entrepreneurship Department, with a custom data model for real-time inventory and complex producer sales hierarchies.</p>
+          <ul class="card__bullets">
+            <li>Custom data model for a multi-persona Producer/Consumer platform</li>
+            <li>Dynamic Screen Flows guiding product listings &amp; checkout</li>
+            <li>Automated Order creation and Inventory Management</li>
+          </ul>
+          <div class="card__stack">Screen Flow · Custom Objects · Sales Hierarchies</div>
+          <div class="card__footer">
+            <span class="card__badge card__badge--sf">MIS Project · Fall 2025</span>
+          </div>
+        </article>
+
         <article class="card card--salesforce" data-category="salesforce">
           <div class="card__sf-glow"></div>
           <div class="card__cloud-badge">
@@ -485,66 +545,6 @@
           <div class="card__stack">Salesforce Bulk API · Apex · Data Migration</div>
           <div class="card__footer">
             <span class="card__badge card__badge--sf">MIS Project · Spring 2025</span>
-          </div>
-        </article>
-
-        <article class="card card--salesforce" data-category="salesforce">
-          <div class="card__sf-glow"></div>
-          <div class="card__cloud-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-            Salesforce Ecosystem
-          </div>
-          <div class="card__header">
-            <div class="card__icon-wrap card__icon-wrap--sf">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
-            </div>
-            <div class="card__tags">
-              <span class="tag tag--sf">Screen Flow</span>
-              <span class="tag tag--sf">Custom Objects</span>
-            </div>
-          </div>
-          <h3 class="card__title">Harvest Market Platform</h3>
-          <p class="card__desc">Multi-persona Salesforce platform built for the UNLV Management &amp; Entrepreneurship Department, with a custom data model for real-time inventory and complex producer sales hierarchies.</p>
-          <ul class="card__bullets">
-            <li>Custom data model for a multi-persona Producer/Consumer platform</li>
-            <li>Dynamic Screen Flows guiding product listings &amp; checkout</li>
-            <li>Automated Order creation and Inventory Management</li>
-          </ul>
-          <div class="card__stack">Screen Flow · Custom Objects · Sales Hierarchies</div>
-          <div class="card__footer">
-            <span class="card__badge card__badge--sf">MIS Project · Fall 2025</span>
-          </div>
-        </article>
-
-        <article class="card card--wide card--salesforce" data-category="salesforce">
-          <div class="card__sf-glow"></div>
-          <div class="card__cloud-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-            Salesforce Ecosystem
-          </div>
-          <div class="card__header">
-            <div class="card__icon-wrap card__icon-wrap--sf">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8.5-3.5 8.5-10V5l-8.5-3-8.5 3v7c0 6.5 8.5 10 8.5 10z"/><path d="M9 12l2 2 4-4"/></svg>
-            </div>
-            <div class="card__tags">
-              <span class="tag tag--sf">Apex</span>
-              <span class="tag tag--sf">LWC</span>
-              <span class="tag tag--sf">Agentforce</span>
-              <span class="tag tag--sf">CI/CD</span>
-            </div>
-          </div>
-          <h3 class="card__title">Warranty Claims Management App</h3>
-          <p class="card__desc">A warranty-claims process modeled end-to-end on the Salesforce Platform — customer submission through technician resolution — built as one coherent system, not disconnected samples.</p>
-          <ul class="card__bullets">
-            <li>Trigger framework, Batch/Queueable/Schedulable Apex, and a custom Error Log for exception tracking</li>
-            <li>Multi-step LWC claim wizard, technician dashboard, and Lightning Message Service for cross-component comms</li>
-            <li>Screen Flows, dollar-threshold Approval Processes, Platform Events, and Named Credentials/External Services integration</li>
-            <li>Agentforce conversational agent that checks claim status and creates/updates claims via invocable Apex</li>
-            <li>SFDX project structure with GitHub Actions CI running Apex tests &amp; coverage checks on every push</li>
-          </ul>
-          <div class="card__stack">Apex · LWC · Flow Builder · Agentforce · Platform Events · GitHub Actions</div>
-          <div class="card__footer">
-            <span class="card__badge card__badge--sf">Portfolio Project</span>
           </div>
         </article>
 
