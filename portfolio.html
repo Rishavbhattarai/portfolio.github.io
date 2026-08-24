@@ -69,7 +69,10 @@
   <header class="nav-top">
     <div class="nav-top__container">
       <a href="index.html" class="nav-top__logo"><strong>Rishav</strong></a>
-      <nav class="nav-top__menu">
+      <button class="nav-top__toggle" id="navTopToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navTopMenu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-top__menu" id="navTopMenu">
         <ul class="nav-top__links">
           <li><a href="index.html">Home</a></li>
           <li><a href="portfolio.html">Portfolio</a></li>
@@ -113,7 +116,7 @@
       </div>
       
       <p class="header-summary__description">
-        Salesforce Developer with 2+ years building on the Salesforce platform, backed by 7 years of prior Java/Spring Boot backend engineering. Currently at UNLV's Office of Information Technology, where I deliver Sales &amp; Service Cloud solutions with Apex, Flow, and LWC, and automate CI/CD release pipelines across Education Cloud and Sales Cloud. Proven track record: 87% faster deployments, ~150 engineering hours saved monthly, 20% integration latency reduction, and 18–25% performance and reliability gains from earlier fintech microservices work.
+        Salesforce Developer with 2+ years on the platform, backed by 7 years of Java/Spring Boot engineering before that. At UNLV's Office of Information Technology, I build Sales &amp; Service Cloud solutions in Apex, Flow, and LWC, and automate CI/CD pipelines across Education Cloud and Sales Cloud. The numbers: 87% faster deployments, ~150 engineering hours saved monthly, 20% lower integration latency, and 18–25% performance gains from earlier fintech microservices work.
       </p>
 
       <div class="header-summary__skills">
@@ -152,7 +155,7 @@
       <div class="section__header">
         <p class="section__eyebrow">Work</p>
         <h2 class="section__title">Project Hub</h2>
-        <p class="section__subtitle">A curated collection of real-world problem-solving with measurable business impact.</p>
+        <p class="section__subtitle">Real problems, solved, with numbers to show for it.</p>
       </div>
 
       <!-- Filter Bar -->
@@ -184,32 +187,6 @@
           <div class="card__glow"></div>
           <div class="card__header">
             <div class="card__icon-wrap">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><polyline points="18 9 12 15 8 11 3 16"/></svg>
-            </div>
-            <div class="card__tags">
-              <span class="tag tag--red">Data Viz</span>
-              <span class="tag tag--blue">Maps</span>
-              <span class="tag tag--green">Real-time</span>
-            </div>
-          </div>
-          <h3 class="card__title">Election Commission Data Dashboards</h3>
-          <p class="card__desc">Comprehensive interactive dashboards visualizing Nepal's electoral data — transforming complex datasets into intuitive experiences for journalists, researchers, and citizens.</p>
-          <ul class="card__bullets">
-            <li>Election 2082: Candidate listings with party affiliations</li>
-            <li>Constituency Dashboard with interactive maps &amp; demographics</li>
-            <li>Historical results and trend analysis for Election 2080</li>
-          </ul>
-          <div class="card__stack">JavaScript · D3.js · Leaflet.js · Chart.js · JSON</div>
-          <div class="card__footer">
-            <a href="Election_Commission.html" class="card__link card__link--primary" target="_blank">View Dashboards →</a>
-            <a href="2082_candidates.html" class="card__link" target="_blank">2082 Candidates</a>
-          </div>
-        </article>
-
-        <article class="card" data-category="dashboards">
-          <div class="card__glow"></div>
-          <div class="card__header">
-            <div class="card__icon-wrap">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
             </div>
             <div class="card__tags">
@@ -218,7 +195,7 @@
             </div>
           </div>
           <h3 class="card__title">Economic Indicators Dashboard</h3>
-          <p class="card__desc">Interactive visualization of macroeconomic indicators: 15-year GDP growth trends and Gross Value Added (GVA) sectoral analysis with dynamic filtering.</p>
+          <p class="card__desc">Fifteen years of GDP growth and sector-level GVA data, filterable and visualized in real time.</p>
           <ul class="card__bullets">
             <li>15-year GDP trends with year-over-year comparisons</li>
             <li>Sector-wise GVA breakdown with interactive filtering</li>
@@ -329,7 +306,7 @@
             </div>
           </div>
           <h3 class="card__title">ML: House Price Prediction System</h3>
-          <p class="card__desc">End-to-end machine learning system predicting optimal house prices from user preferences and market data. Full pipeline from preprocessing to a Flask web interface.</p>
+          <p class="card__desc">An ML system that predicts house prices from user preferences and market data — full pipeline, preprocessing to a Flask front end.</p>
           <ul class="card__bullets">
             <li>Data cleaning and preprocessing pipeline</li>
             <li>Feature engineering for accuracy improvements</li>
@@ -469,7 +446,7 @@
             </div>
           </div>
           <h3 class="card__title">Qualtrics Form Automation at Scale</h3>
-          <p class="card__desc">Streamlined management of hundreds of Qualtrics forms with scalable Flow automation and Custom Metadata, letting departments reuse and manage student application processes annually without redevelopment.</p>
+          <p class="card__desc">Manages hundreds of Qualtrics forms with scalable Flow automation and Custom Metadata, so departments reuse the same student application process every year without rebuilding it.</p>
           <ul class="card__bullets">
             <li>Custom Metadata–driven Flow automation</li>
             <li>Profile-based access control across hundreds of forms</li>
@@ -497,7 +474,7 @@
             </div>
           </div>
           <h3 class="card__title">Org-to-Org Data Seeding &amp; Migration Tool</h3>
-          <p class="card__desc">Programmatic org-to-org data seeding tool built with the Salesforce Bulk API, automating parent-child record matching to preserve complex relationships and bypass manual Data Loader constraints.</p>
+          <p class="card__desc">A Bulk API tool that seeds data org-to-org, matching parent-child records automatically to preserve relationships and skip Data Loader's manual limits.</p>
           <ul class="card__bullets">
             <li>Automated parent-child record matching across environments</li>
             <li>Sandbox data seeding time cut by <strong>80%</strong></li>
@@ -555,7 +532,7 @@
             </div>
           </div>
           <h3 class="card__title">Warranty Claims Management App</h3>
-          <p class="card__desc">End-to-end Salesforce Platform portfolio project modeling a real warranty-claims business process — from customer submission through technician resolution — built to demonstrate the full Salesforce development stack in one coherent system rather than disconnected samples.</p>
+          <p class="card__desc">A warranty-claims process modeled end-to-end on the Salesforce Platform — customer submission through technician resolution — built as one coherent system, not disconnected samples.</p>
           <ul class="card__bullets">
             <li>Trigger framework, Batch/Queueable/Schedulable Apex, and a custom Error Log for exception tracking</li>
             <li>Multi-step LWC claim wizard, technician dashboard, and Lightning Message Service for cross-component comms</li>
@@ -583,7 +560,7 @@
             </div>
           </div>
           <h3 class="card__title">Zenith — Enterprise AI Security &amp; Observability Gateway</h3>
-          <p class="card__desc">Open-source security and observability gateway for the Model Context Protocol (MCP) — a centralized middleware proxy that eliminates the risk of fragmented, client-side safety assumptions in AI-agentic systems.</p>
+          <p class="card__desc">An open-source security and observability gateway for the Model Context Protocol (MCP) — one middleware proxy that replaces scattered, client-side safety assumptions with a single enforced checkpoint.</p>
           <ul class="card__bullets">
             <li>Built a 6-step connection handler managing real-time JSON-RPC 2.0 streams over WebSockets/stdio</li>
             <li>Monitors AI execution times, token usage, and payloads in detail</li>

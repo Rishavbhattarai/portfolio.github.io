@@ -3,73 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"> 
-<link rel="stylesheet" href="css/calculator.css">
-
 <title>Simple Calculator</title>
-<link rel="stylesheet" href="styles.css">
+<meta name="description" content="A minimal, premium-styled JavaScript calculator with an annotated build walkthrough.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/calculator.css">
 </head>
 <body>
-<div class="container">
-  <div class ="col col-xs-10">
-    <div class="row">
-      <h1> How to build a Calculator using Javascript such as below ?</h1>
 
+<nav class="tool-nav">
+  <a href="index.html" class="tool-nav__logo">RB</a>
+  <div class="tool-nav__links">
+    <a href="portfolio.html">Portfolio</a>
+    <a href="aboutme.html">About</a>
+    <a href="blog.html">Blog</a>
+  </div>
+</nav>
+
+<main class="tool-shell">
+
+  <header class="tool-header">
+    <span class="tool-header__eyebrow">Mini Build · JavaScript</span>
+    <h1 class="tool-header__title">Simple Calculator</h1>
+    <p class="tool-header__desc">A small four-function calculator, built to show how a display input and a grid of buttons can be wired together with a handful of plain JavaScript functions.</p>
+  </header>
+
+  <!-- double-bezel calculator -->
+  <div class="calc-shell">
+    <div class="calc-core">
+      <input type="text" id="display" class="calc-display" readonly placeholder="0">
+      <div class="keys">
+        <button class="key" onclick="appendNumber('7')">7</button>
+        <button class="key" onclick="appendNumber('8')">8</button>
+        <button class="key" onclick="appendNumber('9')">9</button>
+        <button class="key key--op" onclick="appendOperator('+')">+</button>
+        <button class="key" onclick="appendNumber('4')">4</button>
+        <button class="key" onclick="appendNumber('5')">5</button>
+        <button class="key" onclick="appendNumber('6')">6</button>
+        <button class="key key--op" onclick="appendOperator('-')">&minus;</button>
+        <button class="key" onclick="appendNumber('1')">1</button>
+        <button class="key" onclick="appendNumber('2')">2</button>
+        <button class="key" onclick="appendNumber('3')">3</button>
+        <button class="key key--op" onclick="appendOperator('*')">&times;</button>
+        <button class="key" onclick="appendNumber('0')">0</button>
+        <button class="key key--clear" onclick="clearDisplay()">C</button>
+        <button class="key key--equals" onclick="calculateResult()">=</button>
+        <button class="key key--op" onclick="appendOperator('/')">&divide;</button>
+      </div>
     </div>
   </div>
-  <div class="calculator">
-    <input type="text" id="display" readonly>
-    <div class="keys">
-      <button onclick="appendNumber('7')">7</button>
-      <button onclick="appendNumber('8')">8</button>
-      <button onclick="appendNumber('9')">9</button>
-      <button onclick="appendOperator('+')">+</button>
-      <button onclick="appendNumber('4')">4</button>
-      <button onclick="appendNumber('5')">5</button>
-      <button onclick="appendNumber('6')">6</button>
-      <button onclick="appendOperator('-')">-</button>
-      <button onclick="appendNumber('1')">1</button>
-      <button onclick="appendNumber('2')">2</button>
-      <button onclick="appendNumber('3')">3</button>
-      <button onclick="appendOperator('*')">*</button>
-      <button onclick="appendNumber('0')">0</button>
-      <button onclick="clearDisplay()">C</button>
-      <button onclick="calculateResult()">=</button>
-      <button onclick="appendOperator('/')">/</button>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col col-xs-10">
-      <p>
-        After completing the setup of your html css and js project you will now have to 
-        insert some front end code to build your calculator. Below is a html code that you 
-        have to copy and paste in your index.html file. 
-         </p>
-           <div class="code-box">
-               <pre class="code-content">
-              <code>&lt;button&gt;7&lt;/button&gt;</code>
-              <code>&lt;button&gt;8&lt;/button&gt;</code>
-              <code>&lt;button&gt;9&lt;/button&gt;</code>
-              <code>&lt;button&gt;+&lt;/button&gt;</code>
-              <code>&lt;button&gt;4&lt;/button&gt;</code>
-              <code>&lt;button&gt;5&lt;/button&gt;</code>
-              <code>&lt;button&gt;6&lt;/button&gt;</code>
-              <code>&lt;button&gt;-&lt;/button&gt;</code>
-              <code>&lt;button&gt;1&lt;/button&gt;</code>
-              <code>&lt;button&gt;2&lt;/button&gt;</code>
-              <code>&lt;button&gt;3&lt;/button&gt;</code>
-              <code>&lt;button&gt;*&lt;/button&gt;</code>
-              <code>&lt;button&gt;0&lt;/button&gt;</code>
-              <code>&lt;button&gt;C&lt;/button&gt;</code>
-              <code>&lt;button&gt;=&lt;/button&gt;</code>
-              <code>&lt;button&gt;/&lt;/button&gt;</code>
-              
-               </pre>
-           </div>
-           
-  </div>
-</div>
+  <section class="tool-note">
+    <h2 class="tool-note__title">How it's built</h2>
+    <p class="tool-note__body">
+      After setting up your HTML, CSS and JS files, the front end is just a text input acting as
+      a display, plus a grid of buttons. Below is the button markup you'd drop into your own page
+      to reproduce the layout above.
+    </p>
+    <div class="code-box">
+      <pre class="code-content"><code>&lt;button&gt;7&lt;/button&gt;
+&lt;button&gt;8&lt;/button&gt;
+&lt;button&gt;9&lt;/button&gt;
+&lt;button&gt;+&lt;/button&gt;
+&lt;button&gt;4&lt;/button&gt;
+&lt;button&gt;5&lt;/button&gt;
+&lt;button&gt;6&lt;/button&gt;
+&lt;button&gt;-&lt;/button&gt;
+&lt;button&gt;1&lt;/button&gt;
+&lt;button&gt;2&lt;/button&gt;
+&lt;button&gt;3&lt;/button&gt;
+&lt;button&gt;*&lt;/button&gt;
+&lt;button&gt;0&lt;/button&gt;
+&lt;button&gt;C&lt;/button&gt;
+&lt;button&gt;=&lt;/button&gt;
+&lt;button&gt;/&lt;/button&gt;</code></pre>
+    </div>
+  </section>
+
+</main>
 
 <script>
     let expression = '';

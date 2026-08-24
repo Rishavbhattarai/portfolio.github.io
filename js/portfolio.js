@@ -37,6 +37,32 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+/* ── NAV TOP TOGGLE (TABLET + MOBILE HAMBURGER) ──────── */
+const navTopToggle = document.getElementById('navTopToggle');
+const navTopMenu = document.getElementById('navTopMenu');
+const navTopLinks = navTopMenu ? navTopMenu.querySelectorAll('a') : [];
+
+if (navTopToggle && navTopMenu) {
+  navTopToggle.addEventListener('click', () => {
+    const isOpen = navTopMenu.classList.toggle('open');
+    navTopToggle.setAttribute('aria-expanded', isOpen);
+  });
+}
+
+navTopLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (navTopMenu) navTopMenu.classList.remove('open');
+    if (navTopToggle) navTopToggle.setAttribute('aria-expanded', 'false');
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && navTopMenu) {
+    navTopMenu.classList.remove('open');
+    if (navTopToggle) navTopToggle.setAttribute('aria-expanded', 'false');
+  }
+});
+
 /* ── PROJECT FILTER ─────────────────────────────────── */
 const filterBtns = document.querySelectorAll('.filter-btn');
 const cards = document.querySelectorAll('.card');

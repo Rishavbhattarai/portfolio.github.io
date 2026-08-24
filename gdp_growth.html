@@ -5,412 +5,409 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nepal's Economic Transformation</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --crimson: #C0392B;
-    --deep-red: #8B0000;
-    --saffron: #E67E22;
-    --gold: #F1C40F;
-    --midnight: #0D1117;
-    --dark: #161B22;
-    --card: #1C2230;
-    --card2: #212835;
-    --border: rgba(255,255,255,0.07);
-    --text: #E8E0D5;
-    --muted: #8B9BB4;
-    --accent: #C0392B;
+  :root{
+    --paper:#E7EBE6; --paper-raised:#F3F5F1; --ink:#16241F; --ink-soft:#3D4C46; --line:#C7D0C6;
+    --teal:#1F6F6B; --teal-deep:#154F4C; --rust:#A8462C; --rust-soft:#C97556; --mono-chip:#DDE4DC; --focus:#1F6F6B;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4; --line:#2B3D36;
+      --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054; --rust-soft:#E8A582; --mono-chip:#1E2C27; --focus:#5FBDB5;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4; --line:#2B3D36;
+    --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054; --rust-soft:#E8A582; --mono-chip:#1E2C27; --focus:#5FBDB5;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *{ box-sizing:border-box; }
+  ::selection{ background:var(--teal); color:var(--paper); }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--midnight);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Himalayan silhouette background */
-  body::before {
-    content: '';
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 280px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 280'%3E%3Cpolygon points='0,280 0,200 80,160 140,180 200,120 270,140 340,60 410,90 480,40 550,70 610,20 670,50 730,10 790,45 850,30 920,65 980,45 1060,90 1120,70 1180,110 1240,85 1300,130 1360,100 1440,150 1440,280' fill='%23161B22' opacity='0.9'/%3E%3Cpolygon points='0,280 0,220 100,190 180,210 260,160 330,175 400,100 470,130 540,80 600,110 660,55 720,85 780,45 840,75 900,55 960,100 1020,80 1100,115 1160,95 1220,135 1280,110 1340,155 1440,130 1440,280' fill='%231C2230' opacity='0.6'/%3E%3C/svg%3E") no-repeat bottom center / cover;
-    pointer-events: none;
-    z-index: 0;
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
   }
 
-  .container { max-width: 1400px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 1; }
+  a{ color:var(--teal-deep); }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
 
-  /* HEADER */
-  header {
-    padding: 28px 0 24px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+  /* ---------- Site integration bar ---------- */
+  .site-topbar{ background:var(--paper-raised); border-bottom:1px solid var(--line); }
+  .site-topbar__inner{
+    max-width:1080px; margin:0 auto; padding:14px 24px;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
   }
+  .site-topbar__home{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+    color:var(--ink); text-decoration:none;
+  }
+  .site-topbar__home:hover{ color:var(--teal-deep); }
+  .site-topbar__links{ display:flex; flex-wrap:wrap; gap:6px 18px; }
+  .site-topbar__links a{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+    color:var(--ink-soft); text-decoration:none;
+  }
+  .site-topbar__links a:hover, .site-topbar__links a.is-active{ color:var(--teal-deep); }
 
-  .header-inner {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px 96px; }
 
-  .flag-stripe {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    margin-bottom: 10px;
+  /* ---------- Hero ---------- */
+  header.hero{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:40px;
   }
-  .stripe { width: 28px; height: 4px; border-radius: 2px; }
-  .stripe.red { background: var(--crimson); }
-  .stripe.blue { background: #003893; }
+  @media (prefers-reduced-motion: no-preference){
+    header.hero{ animation:rise 0.6s cubic-bezier(0.32,0.72,0,1) both; }
+  }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 
-  h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.6rem, 6vw, 3.2rem);
-    line-height: 1.1;
-    color: #fff;
+  .kicker{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--rust);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
   }
-  h1 span { color: var(--crimson); font-style: italic; }
+  .kicker::before{
+    content:"";
+    width:8px; height:8px;
+    background:var(--rust);
+    border-radius:50%;
+    flex:none;
+  }
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(2rem, 5vw, 3rem);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin:0 0 20px;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .dek{
+    font-size:1.1rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    max-width:62ch;
+    margin:0 0 26px;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 22px;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+  }
+  .meta span{ white-space:nowrap; }
+  .meta strong{ color:var(--ink); font-weight:600; }
 
-  .subtitle {
-    color: var(--muted);
-    font-size: clamp(0.75rem, 2.5vw, 0.95rem);
-    margin-top: 8px;
-    font-weight: 300;
-    letter-spacing: 0.02em;
+  /* ---------- Section headings / dividers ---------- */
+  h2{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-size:1.5rem;
+    letter-spacing:-0.005em;
+    margin:0 0 20px;
+    text-wrap:balance;
   }
+  .divider{
+    display:flex; align-items:center; gap:14px;
+    margin:56px 0 32px;
+    color:var(--ink-soft);
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
+  }
+  .divider::before, .divider::after{ content:""; flex:1; height:1px; background:var(--line); }
 
-  .header-stats {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    flex-shrink: 0;
+  /* ---------- NAV TABS ---------- */
+  .nav-tabs{
+    display:flex;
+    gap:6px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:5px;
+    margin-bottom:32px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex-wrap:nowrap;
   }
-
-  .hstat { text-align: right; }
-  .hstat-val {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.4rem, 4vw, 2rem);
-    color: var(--gold);
-    line-height: 1;
+  .nav-tabs::-webkit-scrollbar{ display:none; }
+  .tab{
+    padding:9px 15px;
+    border-radius:8px;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.76rem;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    font-weight:500;
+    cursor:pointer;
+    transition:background .35s cubic-bezier(0.32,0.72,0,1), color .35s cubic-bezier(0.32,0.72,0,1);
+    white-space:nowrap;
+    flex-shrink:0;
+    -webkit-tap-highlight-color:transparent;
   }
-  .hstat-label {
-    font-size: 0.68rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-top: 4px;
-  }
-
-  /* NAV TABS — scrollable on mobile */
-  .nav-tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--dark);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 24px;
-    border: 1px solid var(--border);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    flex-wrap: nowrap;
-  }
-  .nav-tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    padding: 9px 14px;
-    border-radius: 9px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-  .tab.active {
-    background: var(--crimson);
-    color: #fff;
-    box-shadow: 0 2px 12px rgba(192,57,43,0.4);
-  }
-
-  /* SECTION PANELS */
-  .panel { display: none; animation: fadeIn 0.4s ease; }
-  .panel.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* GRID */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
-
-  @media(max-width: 700px) {
-    .grid-2 { grid-template-columns: 1fr; }
-    .grid-3 { grid-template-columns: 1fr; }
-    .grid-4 { grid-template-columns: 1fr 1fr; }
-  }
-  @media(max-width: 400px) {
-    .grid-4 { grid-template-columns: 1fr; }
-  }
-
-  /* CARDS */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--crimson), var(--saffron));
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .card:hover::before { opacity: 1; }
-
-  .card.span2 { grid-column: span 2; }
-  .card.span3 { grid-column: span 3; }
-  @media(max-width: 700px) { .card.span2, .card.span3 { grid-column: span 1; } }
-
-  .card-title {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    margin-bottom: 12px;
-    font-weight: 600;
-    line-height: 1.4;
-  }
-  .card-title span {
-    display: inline-block;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--crimson);
-    margin-right: 7px;
-    vertical-align: middle;
-    flex-shrink: 0;
+  .tab:hover{ color:var(--ink); background:var(--mono-chip); }
+  .tab.active{
+    background:var(--teal);
+    color:var(--paper);
   }
 
-  /* STAT CARDS */
-  .stat-val {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.6rem, 5vw, 2.4rem);
-    color: #fff;
-    line-height: 1;
-  }
-  .stat-unit { font-size: 0.9rem; color: var(--muted); margin-left: 3px; }
-  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
-  .stat-change {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-top: 6px;
-    padding: 2px 7px;
-    border-radius: 20px;
-  }
-  .stat-change.up { background: rgba(39,174,96,0.15); color: #27AE60; }
-  .stat-change.down { background: rgba(231,76,60,0.15); color: #E74C3C; }
-
-  /* CHART CONTAINERS */
-  .chart-wrap { position: relative; width: 100%; }
-  .chart-wrap canvas { max-height: 280px; }
-  .chart-wrap.tall canvas { max-height: 300px; }
-
-  @media(max-width: 480px) {
-    .chart-wrap canvas { max-height: 220px; }
-    .chart-wrap.tall canvas { max-height: 240px; }
+  /* ---------- SECTION PANELS ---------- */
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+  @media (prefers-reduced-motion: no-preference){
+    .panel.active{ animation:rise 0.5s cubic-bezier(0.32,0.72,0,1) both; }
   }
 
-  /* SECTOR BARS */
-  .sector-list { display: flex; flex-direction: column; gap: 10px; }
-  .sector-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  /* ---------- GRID ---------- */
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+  .grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:16px; }
+  .grid-4{ display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; margin-bottom:16px; }
+
+  @media(max-width: 800px){
+    .grid-2{ grid-template-columns:1fr; }
+    .grid-3{ grid-template-columns:1fr; }
+    .grid-4{ grid-template-columns:1fr 1fr; }
   }
-  .sector-name {
-    font-size: 0.75rem;
-    color: var(--text);
-    width: 120px;
-    flex-shrink: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  @media(max-width: 400px) {
-    .sector-name { width: 90px; font-size: 0.7rem; }
-  }
-  .bar-track {
-    flex: 1;
-    height: 7px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 4px;
-    overflow: hidden;
-    min-width: 40px;
-  }
-  .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 1s ease;
-  }
-  .bar-val {
-    font-size: 0.72rem;
-    color: var(--muted);
-    width: 48px;
-    text-align: right;
-    flex-shrink: 0;
+  @media(max-width: 480px){
+    .grid-4{ grid-template-columns:1fr; }
   }
 
-  /* TIMELINE LABELS */
-  .timeline-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.7rem;
-    color: var(--muted);
-    background: var(--dark);
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    white-space: nowrap;
+  /* ---------- CARDS (chart / stat containers) ---------- */
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:20px 22px;
+    position:relative;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(16px);
+    transition:opacity .8s cubic-bezier(0.32,0.72,0,1), transform .8s cubic-bezier(0.32,0.72,0,1);
   }
-  .timeline-note .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
-  .annotations { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-
-  /* QUARTERLY SELECTOR */
-  .q-selector {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .q-btn {
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .q-btn:hover { border-color: var(--saffron); color: var(--saffron); }
-  .q-btn.active { background: var(--saffron); border-color: var(--saffron); color: #000; font-weight: 600; }
-
-  /* RECOVERY METER */
-  .recovery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-  @media(max-width: 480px) {
-    .recovery-grid { grid-template-columns: 1fr 1fr; }
-  }
-  .rec-card {
-    background: var(--dark);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    transition: transform 0.2s;
-  }
-  .rec-card:hover { transform: translateY(-2px); }
-  .rec-name { font-size: 0.72rem; color: var(--muted); margin-bottom: 7px; }
-  .rec-bar-wrap { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-bottom: 7px; }
-  .rec-bar { height: 100%; border-radius: 3px; transition: width 1.2s ease; }
-  .rec-pct { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: #fff; }
-  .rec-sub { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
-
-  /* INSIGHT CALLOUT */
-  .insight {
-    background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(230,126,34,0.08));
-    border: 1px solid rgba(192,57,43,0.25);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-top: 14px;
-    font-size: 0.82rem;
-    color: var(--text);
-    line-height: 1.6;
-  }
-  .insight strong { color: var(--saffron); }
-
-  /* FOOTER */
-  footer {
-    margin-top: 40px;
-    padding: 20px 0 32px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  footer p { font-size: 0.7rem; color: var(--muted); }
-
-  /* Touch-friendly tap targets */
-  @media(max-width: 600px) {
-    .tab { padding: 10px 12px; font-size: 0.75rem; }
-    .card { padding: 14px; }
-    header { padding: 20px 0 18px; margin-bottom: 18px; }
+  .card.is-visible{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .card{ opacity:1; transform:none; transition:none; }
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--dark); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .card.span2{ grid-column:span 2; }
+  .card.span3{ grid-column:span 3; }
+  @media(max-width: 800px){ .card.span2, .card.span3{ grid-column:span 1; } }
+
+  .card-title{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+    font-weight:600;
+    line-height:1.4;
+    display:flex;
+    align-items:center;
+  }
+  .card-title span{
+    display:inline-block;
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--rust);
+    margin-right:8px;
+    vertical-align:middle;
+    flex-shrink:0;
+  }
+
+  /* ---------- STAT CARDS ---------- */
+  .stat-val{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-size:clamp(1.5rem, 4vw, 2.2rem);
+    color:var(--ink);
+    line-height:1;
+  }
+  .stat-unit{ font-size:0.85rem; color:var(--ink-soft); margin-left:3px; font-family:"Source Sans 3", sans-serif; }
+  .stat-label{ font-size:0.78rem; color:var(--ink-soft); margin-top:8px; }
+  .stat-change{
+    display:inline-flex; align-items:center; gap:4px;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem; font-weight:600; margin-top:8px;
+    padding:2px 8px; border-radius:20px;
+  }
+  .stat-change.up{ background:color-mix(in srgb, var(--teal) 16%, transparent); color:var(--teal-deep); }
+  .stat-change.down{ background:color-mix(in srgb, var(--rust) 16%, transparent); color:var(--rust); }
+
+  /* ---------- CHART CONTAINERS ---------- */
+  .chart-wrap{ position:relative; width:100%; }
+  .chart-wrap canvas{ max-height:280px; }
+  .chart-wrap.tall canvas{ max-height:300px; }
+
+  @media(max-width: 480px){
+    .chart-wrap canvas{ max-height:220px; }
+    .chart-wrap.tall canvas{ max-height:240px; }
+  }
+
+  /* ---------- SECTOR BARS ---------- */
+  .sector-list{ display:flex; flex-direction:column; gap:11px; }
+  .sector-item{ display:flex; align-items:center; gap:9px; }
+  .sector-name{
+    font-size:0.78rem; color:var(--ink);
+    width:120px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  @media(max-width: 400px){ .sector-name{ width:90px; font-size:0.72rem; } }
+  .bar-track{
+    flex:1; height:7px;
+    background:var(--mono-chip);
+    border-radius:4px; overflow:hidden; min-width:40px;
+  }
+  .bar-fill{ height:100%; border-radius:4px; transition:width 1s cubic-bezier(0.32,0.72,0,1); }
+  .bar-val{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem; color:var(--ink-soft); width:52px; text-align:right; flex-shrink:0;
+  }
+
+  /* ---------- TIMELINE LABELS ---------- */
+  .timeline-note{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.7rem; letter-spacing:0.02em; text-transform:uppercase;
+    color:var(--ink-soft);
+    background:var(--paper);
+    padding:4px 10px; border-radius:20px;
+    border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .timeline-note .dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+
+  .annotations{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+
+  /* ---------- QUARTERLY SELECTOR ---------- */
+  .q-selector{ display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
+  .q-btn{
+    padding:5px 13px; border-radius:20px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.74rem;
+    cursor:pointer;
+    transition:all .3s cubic-bezier(0.32,0.72,0,1);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .q-btn:hover{ border-color:var(--rust); color:var(--rust); }
+  .q-btn.active{ background:var(--rust); border-color:var(--rust); color:var(--paper); font-weight:600; }
+
+  /* ---------- RECOVERY METER ---------- */
+  .recovery-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:10px; }
+  @media(max-width: 480px){ .recovery-grid{ grid-template-columns:1fr 1fr; } }
+  .rec-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:13px;
+    transition:transform .3s cubic-bezier(0.32,0.72,0,1);
+  }
+  .rec-card:hover{ transform:translateY(-2px); }
+  .rec-name{ font-size:0.74rem; color:var(--ink-soft); margin-bottom:8px; }
+  .rec-bar-wrap{ height:5px; background:var(--mono-chip); border-radius:3px; margin-bottom:8px; }
+  .rec-bar{ height:100%; border-radius:3px; transition:width 1.1s cubic-bezier(0.32,0.72,0,1); }
+  .rec-pct{ font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.25rem; color:var(--ink); }
+  .rec-sub{ font-size:0.66rem; color:var(--ink-soft); margin-top:3px; }
+
+  /* ---------- INSIGHT CALLOUT ---------- */
+  .insight{
+    background:color-mix(in srgb, var(--teal) 8%, var(--paper-raised));
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:13px 15px;
+    margin-top:16px;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .insight strong{ color:var(--ink); font-weight:650; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    margin-top:64px;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 20px;
+  }
+  footer a{ color:var(--teal-deep); }
+
+  @media(max-width: 600px){
+    .tab{ padding:10px 12px; font-size:0.72rem; }
+    .card{ padding:16px; }
+    header.hero{ padding:36px 0 28px; margin-bottom:28px; }
+  }
 </style>
 </head>
 <body>
-<div class="container">
+
+<div class="site-topbar">
+  <div class="site-topbar__inner">
+    <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+    <nav class="site-topbar__links">
+      <a href="portfolio.html">Portfolio</a>
+      <a href="blog.html">Writing &amp; Research</a>
+      <a href="21_22_gva_report.html">GVA Report</a>
+      <a href="financial_chaos.html">Financial Chaos</a>
+      <a href="gdp_growth.html" class="is-active">This Dashboard</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
 
   <!-- HEADER -->
-  <header>
-    <div class="header-inner">
-      <div>
-        <div class="flag-stripe">
-          <div class="stripe red"></div>
-          <div class="stripe blue"></div>
-          <div class="stripe red"></div>
-        </div>
-        <h1>Nepal's <span>Economic</span><br>Transformation</h1>
-        <p class="subtitle">15 Years of GDP Growth · 18 Sectors · Quarterly Data · 2010–2025</p>
-      </div>
-      <div class="header-stats">
-        <div class="hstat">
-          <div class="hstat-val" id="totalGDP">—</div>
-          <div class="hstat-label">Latest GDP (NPR Cr)</div>
-        </div>
-        <div class="hstat">
-          <div class="hstat-val" id="growthPct" style="color: var(--saffron)">—</div>
-          <div class="hstat-label">15-Year Growth</div>
-        </div>
-      </div>
+  <header class="hero">
+    <div class="kicker">Nepal National Accounts · GDP Dashboard</div>
+    <h1>Nepal's Economic Transformation</h1>
+    <p class="dek">15 Years of GDP Growth · 18 Sectors · Quarterly Data · 2010–2025</p>
+    <div class="meta">
+      <span><strong id="totalGDP">—</strong> Latest GDP, NPR Cr</span>
+      <span><strong id="growthPct">—</strong> 15-year growth</span>
+      <span><strong>18</strong> sectors tracked</span>
+      <span><strong>61</strong> quarters of data</span>
     </div>
   </header>
 
   <!-- NAV -->
   <nav class="nav-tabs" id="tabs">
-    <button class="tab active" data-panel="overview">📊 Overview</button>
-    <button class="tab" data-panel="sectors">🏭 Sector Transformation</button>
-    <button class="tab" data-panel="agri">🌾 Agriculture vs Services</button>
-    <button class="tab" data-panel="tourism">🏔️ Tourism & Hospitality</button>
-    <button class="tab" data-panel="seasonal">📅 Seasonal Patterns</button>
+    <button class="tab active" data-panel="overview">Overview</button>
+    <button class="tab" data-panel="sectors">Sector Transformation</button>
+    <button class="tab" data-panel="agri">Agriculture vs Services</button>
+    <button class="tab" data-panel="tourism">Tourism &amp; Hospitality</button>
+    <button class="tab" data-panel="seasonal">Seasonal Patterns</button>
   </nav>
 
   <!-- ===== OVERVIEW ===== -->
@@ -428,12 +425,12 @@
       </div>
       <div class="card">
         <div class="card-title"><span></span>Fastest Growing</div>
-        <div class="stat-val" style="font-size:1.5rem; color: var(--gold)" id="ov-fastest">—</div>
+        <div class="stat-val" style="font-size:1.4rem; color:var(--rust)" id="ov-fastest">—</div>
         <div class="stat-label">Most expanded sector</div>
       </div>
       <div class="card">
         <div class="card-title"><span></span>COVID Shock</div>
-        <div class="stat-val" style="font-size:1.8rem; color: #E74C3C">-8.4%</div>
+        <div class="stat-val" style="font-size:1.7rem; color:var(--rust)">-8.4%</div>
         <div class="stat-label">GDP drop in 2020/21 Q4</div>
       </div>
     </div>
@@ -442,9 +439,9 @@
       <div class="card span2">
         <div class="card-title"><span></span>Total GDP Trend — Annual (Sum of 4 Quarters)</div>
         <div class="annotations">
-          <div class="timeline-note"><div class="dot" style="background:#E67E22"></div> 2015 Earthquake</div>
-          <div class="timeline-note"><div class="dot" style="background:#E74C3C"></div> COVID-19</div>
-          <div class="timeline-note"><div class="dot" style="background:#27AE60"></div> Recovery</div>
+          <div class="timeline-note"><div class="dot" style="background:var(--rust-soft)"></div> 2015 Earthquake</div>
+          <div class="timeline-note"><div class="dot" style="background:var(--rust)"></div> COVID-19</div>
+          <div class="timeline-note"><div class="dot" style="background:var(--teal)"></div> Recovery</div>
         </div>
         <div class="chart-wrap tall"><canvas id="chart-total-gdp"></canvas></div>
       </div>
@@ -472,7 +469,7 @@
         <div class="card-title"><span></span>Sector Growth Multiplier (2010/11 → 2024/25) — How Many Times Each Sector Grew</div>
         <div class="chart-wrap tall"><canvas id="chart-multiplier"></canvas></div>
         <div class="insight">
-          <strong>Electricity & Gas</strong> is the standout story — it has grown <strong>5x</strong> in 15 years, driven by Nepal's massive hydropower expansion. <strong>Real Estate</strong> and <strong>ICT</strong> also show strong structural growth.
+          <strong>Electricity &amp; Gas</strong> is the standout story — it has grown <strong>5x</strong> in 15 years, driven by Nepal's massive hydropower expansion. <strong>Real Estate</strong> and <strong>ICT</strong> also show strong structural growth.
         </div>
       </div>
     </div>
@@ -534,31 +531,31 @@
     <div class="grid-4">
       <div class="card">
         <div class="card-title"><span></span>Pre-COVID Peak</div>
-        <div class="stat-val" style="color: var(--gold)" id="tour-peak">—</div>
+        <div class="stat-val" style="color:var(--rust-soft)" id="tour-peak">—</div>
         <div class="stat-label">Hospitality GDP (2019/20)</div>
       </div>
       <div class="card">
         <div class="card-title"><span></span>COVID Low</div>
-        <div class="stat-val" style="color: #E74C3C" id="tour-low">—</div>
+        <div class="stat-val" style="color:var(--rust)" id="tour-low">—</div>
         <div class="stat-label">Hospitality GDP (2020/21)</div>
       </div>
       <div class="card">
         <div class="card-title"><span></span>Drop</div>
-        <div class="stat-val" style="color: #E74C3C" id="tour-drop">—</div>
+        <div class="stat-val" style="color:var(--rust)" id="tour-drop">—</div>
         <div class="stat-label">COVID collapse</div>
       </div>
       <div class="card">
         <div class="card-title"><span></span>Latest</div>
-        <div class="stat-val" style="color: #27AE60" id="tour-now">—</div>
+        <div class="stat-val" style="color:var(--teal)" id="tour-now">—</div>
         <div class="stat-label">Hospitality GDP (2024/25)</div>
       </div>
     </div>
 
     <div class="card" style="margin-bottom:20px">
-      <div class="card-title"><span></span>Accommodation & Food Service — Quarterly GDP Trend (with COVID Shock)</div>
+      <div class="card-title"><span></span>Accommodation &amp; Food Service — Quarterly GDP Trend (with COVID Shock)</div>
       <div class="annotations">
-        <div class="timeline-note"><div class="dot" style="background:#E74C3C"></div> COVID Collapse (2020/21)</div>
-        <div class="timeline-note"><div class="dot" style="background:#27AE60"></div> Recovery Phase</div>
+        <div class="timeline-note"><div class="dot" style="background:var(--rust)"></div> COVID Collapse (2020/21)</div>
+        <div class="timeline-note"><div class="dot" style="background:var(--teal)"></div> Recovery Phase</div>
       </div>
       <div class="chart-wrap tall"><canvas id="chart-tourism"></canvas></div>
     </div>
@@ -603,9 +600,13 @@
     </div>
   </div>
 
+  <div class="divider">Source &amp; methodology</div>
+  <p class="dek" style="max-width:70ch; font-size:0.95rem;">Nepal ISIC National Accounts, 2010/11–2024/25. All values in NPR Crore, fiscal year (Shrawan–Ashadh). Annual figures are the sum of four fiscal quarters; sector multipliers compare full-year 2010/11 to full-year 2024/25.</p>
+
   <footer>
-    <p>📊 Data: Nepal ISIC National Accounts, 2010/11–2024/25 &nbsp;|&nbsp; All values in NPR Crore &nbsp;|&nbsp; Fiscal year (Shrawan–Ashadh)</p>
-    <p style="color: var(--crimson)">🇳🇵 नेपाल</p>
+    <span>Related: <a href="21_22_gva_report.html">Nepal GVA Report, FY 2021/22</a></span>
+    <span><a href="financial_chaos.html">Financial Chaos — Market Dashboard</a></span>
+    <span>Data: Nepal ISIC National Accounts</span>
   </footer>
 
 </div>
@@ -673,23 +674,55 @@ const totalQ = quarters.map((_,i) => sectorKeys.reduce((s,k)=>s+rawData[k].value
 const totalAnnual = yearLabels.map((_,y) => sectorKeys.reduce((s,k)=>s+annualSum(k)[y],0));
 
 // ============================================================
+// Design-token bridge — read the page's resolved CSS custom
+// properties so Chart.js canvases follow light/dark theme.
+// ============================================================
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function hexToRgba(hex, a){
+  const h = hex.replace('#','').trim();
+  const full = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
+  const n = parseInt(full,16);
+  const r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  return `rgba(${r},${g},${b},${a})`;
+}
+const TOKENS = {
+  ink: cssVar('--ink'), inkSoft: cssVar('--ink-soft'), line: cssVar('--line'),
+  paper: cssVar('--paper'), paperRaised: cssVar('--paper-raised'),
+  teal: cssVar('--teal'), tealDeep: cssVar('--teal-deep'),
+  rust: cssVar('--rust'), rustSoft: cssVar('--rust-soft')
+};
+// Supplementary editorial hues for the 18-sector categorical palette —
+// anchored on teal/rust with muted earth tones between them.
+const COLORS = [
+  TOKENS.teal, TOKENS.rust, '#B98A2E', '#6B8F71', '#4C6B8A',
+  TOKENS.rustSoft, TOKENS.tealDeep, '#7A5980', '#9C6B4E', '#566B4A',
+  '#395470', '#C99A3A', '#8C3F2E', '#2F5E52', '#6B5B7A',
+  '#B79A6B', '#5C7A85', '#6E4E3A'
+];
+const AMBER = '#C99A3A'; // seasonal / secondary highlight
+
+// ============================================================
 // Chart.js defaults
 // ============================================================
-Chart.defaults.color = '#8B9BB4';
-Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
-Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.color = TOKENS.inkSoft;
+Chart.defaults.borderColor = hexToRgba(TOKENS.line, 0.6);
+Chart.defaults.font.family = "'IBM Plex Mono', ui-monospace, monospace";
 Chart.defaults.font.size = isMobile ? 10 : 12;
+Chart.defaults.plugins.tooltip.backgroundColor = TOKENS.ink;
+Chart.defaults.plugins.tooltip.titleColor = TOKENS.paper;
+Chart.defaults.plugins.tooltip.bodyColor = TOKENS.paper;
+Chart.defaults.plugins.tooltip.borderColor = TOKENS.line;
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 6;
+Chart.defaults.plugins.tooltip.titleFont = { family: "'IBM Plex Mono', ui-monospace, monospace", weight: '600' };
+Chart.defaults.plugins.tooltip.bodyFont = { family: "'Source Sans 3', sans-serif" };
+Chart.defaults.plugins.legend.labels.color = TOKENS.inkSoft;
 
 const tickFont = { size: isMobile ? 9 : 11 };
 const legendFont = { size: isMobile ? 9 : 11 };
 const maxTicks = isMobile ? 6 : 16;
-
-const COLORS = [
-  '#C0392B','#E67E22','#F1C40F','#27AE60','#2980B9',
-  '#8E44AD','#16A085','#D35400','#1ABC9C','#2C3E50',
-  '#E74C3C','#3498DB','#9B59B6','#F39C12','#1ABC9C',
-  '#7F8C8D','#BDC3C7','#ECF0F1'
-];
+const gridColor = hexToRgba(TOKENS.line, 0.6);
 
 function fmt(n) {
   if(n>=100000) return (n/100000).toFixed(1)+'L';
@@ -728,11 +761,11 @@ new Chart(document.getElementById('chart-total-gdp'), {
     datasets: [{
       label: 'Total GDP',
       data: totalAnnual,
-      borderColor: '#C0392B',
-      backgroundColor: 'rgba(192,57,43,0.12)',
+      borderColor: TOKENS.teal,
+      backgroundColor: hexToRgba(TOKENS.teal, 0.12),
       fill: true,
       tension: 0.4,
-      pointBackgroundColor: yearLabels.map((_,i)=> i===9 ? '#E74C3C' : i===7 ? '#E67E22' : '#C0392B'),
+      pointBackgroundColor: yearLabels.map((_,i)=> i===9 ? TOKENS.rust : i===7 ? AMBER : TOKENS.teal),
       pointRadius: yearLabels.map((_,i)=> i===9||i===7 ? 7 : 3),
       pointHoverRadius: 7,
     }]
@@ -744,14 +777,14 @@ new Chart(document.getElementById('chart-total-gdp'), {
       tooltip: { callbacks: { label: ctx => ' NPR ' + fmt(ctx.raw) + ' Crore' } },
       annotation: {
         annotations: {
-          eq: { type:'line', xMin:5, xMax:5, borderColor:'#E67E22', borderWidth:2, borderDash:[5,5], label:{content:'2015 Quake',display:true,color:'#E67E22',font:{size:10}} },
-          covid: { type:'line', xMin:9, xMax:9, borderColor:'#E74C3C', borderWidth:2, borderDash:[5,5], label:{content:'COVID',display:true,color:'#E74C3C',font:{size:10}} }
+          eq: { type:'line', xMin:5, xMax:5, borderColor:AMBER, borderWidth:2, borderDash:[5,5], label:{content:'2015 Quake',display:true,color:AMBER,font:{size:10}} },
+          covid: { type:'line', xMin:9, xMax:9, borderColor:TOKENS.rust, borderWidth:2, borderDash:[5,5], label:{content:'COVID',display:true,color:TOKENS.rust,font:{size:10}} }
         }
       }
     },
     scales: {
-      x: { grid:{color:'rgba(255,255,255,0.04)'}, ticks:{font:tickFont, maxRotation:45, maxTicksLimit: isMobile?8:15} },
-      y: { grid:{color:'rgba(255,255,255,0.04)'}, ticks:{callback:v=>fmt(v), font:tickFont} }
+      x: { grid:{color:gridColor}, ticks:{font:tickFont, maxRotation:45, maxTicksLimit: isMobile?8:15} },
+      y: { grid:{color:gridColor}, ticks:{callback:v=>fmt(v), font:tickFont} }
     }
   }
 });
@@ -762,7 +795,7 @@ new Chart(document.getElementById('chart-pie-latest'), {
   type: 'doughnut',
   data: {
     labels: sectorKeys.map(k=>rawData[k].name),
-    datasets: [{ data: latestAnnual, backgroundColor: COLORS, borderColor: '#161B22', borderWidth: 2 }]
+    datasets: [{ data: latestAnnual, backgroundColor: COLORS, borderColor: TOKENS.paperRaised, borderWidth: 2 }]
   },
   options: {
     responsive:true, maintainAspectRatio:true,
@@ -800,7 +833,7 @@ new Chart(document.getElementById('chart-multiplier'), {
     datasets:[{
       label:'Growth Multiple (x)',
       data: multipliers.map(d=>d.m),
-      backgroundColor: multipliers.map((_,i)=> i===0 ? '#F1C40F' : i===1||i===2 ? '#E67E22' : 'rgba(192,57,43,0.6)'),
+      backgroundColor: multipliers.map((_,i)=> i===0 ? AMBER : i===1||i===2 ? TOKENS.rustSoft : hexToRgba(TOKENS.teal, 0.45)),
       borderColor: 'transparent',
       borderRadius:6,
     }]
@@ -810,7 +843,7 @@ new Chart(document.getElementById('chart-multiplier'), {
     indexAxis:'y',
     plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.raw}x growth`}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'}, ticks:{callback:v=>v+'x', font:tickFont}},
+      x:{grid:{color:gridColor}, ticks:{callback:v=>v+'x', font:tickFont}},
       y:{grid:{display:false}, ticks:{font:tickFont}}
     }
   }
@@ -825,16 +858,16 @@ new Chart(document.getElementById('chart-share-compare'),{
   data:{
     labels: first5.map(k=>rawData[k].name),
     datasets:[
-      {label:'2010/11',data:shareFirst,backgroundColor:'rgba(192,57,43,0.5)',borderRadius:4},
-      {label:'2024/25',data:shareLast,backgroundColor:'rgba(241,196,15,0.7)',borderRadius:4}
+      {label:'2010/11',data:shareFirst,backgroundColor:hexToRgba(TOKENS.rust,0.55),borderRadius:4},
+      {label:'2024/25',data:shareLast,backgroundColor:hexToRgba(TOKENS.teal,0.75),borderRadius:4}
     ]
   },
   options:{
     responsive:true, maintainAspectRatio:true,
-    plugins:{legend:{labels:{color:'#8B9BB4'}}},
+    plugins:{legend:{labels:{color:TOKENS.inkSoft}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{maxRotation:40,font:tickFont}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:tickFont}}
+      x:{grid:{color:gridColor},ticks:{maxRotation:40,font:tickFont}},
+      y:{grid:{color:gridColor},ticks:{callback:v=>v+'%',font:tickFont}}
     }
   }
 });
@@ -845,7 +878,7 @@ const categories = {
   'Industry': ['B','C','D','E','F'],
   'Services': ['G','H','I','J','K','L','M','N','O','P','Q','RST']
 };
-const catColors = { Agriculture:'#27AE60', Industry:'#E67E22', Services:'#2980B9' };
+const catColors = { Agriculture: TOKENS.teal, Industry: TOKENS.rust, Services: '#4C6B8A' };
 new Chart(document.getElementById('chart-stacked'),{
   type:'line',
   data:{
@@ -853,17 +886,17 @@ new Chart(document.getElementById('chart-stacked'),{
     datasets: Object.entries(categories).map(([cat,keys])=>({
       label:cat,
       data: yearLabels.map((_,y)=>keys.reduce((s,k)=>s+annualSum(k)[y],0)),
-      backgroundColor: catColors[cat]+'33',
+      backgroundColor: hexToRgba(catColors[cat], 0.2),
       borderColor: catColors[cat],
       fill:true, tension:0.4, pointRadius:2
     }))
   },
   options:{
     responsive:true,maintainAspectRatio:true,
-    plugins:{legend:{labels:{color:'#8B9BB4'}}},
+    plugins:{legend:{labels:{color:TOKENS.inkSoft}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},stacked:false,ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},stacked:false,ticks:{callback:v=>fmt(v),font:tickFont}}
+      x:{grid:{color:gridColor},stacked:false,ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:gridColor},stacked:false,ticks:{callback:v=>fmt(v),font:tickFont}}
     }
   }
 });
@@ -885,16 +918,16 @@ new Chart(document.getElementById('chart-agri-services'),{
   data:{
     labels:yearLabels,
     datasets:[
-      {label:'Agriculture',data:agriAnnual,borderColor:'#27AE60',backgroundColor:'rgba(39,174,96,0.1)',fill:true,tension:0.4,pointRadius:3},
-      {label:'Services',data:servAnnual,borderColor:'#2980B9',backgroundColor:'rgba(41,128,185,0.1)',fill:true,tension:0.4,pointRadius:3}
+      {label:'Agriculture',data:agriAnnual,borderColor:TOKENS.teal,backgroundColor:hexToRgba(TOKENS.teal,0.1),fill:true,tension:0.4,pointRadius:3},
+      {label:'Services',data:servAnnual,borderColor:TOKENS.rust,backgroundColor:hexToRgba(TOKENS.rust,0.1),fill:true,tension:0.4,pointRadius:3}
     ]
   },
   options:{
     responsive:true,maintainAspectRatio:true,
-    plugins:{legend:{labels:{color:'#8B9BB4',font:legendFont}}},
+    plugins:{legend:{labels:{color:TOKENS.inkSoft,font:legendFont}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+      x:{grid:{color:gridColor},ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:gridColor},ticks:{callback:v=>fmt(v),font:tickFont}}
     }
   }
 });
@@ -907,16 +940,16 @@ new Chart(document.getElementById('chart-agri-share'),{
   data:{
     labels:yearLabels,
     datasets:[
-      {label:'Agriculture % of GDP',data:agriShare,borderColor:'#27AE60',tension:0.4,pointRadius:3,fill:false},
-      {label:'Services % of GDP',data:servShare,borderColor:'#2980B9',tension:0.4,pointRadius:3,fill:false}
+      {label:'Agriculture % of GDP',data:agriShare,borderColor:TOKENS.teal,tension:0.4,pointRadius:3,fill:false},
+      {label:'Services % of GDP',data:servShare,borderColor:TOKENS.rust,tension:0.4,pointRadius:3,fill:false}
     ]
   },
   options:{
     responsive:true,maintainAspectRatio:true,
-    plugins:{legend:{labels:{color:'#8B9BB4',font:legendFont}}},
+    plugins:{legend:{labels:{color:TOKENS.inkSoft,font:legendFont}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:tickFont},min:0}
+      x:{grid:{color:gridColor},ticks:{font:tickFont,maxRotation:45,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:gridColor},ticks:{callback:v=>v+'%',font:tickFont},min:0}
     }
   }
 });
@@ -946,19 +979,19 @@ new Chart(document.getElementById('chart-tourism'),{
       data: hospV,
       borderColor: ctx => {
         const i = ctx.dataIndex;
-        if(i>=36&&i<=43) return '#E74C3C';
-        return '#E67E22';
+        if(i>=36&&i<=43) return TOKENS.rust;
+        return AMBER;
       },
       segment: {
         borderColor: ctx => {
           const i = ctx.p0DataIndex;
-          if(i>=36&&i<=43) return '#E74C3C';
-          return '#E67E22';
+          if(i>=36&&i<=43) return TOKENS.rust;
+          return AMBER;
         },
         backgroundColor: ctx => {
           const i = ctx.p0DataIndex;
-          if(i>=36&&i<=43) return 'rgba(231,76,60,0.15)';
-          return 'rgba(230,126,34,0.1)';
+          if(i>=36&&i<=43) return hexToRgba(TOKENS.rust,0.15);
+          return hexToRgba(AMBER,0.1);
         }
       },
       fill:true,
@@ -969,8 +1002,8 @@ new Chart(document.getElementById('chart-tourism'),{
     responsive:true,maintainAspectRatio:true,
     plugins:{legend:{display:false}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{maxTicksLimit:isMobile?6:16,maxRotation:45,font:tickFont}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+      x:{grid:{color:gridColor},ticks:{maxTicksLimit:isMobile?6:16,maxRotation:45,font:tickFont}},
+      y:{grid:{color:gridColor},ticks:{callback:v=>fmt(v),font:tickFont}}
     }
   }
 });
@@ -990,7 +1023,7 @@ recSectors.forEach(s=>{
   const base = an[9];
   const latest = an[14];
   const pct = Math.round((latest/base)*100);
-  const color = pct>=100 ? '#27AE60' : pct>=80 ? '#E67E22' : '#E74C3C';
+  const color = pct>=100 ? TOKENS.teal : pct>=80 ? AMBER : TOKENS.rust;
   recGrid.innerHTML += `<div class="rec-card">
     <div class="rec-name">${s.name}</div>
     <div class="rec-bar-wrap"><div class="rec-bar" style="width:${Math.min(pct,100)}%;background:${color}"></div></div>
@@ -1015,10 +1048,10 @@ new Chart(document.getElementById('chart-tour-compare'),{
   },
   options:{
     responsive:true,maintainAspectRatio:true,
-    plugins:{legend:{labels:{color:'#8B9BB4',font:legendFont}}},
+    plugins:{legend:{labels:{color:TOKENS.inkSoft,font:legendFont}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{maxRotation:45,font:tickFont,maxTicksLimit:isMobile?6:15}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+      x:{grid:{color:gridColor},ticks:{maxRotation:45,font:tickFont,maxTicksLimit:isMobile?6:15}},
+      y:{grid:{color:gridColor},ticks:{callback:v=>fmt(v),font:tickFont}}
     }
   }
 });
@@ -1029,6 +1062,7 @@ new Chart(document.getElementById('chart-tour-compare'),{
 // Build sector buttons
 const qSel = document.getElementById('q-sector-select');
 let activeSeasKey = 'G';
+const Q_COLORS = [TOKENS.rustSoft, AMBER, '#4C6B8A', TOKENS.teal];
 function buildSeasonalChart() {
   const ctx = document.getElementById('chart-seasonal-main');
   if(ctx._chartInstance) ctx._chartInstance.destroy();
@@ -1036,7 +1070,7 @@ function buildSeasonalChart() {
   // Color by quarter
   const bgColors = v.map((_,i)=> {
     const q = i%4;
-    return ['rgba(192,57,43,0.7)','rgba(230,126,34,0.7)','rgba(241,196,15,0.7)','rgba(39,174,96,0.7)'][q];
+    return hexToRgba(Q_COLORS[q], 0.75);
   });
   const c = new Chart(ctx,{
     type:'bar',
@@ -1058,7 +1092,7 @@ function buildSeasonalChart() {
       },
       scales:{
         x:{grid:{display:false},ticks:{maxTicksLimit:isMobile?6:16,maxRotation:45,font:tickFont}},
-        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>fmt(v),font:tickFont}}
+        y:{grid:{color:gridColor},ticks:{callback:v=>fmt(v),font:tickFont}}
       }
     }
   });
@@ -1101,7 +1135,7 @@ new Chart(document.getElementById('chart-q-avg'),{
     datasets:[{
       label:'Seasonal Index (100=average)',
       data:qIdx,
-      backgroundColor:['rgba(192,57,43,0.7)','rgba(230,126,34,0.9)','rgba(241,196,15,0.7)','rgba(39,174,96,0.7)'],
+      backgroundColor: Q_COLORS.map(c=>hexToRgba(c,0.75)),
       borderRadius:8,
     }]
   },
@@ -1110,7 +1144,7 @@ new Chart(document.getElementById('chart-q-avg'),{
     plugins:{legend:{display:false}},
     scales:{
       x:{grid:{display:false},ticks:{font:tickFont}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v,font:tickFont},min:85,max:115}
+      y:{grid:{color:gridColor},ticks:{callback:v=>v,font:tickFont},min:85,max:115}
     }
   }
 });
@@ -1129,7 +1163,7 @@ const volatilities = sectorKeys.map(k=>{
 const maxVol = parseFloat(volatilities[0].vol);
 volatilities.slice(0,8).forEach(s=>{
   const pct = (parseFloat(s.vol)/maxVol*100).toFixed(0);
-  const color = parseFloat(s.vol)>15 ? '#E74C3C' : parseFloat(s.vol)>8 ? '#E67E22' : '#27AE60';
+  const color = parseFloat(s.vol)>15 ? TOKENS.rust : parseFloat(s.vol)>8 ? AMBER : TOKENS.teal;
   volList.innerHTML += `<div class="sector-item">
     <div class="sector-name">${s.name}</div>
     <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
@@ -1145,9 +1179,52 @@ document.querySelectorAll('.tab').forEach(tab=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     tab.classList.add('active');
-    document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
+    const panel = document.getElementById('panel-'+tab.dataset.panel);
+    panel.classList.add('active');
+    revealPanelCards(panel);
   });
 });
+
+// ============================================================
+// SCROLL-ENTRY REVEAL (IntersectionObserver, no scroll listeners)
+// ============================================================
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cardObserver = ('IntersectionObserver' in window && !reduceMotion) ? new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const el = entry.target;
+      const idx = Array.from(el.parentElement.children).indexOf(el);
+      el.style.transitionDelay = (Math.min(idx,4) * 70) + 'ms';
+      el.classList.add('is-visible');
+      cardObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }) : null;
+
+function revealPanelCards(panel){
+  const cards = panel.querySelectorAll('.card');
+  if(reduceMotion || !cardObserver){
+    cards.forEach(c=>c.classList.add('is-visible'));
+    return;
+  }
+  cards.forEach((c,i)=>{
+    if(c.classList.contains('is-visible')) return;
+    // Panel just became visible via tab switch — reveal immediately with a small stagger
+    // rather than waiting on IntersectionObserver, since display:none blocks intersection.
+    c.style.transitionDelay = (Math.min(i,5) * 60) + 'ms';
+    requestAnimationFrame(()=> c.classList.add('is-visible'));
+  });
+}
+
+if(reduceMotion){
+  document.querySelectorAll('.card').forEach(c=>c.classList.add('is-visible'));
+} else {
+  // Only the initially-active panel's cards need IntersectionObserver;
+  // panels revealed later via tab clicks go through revealPanelCards().
+  document.querySelectorAll('.panel.active .card').forEach(c=>{
+    if(cardObserver) cardObserver.observe(c);
+  });
+}
 </script>
 </body>
 </html>
