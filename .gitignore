@@ -50,6 +50,10 @@ dist/
 build/
 *.egg-info/
 
+# Node / Salesforce CLI tooling (dev-only, never deployed)
+node_modules/
+.sfdx/
+
 # Temporary files
 *.tmp
 *.temp
