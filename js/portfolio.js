@@ -1,41 +1,9 @@
 /* ============================================================
-   RISHAV BHATTARAI — PORTFOLIO JS
+   RISHAV BHATTARAI: PORTFOLIO JS
    Vanilla ES6+ · No Dependencies
    ============================================================ */
 
 'use strict';
-
-/* ── NAV SIDEBAR TOGGLE (MOBILE) ────────────────────── */
-const navToggle = document.getElementById('navToggle');
-const navSidebar = document.getElementById('navSidebar');
-const navSidebarLinks = document.querySelectorAll('.nav-sidebar__link');
-
-if (navToggle) {
-  navToggle.addEventListener('click', () => {
-    const isOpen = navSidebar.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', isOpen);
-  });
-}
-
-// Close mobile menu on link click
-navSidebarLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    navSidebar.classList.remove('open');
-    if (navToggle) {
-      navToggle.setAttribute('aria-expanded', 'false');
-    }
-  });
-});
-
-// Close on Escape key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && navSidebar) {
-    navSidebar.classList.remove('open');
-    if (navToggle) {
-      navToggle.setAttribute('aria-expanded', 'false');
-    }
-  }
-});
 
 /* ── NAV TOP TOGGLE (TABLET + MOBILE HAMBURGER) ──────── */
 const navTopToggle = document.getElementById('navTopToggle');
@@ -141,35 +109,21 @@ tnodes.forEach(node => {
   });
 });
 
-/* ── TIMELINE SCROLL-DRAW ───────────────────────────── */
+/* ── TIMELINE LINE ──────────────────────────────────── */
+// Draw the timeline rail once when the section comes into view.
 const timelineLine = document.getElementById('timelineLine');
-const timelineSection = document.getElementById('timeline');
-
-function updateTimelineProgress() {
-  if (!timelineLine || !timelineSection) return;
-
-  const rect = timelineSection.getBoundingClientRect();
-  const windowH = window.innerHeight;
-
-  // Start drawing when section enters viewport, finish when it exits bottom
-  const start = windowH * 0.9;
-  const end = windowH * 0.1;
-
-  // Range: from when top of section hits `start` to when bottom of section hits `end`
-  const sectionH = timelineSection.offsetHeight;
-  const total = sectionH + windowH;
-  const traveled = windowH - rect.top;
-  const progress = Math.min(1, Math.max(0, traveled / total));
-
-  timelineLine.style.height = (progress * 100) + '%';
+if (timelineLine) {
+  new IntersectionObserver((entries, obs) => {
+    if (entries[0].isIntersecting) {
+      timelineLine.style.transform = 'scaleY(1)';
+      obs.disconnect();
+    }
+  }, { threshold: 0.2 }).observe(timelineLine.closest('section') || timelineLine);
 }
-
-window.addEventListener('scroll', updateTimelineProgress, { passive: true });
-updateTimelineProgress(); // run once on load
 
 /* ── SCROLL REVEAL ──────────────────────────────────── */
 const revealElements = document.querySelectorAll(
-  '.section__header, .filter-bar, .contact-card, .footer'
+  '.section__header, .filter-bar, .contact-card'
 );
 
 // Mark them initially
@@ -211,24 +165,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-/* ── ACTIVE NAV LINK HIGHLIGHT ──────────────────────── */
-const sections = document.querySelectorAll('section[id], header[id]');
-const sidebarNavLinks = document.querySelectorAll('.nav-sidebar__link');
-
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const id = entry.target.getAttribute('id');
-      sidebarNavLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
-        const isActive = linkHref === `#${id}`;
-        link.classList.toggle('active', isActive);
-      });
-    }
-  });
-}, { threshold: 0.3 });
-
-sections.forEach(section => sectionObserver.observe(section));
-
-console.log('%c⚡ Rishav Bhattarai — Portfolio', 'color:#3b82f6;font-size:1.1rem;font-weight:bold;');
-console.log('%cSalesforce Developer | Java Engineer | Las Vegas, NV', 'color:#94a3b8;font-size:0.85rem;');
+/* ── CURRENT PAGE IN TOP NAV ────────────────────────── */
+const currentPage = location.pathname.split('/').pop() || 'index.html';
+navTopLinks.forEach(link => {
+  if (link.getAttribute('href') === currentPage) link.setAttribute('aria-current', 'page');
+});

@@ -4,138 +4,13 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>About Me | Rishav Bhattarai</title>
-	<meta name="description" content="The story behind Rishav Bhattarai — Software Engineer and Salesforce Developer, from Nepal to UNLV, told as a running terminal session." />
+	<meta name="description" content="The story behind Rishav Bhattarai, Software Engineer and Salesforce Developer: from organizing events in Nepal to building digital wallets and Salesforce automation at UNLV." />
 	<link rel="canonical" href="https://rishavbhattarai.com.np/aboutme.html" />
 
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 	<link rel="stylesheet" href="css/portfolio.css" />
-
-	<style>
-		/* ── ABOUT PAGE: terminal card, built on the shared design tokens ── */
-		.about-hero {
-			padding: clamp(140px, 18vw, 190px) 0 40px;
-		}
-		.about-hero__eyebrow {
-			font-family: var(--font-body);
-			font-size: 0.78rem;
-			font-weight: 600;
-			letter-spacing: 0.22em;
-			text-transform: uppercase;
-			color: var(--electric);
-			margin-bottom: 18px;
-		}
-		.about-hero__title {
-			font-family: var(--font-display);
-			font-weight: 800;
-			font-size: clamp(2.2rem, 5vw, 3.4rem);
-			line-height: 1.08;
-			letter-spacing: -0.01em;
-			max-width: 760px;
-			margin-bottom: 18px;
-		}
-		.about-hero__desc {
-			font-family: var(--font-body);
-			font-weight: 300;
-			font-size: 1.05rem;
-			color: var(--text-secondary);
-			max-width: 620px;
-		}
-
-		.terminal-section { padding: 20px 0 var(--section-gap); }
-
-		.terminal-shell {
-			background: var(--paper);
-			border: 1px solid var(--glass-border);
-			border-radius: var(--radius-xl);
-			padding: 6px;
-			box-shadow: var(--shadow-lg);
-		}
-
-		.terminal-window {
-			background: var(--navy-800);
-			border: 1px solid rgba(255,255,255,0.07);
-			border-radius: calc(var(--radius-xl) - 6px);
-			overflow: hidden;
-			box-shadow: inset 0 1px 1px rgba(255,255,255,0.06);
-		}
-
-		.terminal-header {
-			background: var(--navy-700);
-			padding: 14px 18px;
-			display: flex;
-			align-items: center;
-			border-bottom: 1px solid rgba(255,255,255,0.07);
-		}
-		.terminal-buttons { display: flex; gap: 8px; }
-		.btn-mac { width: 11px; height: 11px; border-radius: 50%; }
-		.btn-close { background: #ff5f56; }
-		.btn-min { background: #ffbd2e; }
-		.btn-max { background: #27c93f; }
-		.terminal-title {
-			flex-grow: 1;
-			text-align: center;
-			color: rgba(240,246,242,0.45);
-			font-family: var(--font-body);
-			font-size: 0.8rem;
-			margin-right: 54px;
-		}
-
-		.terminal-body {
-			padding: clamp(20px, 4vw, 34px);
-			min-height: 420px;
-			font-family: 'Fira Code', monospace;
-			font-size: 0.92rem;
-			line-height: 1.7;
-			color: #cfe0d6;
-		}
-
-		.line { margin-bottom: 8px; }
-		.prompt { display: inline-block; margin-right: 10px; }
-		.user { color: #4ade80; font-weight: 600; }
-		.path { color: #c9a7ff; font-weight: 600; }
-		.cmd { color: #4ade80; }
-
-		.output {
-			color: #cfe0d6;
-			margin: 10px 0 26px 0;
-			padding-left: 16px;
-			border-left: 2px solid rgba(255,255,255,0.1);
-		}
-		.output strong { color: #f4f9f6; }
-		.output .highlight { color: #f0883e; }
-		.output .salesforce { color: #3fb1e8; }
-
-		.social-links { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
-		.social-links a {
-			color: #4ade80;
-			display: inline-flex;
-			align-items: center;
-			gap: 10px;
-			transition: var(--transition);
-			width: fit-content;
-			border-bottom: none;
-		}
-		.social-links a i { font-size: 1.1rem; color: #cfe0d6; }
-		.social-links a:hover { color: #f0883e; transform: translateX(5px); }
-		.social-links a:hover i { color: #f0883e; }
-
-		.cursor {
-			display: inline-block;
-			width: 8px;
-			height: 17px;
-			background-color: #f4f9f6;
-			vertical-align: middle;
-			animation: blink 1s step-end infinite;
-		}
-		@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-		@media screen and (max-width: 736px) {
-			.terminal-body { font-size: 0.82rem; padding: 18px; }
-		}
-	</style>
 </head>
 <body>
 
@@ -150,7 +25,7 @@
 				<ul class="nav-top__links">
 					<li><a href="index.html">Home</a></li>
 					<li><a href="portfolio.html">Portfolio</a></li>
-					<li><a href="aboutme.html" class="active">About Me</a></li>
+					<li><a href="aboutme.html">About Me</a></li>
 					<li><a href="blog.html">Writing & Research</a></li>
 					<li><a href="https://github.com/Rishavbhattarai" target="_blank" rel="noopener">GitHub</a></li>
 				</ul>
@@ -161,29 +36,76 @@
 	<main id="main-content">
 
 		<!-- ░░ ABOUT HERO ░░ -->
-		<header class="about-hero">
-			<div class="container">
-				<p class="about-hero__eyebrow">About Me</p>
-				<h1 class="about-hero__title">From Zest Fest logistics in Nepal to Agentforce automation at UNLV.</h1>
-				<p class="about-hero__desc">The short version, told the way I'd actually tell it — one command at a time.</p>
+		<header class="header-summary header-summary--compact">
+			<div class="header-summary__content">
+				<p class="header-summary__eyebrow">About Me</p>
+				<h1 class="header-summary__title">From Zest Fest logistics in Nepal to Agentforce automation at UNLV.</h1>
+				<p class="header-summary__description">Software Engineer and Salesforce Developer, based in Las Vegas. Here is how I got here.</p>
 			</div>
 		</header>
 
-		<!-- ░░ TERMINAL STORY ░░ -->
-		<section class="terminal-section">
+		<!-- ░░ STORY ░░ -->
+		<section class="section section--tight" aria-label="My story">
 			<div class="container">
-				<div class="terminal-shell">
-					<div class="terminal-window">
-						<div class="terminal-header">
-							<div class="terminal-buttons">
-								<div class="btn-mac btn-close"></div>
-								<div class="btn-mac btn-min"></div>
-								<div class="btn-mac btn-max"></div>
-							</div>
-							<div class="terminal-title">rishav@macbook-pro:~ - bash - 80x24</div>
+				<ol class="story">
+					<li class="story__item">
+						<p class="story__meta">St. Xavier's College<br>Nepal</p>
+						<div class="story__body">
+							<h2 class="story__title">Organizing Zest Fest</h2>
+							<p>I ran logistics, teams, and budgets for Zest Fest, and realized the work I enjoy most sits where technology meets people.</p>
 						</div>
+					</li>
+					<li class="story__item">
+						<p class="story__meta">Three Monks Pvt. Ltd.<br>2018 - 2024</p>
+						<div class="story__body">
+							<h2 class="story__title">Senior Software Developer</h2>
+							<p>I built the PayMe and AwiPay digital wallets as Java Spring Boot microservices, serving <strong>100K+ users</strong> and <strong>4,000+ daily transactions</strong>.</p>
+						</div>
+					</li>
+					<li class="story__item">
+						<p class="story__meta">UNLV<br>2024</p>
+						<div class="story__body">
+							<h2 class="story__title">Master's in Management Information Systems</h2>
+							<p>I moved to the US for my master's. As Treasurer of the Nepalese Student Association, I hosted networking events that connected international students with alumni for mentorships and job placements.</p>
+						</div>
+					</li>
+					<li class="story__item">
+						<p class="story__meta">UNLV Office of IT<br>2024 - Present</p>
+						<div class="story__body">
+							<h2 class="story__title">Salesforce Developer</h2>
+							<p>I architect quote-to-cash processes, build Lightning Web Components, and integrate Agentforce AI into automated workflows.</p>
+						</div>
+					</li>
+				</ol>
+			</div>
+		</section>
 
-						<div class="terminal-body" id="term-body"></div>
+		<!-- ░░ CONTACT ░░ -->
+		<section id="contact" class="section contact-section" style="padding-top:0;">
+			<div class="container">
+				<div class="contact-panel">
+					<div>
+						<h2 class="contact-panel__title">Let's build something that lasts.</h2>
+						<p class="contact-panel__body">I'm open to full-time Software Engineering and Salesforce Development roles.</p>
+						<div class="contact-panel__actions">
+							<a href="mailto:bhattarai.rishav@gmail.com" class="btn btn--primary">Email Me</a>
+							<a href="portfolio.html" class="btn btn--ghost">View My Work</a>
+						</div>
+					</div>
+
+					<div class="contact-methods">
+						<a class="contact-method" href="https://www.linkedin.com/in/rishav-bhattarai-nepal/" target="_blank" rel="noopener noreferrer">
+							<span class="card__icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>
+							<div><h3>LinkedIn</h3><span>rishav-bhattarai-nepal</span></div>
+						</a>
+						<a class="contact-method" href="https://github.com/Rishavbhattarai" target="_blank" rel="noopener noreferrer">
+							<span class="card__icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></span>
+							<div><h3>GitHub, personal</h3><span>Rishavbhattarai</span></div>
+						</a>
+						<a class="contact-method" href="https://github.com/rishavunlv" target="_blank" rel="noopener noreferrer">
+							<span class="card__icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></span>
+							<div><h3>GitHub, UNLV projects</h3><span>rishavunlv</span></div>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -193,91 +115,16 @@
 
 	<!-- ░░ FOOTER ░░ -->
 	<footer class="footer">
-		<div class="container">
-			<p class="footer__copy">© 2026 Rishav Bhattarai · Software Engineer &amp; Salesforce Developer</p>
+		<div class="container footer__inner">
+			<p class="footer__copy">© 2026 Rishav Bhattarai</p>
+			<ul class="footer__links">
+				<li><a href="mailto:bhattarai.rishav@gmail.com">Email</a></li>
+				<li><a href="https://www.linkedin.com/in/rishav-bhattarai-nepal/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+				<li><a href="https://github.com/Rishavbhattarai" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+			</ul>
 		</div>
 	</footer>
 
-	<script>
-		const terminalBody = document.getElementById('term-body');
-
-		const storyScript = [
-			{
-				cmd: "whoami",
-				output: "Rishav Bhattarai<br>Role: Software Engineer & Salesforce Developer<br>Current Location: Las Vegas, NV"
-			},
-			{
-				cmd: "cat ./history/01_The_Spark.md",
-				output: "<strong>[Phase 1: Nepal - St. Xavier's College]</strong><br>Organized <span class='highlight'>Zest Fest</span>, managing logistics, teams, and budgets. Realized my passion lay at the intersection of technology and human connection."
-			},
-			{
-				cmd: "cat ./history/02_The_Builder.md",
-				output: "<strong>[Phase 2: Three Monks Pvt. Ltd.]</strong><br>Leveled up to <strong>Senior Software Developer</strong>.<br>> Built digital wallets: <em>PayMe & AwiPay</em>.<br>> Engineered Java Spring Boot microservices.<br>> Scale: Handled <span class='highlight'>100K+ users</span> and 4,000+ daily transactions."
-			},
-			{
-				cmd: "./execute_journey.sh --destination=USA",
-				output: "<strong>[Phase 3: The Connector - UNLV]</strong><br>Moved to the US for my Master's in MIS.<br>Served as <strong>Treasurer of the Nepalese Student Association (NSA)</strong>. Hosted networking events connecting international students with alumni for mentorships and job placements."
-			},
-			{
-				cmd: "ls -la current_focus/",
-				output: "<strong>[Phase 4: The Architect - UNLV OIT]</strong><br>Currently a <span class='salesforce'>Salesforce Developer</span>.<br>- Architecting Quote-to-Cash processes.<br>- Building Lightning Web Components (LWC).<br>- Integrating <span class='salesforce'>Agentforce AI</span> for automated workflows."
-			},
-			{
-				cmd: "contact --links",
-				output: "<br><strong>Let's connect and build something great. You can find me here:</strong><br>" +
-						"<div class='social-links'>" +
-						"<a href='mailto:bhattarai.rishav@gmail.com'><i class='fa-solid fa-envelope'></i> bhattarai.rishav@gmail.com</a>" +
-						"<a href='https://www.linkedin.com/in/rishav-bhattarai-nepal/' target='_blank'><i class='fa-brands fa-linkedin'></i> linkedin.com/in/rishav-bhattarai-nepal</a>" +
-						"<a href='https://github.com/rishavunlv' target='_blank'><i class='fa-brands fa-github'></i> github.com/rishavunlv (UNLV Projects)</a>" +
-						"<a href='https://github.com/Rishavbhattarai' target='_blank'><i class='fa-brands fa-github'></i> github.com/Rishavbhattarai (Personal)</a>" +
-						"</div><br>"
-			}
-		];
-
-		const getPrompt = () => `<span class="prompt"><span class="user">rishav@macbook</span>:<span class="path">~/about-me</span>$</span>`;
-		const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-		async function runTerminal() {
-			for (let i = 0; i < storyScript.length; i++) {
-				const step = storyScript[i];
-
-				const lineDiv = document.createElement('div');
-				lineDiv.className = 'line';
-				lineDiv.innerHTML = getPrompt() + `<span class="cmd"></span><span class="cursor"></span>`;
-				terminalBody.appendChild(lineDiv);
-
-				const cmdSpan = lineDiv.querySelector('.cmd');
-				const cursor = lineDiv.querySelector('.cursor');
-
-				await sleep(200);
-				for (let char of step.cmd) {
-					cmdSpan.innerHTML += char;
-					await sleep(20);
-				}
-
-				await sleep(100);
-				cursor.remove();
-
-				const outputDiv = document.createElement('div');
-				outputDiv.className = 'output';
-				outputDiv.innerHTML = step.output;
-				terminalBody.appendChild(outputDiv);
-
-				window.scrollTo(0, document.body.scrollHeight);
-
-				await sleep(300);
-			}
-
-			const finalLine = document.createElement('div');
-			finalLine.className = 'line';
-			finalLine.innerHTML = getPrompt() + `<span class="cursor"></span>`;
-			terminalBody.appendChild(finalLine);
-			window.scrollTo(0, document.body.scrollHeight);
-		}
-
-		window.onload = () => {
-			setTimeout(runTerminal, 500);
-		};
-	</script>
+	<script src="js/portfolio.js"></script>
 </body>
 </html>

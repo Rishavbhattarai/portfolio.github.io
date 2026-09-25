@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Confounder That Wasn't There | Rishav Bhattarai</title>
-  <meta name="description" content="A debug log: a causal model ran clean, fit without error, and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to control for — a confounder column silently absorbed into a fixed-effects model." />
+  <meta name="description" content="A debug log: a causal model ran clean, fit without error, and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to control for: a confounder column silently absorbed into a fixed-effects model." />
   <meta name="author" content="Rishav Bhattarai" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://rishavbhattarai.com.np/confounder_bug_log.html" />
@@ -21,35 +21,35 @@
 
   <style>
     :root{
-      --paper:#EFEAE0;
-      --paper-raised:#F8F4EB;
-      --ink:#241C2E;
-      --ink-soft:#4E4358;
-      --line:#D9CDB8;
-      --violet:#5B3A8C;
-      --violet-deep:#3F2861;
+      --paper:#F6F8F4;
+      --paper-raised:#FFFFFF;
+      --ink:#12211A;
+      --ink-soft:#45544C;
+      --line:#DCE3DA;
+      --violet:#167A4D;
+      --violet-deep:#0F5C39;
       --rust:#A8462C;
-      --mono-chip:#E4DCC9;
-      --focus:#5B3A8C;
+      --mono-chip:#E8EEE5;
+      --focus:#167A4D;
     }
     @media (prefers-color-scheme: dark){
       :root:not([data-theme="light"]){
-        --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
-        --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
-        --mono-chip:#2A2233; --focus:#A98CD9;
+        --paper:#0F1713; --paper-raised:#16211B; --ink:#E8EFEA; --ink-soft:#A8BBB0;
+        --line:#2A3A32; --violet:#5FC48F; --violet-deep:#8FD9B0; --rust:#E08054;
+        --mono-chip:#1D2A23; --focus:#5FC48F;
       }
     }
     :root[data-theme="dark"]{
-      --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
-      --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
-      --mono-chip:#2A2233; --focus:#A98CD9;
+      --paper:#0F1713; --paper-raised:#16211B; --ink:#E8EFEA; --ink-soft:#A8BBB0;
+      --line:#2A3A32; --violet:#5FC48F; --violet-deep:#8FD9B0; --rust:#E08054;
+      --mono-chip:#1D2A23; --focus:#5FC48F;
     }
 
     *{box-sizing:border-box;}
     ::selection{background:var(--violet); color:var(--paper);}
     body{
       margin:0; background:var(--paper); color:var(--ink);
-      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      font-family:"DM Sans", ui-sans-serif, system-ui, sans-serif;
       -webkit-font-smoothing:antialiased;
     }
     a{color:var(--violet-deep);}
@@ -85,7 +85,7 @@
     }
     .kicker::before{content:""; width:8px; height:8px; background:var(--rust); border-radius:50%; flex:none;}
     h1{
-      font-family:"Fraunces", Georgia, serif; font-optical-sizing:auto; font-weight:600;
+      font-family:"Syne", ui-sans-serif, system-ui, sans-serif; font-weight:600;
       font-size:clamp(2.1rem, 5.5vw, 3.1rem); line-height:1.06; letter-spacing:-0.01em;
       margin:0 0 20px; text-wrap:balance; color:var(--ink);
     }
@@ -129,7 +129,7 @@
     .entry .prose{font-size:1.03rem;}
 
     h2{
-      font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.7rem;
+      font-family:"Syne", ui-sans-serif, system-ui, sans-serif; font-weight:600; font-size:1.7rem;
       letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
     }
     .divider{
@@ -142,7 +142,7 @@
     .lessons{background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; padding:8px 28px 8px;}
     .lesson{padding:26px 0; border-bottom:1px solid var(--line);}
     .lesson:last-child{border-bottom:none;}
-    .lesson h3{font-family:"Source Sans 3", sans-serif; font-size:1.02rem; font-weight:700; margin:0 0 8px; color:var(--violet-deep);}
+    .lesson h3{font-family:"DM Sans", sans-serif; font-size:1.02rem; font-weight:700; margin:0 0 8px; color:var(--violet-deep);}
     .lesson p{margin:0; color:var(--ink-soft); line-height:1.62; font-size:0.98rem;}
 
     footer{
@@ -160,7 +160,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -202,7 +202,7 @@
       <div class="entry">
         <div class="stamp">The robustness pass stalls</div>
         <div class="prose">
-          <p>Rebuilding the consumption-adjusted model independently, the confounder's own coefficient doesn't look right — the antibiotic-consumption term isn't behaving like a real regressor with real explanatory pull. Worth a closer look at exactly which column is going into the fit.</p>
+          <p>Rebuilding the consumption-adjusted model independently, the confounder's own coefficient doesn't look right. The antibiotic-consumption term isn't behaving like a real regressor with real explanatory pull. Worth a closer look at exactly which column is going into the fit.</p>
         </div>
       </div>
 
@@ -211,49 +211,49 @@
         <div class="prose">
           <p>The confounder column was being selected like this:</p>
           <pre>[c for c in esac.columns if c not in ("country_code","year")][0]</pre>
-          <p>The source file's columns are <code>country_code, country_name, year, indicator, value</code>. Filtering out <code>country_code</code> and <code>year</code>, then taking the first remaining column, doesn't land on <code>value</code> — the actual consumption figure. It lands on <code>country_name</code>, a text label.</p>
+          <p>The source file's columns are <code>country_code, country_name, year, indicator, value</code>. Filtering out <code>country_code</code> and <code>year</code>, then taking the first remaining column, doesn't land on <code>value</code> (the actual consumption figure). It lands on <code>country_name</code>, a text label.</p>
         </div>
       </div>
 
       <div class="entry flag">
         <div class="stamp">⚑ Named the bug</div>
         <div class="prose">
-          <p><strong>The model was being fit on a country's own name, not its antibiotic use.</strong> And because <code>country_name</code> is identical for every year within a given country, the fixed-effects model's own machinery — <code>drop_absorbed=True</code> — silently folded it entirely into the country fixed effect it was already estimating. No crash. No warning. No NaN. The regression still ran, still produced a coefficient table, and every result built on it was captioned "consumption-adjusted" while controlling for nothing beyond what the country fixed effect was already doing.</p>
+          <p><strong>The model was being fit on a country's own name, not its antibiotic use.</strong> And because <code>country_name</code> is identical for every year within a given country, the fixed-effects model's own machinery (<code>drop_absorbed=True</code>) silently folded it entirely into the country fixed effect it was already estimating. No crash. No warning. No NaN. The regression still ran, still produced a coefficient table, and every result built on it was captioned "consumption-adjusted" while controlling for nothing beyond what the country fixed effect was already doing.</p>
         </div>
       </div>
 
       <div class="entry">
         <div class="stamp">Before touching the code, reproduced the wrong number</div>
         <div class="prose">
-          <p>Ran the buggy selection deliberately, to confirm this was really the mechanism — not a different bug that happened to produce a similarly odd-looking coefficient. It reproduced exactly: same buggy numbers as the original run, same silent absorption. Confirmed cause, not just a plausible theory of one.</p>
+          <p>Ran the buggy selection deliberately, to confirm this was really the mechanism, not a different bug that happened to produce a similarly odd-looking coefficient. It reproduced exactly: same buggy numbers as the original run, same silent absorption. Confirmed cause, not just a plausible theory of one.</p>
         </div>
       </div>
 
       <div class="entry">
         <div class="stamp">The fix</div>
         <div class="prose">
-          <p>Select the confounder column by name — <code>value</code> — not position. Reran all four pathogen-antibiotic combinations end to end, not just the one combination that had looked significant, since the same bug had silently touched every "consumption-adjusted" number in the draft.</p>
+          <p>Select the confounder column by name (<code>value</code>), not position. Reran all four pathogen-antibiotic combinations end to end, not just the one combination that had looked significant, since the same bug had silently touched every "consumption-adjusted" number in the draft.</p>
         </div>
       </div>
 
       <div class="entry">
         <div class="stamp">Result, checked directly</div>
         <div class="prose">
-          <p>Three of four combinations barely moved — expected, since swapping a no-op regressor for a real but weak one shouldn't move much. The fourth, K. pneumoniae/carbapenems, moved from a pre-fix coefficient of −2.0061 (permutation p = 0.0131) to a corrected −1.7308 (permutation p = 0.0000). Different number. Same conclusion: still the one real, placebo-surviving result in the panel. The fix mattered enough to change the coefficient, not enough to overturn the finding.</p>
+          <p>Three of four combinations barely moved, as expected, since swapping a no-op regressor for a real but weak one shouldn't move much. The fourth, K. pneumoniae/carbapenems, moved from a pre-fix coefficient of −2.0061 (permutation p = 0.0131) to a corrected −1.7308 (permutation p = 0.0000). Different number. Same conclusion: still the one real, placebo-surviving result in the panel. The fix mattered enough to change the coefficient, not enough to overturn the finding.</p>
         </div>
       </div>
 
       <div class="entry">
-        <div class="stamp">Didn't stop there — checked whether the confounder was doing anything</div>
+        <div class="stamp">Didn't stop there: checked whether the confounder was doing anything</div>
         <div class="prose">
-          <p>Fixing the column meant antibiotic consumption was, for the first time, in the model. So: is it doing real confounding work? Checked its own coefficient directly — <strong>+0.9120, p = 0.1051</strong>. Not significant. The consumption confounder isn't meaningfully explaining anything in this fit, correctly wired in or not. The real reason this narrow 2010–2022 subsample shows a result the full 2000–2023 panel doesn't is most likely the narrower sample window itself, not the confounder. Reframed the write-up to say exactly that, instead of letting a fixed bug get credited with a discovery it didn't make.</p>
+          <p>Fixing the column meant antibiotic consumption was, for the first time, in the model. So: is it doing real confounding work? Checked its own coefficient directly: <strong>+0.9120, p = 0.1051</strong>. Not significant. The consumption confounder isn't meaningfully explaining anything in this fit, correctly wired in or not. The real reason this narrow 2010-2022 subsample shows a result the full 2000-2023 panel doesn't is most likely the narrower sample window itself, not the confounder. Reframed the write-up to say exactly that, instead of letting a fixed bug get credited with a discovery it didn't make.</p>
         </div>
       </div>
 
       <div class="entry">
         <div class="stamp">Closed the loop</div>
         <div class="prose">
-          <p>The bug shipped in the first place because the placebo test was a manual step — someone runs the script, reads the console, trusts it. Built <code>validate_pipeline.py</code> to turn that into a gate: it refits every model, checks the permutation shuffle itself isn't degenerate, and flags drift against a stored baseline. Wired to GitHub Actions so it runs on every push, not only when someone remembers to run it by hand.</p>
+          <p>The bug shipped in the first place because the placebo test was a manual step: someone runs the script, reads the console, trusts it. Built <code>validate_pipeline.py</code> to turn that into a gate: it refits every model, checks the permutation shuffle itself isn't degenerate, and flags drift against a stored baseline. Wired to GitHub Actions so it runs on every push, not only when someone remembers to run it by hand.</p>
         </div>
       </div>
 
@@ -262,13 +262,13 @@
     <div class="divider">The lesson, generalized</div>
 
     <div class="prose" style="margin-bottom:28px;">
-      <p>If you're joining external data into a fixed-effects or any absorbing-effects model, this failure mode is worth checking for directly — it doesn't announce itself.</p>
+      <p>If you're joining external data into a fixed-effects or any absorbing-effects model, this failure mode is worth checking for directly. It doesn't announce itself.</p>
     </div>
 
     <div class="lessons">
       <div class="lesson">
         <h3>A silently-absorbed regressor is a bug with no error message.</h3>
-        <p>Fixed-effects models can make a wrong column vanish cleanly — no crash, no NaN, a plausible-looking fit. Select confounder columns by name, never position, especially anywhere near <code>drop_absorbed=True</code> or an equivalent.</p>
+        <p>Fixed-effects models can make a wrong column vanish cleanly: no crash, no NaN, a plausible-looking fit. Select confounder columns by name, never position, especially anywhere near <code>drop_absorbed=True</code> or an equivalent.</p>
       </div>
       <div class="lesson">
         <h3>Reproduce the wrong number before you patch the code.</h3>
@@ -276,16 +276,16 @@
       </div>
       <div class="lesson">
         <h3>A fix that changes the coefficient doesn't automatically validate the finding.</h3>
-        <p>After the fix, the confounder was finally in the model — and still not significant. The real explanation for the result was the sample window, not the confounder. Check what the newly-correct model is actually doing, not just whether the number moved.</p>
+        <p>After the fix, the confounder was finally in the model, and still not significant. The real explanation for the result was the sample window, not the confounder. Check what the newly-correct model is actually doing, not just whether the number moved.</p>
       </div>
       <div class="lesson">
         <h3>A manual QA step you run "when you remember to" is a bug waiting to ship again.</h3>
-        <p>The permutation test existed and was rigorous — it just wasn't automated yet. Turning it into a CI gate is what stops the same class of bug from shipping silently a second time.</p>
+        <p>The permutation test existed and was rigorous. It just wasn't automated yet. Turning it into a CI gate is what stops the same class of bug from shipping silently a second time.</p>
       </div>
     </div>
 
     <footer>
-      <span>Related: <a href="amr_climate_case_study.html">AMR-Climate Atlas — Case Study</a></span>
+      <span>Related: <a href="amr_climate_case_study.html">AMR-Climate Atlas: Case Study</a></span>
       <span>Code: <code>src/amr_climate_atlas/stage3_identification.py</code> · <code>validate_pipeline.py</code></span>
       <span>Full write-up: <code>docs/paper.md</code></span>
     </footer>

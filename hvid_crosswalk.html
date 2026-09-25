@@ -21,36 +21,36 @@
 
   <style>
     :root{
-      --paper:#E7EBE6;
-      --paper-raised:#F3F5F1;
-      --ink:#16241F;
-      --ink-soft:#3D4C46;
-      --line:#C7D0C6;
-      --teal:#1F6F6B;
-      --teal-deep:#154F4C;
+      --paper:#F6F8F4;
+      --paper-raised:#FFFFFF;
+      --ink:#12211A;
+      --ink-soft:#45544C;
+      --line:#DCE3DA;
+      --teal:#167A4D;
+      --teal-deep:#0F5C39;
       --rust:#A8462C;
-      --mono-chip:#DDE4DC;
-      --focus:#1F6F6B;
-      --bar:#1F6F6B;
+      --mono-chip:#E8EEE5;
+      --focus:#167A4D;
+      --bar:#167A4D;
     }
     @media (prefers-color-scheme: dark){
       :root:not([data-theme="light"]){
-        --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4;
-        --line:#2B3D36; --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054;
-        --mono-chip:#1E2C27; --focus:#5FBDB5; --bar:#5FBDB5;
+        --paper:#0F1713; --paper-raised:#16211B; --ink:#E8EFEA; --ink-soft:#A8BBB0;
+        --line:#2A3A32; --teal:#5FC48F; --teal-deep:#8FD9B0; --rust:#E08054;
+        --mono-chip:#1D2A23; --focus:#5FC48F; --bar:#5FC48F;
       }
     }
     :root[data-theme="dark"]{
-      --paper:#121C19; --paper-raised:#182420; --ink:#E7EFEA; --ink-soft:#A9BDB4;
-      --line:#2B3D36; --teal:#5FBDB5; --teal-deep:#8ED9D1; --rust:#E08054;
-      --mono-chip:#1E2C27; --focus:#5FBDB5; --bar:#5FBDB5;
+      --paper:#0F1713; --paper-raised:#16211B; --ink:#E8EFEA; --ink-soft:#A8BBB0;
+      --line:#2A3A32; --teal:#5FC48F; --teal-deep:#8FD9B0; --rust:#E08054;
+      --mono-chip:#1D2A23; --focus:#5FC48F; --bar:#5FC48F;
     }
 
     *{box-sizing:border-box;}
     ::selection{background:var(--teal); color:var(--paper);}
     body{
       margin:0; background:var(--paper); color:var(--ink);
-      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      font-family:"DM Sans", ui-sans-serif, system-ui, sans-serif;
       -webkit-font-smoothing:antialiased;
     }
     a{color:var(--teal-deep);}
@@ -86,7 +86,7 @@
     }
     .kicker::before{content:""; width:8px; height:8px; background:var(--teal); border-radius:50%; flex:none;}
     h1{
-      font-family:"Fraunces", Georgia, serif; font-optical-sizing:auto; font-weight:600;
+      font-family:"Syne", ui-sans-serif, system-ui, sans-serif; font-weight:600;
       font-size:clamp(2rem, 5vw, 2.9rem); line-height:1.1; letter-spacing:-0.01em;
       margin:0 0 20px; text-wrap:balance;
     }
@@ -102,7 +102,7 @@
     .stat .l{font-size:0.79rem; color:var(--ink-soft);}
 
     h2{
-      font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.6rem;
+      font-family:"Syne", ui-sans-serif, system-ui, sans-serif; font-weight:600; font-size:1.6rem;
       letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
     }
     .divider{
@@ -178,7 +178,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -200,7 +200,7 @@
     <header class="hero">
       <div class="kicker">Dataset · PCVI Atlas</div>
       <h1>HVID Drug Crosswalk</h1>
-      <p class="dek">A 276-drug table of heat-vulnerability-inducing drugs (HVID), each resolved to standard RxNorm and ATC codes, with its evidence source, mechanism, and effect direction — built to make two disconnected literatures (RCT pharmacology and Medicare prescribing data) speak to each other.</p>
+      <p class="dek">A 276-drug table of heat-vulnerability-inducing drugs (HVID), each resolved to standard RxNorm and ATC codes, with its evidence source, mechanism, and effect direction, built to make two disconnected literatures (RCT pharmacology and Medicare prescribing data) speak to each other.</p>
       <div class="statrow">
         <div class="stat"><span class="n">276</span><span class="l">drugs</span></div>
         <div class="stat"><span class="n">205</span><span class="l">full RxCUI + ATC</span></div>
@@ -212,7 +212,7 @@
     <section>
       <div class="divider">Why this exists</div>
       <div class="prose">
-        <p>Two open-access literatures independently identify medications that impair heat regulation: a 2024 <em>eClinicalMedicine</em> systematic review (RCT-derived core-temperature effect sizes, 25 individually-tested drugs) and a 2026 MDPI <em>Pharmacy</em> scoping review (16 individually-named drugs plus 10 drug classes named only at the class level). Neither speaks the language prescribing databases use — RxNorm concept identifiers and ATC codes — so neither can be directly matched against real-world claims data like CMS Medicare Part D.</p>
+        <p>Two open-access literatures independently identify medications that impair heat regulation: a 2024 <em>eClinicalMedicine</em> systematic review (RCT-derived core-temperature effect sizes, 25 individually-tested drugs) and a 2026 MDPI <em>Pharmacy</em> scoping review (16 individually-named drugs plus 10 drug classes named only at the class level). Neither speaks the language prescribing databases use (RxNorm concept identifiers and ATC codes), so neither can be directly matched against real-world claims data like CMS Medicare Part D.</p>
         <p>This crosswalk closes that gap: every drug and class is expanded to its constituent ingredients and resolved to the codes a claims pipeline needs, with the evidence trail (source, mechanism, effect direction, effect size) preserved rather than collapsed into a single opaque flag. It's the foundation for the <a href="pcvi_atlas_case_study.html">Pharmaco-Climatic Vulnerability Atlas</a>.</p>
       </div>
     </section>
@@ -232,14 +232,14 @@
       </div>
 
       <div class="prose" style="margin-top:32px;">
-        <p><strong>Resolution status</strong> — RxNorm/RxClass API resolution against a US-marketed product mapping:</p>
+        <p><strong>Resolution status</strong>: RxNorm/RxClass API resolution against a US-marketed product mapping:</p>
       </div>
       <div class="table-scroll">
         <table>
           <thead><tr><th>Status</th><th>Count</th><th>Meaning</th></tr></thead>
           <tbody>
             <tr><td><span class="status-pill ok">ok</span></td><td>205</td><td>Resolved to both RxCUI and a product-level ATC code.</td></tr>
-            <tr><td><span class="status-pill partial">rxcui_no_atc</span></td><td>71</td><td>Resolved to an RxCUI (valid class membership) but no US-marketed product ATC — mostly older, discontinued, or non-US-marketed agents (e.g. heparin, streptokinase, several European-only NSAIDs and benzodiazepines).</td></tr>
+            <tr><td><span class="status-pill partial">rxcui_no_atc</span></td><td>71</td><td>Resolved to an RxCUI (valid class membership) but no US-marketed product ATC, mostly older, discontinued, or non-US-marketed agents (e.g. heparin, streptokinase, several European-only NSAIDs and benzodiazepines).</td></tr>
           </tbody>
         </table>
       </div>
@@ -249,7 +249,7 @@
       <div class="divider">Methods</div>
       <div class="prose">
         <p>Individually-named drugs and their reported heat-related mechanisms were extracted from two open-access sources: the 2024 <em>eClinicalMedicine</em> systematic review and the 2026 MDPI <em>Pharmacy</em> scoping review. Class-level entries (ACE inhibitors, ARBs, calcium-channel blockers, nitrates, anticoagulants, benzodiazepines, NSAIDs, antiepileptics, proton-pump inhibitors) were expanded to their constituent ingredient drugs via the National Library of Medicine's free RxClass API (<code>classMembers</code> endpoint, ATC classification), yielding 276 total drugs.</p>
-        <p>Each drug was resolved to an RxNorm concept identifier (RxCUI) and, where a US-marketed product mapping exists, an ATC code, via the free RxNorm/RxClass APIs — 205/276 resolved to a full RxCUI+ATC pair. The crosswalk is rerunnable end to end via <code>src/pcvi_atlas/crosswalk.py</code> and <code>expand_classes.py</code> any time the seed list grows.</p>
+        <p>Each drug was resolved to an RxNorm concept identifier (RxCUI) and, where a US-marketed product mapping exists, an ATC code, via the free RxNorm/RxClass APIs: 205/276 resolved to a full RxCUI+ATC pair. The crosswalk is rerunnable end to end via <code>src/pcvi_atlas/crosswalk.py</code> and <code>expand_classes.py</code> any time the seed list grows.</p>
       </div>
     </section>
 
@@ -260,16 +260,16 @@
           <thead><tr><th>Column</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td><code>drug_name</code></td><td>Generic drug name as named by the source literature.</td></tr>
-            <tr><td><code>drug_class</code></td><td>Pharmacologic class (58 anticoagulants, 55 NSAIDs, etc. — see composition above).</td></tr>
+            <tr><td><code>drug_class</code></td><td>Pharmacologic class (58 anticoagulants, 55 NSAIDs, etc.; see composition above).</td></tr>
             <tr><td><code>mechanism</code></td><td>Reported heat-regulation mechanism, e.g. "reduced sweating; hypohidrosis."</td></tr>
-            <tr><td><code>effect_direction</code></td><td><code>increase</code> / <code>decrease</code> / <code>none</code> / <code>unclear</code> — direction of heat-vulnerability effect.</td></tr>
+            <tr><td><code>effect_direction</code></td><td><code>increase</code> / <code>decrease</code> / <code>none</code> / <code>unclear</code>: direction of heat-vulnerability effect.</td></tr>
             <tr><td><code>effect_size</code></td><td>Quantified effect where available, e.g. "+0.42°C core temp (≥30°C air temp)."</td></tr>
             <tr><td><code>evidence_source</code></td><td>Originating literature: eClinicalMedicine 2024 or MDPI 2026 (or both).</td></tr>
-            <tr><td><code>evidence_strength</code></td><td>Source-reported confidence tier — see Stage 2 weighting note below.</td></tr>
+            <tr><td><code>evidence_strength</code></td><td>Source-reported confidence tier; see Stage 2 weighting note below.</td></tr>
             <tr><td><code>notes</code></td><td>Free-text caveats from the source (e.g. sample size, selectivity).</td></tr>
             <tr><td><code>rxcui</code></td><td>RxNorm concept identifier.</td></tr>
             <tr><td><code>atc_codes</code></td><td>Semicolon-delimited ATC product codes, where resolved.</td></tr>
-            <tr><td><code>resolution_status</code></td><td><code>ok</code> or <code>rxcui_no_atc</code> — see table above.</td></tr>
+            <tr><td><code>resolution_status</code></td><td><code>ok</code> or <code>rxcui_no_atc</code>; see table above.</td></tr>
           </tbody>
         </table>
       </div>
@@ -291,14 +291,14 @@
     <section>
       <div class="divider">Known limitations</div>
       <div class="callout">
-        <p><strong>Evidence-strength labels are heterogeneous, not a clean confidence axis.</strong> "Low" evidence_strength covers two very different things — drugs RCT-tested and found to have <em>no</em> effect, and drugs with a real increase-direction finding that just wasn't independently significant. A downstream weighting scheme (Stage 2 of this project) treats <code>effect_direction</code> as primary and <code>evidence_strength</code> as a secondary modifier for exactly this reason — don't sort or filter on <code>evidence_strength</code> alone.</p>
-        <p><strong>71 drugs lack a product-level ATC code</strong> despite valid RxCUI/class membership — low-value tail of rare, legacy, or non-US-marketed agents. Not pursued further; their class membership is correct even where <code>atc_codes</code> is blank.</p>
-        <p><strong>The 2026 EJCP evidence-grading scheme (110 high / 390 possible / 72 unlikely, 572 screened drugs) is not yet incorporated</strong> — the supplementary drug list sits behind a paywall with no confirmation it's even included. This crosswalk stands on its own regardless, using two open-access sources with transparent per-drug evidence.</p>
+        <p><strong>Evidence-strength labels are heterogeneous, not a clean confidence axis.</strong> "Low" evidence_strength covers two very different things: drugs RCT-tested and found to have <em>no</em> effect, and drugs with a real increase-direction finding that just wasn't independently significant. A downstream weighting scheme (Stage 2 of this project) treats <code>effect_direction</code> as primary and <code>evidence_strength</code> as a secondary modifier for exactly this reason. Don't sort or filter on <code>evidence_strength</code> alone.</p>
+        <p><strong>71 drugs lack a product-level ATC code</strong> despite valid RxCUI/class membership: a low-value tail of rare, legacy, or non-US-marketed agents. Not pursued further; their class membership is correct even where <code>atc_codes</code> is blank.</p>
+        <p><strong>The 2026 EJCP evidence-grading scheme (110 high / 390 possible / 72 unlikely, 572 screened drugs) is not yet incorporated</strong>. The supplementary drug list sits behind a paywall with no confirmation it's even included. This crosswalk stands on its own regardless, using two open-access sources with transparent per-drug evidence.</p>
       </div>
     </section>
 
     <footer>
-      <span>Related: <a href="pcvi_atlas_case_study.html">Pharmaco-Climatic Vulnerability Atlas — Case Study</a> · <a href="winchester_artifact.html">The Winchester Artifact</a></span>
+      <span>Related: <a href="pcvi_atlas_case_study.html">Pharmaco-Climatic Vulnerability Atlas: Case Study</a> · <a href="winchester_artifact.html">The Winchester Artifact</a></span>
       <span>Data: <code>data/hvid_crosswalk.csv</code> · <code>data/hvid_seed_drugs.csv</code></span>
       <span>Code: <a href="https://github.com/Rishavbhattarai/pcvi-atlas" target="_blank" rel="noopener">github.com/Rishavbhattarai/pcvi-atlas</a></span>
     </footer>
