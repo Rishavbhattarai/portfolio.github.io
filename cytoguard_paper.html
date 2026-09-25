@@ -20,213 +20,217 @@
   <meta name="twitter:title" content="CytoGuard: Detecting Cellular Injury in Cell Painting Screens" />
   <meta name="twitter:description" content="Flag injured wells, name the injury mechanism, and show the cells behind every call." />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+
   <style>
-    :root{
-      --paper:#EFEAE0;
-      --paper-raised:#F8F4EB;
-      --ink:#241C2E;
-      --ink-soft:#4E4358;
-      --line:#D9CDB8;
-      --violet:#5B3A8C;
-      --violet-deep:#3F2861;
-      --rust:#A8462C;
-      --mono-chip:#E4DCC9;
-      --focus:#5B3A8C;
-      --good:#3F7A4A;
-      --null:#8A6D2E;
-    }
-    @media (prefers-color-scheme: dark){
-      :root:not([data-theme="light"]){
-        --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
-        --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
-        --mono-chip:#2A2233; --focus:#A98CD9; --good:#78C688; --null:#D9B85E;
-      }
-    }
-    :root[data-theme="dark"]{
-      --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
-      --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
-      --mono-chip:#2A2233; --focus:#A98CD9; --good:#78C688; --null:#D9B85E;
+    /* Site design tokens (mirrors css/portfolio.css: Paper White, emerald accent).
+       Radius rule: 14px for figures, tables and panels; 8px for inline chips. */
+    :root {
+      --page-bg: #f6f8f4;
+      --paper: #ffffff;
+      --tint: #eef3ec;
+      --line: rgba(15, 26, 20, 0.10);
+      --line-soft: rgba(15, 26, 20, 0.06);
+      --accent: #167a4d;
+      --accent-dim: rgba(22, 122, 77, 0.10);
+      --text: #12211a;
+      --text-2: rgba(18, 33, 26, 0.72);
+      --text-3: rgba(18, 33, 26, 0.55);
+      --shadow: 0 20px 50px rgba(16, 36, 26, 0.07);
+      --r-md: 14px;
+      --r-sm: 8px;
+      --display: "Syne", system-ui, sans-serif;
+      --body: "DM Sans", system-ui, sans-serif;
     }
 
-    *{box-sizing:border-box;}
-    ::selection{background:var(--violet); color:var(--paper);}
-    body{
-      margin:0; background:var(--paper); color:var(--ink);
-      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
-      -webkit-font-smoothing:antialiased;
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--page-bg); color: var(--text);
+      font-family: var(--body); font-size: 17px; line-height: 1.7;
+      -webkit-font-smoothing: antialiased; font-feature-settings: "tnum" 0;
     }
-    a{color:var(--violet-deep);}
-    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+    ::selection { background: var(--accent-dim); }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    [id] { scroll-margin-top: 88px; }
+    img { max-width: 100%; display: block; }
 
-    /* ---------- Site integration bar ---------- */
-    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
-    .site-topbar__inner{
-      max-width:800px; margin:0 auto; padding:14px 24px;
-      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    /* top bar */
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(246, 248, 244, 0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
     }
-    .site-topbar__home{
-      font-family:"IBM Plex Mono", ui-monospace, monospace;
-      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
-      color:var(--ink); text-decoration:none;
+    .bar__in {
+      max-width: 1160px; margin: 0 auto; height: 64px; padding: 0 clamp(20px, 5vw, 48px);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .site-topbar__home:hover{color:var(--violet-deep);}
-    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
-    .site-topbar__links a{
-      font-family:"IBM Plex Mono", ui-monospace, monospace;
-      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
-      color:var(--ink-soft); text-decoration:none;
-    }
-    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--violet-deep);}
+    .bar__home { font-family: var(--display); font-weight: 800; font-size: 1.15rem; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
+    .bar nav { display: flex; gap: 22px; }
+    .bar nav a { color: var(--text-2); text-decoration: none; font-size: 0.93rem; font-weight: 500; transition: color .2s; }
+    .bar nav a:hover { color: var(--accent); }
 
-    .wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+    /* hero */
+    .hero { max-width: 1160px; margin: 0 auto; padding: 72px clamp(20px, 5vw, 48px) 0; }
+    .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+    h1 {
+      font-family: var(--display); font-weight: 700; letter-spacing: -0.02em;
+      font-size: clamp(2rem, 3.9vw, 3.05rem); line-height: 1.1; margin: 0 0 22px; max-width: 27ch; text-wrap: balance;
+    }
+    .dek { font-size: 1.2rem; line-height: 1.6; color: var(--text-2); max-width: 56ch; margin: 0; }
+    .hero__figure { margin: 48px 0 0; }
+    .hero__figure img { width: 100%; height: auto; border-radius: var(--r-md); border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--paper); }
+    .hero__figure figcaption { margin-top: 12px; }
 
-    header.hero{padding:56px 0 40px; border-bottom:1px solid var(--line); margin-bottom:56px;}
-    .kicker{
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem;
-      letter-spacing:0.14em; text-transform:uppercase; color:var(--violet-deep);
-      display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    .stats {
+      max-width: 1160px; margin: 40px auto 0; padding: 0 clamp(20px, 5vw, 48px);
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
     }
-    .kicker::before{content:""; width:8px; height:8px; background:var(--violet); border-radius:50%; flex:none;}
-    h1{
-      font-family:"Fraunces", Georgia, serif; font-optical-sizing:auto; font-weight:600;
-      font-size:clamp(2.0rem, 5vw, 2.9rem); line-height:1.08; letter-spacing:-0.01em;
-      margin:0 0 20px; text-wrap:balance;
-    }
-    .dek{font-size:1.15rem; line-height:1.55; color:var(--ink-soft); max-width:60ch; margin:0 0 18px;}
-    .byline{
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.8rem;
-      color:var(--ink-soft); margin:0 0 30px; line-height:1.7;
-    }
+    .stat { padding: 18px 24px 18px 0; }
+    .stat + .stat { padding-left: 24px; border-left: 1px solid var(--line); }
+    .stat b { display: block; font-family: var(--display); font-weight: 700; font-size: 1.9rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .stat span { font-size: 0.9rem; color: var(--text-2); }
 
-    .statrow{display:flex; flex-wrap:wrap; gap:0;}
-    .stat{flex:1 1 140px; padding:14px 20px 14px 0; border-right:1px solid var(--line); margin-right:20px;}
-    .stat:last-child{border-right:none; margin-right:0;}
-    .stat .n{
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:1.5rem; font-weight:600;
-      color:var(--ink); font-variant-numeric:tabular-nums; display:block;
+    /* body layout: sticky contents + article */
+    .layout {
+      max-width: 1160px; margin: 72px auto 0; padding: 0 clamp(20px, 5vw, 48px) 110px;
+      display: grid; grid-template-columns: 210px minmax(0, 720px); gap: 72px; justify-content: start;
     }
-    .stat .l{font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.02em;}
+    .toc { position: sticky; top: 96px; align-self: start; }
+    .toc p { font-size: 0.8rem; font-weight: 600; color: var(--text-3); margin: 0 0 10px; }
+    .toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); }
+    .toc a {
+      display: block; padding: 5px 0 5px 14px; margin-left: -1px; border-left: 2px solid transparent;
+      color: var(--text-2); text-decoration: none; font-size: 0.9rem; line-height: 1.4; transition: color .2s, border-color .2s;
+    }
+    .toc a:hover { color: var(--text); }
+    .toc a[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
 
-    h2{
-      font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.65rem;
-      letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
-    }
-    h3{font-size:1.08rem; font-weight:700; margin:32px 0 10px;}
-    .divider{
-      display:flex; align-items:center; gap:14px; margin:64px 0 32px;
-      color:var(--ink-soft); font-family:"IBM Plex Mono", ui-monospace, monospace;
-      font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
-    }
-    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
-    section:first-of-type .divider{margin-top:0;}
+    article section + section { margin-top: 72px; }
+    h2 { font-family: var(--display); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.015em; line-height: 1.2; margin: 0 0 22px; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin: 36px 0 10px; }
+    .prose p { margin: 0 0 1.25em; }
+    .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.25em; }
+    .prose li { margin-bottom: 0.55em; }
+    .prose li::marker { color: var(--accent); }
+    strong { font-weight: 600; }
+    code { font-size: 0.86em; background: var(--tint); padding: 0.12em 0.4em; border-radius: var(--r-sm); overflow-wrap: anywhere; }
 
-    .prose{font-size:1.06rem; line-height:1.68;}
-    .prose p{margin:0 0 1.3em;}
-    .prose > p:last-child{margin-bottom:0;}
-    .prose ul, .prose ol{margin:0 0 1.3em; padding-left:1.3em;}
-    .prose li{margin-bottom:0.55em;}
-    strong{color:var(--ink); font-weight:650;}
-    code{
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.86em;
-      background:var(--mono-chip); padding:0.12em 0.4em; border-radius:4px;
-      overflow-wrap:anywhere;
-    }
+    .abstract { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: var(--r-md); padding: 26px 28px; }
+    .abstract p { margin: 0; font-size: 1.02rem; }
 
-    .abstract{
-      background:var(--paper-raised); border:1px solid var(--line);
-      border-left:3px solid var(--violet); border-radius:10px; padding:24px 26px;
-    }
-    .abstract p{margin:0; font-size:1.02rem; line-height:1.68;}
+    /* tables: header rule + zebra, no hairline under every row */
+    .table-wrap { overflow-x: auto; margin: 8px 0 28px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.93rem; font-variant-numeric: tabular-nums; }
+    caption { caption-side: top; text-align: left; padding: 14px 16px 6px; font-size: 0.86rem; font-weight: 600; color: var(--text-2); }
+    th, td { padding: 10px 16px; text-align: left; vertical-align: top; }
+    thead th { font-weight: 600; font-size: 0.84rem; color: var(--text-3); border-bottom: 1px solid var(--line); }
+    tbody tr:nth-child(even) td { background: rgba(22, 122, 77, 0.035); }
+    td.n, th.n { text-align: right; white-space: nowrap; }
+    td.best { color: var(--accent); font-weight: 600; }
 
-    /* tables */
-    .table-wrap{overflow-x:auto; margin:0 0 1.5em; border:1px solid var(--line); border-radius:10px; background:var(--paper-raised);}
-    table{width:100%; border-collapse:collapse; font-size:0.94rem;}
-    caption{
-      caption-side:top; text-align:left; padding:14px 16px 4px;
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.74rem;
-      letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft);
-    }
-    th, td{padding:9px 16px; text-align:left; vertical-align:top;}
-    thead th{font-weight:600; color:var(--ink-soft); font-size:0.84rem; border-bottom:1px solid var(--line);}
-    tbody tr + tr td{border-top:1px solid color-mix(in srgb, var(--line) 60%, transparent);}
-    td.n, th.n{text-align:right; font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; white-space:nowrap;}
-    td.best{color:var(--violet-deep); font-weight:600;}
+    figure { margin: 8px 0 32px; }
+    figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--r-md); background: #fcfcfb; }
+    figcaption { font-size: 0.9rem; color: var(--text-2); line-height: 1.55; margin-top: 10px; }
+    figcaption strong { color: var(--text); margin-right: 6px; }
 
-    figure{margin:8px 0 32px;}
-    figure img{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:10px; background:#fcfcfb;}
-    figcaption{font-size:0.88rem; color:var(--ink-soft); line-height:1.55; margin-top:10px;}
-    figcaption strong{font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--violet-deep); margin-right:6px;}
+    .errors { margin: 4px 0 28px; }
+    .errors > div { display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 16px 0; }
+    .errors > div + div { border-top: 1px solid var(--line-soft); }
+    .errors dt { font-weight: 600; color: var(--text); }
+    .errors dd { margin: 0; color: var(--text-2); font-size: 0.97rem; }
 
-    .errors{display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:1.3em;}
-    @media (min-width:620px){.errors{grid-template-columns:1fr 1fr 1fr;}}
-    .err{
-      background:var(--paper-raised); border:1px solid var(--line);
-      border-left:3px solid var(--rust); border-radius:10px; padding:18px 20px;
-    }
-    .err .tag{
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem;
-      letter-spacing:0.09em; text-transform:uppercase; color:var(--rust); margin-bottom:8px; display:block;
-    }
-    .err p{margin:0; color:var(--ink-soft); font-size:0.93rem; line-height:1.56;}
+    ol.refs { padding-left: 1.3em; font-size: 0.95rem; color: var(--text-2); }
+    ol.refs li { margin-bottom: 0.7em; }
 
-    ol.refs{padding-left:1.4em; font-size:0.94rem; line-height:1.6; color:var(--ink-soft);}
-    ol.refs li{margin-bottom:0.7em;}
+    .end { margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px 28px; font-size: 0.92rem; color: var(--text-2); }
 
-    footer{
-      margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
-      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
-      display:flex; flex-wrap:wrap; gap:8px 20px;
+    @media (prefers-reduced-motion: no-preference) {
+      .hero > * { animation: rise .6s cubic-bezier(.16,1,.3,1) both; }
+      .hero > *:nth-child(2) { animation-delay: .06s; }
+      .hero > *:nth-child(3) { animation-delay: .12s; }
+      .hero > *:nth-child(4) { animation-delay: .18s; }
     }
-    footer a{color:var(--violet-deep);}
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-    @media (prefers-reduced-motion: no-preference){
-      header.hero, section{animation:rise 0.5s ease both;}
+    @media (max-width: 1000px) {
+      .layout { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 56px; }
+      .toc { display: none; }
     }
-    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      .bar nav a.opt { display: none; }
+      .hero { padding-top: 44px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
+      .stat + .stat { border-left: 0; padding-left: 0; }
+      .stat { padding-right: 12px; }
+      .errors > div { grid-template-columns: 1fr; gap: 4px; }
+      h2 { font-size: 1.45rem; }
+    }
   </style>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div class="site-topbar">
-    <div class="site-topbar__inner">
-      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
-      <nav class="site-topbar__links">
+  <header class="bar">
+    <div class="bar__in">
+      <a href="index.html" class="bar__home">Rishav</a>
+      <nav aria-label="Site">
+        <a href="index.html" class="opt">Home</a>
         <a href="portfolio.html">Portfolio</a>
         <a href="blog.html">Writing &amp; Research</a>
-        <a href="cytoguard_paper.html" class="is-active">Technical Report</a>
       </nav>
     </div>
-  </div>
+  </header>
 
-  <div class="wrap">
-
+  <main>
     <header class="hero">
-      <div class="kicker">Technical report · CytoGuard</div>
-      <h1>CytoGuard: Detecting and Classifying Cellular Injury in Cell Painting Screens</h1>
-      <p class="dek">An open platform that flags injured wells in Cell Painting screens, names the likely injury mechanism, and shows the cells behind every call, evaluated on compounds the model has never seen.</p>
-      <p class="byline">Rishav Bhattarai · September 2026<br>Data: IDR idr0133 (CC BY 4.0)</p>
-      <div class="statrow">
-        <div class="stat"><span class="n">16,701</span><span class="l">Cell Painting wells</span></div>
-        <div class="stat"><span class="n">0.462</span><span class="l">macro-F1, never-seen compounds</span></div>
-        <div class="stat"><span class="n">0.947</span><span class="l">AUROC, injured vs healthy</span></div>
-        <div class="stat"><span class="n">r = 0.95</span><span class="l">raw pixels vs profiles</span></div>
-      </div>
+      <p class="eyebrow">Technical report</p>
+      <h1>CytoGuard: detecting cellular injury in Cell Painting screens</h1>
+      <p class="dek">An open platform that flags injured wells, names the likely injury mechanism, and shows the cells behind every call. By Rishav Bhattarai, September 2026.</p>
+      <figure class="hero__figure">
+        <img src="images/cytoguard/plate_view.jpg" alt="CytoGuard dashboard: a 384-well plate colored by injury score, with the selected nocodazole well's injury call, class probabilities and most similar reference compounds" width="1600" height="1000" fetchpriority="high">
+        <figcaption><strong>Figure 1.</strong> The CytoGuard dashboard on plate BR00114096. Wells are colored by injury score; DMSO controls are ringed. The selected nocodazole well is flagged as Cytoskeletal, and its nearest reference treatments are podophyllotoxin and colchicine, both tubulin poisons.</figcaption>
+      </figure>
     </header>
 
-    <section>
-      <div class="divider">Abstract</div>
-      <div class="abstract">
+    <div class="stats" role="list" aria-label="Key results">
+      <div class="stat" role="listitem"><b>16,701</b><span>Cell Painting wells, IDR idr0133</span></div>
+      <div class="stat" role="listitem"><b>0.462</b><span>macro-F1 on never-seen compounds (baseline 0.146)</span></div>
+      <div class="stat" role="listitem"><b>0.947</b><span>AUROC, injured vs healthy wells</span></div>
+      <div class="stat" role="listitem"><b>0.95</b><span>correlation, raw pixels vs published profiles</span></div>
+    </div>
+
+    <div class="layout">
+      <nav class="toc" aria-label="Contents">
+        <p>Contents</p>
+        <ol>
+          <li><a href="#abstract">Abstract</a></li>
+          <li><a href="#introduction">1. Introduction</a></li>
+          <li><a href="#data">2. Data</a></li>
+          <li><a href="#methods">3. Methods</a></li>
+          <li><a href="#results">4. Results</a></li>
+          <li><a href="#discussion">5. Discussion</a></li>
+          <li><a href="#limitations">6. Limitations</a></li>
+          <li><a href="#reproducibility">7. Reproducibility</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <article>
+      <section id="abstract" aria-labelledby="abstract-h">
+        <h2 id="abstract-h">Abstract</h2>
+        <div class="abstract">
         <p>Compounds that damage cells nonspecifically are a common source of false positives in phenotypic and target-based screens. I present CytoGuard, an open, end-to-end platform that flags injured wells in Cell Painting screens, names the likely injury mechanism, retrieves morphologically similar reference compounds, and exposes the underlying images and segmentations for review. On the idr0133 reference set (16,701 wells, 144 compounds, 14 injury mechanisms), profile quality validated with mean average precision shows that 88% of treatments are distinguishable from vehicle and that 13 of 14 mechanisms are morphologically consistent across chemically distinct compounds. Under compound-held-out cross-validation, the setting that matches screening a new compound, a gradient-boosted classifier reaches a macro-F1 of 0.462 across 15 classes, separates injured from healthy wells with an AUROC of 0.947, and ranks the true mechanism first for 59% of never-seen compounds (84% within the top three). Under the published baseline's own evaluation protocols it improves macro-F1 from 0.608 to 0.807 (random split) and from 0.586 to 0.819 (plate holdout). An independent pixel-level pipeline (OME-Zarr, Cellpose-SAM, cp_measure) reproduces injury scores from raw images with a correlation of 0.95 against the profile-based predictions on the same wells, although mechanism naming transfers less well across the software gap. All components, from ingest to web interface, are open source, tested and reproducible.</p>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">1. Introduction</div>
-      <div class="prose">
+      <section id="introduction" aria-labelledby="introduction-h">
+        <h2 id="introduction-h">1. Introduction</h2>
+        <div class="prose">
         <p>High-throughput screens routinely produce "hits" whose activity comes from cellular injury rather than on-target engagement: redox cycling, nonselective covalent reactivity, membrane disruption, cytoskeletal collapse or DNA damage. These nuisance compounds consume follow-up resources and, if missed, resurface later as toxicity liabilities. Dahlin <em>et al.</em> (2023) assembled 218 prototypical cytotoxic and nuisance compounds, profiled them with Cell Painting in U-2 OS cells across a dose range, and showed that injury mechanisms form distinct morphological clusters. Serrano <em>et al.</em> (2025) used the processed profiles as a case study for Pycytominer, training a multi-class logistic regression to predict 15 injury categories.</p>
         <p>This project turns those reference data into a tool a screening scientist can use to triage new compounds. That takes three things beyond a classifier: an evaluation that reflects never-seen compounds, a pipeline that works from raw images rather than pre-computed features, and an interface that shows the evidence behind each call.</p>
         <p><strong>Contributions.</strong></p>
@@ -237,15 +241,11 @@
           <li>A deployable platform (FastAPI, job queue, plugin system, web viewer) with tests at every stage and a single-command reproducible workflow.</li>
         </ol>
       </div>
-      <figure>
-        <img src="images/cytoguard/plate_view.jpg" alt="CytoGuard dashboard: a 384-well plate colored by injury score, with the selected nocodazole well's injury call, class probabilities and most similar reference compounds" loading="lazy" width="1600" height="1000">
-        <figcaption><strong>Figure 1</strong>The CytoGuard dashboard on plate BR00114096. Wells are colored by injury score; DMSO controls are ringed. The selected nocodazole well is flagged as Cytoskeletal, and its nearest reference treatments are podophyllotoxin and colchicine, both tubulin poisons.</figcaption>
-      </figure>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">2. Data</div>
-      <div class="prose">
+      <section id="data" aria-labelledby="data-h">
+        <h2 id="data-h">2. Data</h2>
+        <div class="prose">
         <p><strong>Reference set.</strong> IDR study idr0133, screen A: 84 plates of U-2 OS cells, Cell Painting (DNA, ER, RNA/nucleoli, AGP, mitochondria), 20x Opera Phenix, 24 h and 48 h treatments. I used the labeled per-well CellProfiler profiles released with the Pycytominer case study (<code>labeled_cell_injury_profile.csv.gz</code>, WayScience/predicting-cell-injury-compounds v2.1.1): 16,701 wells, 372 features, 144 annotated compounds plus DMSO, 1,111 distinct treatments (compound x concentration x time).</p>
       </div>
       <div class="table-wrap">
@@ -267,11 +267,11 @@
       <div class="prose">
         <p><strong>Raw images.</strong> For the pixel track I retrieved raw 16-bit TIFFs (2160 x 2160, one per channel and field) for 25 wells of plate BR00114096 from the EBI mirror of IDR, verifying each file against the published SHA-1 checksums. The selection comprises 8 randomly chosen DMSO wells and, for each injury class present on the plate, the highest-concentration well of up to two distinct compounds (17 wells, 11 classes). The IDR OMERO rendering service could not serve pixels for this study at the time of writing, so the file mirror was used directly.</p>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">3. Methods</div>
-      <div class="prose">
+      <section id="methods" aria-labelledby="methods-h">
+        <h2 id="methods-h">3. Methods</h2>
+        <div class="prose">
         <h3>3.1 Profile processing</h3>
         <p>Profiles were renamed into a tidy <code>Metadata_*</code> schema and cast to float32. Pycytominer <code>feature_select</code> removed low-variance features, one feature from each pair with Pearson correlation above 0.9, features with missing values, and features on the standard blocklist, leaving 352 features. The released profiles are already plate-normalized, so no further normalization was applied in the profile track.</p>
 
@@ -314,18 +314,18 @@
         <h3>3.6 Platform</h3>
         <p>The library exposes each stage as a function. Analyses are plugins implementing <code>run(PlateContext) -&gt; PluginResult</code>, discovered through the <code>cytoguard.plugins</code> entry-point group. Three are built in: injury flags (per-compound worst-well triage), similarity search (cosine similarity after per-feature scaling, excluding the query's own compound), and plate spatial QC. The spatial plugin tests DMSO wells for edge-versus-interior (Mann-Whitney U), row and column effects (Kruskal-Wallis), with Bonferroni correction and a minimum effect size of 0.05 in injury score, because with about 100 DMSO wells per plate trivially small shifts are otherwise significant. A FastAPI service serves plates, wells, similarity, jobs and decisions. Jobs run on Redis/RQ when configured (with separate <code>gpu</code> and <code>default</code> queues) or on an in-process pool otherwise. The web client renders the plate map, a canvas-based five-channel compositor with mask overlays, a triage table with persisted decisions, and the QC and model views.</p>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">4. Results</div>
-      <div class="prose">
+      <section id="results" aria-labelledby="results-h">
+        <h2 id="results-h">4. Results</h2>
+        <div class="prose">
         <h3>4.1 Profiles carry strong, mechanism-specific signal</h3>
         <p>Of 1,111 treatments, 88% were retrieved against plate-matched DMSO with significant mAP. Activity was highest for mTOR, HDAC and Hsp90 inhibitors (100%) and lowest for saponins (69%), redox cyclers (79%) and tannins (79%), consistent with the weaker or dose-limited phenotypes of those classes.</p>
         <p>Cross-compound injury consistency was significant for 13 of 14 classes. The strongest were HDAC (mAP 0.67), genotoxins (0.56), Hsp90 (0.44) and cytoskeletal agents (0.36). The only non-significant class was Miscellaneous (0.27), a heterogeneous catch-all label for which consistency is not expected. Mitochondrial toxicants (0.05) and nonspecific reactives (0.08) were significant but weak, and they are also among the hardest classes to predict (Section 4.3).</p>
       </div>
       <figure>
         <img src="images/cytoguard/map_injury.jpg" alt="Bar chart of mean average precision by injury class; HDAC highest at 0.67, Miscellaneous not significant" loading="lazy" width="1600" height="1050">
-        <figcaption><strong>Figure 2</strong>Cross-compound injury consistency (mAP) per class. Gray marks the one class that is not significant after FDR correction.</figcaption>
+        <figcaption><strong>Figure 2.</strong> Cross-compound injury consistency (mAP) per class. Gray marks the one class that is not significant after FDR correction.</figcaption>
       </figure>
 
       <div class="prose"><h3>4.2 Classification</h3></div>
@@ -353,7 +353,7 @@
       </div>
       <figure>
         <img src="images/cytoguard/macro_f1_comparison.jpg" alt="Grouped bar chart of macro-F1 for the published baseline, logistic regression and LightGBM across three evaluation settings" loading="lazy" width="1600" height="755">
-        <figcaption><strong>Figure 3</strong>Macro-F1 by evaluation setting. The compound holdout is the setting a screen faces when it tests a new compound.</figcaption>
+        <figcaption><strong>Figure 3.</strong> Macro-F1 by evaluation setting. The compound holdout is the setting a screen faces when it tests a new compound.</figcaption>
       </figure>
       <div class="prose">
         <p>My logistic regression already matches or exceeds the baseline under its own protocols, and LightGBM adds a further 0.14 to 0.18 macro-F1. The drop from plate holdout (0.819) to compound holdout (0.462) quantifies how much of the "easy" performance comes from recognizing specific compounds. Even so, performance on never-seen compounds is far above the permutation control, and injured wells are separated from healthy ones with an AUROC of 0.947. In triage the injury score drives the keep or drop decision, and the mechanism label guides interpretation, so this separation matters more than mechanism accuracy.</p>
@@ -361,23 +361,14 @@
         <h3>4.3 Where the model fails, and why</h3>
         <p>Per-class F1 on held-out compounds (LightGBM): Control 0.91, Cytoskeletal 0.91, HDAC 0.90, Genotoxin 0.61, Proteasome 0.61, Hsp90 0.49, Ferroptosis 0.49, Miscellaneous 0.44, Kinase 0.42, Saponin 0.34, Tannin 0.28, Redox 0.26, Nonspecific reactive 0.22, Mitochondria 0.02, mTOR 0.00. The main error patterns are:</p>
       </div>
-      <div class="errors">
-        <div class="err">
-          <span class="tag">mTOR to Kinase</span>
-          <p>Both mTOR compounds are predicted as Kinase. mTOR is itself a kinase, and several "Kinase" compounds (for example PI-103 and BEZ235) inhibit PI3K/mTOR, so the confusion is biologically reasonable and the class is too small (two compounds) to learn separately.</p>
-        </div>
-        <div class="err">
-          <span class="tag">Weak mechanisms to Control</span>
-          <p>72% of tannin wells and 55% of saponin wells are predicted as Control. Labels are assigned per compound, but many low-dose wells show no phenotype. These are label-noise errors more than model errors.</p>
-        </div>
-        <div class="err">
-          <span class="tag">Diffuse mechanisms to Miscellaneous</span>
-          <p>Mitochondrial toxicants and nonspecific reactives are absorbed into the heterogeneous Miscellaneous class, consistent with their low cross-compound mAP in Section 4.1.</p>
-        </div>
-      </div>
+      <dl class="errors">
+          <div><dt>mTOR to Kinase</dt><dd>Both mTOR compounds are predicted as Kinase. mTOR is itself a kinase, and several "Kinase" compounds (for example PI-103 and BEZ235) inhibit PI3K/mTOR, so the confusion is biologically reasonable and the class is too small (two compounds) to learn separately.</dd></div>
+          <div><dt>Weak mechanisms to Control</dt><dd>72% of tannin wells and 55% of saponin wells are predicted as Control. Labels are assigned per compound, but many low-dose wells show no phenotype. These are label-noise errors more than model errors.</dd></div>
+          <div><dt>Diffuse mechanisms to Miscellaneous</dt><dd>Mitochondrial toxicants and nonspecific reactives are absorbed into the heterogeneous Miscellaneous class, consistent with their low cross-compound mAP in Section 4.1.</dd></div>
+        </dl>
       <figure>
         <img src="images/cytoguard/confusion_lgbm.jpg" alt="Row-normalized confusion matrix for held-out compounds; strong diagonal for Control, Cytoskeletal and HDAC; mTOR predicted as Kinase" loading="lazy" width="1600" height="1383">
-        <figcaption><strong>Figure 4</strong>Row-normalized confusion matrix for held-out compounds (LightGBM).</figcaption>
+        <figcaption><strong>Figure 4.</strong> Row-normalized confusion matrix for held-out compounds (LightGBM).</figcaption>
       </figure>
 
       <div class="prose">
@@ -400,7 +391,7 @@
       </div>
       <figure>
         <img src="images/cytoguard/pixel_viewer.jpg" alt="Image viewer showing a colchicine-treated field with sparse, damaged cells and Cellpose-SAM outlines, flagged with an injury score of 0.92" loading="lazy" width="1600" height="1000">
-        <figcaption><strong>Figure 5</strong>A colchicine well from the pixel track: five-channel composite with Cellpose-SAM nucleus (cyan) and cell (amber) outlines. The injury flag is correct; the mechanism call (Genotoxin) is one of the pixel track's naming errors.</figcaption>
+        <figcaption><strong>Figure 5.</strong> A colchicine well from the pixel track: five-channel composite with Cellpose-SAM nucleus (cyan) and cell (amber) outlines. The injury flag is correct; the mechanism call (Genotoxin) is one of the pixel track's naming errors.</figcaption>
       </figure>
       <div class="prose">
         <p>Cellpose-SAM beats the classical segmenter on every accuracy row, and the gap is largest in the separation between treated and control wells.</p>
@@ -410,19 +401,19 @@
         <h3>4.5 Plate quality control</h3>
         <p>On the reference plate BR00114096, DMSO wells showed a statistically significant edge-versus-interior difference of -0.011 in injury score, which the effect-size criterion correctly does not flag, and a row effect with a spread of 0.082 across row medians, which is flagged for review. Without the effect-size criterion both would be reported. With about 100 DMSO wells per plate, significance alone flags shifts too small to matter.</p>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">5. Discussion</div>
-      <div class="prose">
+      <section id="discussion" aria-labelledby="discussion-h">
+        <h2 id="discussion-h">5. Discussion</h2>
+        <div class="prose">
         <p>Cellular injury is detectable from Cell Painting with high reliability even for never-seen compounds, and the detection holds up when the whole pipeline is rebuilt from raw pixels. Mechanism assignment is useful but more fragile: excellent for cytoskeletal, HDAC and genotoxic agents, weak for mechanisms with small reference sets or diffuse phenotypes. In screening triage, the injury score gates the decision, and the mechanism probabilities, similar reference compounds and images give the scientist evidence for the final call.</p>
         <p>The gap between plate-holdout and compound-holdout performance (0.82 vs 0.46 macro-F1) shows how much of the easier splits' performance comes from recognizing known compounds. Reporting only random or plate splits overstates how well a model will behave on a new library. Compound-grouped evaluation, permutation controls and decision-level metrics should be the default for this task.</p>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">6. Limitations</div>
-      <div class="prose">
+      <section id="limitations" aria-labelledby="limitations-h">
+        <h2 id="limitations-h">6. Limitations</h2>
+        <div class="prose">
         <ul>
           <li><strong>Label granularity.</strong> Mechanism labels are per compound and ignore dose response, which penalizes correct "healthy" calls at inactive doses and caps achievable well-level accuracy.</li>
           <li><strong>Class imbalance and size.</strong> Five classes have four or fewer compounds. Estimates for these classes are high-variance.</li>
@@ -431,19 +422,19 @@
           <li><strong>Single cell line and assay.</strong> All data are U-2 OS Cell Painting from one laboratory. Transfer to other cell types, stains and microscopes is untested.</li>
         </ul>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">7. Reproducibility</div>
-      <div class="prose">
+      <section id="reproducibility" aria-labelledby="reproducibility-h">
+        <h2 id="reproducibility-h">7. Reproducibility</h2>
+        <div class="prose">
         <p>All results are produced by <code>snakemake -s workflow/Snakefile -c4</code>, which downloads and checksums the data, runs the profile benchmark, selects and processes the demo wells, and renders the results page. Random seeds are fixed. The test suite (20 tests, about 3 s) runs on a synthetic dataset with the same schema, so continuous integration never depends on external downloads. Software versions used: Python 3.11, Cellpose 4.2, cp_measure 0.2, Pycytominer 1.7, copairs 0.5, ngff-zarr 0.47, scikit-learn 1.9, LightGBM 4.7, PyTorch 2.14.</p>
         <p><strong>Compute.</strong> The profile benchmark (mAP, three splits, two models, permutation control) takes about 3.5 minutes on an Apple M4 laptop. The pixel track for 25 wells takes about 20 minutes with Cellpose-SAM on MPS, or about 6 minutes with the classical segmenter.</p>
       </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="divider">References</div>
-      <ol class="refs">
+      <section id="references" aria-labelledby="references-h">
+        <h2 id="references-h">References</h2>
+        <ol class="refs">
         <li>Dahlin, J.L., Hua, B.K., Zucconi, B.E. <em>et al.</em> Reference compounds for characterizing cellular injury in high-content cellular morphology assays. <em>Nature Communications</em> 14, 1364 (2023).</li>
         <li>Serrano, E., Chandrasekaran, S.N., Bunten, D. <em>et al.</em> Reproducible image-based profiling with Pycytominer. <em>Nature Methods</em> (2025).</li>
         <li>Pachitariu, M., Rariden, M. and Stringer, C. Cellpose-SAM: superhuman generalization for cellular segmentation. <em>bioRxiv</em> (2025).</li>
@@ -452,15 +443,31 @@
         <li>Moore, J. <em>et al.</em> OME-Zarr: a cloud-optimized bioimaging file format with international community support. <em>Histochemistry and Cell Biology</em> 160, 223-251 (2023).</li>
         <li>Bray, M.-A. <em>et al.</em> Cell Painting, a high-content image-based assay for morphological profiling using multiplexed fluorescent dyes. <em>Nature Protocols</em> 11, 1757-1774 (2016).</li>
       </ol>
-    </section>
+      </section>
 
-    <footer>
-      <span>Back to <a href="blog.html">Writing &amp; Research</a></span>
-      <span>Data: <a href="https://idr.openmicroscopy.org/webclient/?show=screen-3151" rel="noopener">IDR idr0133</a> (CC BY 4.0)</span>
-      <span>Baseline: <a href="https://github.com/WayScience/predicting-cell-injury-compounds" rel="noopener">WayScience/predicting-cell-injury-compounds</a></span>
-    </footer>
+        <div class="end">
+          <span>Back to <a href="blog.html">Writing &amp; Research</a></span>
+          <span>Data: <a href="https://idr.openmicroscopy.org/webclient/?show=screen-3151" rel="noopener">IDR idr0133</a>, CC BY 4.0</span>
+          <span>Baseline: <a href="https://github.com/WayScience/predicting-cell-injury-compounds" rel="noopener">WayScience/predicting-cell-injury-compounds</a></span>
+        </div>
+      </article>
+    </div>
+  </main>
 
-  </div>
-
+  <script>
+    // Contents highlight: marks the section currently being read (IntersectionObserver, no scroll listener).
+    (() => {
+      const links = new Map([...document.querySelectorAll('.toc a')].map(a => [a.getAttribute('href').slice(1), a]));
+      if (!('IntersectionObserver' in window) || !links.size) return;
+      const visible = new Set();
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id));
+        const current = [...links.keys()].find(id => visible.has(id));
+        if (!current) return;
+        links.forEach((a, id) => a.setAttribute('aria-current', String(id === current)));
+      }, { rootMargin: '-90px 0px -65% 0px' });
+      links.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+    })();
+  </script>
 </body>
 </html>
