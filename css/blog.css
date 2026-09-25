@@ -2,3 +2,6 @@
    BLOG / WRITING & RESEARCH — PAGE-SPECIFIC OVERRIDES
    Shares the design system defined in css/portfolio.css
    ============================================================ */
+
+/* Research section: full-width paper cards stacked */
+.research-stack { display: grid; grid-template-columns: 1fr; gap: 24px; }

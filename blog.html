@@ -103,10 +103,40 @@
   <section id="research" class="section">
     <div class="container">
       <div class="section__header">
-        <p class="section__eyebrow">Published</p>
-        <h2 class="section__title">Conference Paper</h2>
-        <p class="section__subtitle">Peer-reviewed research on translating cybersecurity risk into financial decision-making.</p>
+        <p class="section__eyebrow">Research</p>
+        <h2 class="section__title">Papers &amp; Technical Reports</h2>
+        <p class="section__subtitle">A peer-reviewed conference paper on cybersecurity investment, and a technical report on detecting cellular injury in drug screens.</p>
       </div>
+
+      <div class="research-stack">
+
+      <article class="card card--wide">
+        <div class="card__glow"></div>
+        <div class="card__header">
+          <div class="card__icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6"/><path d="M10 3v6.5L4.5 19a1.5 1.5 0 0 0 1.3 2.25h12.4A1.5 1.5 0 0 0 19.5 19L14 9.5V3"/><path d="M7 15h10"/></svg>
+          </div>
+          <div class="card__tags">
+            <span class="tag tag--teal">Computer Vision</span>
+            <span class="tag tag--purple">Drug Discovery</span>
+            <span class="tag tag--python">Python</span>
+          </div>
+        </div>
+        <h3 class="card__title">CytoGuard: Detecting and Classifying Cellular Injury in Cell Painting Screens</h3>
+        <p class="card__desc">
+          An open platform that flags injured wells in Cell Painting drug screens, names the likely injury mechanism, and shows the cells behind every call. Evaluated on 16,701 wells from IDR idr0133, with every compound scored by a model that never saw it.
+        </p>
+        <ul class="card__bullets">
+          <li>Macro-F1 of 0.462 on never-seen compounds, against 0.146 for the published Pycytominer baseline; AUROC 0.947 for injured vs healthy wells</li>
+          <li>Raw images to injury calls with OME-Zarr, Cellpose-SAM and cp_measure; pixel-level scores match the published profiles at r = 0.95</li>
+          <li>FastAPI job queue, plugin system and a web viewer with segmentation overlays; 20 tests and a one-command Snakemake workflow</li>
+        </ul>
+        <div class="card__stack">Cellpose-SAM · cp_measure · Pycytominer · copairs · LightGBM · FastAPI</div>
+        <div class="card__footer">
+          <a href="cytoguard_paper.html" class="card__link card__link--primary">Read the Report →</a>
+          <span class="card__badge">Technical Report · September 2026</span>
+        </div>
+      </article>
 
       <article class="card card--wide">
         <div class="card__glow"></div>
@@ -135,6 +165,8 @@
           <span class="card__badge">Published Conference Paper · 2025</span>
         </div>
       </article>
+
+      </div><!-- /research-stack -->
     </div>
   </section>
 

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CytoGuard: Detecting Cellular Injury in Cell Painting Screens | Rishav Bhattarai</title>
+  <meta name="description" content="Technical report: an open platform that flags injured wells in Cell Painting screens, names the injury mechanism, and shows the cells behind every call. Compound-held-out evaluation on 16,701 wells from IDR idr0133." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavbhattarai.com.np/cytoguard_paper.html" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="CytoGuard: Detecting and Classifying Cellular Injury in Cell Painting Screens" />
+  <meta property="og:description" content="Flag injured wells, name the injury mechanism, and show the cells behind every call. Macro-F1 0.462 on never-seen compounds against a published baseline of 0.146." />
+  <meta property="og:url" content="https://rishavbhattarai.com.np/cytoguard_paper.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta property="og:image" content="https://rishavbhattarai.com.np/images/cytoguard/plate_view.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CytoGuard: Detecting Cellular Injury in Cell Painting Screens" />
+  <meta name="twitter:description" content="Flag injured wells, name the injury mechanism, and show the cells behind every call." />
+
+  <style>
+    :root{
+      --paper:#EFEAE0;
+      --paper-raised:#F8F4EB;
+      --ink:#241C2E;
+      --ink-soft:#4E4358;
+      --line:#D9CDB8;
+      --violet:#5B3A8C;
+      --violet-deep:#3F2861;
+      --rust:#A8462C;
+      --mono-chip:#E4DCC9;
+      --focus:#5B3A8C;
+      --good:#3F7A4A;
+      --null:#8A6D2E;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
+        --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
+        --mono-chip:#2A2233; --focus:#A98CD9; --good:#78C688; --null:#D9B85E;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#1B1620; --paper-raised:#241D2B; --ink:#EFE9F2; --ink-soft:#B6A9C2;
+      --line:#3A3145; --violet:#A98CD9; --violet-deep:#C7B0EE; --rust:#E08054;
+      --mono-chip:#2A2233; --focus:#A98CD9; --good:#78C688; --null:#D9B85E;
+    }
+
+    *{box-sizing:border-box;}
+    ::selection{background:var(--violet); color:var(--paper);}
+    body{
+      margin:0; background:var(--paper); color:var(--ink);
+      font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--violet-deep);}
+    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+    /* ---------- Site integration bar ---------- */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:800px; margin:0 auto; padding:14px 24px;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--violet-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--violet-deep);}
+
+    .wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+
+    header.hero{padding:56px 0 40px; border-bottom:1px solid var(--line); margin-bottom:56px;}
+    .kicker{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--violet-deep);
+      display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    }
+    .kicker::before{content:""; width:8px; height:8px; background:var(--violet); border-radius:50%; flex:none;}
+    h1{
+      font-family:"Fraunces", Georgia, serif; font-optical-sizing:auto; font-weight:600;
+      font-size:clamp(2.0rem, 5vw, 2.9rem); line-height:1.08; letter-spacing:-0.01em;
+      margin:0 0 20px; text-wrap:balance;
+    }
+    .dek{font-size:1.15rem; line-height:1.55; color:var(--ink-soft); max-width:60ch; margin:0 0 18px;}
+    .byline{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.8rem;
+      color:var(--ink-soft); margin:0 0 30px; line-height:1.7;
+    }
+
+    .statrow{display:flex; flex-wrap:wrap; gap:0;}
+    .stat{flex:1 1 140px; padding:14px 20px 14px 0; border-right:1px solid var(--line); margin-right:20px;}
+    .stat:last-child{border-right:none; margin-right:0;}
+    .stat .n{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:1.5rem; font-weight:600;
+      color:var(--ink); font-variant-numeric:tabular-nums; display:block;
+    }
+    .stat .l{font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.02em;}
+
+    h2{
+      font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:1.65rem;
+      letter-spacing:-0.005em; margin:0 0 22px; text-wrap:balance;
+    }
+    h3{font-size:1.08rem; font-weight:700; margin:32px 0 10px;}
+    .divider{
+      display:flex; align-items:center; gap:14px; margin:64px 0 32px;
+      color:var(--ink-soft); font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
+    }
+    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+    section:first-of-type .divider{margin-top:0;}
+
+    .prose{font-size:1.06rem; line-height:1.68;}
+    .prose p{margin:0 0 1.3em;}
+    .prose > p:last-child{margin-bottom:0;}
+    .prose ul, .prose ol{margin:0 0 1.3em; padding-left:1.3em;}
+    .prose li{margin-bottom:0.55em;}
+    strong{color:var(--ink); font-weight:650;}
+    code{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.86em;
+      background:var(--mono-chip); padding:0.12em 0.4em; border-radius:4px;
+      overflow-wrap:anywhere;
+    }
+
+    .abstract{
+      background:var(--paper-raised); border:1px solid var(--line);
+      border-left:3px solid var(--violet); border-radius:10px; padding:24px 26px;
+    }
+    .abstract p{margin:0; font-size:1.02rem; line-height:1.68;}
+
+    /* tables */
+    .table-wrap{overflow-x:auto; margin:0 0 1.5em; border:1px solid var(--line); border-radius:10px; background:var(--paper-raised);}
+    table{width:100%; border-collapse:collapse; font-size:0.94rem;}
+    caption{
+      caption-side:top; text-align:left; padding:14px 16px 4px;
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.74rem;
+      letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft);
+    }
+    th, td{padding:9px 16px; text-align:left; vertical-align:top;}
+    thead th{font-weight:600; color:var(--ink-soft); font-size:0.84rem; border-bottom:1px solid var(--line);}
+    tbody tr + tr td{border-top:1px solid color-mix(in srgb, var(--line) 60%, transparent);}
+    td.n, th.n{text-align:right; font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; white-space:nowrap;}
+    td.best{color:var(--violet-deep); font-weight:600;}
+
+    figure{margin:8px 0 32px;}
+    figure img{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:10px; background:#fcfcfb;}
+    figcaption{font-size:0.88rem; color:var(--ink-soft); line-height:1.55; margin-top:10px;}
+    figcaption strong{font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--violet-deep); margin-right:6px;}
+
+    .errors{display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:1.3em;}
+    @media (min-width:620px){.errors{grid-template-columns:1fr 1fr 1fr;}}
+    .err{
+      background:var(--paper-raised); border:1px solid var(--line);
+      border-left:3px solid var(--rust); border-radius:10px; padding:18px 20px;
+    }
+    .err .tag{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.72rem;
+      letter-spacing:0.09em; text-transform:uppercase; color:var(--rust); margin-bottom:8px; display:block;
+    }
+    .err p{margin:0; color:var(--ink-soft); font-size:0.93rem; line-height:1.56;}
+
+    ol.refs{padding-left:1.4em; font-size:0.94rem; line-height:1.6; color:var(--ink-soft);}
+    ol.refs li{margin-bottom:0.7em;}
+
+    footer{
+      margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+      display:flex; flex-wrap:wrap; gap:8px 20px;
+    }
+    footer a{color:var(--violet-deep);}
+
+    @media (prefers-reduced-motion: no-preference){
+      header.hero, section{animation:rise 0.5s ease both;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="site-topbar">
+    <div class="site-topbar__inner">
+      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+      <nav class="site-topbar__links">
+        <a href="portfolio.html">Portfolio</a>
+        <a href="blog.html">Writing &amp; Research</a>
+        <a href="cytoguard_paper.html" class="is-active">Technical Report</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="kicker">Technical report · CytoGuard</div>
+      <h1>CytoGuard: Detecting and Classifying Cellular Injury in Cell Painting Screens</h1>
+      <p class="dek">An open platform that flags injured wells in Cell Painting screens, names the likely injury mechanism, and shows the cells behind every call, evaluated on compounds the model has never seen.</p>
+      <p class="byline">Rishav Bhattarai · September 2026<br>Data: IDR idr0133 (CC BY 4.0)</p>
+      <div class="statrow">
+        <div class="stat"><span class="n">16,701</span><span class="l">Cell Painting wells</span></div>
+        <div class="stat"><span class="n">0.462</span><span class="l">macro-F1, never-seen compounds</span></div>
+        <div class="stat"><span class="n">0.947</span><span class="l">AUROC, injured vs healthy</span></div>
+        <div class="stat"><span class="n">r = 0.95</span><span class="l">raw pixels vs profiles</span></div>
+      </div>
+    </header>
+
+    <section>
+      <div class="divider">Abstract</div>
+      <div class="abstract">
+        <p>Compounds that damage cells nonspecifically are a common source of false positives in phenotypic and target-based screens. I present CytoGuard, an open, end-to-end platform that flags injured wells in Cell Painting screens, names the likely injury mechanism, retrieves morphologically similar reference compounds, and exposes the underlying images and segmentations for review. On the idr0133 reference set (16,701 wells, 144 compounds, 14 injury mechanisms), profile quality validated with mean average precision shows that 88% of treatments are distinguishable from vehicle and that 13 of 14 mechanisms are morphologically consistent across chemically distinct compounds. Under compound-held-out cross-validation, the setting that matches screening a new compound, a gradient-boosted classifier reaches a macro-F1 of 0.462 across 15 classes, separates injured from healthy wells with an AUROC of 0.947, and ranks the true mechanism first for 59% of never-seen compounds (84% within the top three). Under the published baseline's own evaluation protocols it improves macro-F1 from 0.608 to 0.807 (random split) and from 0.586 to 0.819 (plate holdout). An independent pixel-level pipeline (OME-Zarr, Cellpose-SAM, cp_measure) reproduces injury scores from raw images with a correlation of 0.95 against the profile-based predictions on the same wells, although mechanism naming transfers less well across the software gap. All components, from ingest to web interface, are open source, tested and reproducible.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">1. Introduction</div>
+      <div class="prose">
+        <p>High-throughput screens routinely produce "hits" whose activity comes from cellular injury rather than on-target engagement: redox cycling, nonselective covalent reactivity, membrane disruption, cytoskeletal collapse or DNA damage. These nuisance compounds consume follow-up resources and, if missed, resurface later as toxicity liabilities. Dahlin <em>et al.</em> (2023) assembled 218 prototypical cytotoxic and nuisance compounds, profiled them with Cell Painting in U-2 OS cells across a dose range, and showed that injury mechanisms form distinct morphological clusters. Serrano <em>et al.</em> (2025) used the processed profiles as a case study for Pycytominer, training a multi-class logistic regression to predict 15 injury categories.</p>
+        <p>This project turns those reference data into a tool a screening scientist can use to triage new compounds. That takes three things beyond a classifier: an evaluation that reflects never-seen compounds, a pipeline that works from raw images rather than pre-computed features, and an interface that shows the evidence behind each call.</p>
+        <p><strong>Contributions.</strong></p>
+        <ol>
+          <li>A leakage-aware evaluation of injury classification, with compound-grouped cross-validation, a permutation control and decision-level (per-compound) metrics, together with a copairs-based validation of profile quality that is independent of any classifier.</li>
+          <li>A classifier that outperforms the published baseline under the baseline's own protocols and reaches a macro-F1 of 0.462 on held-out compounds.</li>
+          <li>An image-to-decision pipeline (OME-Zarr, Cellpose-SAM, cp_measure, Pycytominer) whose outputs are bridged into the reference feature space and validated against the profile track.</li>
+          <li>A deployable platform (FastAPI, job queue, plugin system, web viewer) with tests at every stage and a single-command reproducible workflow.</li>
+        </ol>
+      </div>
+      <figure>
+        <img src="images/cytoguard/plate_view.jpg" alt="CytoGuard dashboard: a 384-well plate colored by injury score, with the selected nocodazole well's injury call, class probabilities and most similar reference compounds" loading="lazy" width="1600" height="1000">
+        <figcaption><strong>Figure 1</strong>The CytoGuard dashboard on plate BR00114096. Wells are colored by injury score; DMSO controls are ringed. The selected nocodazole well is flagged as Cytoskeletal, and its nearest reference treatments are podophyllotoxin and colchicine, both tubulin poisons.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <div class="divider">2. Data</div>
+      <div class="prose">
+        <p><strong>Reference set.</strong> IDR study idr0133, screen A: 84 plates of U-2 OS cells, Cell Painting (DNA, ER, RNA/nucleoli, AGP, mitochondria), 20x Opera Phenix, 24 h and 48 h treatments. I used the labeled per-well CellProfiler profiles released with the Pycytominer case study (<code>labeled_cell_injury_profile.csv.gz</code>, WayScience/predicting-cell-injury-compounds v2.1.1): 16,701 wells, 372 features, 144 annotated compounds plus DMSO, 1,111 distinct treatments (compound x concentration x time).</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption>Table 1 · Reference compounds and wells per class</caption>
+          <thead><tr><th>Class</th><th class="n">Compounds</th><th class="n">Wells</th><th>Class</th><th class="n">Compounds</th><th class="n">Wells</th></tr></thead>
+          <tbody>
+            <tr><td>Control (DMSO)</td><td class="n">1</td><td class="n">9,855</td><td>Saponin</td><td class="n">11</td><td class="n">288</td></tr>
+            <tr><td>Miscellaneous</td><td class="n">39</td><td class="n">1,302</td><td>HDAC</td><td class="n">5</td><td class="n">168</td></tr>
+            <tr><td>Genotoxin</td><td class="n">22</td><td class="n">944</td><td>Nonspecific reactive</td><td class="n">5</td><td class="n">128</td></tr>
+            <tr><td>Cytoskeletal</td><td class="n">15</td><td class="n">1,472</td><td>Proteasome</td><td class="n">4</td><td class="n">144</td></tr>
+            <tr><td>Kinase</td><td class="n">13</td><td class="n">1,104</td><td>Mitochondria</td><td class="n">4</td><td class="n">144</td></tr>
+            <tr><td>Redox</td><td class="n">12</td><td class="n">312</td><td>Ferroptosis</td><td class="n">4</td><td class="n">96</td></tr>
+            <tr><td>Hsp90</td><td class="n">3</td><td class="n">552</td><td>Tannin</td><td class="n">4</td><td class="n">96</td></tr>
+            <tr><td>mTOR</td><td class="n">2</td><td class="n">96</td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prose">
+        <p><strong>Raw images.</strong> For the pixel track I retrieved raw 16-bit TIFFs (2160 x 2160, one per channel and field) for 25 wells of plate BR00114096 from the EBI mirror of IDR, verifying each file against the published SHA-1 checksums. The selection comprises 8 randomly chosen DMSO wells and, for each injury class present on the plate, the highest-concentration well of up to two distinct compounds (17 wells, 11 classes). The IDR OMERO rendering service could not serve pixels for this study at the time of writing, so the file mirror was used directly.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">3. Methods</div>
+      <div class="prose">
+        <h3>3.1 Profile processing</h3>
+        <p>Profiles were renamed into a tidy <code>Metadata_*</code> schema and cast to float32. Pycytominer <code>feature_select</code> removed low-variance features, one feature from each pair with Pearson correlation above 0.9, features with missing values, and features on the standard blocklist, leaving 352 features. The released profiles are already plate-normalized, so no further normalization was applied in the profile track.</p>
+
+        <h3>3.2 Profile quality with mean average precision</h3>
+        <p>I used copairs to compute average precision for every well and aggregated to mean average precision (mAP) per group, with significance from a 10,000-permutation null and Benjamini-Hochberg correction at 5%.</p>
+        <ul>
+          <li><strong>Phenotypic activity.</strong> Positives are replicate wells of the same treatment. Negatives are DMSO wells on the <em>same plate</em>, which controls for plate effects and keeps the comparison local. A treatment is "active" if its mAP is significant.</li>
+          <li><strong>Injury consistency.</strong> Treatment-level consensus profiles (median) of active treatments were compared with positives defined as <em>different compounds</em> sharing an injury label, and negatives as treatments with a different label. A class scores well only if its phenotype generalizes across chemistry.</li>
+        </ul>
+
+        <h3>3.3 Injury classification and evaluation design</h3>
+        <p>Two model families were evaluated: an L2-regularized multinomial logistic regression (standardized inputs, C = 0.05, balanced class weights), matching the form of the published baseline, and LightGBM (300 trees, learning rate 0.05, 31 leaves, row subsampling 0.8, feature subsampling 0.5, balanced class weights). Hyperparameters were fixed a priori rather than tuned on test folds.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption>Table 2 · Evaluation settings</caption>
+          <thead><tr><th>Setting</th><th>Construction</th><th>What it measures</th></tr></thead>
+          <tbody>
+            <tr><td>Random wells</td><td>stratified 80/20 well split (seed 0)</td><td>recognition of known compounds; mirrors the baseline's "Test" split</td></tr>
+            <tr><td>Plate holdout</td><td>10 randomly chosen plates held out</td><td>robustness to plate effects; mirrors the baseline's "Plate Holdout"</td></tr>
+            <tr><td><strong>Compound holdout</strong></td><td>5-fold <code>StratifiedGroupKFold</code> grouped by compound; DMSO grouped by plate</td><td>generalization to never-seen compounds; the screening use case</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prose">
+        <p>In the compound holdout every well receives an out-of-fold prediction from a model that saw no well, dose or plate of that compound. A permutation control shuffles labels at the compound level and repeats the full procedure. Metrics are macro-F1 over the classes present, accuracy, and an injury AUROC that uses 1 - P(Control) as a score for "injured vs DMSO". Because triage decisions are made per compound, I also report decision-level accuracy: each compound's class probabilities are averaged over its wells with an injury score of at least 0.5 (falling back to all its wells), and I check whether the true mechanism is ranked first or within the top three.</p>
+        <p><strong>Baseline.</strong> Per-class F1 of the published model was taken from the released <code>fs_all_f1_scores.csv.gz</code> and averaged over its 15 classes, as in my macro-F1. Inspection of the baseline's split code showed that its treatment holdout picks, for each injury with at least 10 compounds, the compound returned by <code>df.min().iloc[1]</code>, which is the alphabetically first compound name rather than the one with the fewest wells. That holdout therefore contains only a few compounds, and its score is compared with my compound holdout only directionally.</p>
+
+        <h3>3.4 Pixel pipeline</h3>
+        <ol>
+          <li><strong>Ingest.</strong> The five channel planes of a field are stacked, 2x2 mean-binned (to 1080 x 1080) and written as a three-level multiscale OME-Zarr (NGFF 0.4) with ngff-zarr, including channel names and physical scale.</li>
+          <li><strong>Segmentation.</strong> Nuclei are segmented from the DNA channel and cells from a cytoplasm composite (normalized RNA + AGP, with DNA as a second channel) using Cellpose-SAM (<code>cpsam_v2</code>) on Apple MPS. A classical backend (Otsu threshold with distance-transform watershed for nuclei, then nucleus-seeded watershed on the cytoplasm composite) is provided as a fallback and comparison. Nuclei and cells are matched one-to-one by greedy maximal overlap. Unmatched nuclei receive a 6-pixel grown cell and cells without a nucleus are discarded, following CellProfiler's primary/secondary object logic. The cytoplasm is the cell minus the nucleus. Masks are written back into the OME-Zarr as NGFF <code>labels</code>.</li>
+          <li><strong>Measurement.</strong> cp_measure computes intensity, size and shape, Zernike, Feret, radial distribution and Haralick texture per object for nuclei, cells and cytoplasm. Texture was computed at binned scales 3, 5 and 10 pixels, which correspond to the reference's full-resolution scales 5, 10 and 20. Features were renamed into CellProfiler's <code>Compartment_Module_Feature_Channel[_Scale_Direction]</code> scheme. 329 of the 352 selected reference features were recovered; the remainder are Gabor features, which cp_measure does not implement.</li>
+          <li><strong>Profiling.</strong> Per-cell features are median-aggregated per well and z-scored against the DMSO wells in the selection (median and standard deviation, with a floor on the standard deviation).</li>
+        </ol>
+
+        <h3>3.5 Bridge model</h3>
+        <p>Absolute feature values differ between CellProfiler 4 and cp_measure, and between the full-resolution reference and the binned demo images. I therefore express both domains relative to their own vehicle controls: reference wells are z-scored per plate against that plate's DMSO wells, and demo wells against the demo DMSO wells. A LightGBM model with the settings above is trained on the reference wells restricted to the 329 shared features, excluding the demo plate and every demo compound. Every pixel-track prediction is therefore a never-seen-compound prediction on features from a different software stack.</p>
+
+        <h3>3.6 Platform</h3>
+        <p>The library exposes each stage as a function. Analyses are plugins implementing <code>run(PlateContext) -&gt; PluginResult</code>, discovered through the <code>cytoguard.plugins</code> entry-point group. Three are built in: injury flags (per-compound worst-well triage), similarity search (cosine similarity after per-feature scaling, excluding the query's own compound), and plate spatial QC. The spatial plugin tests DMSO wells for edge-versus-interior (Mann-Whitney U), row and column effects (Kruskal-Wallis), with Bonferroni correction and a minimum effect size of 0.05 in injury score, because with about 100 DMSO wells per plate trivially small shifts are otherwise significant. A FastAPI service serves plates, wells, similarity, jobs and decisions. Jobs run on Redis/RQ when configured (with separate <code>gpu</code> and <code>default</code> queues) or on an in-process pool otherwise. The web client renders the plate map, a canvas-based five-channel compositor with mask overlays, a triage table with persisted decisions, and the QC and model views.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">4. Results</div>
+      <div class="prose">
+        <h3>4.1 Profiles carry strong, mechanism-specific signal</h3>
+        <p>Of 1,111 treatments, 88% were retrieved against plate-matched DMSO with significant mAP. Activity was highest for mTOR, HDAC and Hsp90 inhibitors (100%) and lowest for saponins (69%), redox cyclers (79%) and tannins (79%), consistent with the weaker or dose-limited phenotypes of those classes.</p>
+        <p>Cross-compound injury consistency was significant for 13 of 14 classes. The strongest were HDAC (mAP 0.67), genotoxins (0.56), Hsp90 (0.44) and cytoskeletal agents (0.36). The only non-significant class was Miscellaneous (0.27), a heterogeneous catch-all label for which consistency is not expected. Mitochondrial toxicants (0.05) and nonspecific reactives (0.08) were significant but weak, and they are also among the hardest classes to predict (Section 4.3).</p>
+      </div>
+      <figure>
+        <img src="images/cytoguard/map_injury.jpg" alt="Bar chart of mean average precision by injury class; HDAC highest at 0.67, Miscellaneous not significant" loading="lazy" width="1600" height="1050">
+        <figcaption><strong>Figure 2</strong>Cross-compound injury consistency (mAP) per class. Gray marks the one class that is not significant after FDR correction.</figcaption>
+      </figure>
+
+      <div class="prose"><h3>4.2 Classification</h3></div>
+      <div class="table-wrap">
+        <table>
+          <caption>Table 3 · Macro-F1 over 15 classes</caption>
+          <thead><tr><th>Setting</th><th class="n">Published baseline</th><th class="n">Logistic regression</th><th class="n">LightGBM</th></tr></thead>
+          <tbody>
+            <tr><td>Random wells</td><td class="n">0.608</td><td class="n">0.630</td><td class="n best">0.807</td></tr>
+            <tr><td>Plate holdout</td><td class="n">0.586</td><td class="n">0.682</td><td class="n best">0.819</td></tr>
+            <tr><td>Compound holdout</td><td class="n">0.146 (directional)</td><td class="n">0.387</td><td class="n best">0.462</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption>Table 4 · Compound holdout, well-level and decision-level metrics</caption>
+          <thead><tr><th>Model</th><th class="n">Accuracy</th><th class="n">Injury AUROC</th><th class="n">Top-1 compounds</th><th class="n">Top-3 compounds</th></tr></thead>
+          <tbody>
+            <tr><td>Logistic regression</td><td class="n">0.631</td><td class="n">0.928</td><td class="n">45%</td><td class="n">75%</td></tr>
+            <tr><td>LightGBM</td><td class="n">0.791</td><td class="n best">0.947</td><td class="n best">59%</td><td class="n best">84%</td></tr>
+            <tr><td>Shuffled labels (LogReg)</td><td class="n">0.078</td><td class="n">0.562</td><td class="n">n/a</td><td class="n">n/a</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <img src="images/cytoguard/macro_f1_comparison.jpg" alt="Grouped bar chart of macro-F1 for the published baseline, logistic regression and LightGBM across three evaluation settings" loading="lazy" width="1600" height="755">
+        <figcaption><strong>Figure 3</strong>Macro-F1 by evaluation setting. The compound holdout is the setting a screen faces when it tests a new compound.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>My logistic regression already matches or exceeds the baseline under its own protocols, and LightGBM adds a further 0.14 to 0.18 macro-F1. The drop from plate holdout (0.819) to compound holdout (0.462) quantifies how much of the "easy" performance comes from recognizing specific compounds. Even so, performance on never-seen compounds is far above the permutation control, and injured wells are separated from healthy ones with an AUROC of 0.947. In triage the injury score drives the keep or drop decision, and the mechanism label guides interpretation, so this separation matters more than mechanism accuracy.</p>
+
+        <h3>4.3 Where the model fails, and why</h3>
+        <p>Per-class F1 on held-out compounds (LightGBM): Control 0.91, Cytoskeletal 0.91, HDAC 0.90, Genotoxin 0.61, Proteasome 0.61, Hsp90 0.49, Ferroptosis 0.49, Miscellaneous 0.44, Kinase 0.42, Saponin 0.34, Tannin 0.28, Redox 0.26, Nonspecific reactive 0.22, Mitochondria 0.02, mTOR 0.00. The main error patterns are:</p>
+      </div>
+      <div class="errors">
+        <div class="err">
+          <span class="tag">mTOR to Kinase</span>
+          <p>Both mTOR compounds are predicted as Kinase. mTOR is itself a kinase, and several "Kinase" compounds (for example PI-103 and BEZ235) inhibit PI3K/mTOR, so the confusion is biologically reasonable and the class is too small (two compounds) to learn separately.</p>
+        </div>
+        <div class="err">
+          <span class="tag">Weak mechanisms to Control</span>
+          <p>72% of tannin wells and 55% of saponin wells are predicted as Control. Labels are assigned per compound, but many low-dose wells show no phenotype. These are label-noise errors more than model errors.</p>
+        </div>
+        <div class="err">
+          <span class="tag">Diffuse mechanisms to Miscellaneous</span>
+          <p>Mitochondrial toxicants and nonspecific reactives are absorbed into the heterogeneous Miscellaneous class, consistent with their low cross-compound mAP in Section 4.1.</p>
+        </div>
+      </div>
+      <figure>
+        <img src="images/cytoguard/confusion_lgbm.jpg" alt="Row-normalized confusion matrix for held-out compounds; strong diagonal for Control, Cytoskeletal and HDAC; mTOR predicted as Kinase" loading="lazy" width="1600" height="1383">
+        <figcaption><strong>Figure 4</strong>Row-normalized confusion matrix for held-out compounds (LightGBM).</figcaption>
+      </figure>
+
+      <div class="prose">
+        <h3>4.4 From raw pixels</h3>
+        <p>Cellpose-SAM processed each 1080 x 1080 field in about 29 s on an Apple M4 GPU (MPS); cp_measure took 2 to 22 s per field depending on cell number.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption>Table 5 · Pixel track, 25 wells of plate BR00114096</caption>
+          <thead><tr><th>Metric</th><th class="n">Classical segmentation</th><th class="n">Cellpose-SAM</th></tr></thead>
+          <tbody>
+            <tr><td>Median cells per field</td><td class="n">161</td><td class="n">145</td></tr>
+            <tr><td>DMSO wells called healthy</td><td class="n">8 / 8</td><td class="n best">8 / 8</td></tr>
+            <tr><td>Treated wells flagged as injured</td><td class="n">12 / 17</td><td class="n best">13 / 17</td></tr>
+            <tr><td>Correct mechanism, top-1</td><td class="n">4 / 17</td><td class="n best">5 / 17</td></tr>
+            <tr><td>Correct mechanism, top-3</td><td class="n">7 / 17</td><td class="n best">9 / 17</td></tr>
+            <tr><td>Mean injury score, treated vs DMSO</td><td class="n">0.67 vs 0.007</td><td class="n best">0.77 vs 0.002</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <img src="images/cytoguard/pixel_viewer.jpg" alt="Image viewer showing a colchicine-treated field with sparse, damaged cells and Cellpose-SAM outlines, flagged with an injury score of 0.92" loading="lazy" width="1600" height="1000">
+        <figcaption><strong>Figure 5</strong>A colchicine well from the pixel track: five-channel composite with Cellpose-SAM nucleus (cyan) and cell (amber) outlines. The injury flag is correct; the mechanism call (Genotoxin) is one of the pixel track's naming errors.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>Cellpose-SAM beats the classical segmenter on every accuracy row, and the gap is largest in the separation between treated and control wells.</p>
+        <p><strong>Concordance with the profile track.</strong> On the same 25 wells, pixel-track injury scores correlate with the out-of-fold profile-track scores at r = 0.95, and the two agree on flagged versus healthy for 24 of 25 wells. The treated wells called healthy by both tracks, DZNep (relative cell count 0.94), BSI-201 (1.10) and (R)-MG132 (0.89), show near-normal cell counts, so these compounds had no visible effect in this experiment. (R)-MG132 also serves as an internal check. Its stereoisomer (S)-MG132, tested on the same plate at the same concentration, is flagged with an injury score of 1.00 and an 89% loss of cells, and both tracks and the cell counts agree on this difference. The single disagreement is wortmannin (pixel 0.28, profile 1.00), a compound with a subtle phenotype and near-normal cell count (0.85).</p>
+        <p><strong>Mechanism naming</strong> across the software gap is weaker (5 of 17 top-1, 9 of 17 top-3) and skews toward Miscellaneous. Detection depends on large, robust shifts (cell loss, rounding, nuclear changes) that survive differences in feature implementation and resolution. Mechanism discrimination depends on finer texture and distribution features, which are the ones most affected by the CellProfiler-to-cp_measure translation, the missing Gabor features, single-field sampling and binning.</p>
+
+        <h3>4.5 Plate quality control</h3>
+        <p>On the reference plate BR00114096, DMSO wells showed a statistically significant edge-versus-interior difference of -0.011 in injury score, which the effect-size criterion correctly does not flag, and a row effect with a spread of 0.082 across row medians, which is flagged for review. Without the effect-size criterion both would be reported. With about 100 DMSO wells per plate, significance alone flags shifts too small to matter.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">5. Discussion</div>
+      <div class="prose">
+        <p>Cellular injury is detectable from Cell Painting with high reliability even for never-seen compounds, and the detection holds up when the whole pipeline is rebuilt from raw pixels. Mechanism assignment is useful but more fragile: excellent for cytoskeletal, HDAC and genotoxic agents, weak for mechanisms with small reference sets or diffuse phenotypes. In screening triage, the injury score gates the decision, and the mechanism probabilities, similar reference compounds and images give the scientist evidence for the final call.</p>
+        <p>The gap between plate-holdout and compound-holdout performance (0.82 vs 0.46 macro-F1) shows how much of the easier splits' performance comes from recognizing known compounds. Reporting only random or plate splits overstates how well a model will behave on a new library. Compound-grouped evaluation, permutation controls and decision-level metrics should be the default for this task.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">6. Limitations</div>
+      <div class="prose">
+        <ul>
+          <li><strong>Label granularity.</strong> Mechanism labels are per compound and ignore dose response, which penalizes correct "healthy" calls at inactive doses and caps achievable well-level accuracy.</li>
+          <li><strong>Class imbalance and size.</strong> Five classes have four or fewer compounds. Estimates for these classes are high-variance.</li>
+          <li><strong>Pixel-track scope.</strong> One field per well, 2x binning, one plate, and a selection of the highest concentrations. The pixel-track numbers are a feasibility and concordance demonstration, not a benchmark.</li>
+          <li><strong>Feature-space mismatch.</strong> The bridge model reduces the differences between CellProfiler 4 and cp_measure but does not remove them. The fix is to re-profile the full reference set with the same stack used at inference.</li>
+          <li><strong>Single cell line and assay.</strong> All data are U-2 OS Cell Painting from one laboratory. Transfer to other cell types, stains and microscopes is untested.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">7. Reproducibility</div>
+      <div class="prose">
+        <p>All results are produced by <code>snakemake -s workflow/Snakefile -c4</code>, which downloads and checksums the data, runs the profile benchmark, selects and processes the demo wells, and renders the results page. Random seeds are fixed. The test suite (20 tests, about 3 s) runs on a synthetic dataset with the same schema, so continuous integration never depends on external downloads. Software versions used: Python 3.11, Cellpose 4.2, cp_measure 0.2, Pycytominer 1.7, copairs 0.5, ngff-zarr 0.47, scikit-learn 1.9, LightGBM 4.7, PyTorch 2.14.</p>
+        <p><strong>Compute.</strong> The profile benchmark (mAP, three splits, two models, permutation control) takes about 3.5 minutes on an Apple M4 laptop. The pixel track for 25 wells takes about 20 minutes with Cellpose-SAM on MPS, or about 6 minutes with the classical segmenter.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="divider">References</div>
+      <ol class="refs">
+        <li>Dahlin, J.L., Hua, B.K., Zucconi, B.E. <em>et al.</em> Reference compounds for characterizing cellular injury in high-content cellular morphology assays. <em>Nature Communications</em> 14, 1364 (2023).</li>
+        <li>Serrano, E., Chandrasekaran, S.N., Bunten, D. <em>et al.</em> Reproducible image-based profiling with Pycytominer. <em>Nature Methods</em> (2025).</li>
+        <li>Pachitariu, M., Rariden, M. and Stringer, C. Cellpose-SAM: superhuman generalization for cellular segmentation. <em>bioRxiv</em> (2025).</li>
+        <li>Muñoz, A.F. <em>et al.</em> cp_measure: CellProfiler measurements as a modular Python library. Carpenter-Singh Lab (2025). <a href="https://github.com/afermg/cp_measure" rel="noopener">github.com/afermg/cp_measure</a></li>
+        <li>Kalinin, A.A. <em>et al.</em> A versatile information retrieval framework for evaluating profile strength and similarity. <em>bioRxiv</em> (2024).</li>
+        <li>Moore, J. <em>et al.</em> OME-Zarr: a cloud-optimized bioimaging file format with international community support. <em>Histochemistry and Cell Biology</em> 160, 223-251 (2023).</li>
+        <li>Bray, M.-A. <em>et al.</em> Cell Painting, a high-content image-based assay for morphological profiling using multiplexed fluorescent dyes. <em>Nature Protocols</em> 11, 1757-1774 (2016).</li>
+      </ol>
+    </section>
+
+    <footer>
+      <span>Back to <a href="blog.html">Writing &amp; Research</a></span>
+      <span>Data: <a href="https://idr.openmicroscopy.org/webclient/?show=screen-3151" rel="noopener">IDR idr0133</a> (CC BY 4.0)</span>
+      <span>Baseline: <a href="https://github.com/WayScience/predicting-cell-injury-compounds" rel="noopener">WayScience/predicting-cell-injury-compounds</a></span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
