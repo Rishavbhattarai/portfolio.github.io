@@ -1,0 +1,128 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - link "Rishav Bhattarai" [ref=f2e4] [cursor=pointer]:
+      - /url: index.html
+    - navigation [ref=f2e5]:
+      - link "Portfolio" [ref=f2e6] [cursor=pointer]:
+        - /url: portfolio.html
+      - link "Writing & Research" [ref=f2e7] [cursor=pointer]:
+        - /url: blog.html
+      - link "Article" [ref=f2e8] [cursor=pointer]:
+        - /url: invoices_you_can_recompute.html
+  - generic [ref=f2e9]:
+    - banner [ref=f2e10]:
+      - generic [ref=f2e11]: Engineering write-up · Usage Metering & Billing
+      - heading "How I Built A Billing Pipeline That Can Prove Every Invoice Is Right, Down To The Cent" [level=1] [ref=f2e12]
+      - paragraph [ref=f2e13]: "For engineers who handle money, or who let AI agents write their code: 1 million usage events, 2 replays with identical hashes, a live Salesforce org that matched the ledger to the cent, and the 2 bugs that taught me the most."
+      - generic [ref=f2e14]:
+        - strong [ref=f2e16]: October 2026
+        - generic [ref=f2e17]:
+          - strong [ref=f2e18]: "10"
+          - text: min read
+        - generic [ref=f2e19]: Python, PostgreSQL, Salesforce
+    - generic [ref=f2e20]:
+      - generic [ref=f2e21]:
+        - generic [ref=f2e22]: 1,000,000
+        - text: usage events, 10% duplicates, zero billed twice
+      - generic [ref=f2e23]:
+        - generic [ref=f2e24]: 200 / 200
+        - text: invoices rebuilt with identical SHA-256 hashes
+      - generic [ref=f2e25]:
+        - generic [ref=f2e26]: $598,167.89
+        - text: in a live Salesforce org, matched to the cent
+      - generic [ref=f2e27]:
+        - generic [ref=f2e28]: 205 s → 2.1 s
+        - generic [ref=f2e29]:
+          - text: after one
+          - code [ref=f2e30]: ANALYZE
+          - text: line
+    - article [ref=f2e31]:
+      - paragraph [ref=f2e32]: An invoice you can't recompute is an invoice you can't defend.
+      - paragraph [ref=f2e33]: When a customer disputes a charge, pointing at a database row settles nothing. You need to show which events produced each line, how each one was priced, and that running the same math again gives the same number. I built a usage-metering pipeline around that single requirement, built it with the help of AI agents, then tried to break it with a million events and a real Salesforce org.
+      - paragraph [ref=f2e34]: This post covers the four decisions that held up, the two bugs I learned the most from, and why this kind of proof matters even more when an agent writes the code.
+      - heading "01 Never edit raw events, so every invoice can be rebuilt from scratch." [level=2] [ref=f2e35]:
+        - generic [ref=f2e36]: "01"
+        - text: Never edit raw events, so every invoice can be rebuilt from scratch.
+      - paragraph [ref=f2e37]: Every usage event (an API call, a gigabyte stored) lands in an append-only table and stays there. Nothing updates it, and nothing deletes it.
+      - paragraph [ref=f2e38]:
+        - text: Duplicates are the first problem. Producers retry, networks time out, and the same event shows up twice. Each event carries a client-supplied ID, and ingestion is a single
+        - code [ref=f2e39]: INSERT ... ON CONFLICT DO NOTHING
+        - text: on that ID, so a producer can resend any batch without double billing. In the load test I sent 1,000,000 events with 10% duplicates from 8 concurrent clients. The pipeline ingested them at 38,568 events per second and stored exactly the 900,129 unique ones.
+      - paragraph [ref=f2e40]: "Because the raw log never changes, an invoice becomes a pure function of three inputs: the events, the cutoff time of each billing period, and the price plans. That makes the strongest test in the project possible. I replayed the full log of 999,589 events into an empty database, twice. Both replays rebuilt all 200 invoices, and every invoice's SHA-256 content hash matched the stored one and the other replay."
+      - paragraph [ref=f2e41]: If your billing can't pass that test, you are trusting it rather than checking it.
+      - heading "02 Do money math in integer cents, and round exactly once per line." [level=2] [ref=f2e42]:
+        - generic [ref=f2e43]: "02"
+        - text: Do money math in integer cents, and round exactly once per line.
+      - paragraph [ref=f2e44]:
+        - text: In binary floating point,
+        - code [ref=f2e45]: 0.1 + 0.2
+        - text: does not equal
+        - code [ref=f2e46]: "0.3"
+        - text: . Worse, the error depends on the order of operations, so float money math can give different totals for the same inputs.
+      - paragraph [ref=f2e47]:
+        - text: The pricing engine uses Python's
+        - code [ref=f2e48]: Decimal
+        - text: for quantities and unit prices, and integer cents for every amount. Multiplication runs in a local decimal context with the
+        - code [ref=f2e49]: Inexact
+        - text: trap turned on, so any precision loss raises an error instead of happening silently. A unit test fails if
+        - code [ref=f2e50]: float
+        - text: appears anywhere in the rating code, and the constructors reject non-
+        - code [ref=f2e51]: Decimal
+        - text: input.
+      - paragraph [ref=f2e52]: "Where you round matters as much as how. Rounding per event accumulates bias and makes totals depend on batch sizes. I round once per invoice line, half-up, and the invoice total is the sum of the rounded lines, so the lines always add up to what the customer sees. Hypothesis property tests pin the rules down: totals are never negative, never drop when usage grows, and are off by at most half a cent per line."
+      - heading "03 Book late usage on the next invoice instead of reopening the old one." [level=2] [ref=f2e53]:
+        - generic [ref=f2e54]: "03"
+        - text: Book late usage on the next invoice instead of reopening the old one.
+      - paragraph [ref=f2e55]: Usage keeps arriving after a month ends. A producer was offline, or a retry finally succeeded.
+      - paragraph [ref=f2e56]: Reopening a sent invoice means versioning it in both the ledger and Salesforce, and customers see numbers change after the fact. Rejecting late events loses revenue and makes retries unsafe. So each month's close records a cutoff time, and an event for an earlier month that arrives after that cutoff becomes an adjustment line on the next invoice, labelled with the month it belongs to.
+      - paragraph [ref=f2e57]: "The adjustment is priced at the old month's marginal rate: the charge for (billed usage + late usage) minus the charge for billed usage alone, both under the old month's plan. Late usage that pushes a customer into a cheaper tier is priced in that tier. Late usage still under a minimum commit costs $0. Nothing is billed twice."
+      - paragraph [ref=f2e58]: The cutoff is set 60 seconds in the past. An ingest transaction still in flight when the close starts has a timestamp before "now" but isn't visible yet, and a cutoff of exactly "now" would skip it forever. With the lag, it lands after the cutoff and gets billed as late usage next month.
+      - paragraph [ref=f2e59]: "Remember that 60-second lag. It shows up again in bug #2."
+      - heading "04 Treat Salesforce as a second ledger, and check it record by record." [level=2] [ref=f2e60]:
+        - generic [ref=f2e61]: "04"
+        - text: Treat Salesforce as a second ledger, and check it record by record.
+      - paragraph [ref=f2e62]: Sales and finance teams live in the CRM, so invoices have to reach Salesforce. That makes Salesforce a second copy of the truth, and two copies drift apart unless something checks them.
+      - paragraph [ref=f2e63]:
+        - text: "Only aggregates go to Salesforce: accounts, one record per invoice, and usage summaries per customer and meter. Raw events stay in Postgres. Every write is an upsert keyed by an External ID, so a retried sync updates the same record and never creates a duplicate. Month-end close, sync and reconciliation run as jobs on"
+        - link "jobq" [ref=f2e64] [cursor=pointer]:
+          - /url: https://github.com/Rishavbhattarai/distributed-job-queue
+        - text: ", the Redis and Postgres job queue I built in an earlier project. Failed jobs retry with backoff, and a job that keeps failing goes to a dead-letter queue (DLQ) instead of disappearing."
+      - paragraph [ref=f2e65]: Reconciliation compares the ledger and Salesforce one record at a time, in integer cents.
+      - paragraph [ref=f2e66]: I tested the unhappy paths on purpose. A forced Salesforce failure was retried by the queue and drift ended at zero. A longer outage sent the sync to the DLQ after 5 attempts, and replaying it from the DLQ brought drift back to zero. After 1 million events and two closed months, the ledger and Salesforce both totalled $29,403,835.60.
+      - paragraph [ref=f2e67]: "Those runs used an in-memory fake of Salesforce, which is what CI uses. So I ran it against a real Developer Edition org too: 20,000 events across two months, 100 accounts, 200 invoices and 400 usage summaries. I queried Salesforce directly, bypassing my own client, and it held $598,167.89, the same total as the ledger to the cent. The whole session used 110 of the org's 15,000 daily API requests."
+      - heading "05 The two bugs that taught me the most were in the plumbing." [level=2] [ref=f2e68]:
+        - generic [ref=f2e69]: "05"
+        - text: The two bugs that taught me the most were in the plumbing.
+      - paragraph [ref=f2e70]: The pricing math never produced a wrong number. Both real bugs came from the system around it.
+      - 'heading "Bug #1: a 205-second query fixed by one line." [level=3] [ref=f2e71]'
+      - paragraph [ref=f2e72]: An aggregator rolls raw events into hourly totals for the usage dashboard. To stay correct under retries and crashes, it recomputes every touched hour from all of that hour's raw events, using a temporary table of "dirty" hours.
+      - paragraph [ref=f2e73]: At 900,000 events, one pass took 205 seconds.
+      - paragraph [ref=f2e74]:
+        - text: The agent working on the load test ran
+        - code [ref=f2e75]: EXPLAIN ANALYZE
+        - text: and found why. Postgres had no statistics for the freshly created temp table, so the planner guessed badly and joined each dirty hour against every event that customer had ever sent. Adding one
+        - code [ref=f2e76]: ANALYZE
+        - text: on the temp table before the query brought the pass to 2.1 seconds. Autovacuum never analyzes temporary tables, so the planner knows nothing about one until you run
+        - code [ref=f2e77]: ANALYZE
+        - text: yourself.
+      - 'heading "Bug #2: the first live run billed nobody." [level=3] [ref=f2e78]'
+      - paragraph [ref=f2e79]: The first time I pointed the full stack at the real Salesforce org, it ingested 20,000 events, closed the month, and produced zero invoices.
+      - paragraph [ref=f2e80]: Nothing was wrong with the code. The demo script closes each month a few seconds after sending events, and it expects the stack to run with a 3-second cutoff lag, as CI does. The agent running the setup had started the stack with the default 60 seconds. Every event was still inside the safety window from section 3, so the close correctly treated all of them as too recent to bill.
+      - paragraph [ref=f2e81]: Nothing reached Salesforce from that run. The agent spotted the cause, reset the stack with the 3-second lag, reran it, and got the zero-drift result above. Then we added a note to the setup guide, because the same guard that protects in-flight transactions will confuse the next person who runs a fast demo.
+      - heading "06 Proof matters more when an AI agent writes the code." [level=2] [ref=f2e82]:
+        - generic [ref=f2e83]: "06"
+        - text: Proof matters more when an AI agent writes the code.
+      - paragraph [ref=f2e84]: "Using agents was the plan from the start. I scoped the project and did the research first: how billing systems handle late usage, how to round money, how Salesforce upserts and its Bulk API work. Then I built it with the help of AI agents. I gave them skills and rules they had to follow (free tools only, every number measured, nothing claimed that wasn't run), and I built a separate QA agent whose job was to test what the others wrote."
+      - paragraph [ref=f2e85]: "Agents write a lot of code quickly, and they can be wrong with total confidence. Both bugs above involved an agent: one caused the empty live run, and another found and fixed the 205-second query. Reading every line of a codebase this size doesn't scale, so the QA agent and I leaned on checks that don't care who wrote the code. Replaying the log has to reproduce every invoice hash. Property tests have to hold for any input Hypothesis generates. Reconciliation has to match Salesforce record by record. And the final total has to match when I query Salesforce directly instead of trusting the pipeline's own report."
+      - paragraph [ref=f2e86]: Those checks turned "the agent says it works" into something I could verify in minutes.
+    - generic [ref=f2e87]: The takeaway
+    - generic [ref=f2e88]:
+      - paragraph [ref=f2e89]: Write the replay test before the invoice template.
+      - paragraph [ref=f2e90]: If you build anything that charges money, make the replay test the first thing you write. Keep raw events immutable, make invoices a pure function of events, cutoffs and plans, and prove it by rebuilding everything from scratch and comparing hashes. Every other guarantee in this post depends on that one, whether a person or an agent writes the code.
+    - contentinfo [ref=f2e91]:
+      - generic [ref=f2e92]:
+        - text: "Code, the five architecture decision records and raw benchmark output:"
+        - link "usage-metering-billing on GitHub" [ref=f2e93] [cursor=pointer]:
+          - /url: https://github.com/Rishavbhattarai/usage-metering-billing
+      - generic [ref=f2e94]: Measured on an Apple M4 MacBook (16 GB) with every service in Docker.
+      - generic [ref=f2e95]: "Next in this series: the job queue underneath it, and what happened when I killed 13 workers in the middle of 10,000 jobs."

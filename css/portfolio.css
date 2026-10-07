@@ -191,6 +191,8 @@ button:focus-visible,
   height: 18px;
   flex-shrink: 0;
 }
+/* 44px hit area around the 26x18 icon */
+.nav-top__toggle::after { content: ''; position: absolute; inset: -13px -9px; }
 .nav-top__toggle span {
   position: absolute;
   left: 0;
@@ -370,11 +372,14 @@ body {
 }
 
 .skill-list li::before {
-  content: '›';
+  content: '';
   position: absolute;
-  left: 0;
-  color: var(--sf-blue);
-  font-weight: 700;
+  left: 2px;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
 }
 
 .header-summary__cta {
@@ -399,8 +404,8 @@ body {
 .stat + .stat { border-left: 1px solid var(--glass-border); }
 .stat__value {
   display: block;
-  font-family: var(--font-display);
-  font-weight: 800;
+  font-family: var(--font-body);
+  font-weight: 600;
   font-size: clamp(1.6rem, 2.6vw, 2.1rem);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -427,6 +432,8 @@ body {
   padding-top: clamp(56px, 8vw, 96px);
   padding-bottom: clamp(24px, 4vw, 40px);
 }
+.header-summary--compact .header-summary__grid { grid-template-columns: 1fr; row-gap: 8px; }
+.header-summary--compact .header-summary__description { margin-bottom: 28px; }
 .header-summary--compact .header-summary__title {
   font-size: clamp(1.7rem, 3.2vw, 2.6rem);
   line-height: 1.12;
@@ -523,6 +530,7 @@ body {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
   letter-spacing: -0.02em;
   margin-bottom: 16px;
 }
@@ -744,13 +752,15 @@ body {
   position: relative;
 }
 .card__bullets li::before {
-  content: '›';
+  content: '';
   position: absolute;
-  left: 0;
-  color: var(--electric);
-  font-weight: 700;
+  left: 2px;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
 }
-.card--salesforce .card__bullets li::before { color: var(--sf-blue); }
 .card__stack {
   font-size: 0.76rem;
   color: var(--text-muted);
@@ -767,6 +777,8 @@ body {
   margin-top: 4px;
 }
 .card__link {
+  display: inline-block;
+  padding: 8px 0;
   font-size: 0.83rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -817,7 +829,7 @@ body {
 }
 .timeline-layout {
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 380px 1fr;
   gap: 40px;
   align-items: start;
 }
@@ -1004,12 +1016,14 @@ body {
   line-height: 1.55;
 }
 .tdetail__bullets li::before {
-  content: '▸';
+  content: '';
   position: absolute;
-  left: 0;
-  color: var(--electric);
-  font-size: 0.75rem;
-  top: 3px;
+  left: 2px;
+  top: 0.66em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
 }
 .tdetail__bullets strong { color: var(--text-primary); }
 .tdetail__stack {
@@ -1152,6 +1166,8 @@ a.contact-method:hover { background: var(--page-bg); }
   gap: 24px;
 }
 .footer__links a {
+  display: inline-block;
+  padding: 10px 0;
   font-size: 0.82rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -1294,15 +1310,8 @@ a.contact-method:hover { background: var(--page-bg); }
 }
 
 @media (max-width: 640px) {
-  .header-summary__cta {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .header-summary__cta .btn {
-    width: 100%;
-    justify-content: center;
-  }
+  .header-summary__cta { gap: 10px; }
+  .header-summary__cta .btn { padding: 12px 22px; }
 }
 
 @media (max-width: 480px) {

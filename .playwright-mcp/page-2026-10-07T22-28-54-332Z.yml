@@ -1,0 +1,319 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: index.html
+        - strong [ref=e5]: Rishav
+      - navigation [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - link "Home" [ref=e9] [cursor=pointer]:
+              - /url: index.html
+          - listitem [ref=e10]:
+            - link "Portfolio" [ref=e11] [cursor=pointer]:
+              - /url: portfolio.html
+          - listitem [ref=e12]:
+            - link "About Me" [ref=e13] [cursor=pointer]:
+              - /url: aboutme.html
+          - listitem [ref=e14]:
+            - link "Writing & Research" [ref=e15] [cursor=pointer]:
+              - /url: blog.html
+          - listitem [ref=e16]:
+            - link "GitHub" [ref=e17] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai
+  - main [ref=e18]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - paragraph [ref=e23]: Rishav Bhattarai
+        - heading "Salesforce Developer & Software Engineer" [level=1] [ref=e24]
+      - generic [ref=e25]:
+        - paragraph [ref=e26]: Salesforce Developer at UNLV's Office of Information Technology, with 7 years of Java and Spring Boot engineering before that.
+        - generic [ref=e27]:
+          - link "View My Work" [ref=e28] [cursor=pointer]:
+            - /url: "#projects"
+          - link "Get In Touch" [ref=e29] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - heading "Expertise" [level=3] [ref=e32]
+          - list [ref=e33]:
+            - listitem [ref=e34]: "› Salesforce CRM: Apex, Flow, LWC"
+            - listitem [ref=e35]: › CI/CD and release automation
+            - listitem [ref=e36]: › Java Spring Boot microservices
+        - generic [ref=e37]:
+          - heading "Tools" [level=3] [ref=e38]
+          - list [ref=e39]:
+            - listitem [ref=e40]: › Salesforce DX, Copado, Gearset
+            - listitem [ref=e41]: › Education, Sales and Service Cloud
+            - listitem [ref=e42]: › Hibernate, REST APIs, D3.js
+    - region "Results" [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: 87%
+          - generic [ref=e47]: faster Salesforce deployments
+        - generic [ref=e48]:
+          - generic [ref=e49]: 150 hrs
+          - generic [ref=e50]: engineering time saved monthly (est.)
+        - generic [ref=e51]:
+          - generic [ref=e52]: 20%
+          - generic [ref=e53]: lower integration latency
+        - generic [ref=e54]:
+          - generic [ref=e55]: 100K+
+          - generic [ref=e56]: users on the PayMe and AwiPay wallets
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - heading "Project Hub" [level=2] [ref=e60]
+        - paragraph [ref=e61]: Real problems, solved, with numbers to show for it.
+      - tablist "Project categories" [ref=e62]:
+        - tab "AI & Security Infra" [selected] [ref=e63] [cursor=pointer]
+        - tab "Dashboards" [ref=e68] [cursor=pointer]
+        - tab "Enterprise Software" [ref=e74] [cursor=pointer]
+        - tab "Salesforce" [ref=e77] [cursor=pointer]
+      - generic [ref=e80]:
+        - article [ref=e81]:
+          - generic [ref=e82]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: Computer Vision
+              - generic [ref=e89]: Drug Discovery
+              - generic [ref=e90]: Python
+            - 'heading "CytoGuard: Cellular Injury Detection in Cell Painting Screens" [level=3] [ref=e91]'
+            - paragraph [ref=e92]: An open platform that flags injured wells in Cell Painting drug screens, names the likely injury mechanism, and shows the cells behind every call. Evaluated on 16,701 wells from IDR idr0133, with every compound scored by a model that never saw it.
+            - list [ref=e93]:
+              - listitem [ref=e94]: › Macro-F1 of 0.462 on never-seen compounds, against 0.146 for the published Pycytominer baseline; AUROC 0.947 for injured vs healthy wells
+              - listitem [ref=e95]: › Raw images to injury calls with OME-Zarr, Cellpose-SAM and cp_measure; pixel-level scores match the published profiles at r = 0.95
+              - listitem [ref=e96]: › FastAPI job queue, plugin system and a web viewer with segmentation overlays; 20 tests and a one-command Snakemake workflow
+            - generic [ref=e97]: Python, Cellpose-SAM, cp_measure, Pycytominer, LightGBM, FastAPI
+            - generic [ref=e98]:
+              - link "Read the Paper →" [ref=e99] [cursor=pointer]:
+                - /url: cytoguard_paper.html
+              - link "View on GitHub →" [ref=e100] [cursor=pointer]:
+                - /url: https://github.com/Rishavbhattarai/cytoguard-cell-painting
+              - generic [ref=e101]: Research · September 2026
+          - link [aria-hidden] [ref=e102] [cursor=pointer]:
+            - /url: cytoguard_paper.html
+        - article [ref=e104]:
+          - generic [ref=e109]:
+            - generic [ref=e110]: Python
+            - generic [ref=e111]: Streamlit
+            - generic [ref=e112]: Causal Inference
+          - 'heading "PCVI Atlas: Heatwave Vulnerability Research" [level=3] [ref=e113]'
+          - paragraph [ref=e114]: Public-health research pipeline testing whether U.S. communities with high prescriptions of heat-sensitizing medications face greater vulnerability during heatwaves, linking 8.79M Medicare Part D claims to summer heat exposure across Hospital Referral Regions.
+          - list [ref=e115]:
+            - listitem [ref=e116]: "› Four-stage pipeline: drug crosswalk (276 medications resolved to RxCUI/ATC), claims processing, evidence weighting, and causal analysis"
+            - listitem [ref=e117]: › 6-year daily panel with conditional Poisson regression and 200-permutation placebo testing to separate correlation from causation
+            - listitem [ref=e118]: › Identified and corrected a prescriber-vs-patient-location denominator artifact by reattributing claims via hospital catchment areas
+            - listitem [ref=e119]: › Interactive Streamlit app for exploring results across NASA POWER, NOAA, and Census data sources
+          - generic [ref=e120]: Python, Streamlit, Pandas, RxNorm/RxClass API, Dartmouth Atlas HRR
+          - generic [ref=e121]:
+            - link "Read the Case Study →" [ref=e122] [cursor=pointer]:
+              - /url: pcvi_atlas_case_study.html
+            - link "The Winchester Artifact" [ref=e123] [cursor=pointer]:
+              - /url: winchester_artifact.html
+            - link "HVID Crosswalk Dataset" [ref=e124] [cursor=pointer]:
+              - /url: hvid_crosswalk.html
+            - link "View on GitHub →" [ref=e125] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/pcvi-atlas
+            - generic [ref=e126]: Research · 2026
+        - article [ref=e127]:
+          - generic [ref=e133]:
+            - generic [ref=e134]: Python
+            - generic [ref=e135]: Causal Inference
+            - generic [ref=e136]: MCP Server
+          - 'heading "AMR-Climate Atlas: Antimicrobial Resistance Research" [level=3] [ref=e137]'
+          - paragraph [ref=e138]: Causal panel testing whether a hotter year makes antibiotic resistance worse across 29 EU/EEA countries. Four government data sources are joined into a 2000-2023 panel, with a mandatory 200-permutation placebo test gating every result.
+          - list [ref=e139]:
+            - listitem [ref=e140]: › Two-way fixed-effects regression across four pathogen-antibiotic combinations, cross-checked against independent genomic resistance data via BigQuery
+            - listitem [ref=e141]: › Live MCP server (Anthropic's official SDK) exposing live weather and genomic-resistance data, plus an eval-gated CI pipeline that refits every model on push
+            - listitem [ref=e142]: › Caught and documented a confounder column silently absorbed into the model's fixed effects, a bug with no error message
+            - listitem [ref=e143]: "› Reported an honest mostly-null result: three of four combinations show nothing, the fourth a narrow, independently-corroborated exception"
+          - generic [ref=e144]: Python, Streamlit, MCP SDK, BigQuery, Fixed-Effects Panel Regression
+          - generic [ref=e145]:
+            - link "Read the Case Study →" [ref=e146] [cursor=pointer]:
+              - /url: amr_climate_case_study.html
+            - link "Live Demo ↗" [ref=e147] [cursor=pointer]:
+              - /url: https://amr-climate-a-ijst2rqmsbc8rzrc8jruti.streamlit.app/
+            - link "The Confounder That Wasn't There" [ref=e148] [cursor=pointer]:
+              - /url: confounder_bug_log.html
+            - link "View on GitHub →" [ref=e149] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/amr-climate-atlas
+            - generic [ref=e150]: Research · 2026
+        - article [ref=e151]:
+          - generic [ref=e156]:
+            - generic [ref=e157]: Coding Agent
+            - generic [ref=e158]: SWE-bench
+            - generic [ref=e159]: Ollama
+          - 'heading "mini-swe-agent: Agent-Computer Interface Ablations on SWE-bench Lite" [level=3] [ref=e160]'
+          - paragraph [ref=e161]: A small SWE-agent-style coding agent that reads a GitHub issue, explores the repo, edits code, runs tests and submits a patch, built to measure whether the tools an LLM is given matter as much as the model. Runs entirely on local Ollama models.
+          - list [ref=e162]:
+            - listitem [ref=e163]: › Swappable agent-computer interface (windowed viewer vs full-file dump, ripgrep vs grep) behind a tool registry, scored in official SWE-bench Docker containers
+            - listitem [ref=e164]: "› Ablation: the windowed interface converged about 2.5× faster (10.5 vs 26.0 steps) and reached the edit stage where the basic one never did"
+            - listitem [ref=e165]: › Found and fixed a parser bug that silently discarded 37 consecutive correct tool calls; best attempt passed 9 of 10 tests
+          - generic [ref=e166]: Python, Ollama, Docker, SWE-bench harness, pytest
+          - generic [ref=e167]:
+            - link "View on GitHub →" [ref=e168] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/mini-swe-agent
+            - generic [ref=e169]: Research in progress · 2026
+        - article [ref=e170]:
+          - generic [ref=e176]:
+            - generic [ref=e177]: Differential Privacy
+            - generic [ref=e178]: FastAPI
+          - 'heading "Noisy Survey: Randomized-Response Anonymous Surveys" [level=3] [ref=e179]'
+          - paragraph [ref=e180]: An anonymous survey app that adds noise to sensitive yes/no answers before they are stored, so no answer can be traced back to anyone, yet the true rate can still be recovered.
+          - list [ref=e181]:
+            - listitem [ref=e182]: › Forced-response and Warner mechanisms with unbiased estimators, 95% confidence intervals and a per-question ε (local differential privacy)
+            - listitem [ref=e183]: › Stores only id, question and noisy answer; a test fails if an identifying column is ever added, and the access log is off
+            - listitem [ref=e184]: › Dashboard shows raw noisy results next to the corrected estimate
+          - generic [ref=e185]: Python, FastAPI, SQLite, Jinja2, pytest
+          - generic [ref=e186]:
+            - link "View on GitHub →" [ref=e187] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/noisy-survey
+            - generic [ref=e188]: Open Source · 2026
+        - article [ref=e189]:
+          - generic [ref=e196]:
+            - generic [ref=e197]: MCP
+            - generic [ref=e198]: WebSockets
+            - generic [ref=e199]: AI Security
+          - 'heading "Zenith: Enterprise AI Security & Observability Gateway" [level=3] [ref=e200]'
+          - paragraph [ref=e201]: "An open-source security and observability gateway for the Model Context Protocol (MCP): one middleware proxy that replaces scattered, client-side safety assumptions with a single enforced checkpoint."
+          - list [ref=e202]:
+            - listitem [ref=e203]: › Built a 6-step connection handler managing real-time JSON-RPC 2.0 streams over WebSockets/stdio
+            - listitem [ref=e204]: › Monitors AI execution times, token usage, and payloads in detail
+            - listitem [ref=e205]: › Decoupled middleware architecture built to scale AI-agentic workflows without latency/state bottlenecks
+          - generic [ref=e206]: Python, WebSockets, JSON-RPC 2.0, MCP
+          - generic [ref=e207]:
+            - link "View on GitHub →" [ref=e208] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/Zenith
+            - generic [ref=e209]: Open Source · Summer 2026
+        - article [ref=e210]:
+          - generic [ref=e216]:
+            - generic [ref=e217]: Zero-Trust
+            - generic [ref=e218]: RBAC
+            - generic [ref=e219]: PII Redaction
+          - 'heading "Hyperion: AI-Native SRE Mesh" [level=3] [ref=e220]'
+          - paragraph [ref=e221]: Autonomous "Air Traffic Control" for massive-scale distributed infrastructure. A zero-trust middleware gateway that validates every AI-generated action against RBAC, PII redaction, and Safety Intent Analysis before execution.
+          - list [ref=e222]:
+            - listitem [ref=e223]: › Mitigates catastrophic production risk by gating AI actions before they touch live systems
+            - listitem [ref=e224]: › Real-time infrastructure dashboard over WebSockets with live node health grids in a single view
+            - listitem [ref=e225]: › Automated audit log scoring every proxied request and AI decision
+          - generic [ref=e226]: JavaScript, WebSockets, RBAC, Claude
+          - generic [ref=e227]:
+            - link "View on GitHub →" [ref=e228] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/Hyperion
+            - generic [ref=e229]: Open Source · Summer 2026
+        - article [ref=e230]:
+          - generic [ref=e236]:
+            - generic [ref=e237]: Hybrid RAG
+            - generic [ref=e238]: Knowledge Graph
+            - generic [ref=e239]: Ollama
+          - 'heading "CAFE-RAG: Climate-Health Dataset Discovery Layer" [level=3] [ref=e240]'
+          - paragraph [ref=e241]: Agentic, retrieval-augmented search over 1,300+ Harvard Dataverse climate-health datasets (CAFE, CIESIN, HELD), turning natural-language queries into ranked, DOI-linked results with joinable-dataset suggestions instead of manual metadata browsing.
+          - list [ref=e242]:
+            - listitem [ref=e243]: "› Seven-stage pipeline: harvest → structure → dual-index (FTS5 + Chroma) → knowledge graph → hybrid retrieval → evaluation → Streamlit UI"
+            - listitem [ref=e244]: › Hybrid retrieval combining lexical (SQLite FTS5) and semantic (Chroma) search via Reciprocal Rank Fusion
+            - listitem [ref=e245]: › Local LLM (Ollama) query-intent extraction and metadata classification with fully offline inference
+            - listitem [ref=e246]: "› Reproducible evaluation harness with synthetic gold queries: recall@10 of 0.773, MRR of 0.635"
+          - generic [ref=e247]: Python, SQLite (FTS5), ChromaDB, Ollama, Pydantic, Streamlit
+          - generic [ref=e248]:
+            - link "View on GitHub →" [ref=e249] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/CAFE-RAG
+            - generic [ref=e250]: Open Source · Summer 2026
+        - article [ref=e251]:
+          - generic [ref=e256]:
+            - generic [ref=e257]: RBAC
+            - generic [ref=e258]: Intent Analysis
+            - generic [ref=e259]: PII Redaction
+          - 'heading "Project Aegis: Enterprise MCP Security Gateway" [level=3] [ref=e260]'
+          - paragraph [ref=e261]: WebSocket proxy sitting between AI agents and MCP servers, enforcing three gates (RBAC, AI-driven intent analysis, and PII redaction) on every JSON-RPC call, with a full audit trail and live observability dashboard.
+          - list [ref=e262]:
+            - listitem [ref=e263]: › Agent-specific allowlists restrict which MCP methods each agent can invoke
+            - listitem [ref=e264]: › Local LLM (Ollama) evaluates destructive operations (delete/drop/write/merge) before execution; fail-closed if the model is unreachable
+            - listitem [ref=e265]: › PII scrubbed from payloads sent to the model while original data still reaches backend servers
+            - listitem [ref=e266]: › Supabase-backed audit log with an HTTP API and dashboard for allowed/denied/blocked decisions
+          - generic [ref=e267]: Node.js, WebSockets, Supabase (PostgreSQL), Ollama
+          - generic [ref=e268]:
+            - link "View on GitHub →" [ref=e269] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/Project-Aegis
+            - generic [ref=e270]: Open Source · Summer 2026
+        - article [ref=e271]:
+          - generic [ref=e277]:
+            - generic [ref=e278]: GraphRAG
+            - generic [ref=e279]: FastAPI
+          - heading "AI Knowledge Assistant (GraphRAG)" [level=3] [ref=e280]
+          - paragraph [ref=e281]: Retrieval-augmented generation assistant combining semantic document search, a knowledge graph layer, and webhook-based workflow automation for organizational knowledge bases.
+          - list [ref=e282]:
+            - listitem [ref=e283]: › Vector-based semantic search over ingested docs via ChromaDB
+            - listitem [ref=e284]: › Entity extraction and relationship storage in Neo4j
+            - listitem [ref=e285]: › FastAPI chat endpoint returning source-attributed answers, with webhook automation hooks
+          - generic [ref=e286]: Python, FastAPI, ChromaDB, Neo4j
+          - link "View on GitHub →" [ref=e288] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai/ai-knowledge-assistant
+    - generic [ref=e290]:
+      - generic [ref=e291]:
+        - heading "Experience & Education" [level=2] [ref=e292]
+        - paragraph [ref=e293]: Click a node to explore the details of each role.
+      - generic [ref=e294]:
+        - generic [ref=e297]:
+          - button "Aug 2024 - Present Salesforce Developer UNLV Office of IT Current" [expanded] [ref=e298] [cursor=pointer]:
+            - generic [ref=e302]:
+              - generic [ref=e303]: Aug 2024 - Present
+              - generic [ref=e304]: Salesforce Developer
+              - generic [ref=e305]: UNLV Office of IT
+            - generic [ref=e306]: Current
+          - button "Feb 2018 - June 2024 Senior Java Developer Three Monks Pvt. Ltd. 6.3 yrs" [ref=e307] [cursor=pointer]:
+            - generic [ref=e312]:
+              - generic [ref=e313]: Feb 2018 - June 2024
+              - generic [ref=e314]: Senior Java Developer
+              - generic [ref=e315]: Three Monks Pvt. Ltd.
+            - generic [ref=e316]: 6.3 yrs
+          - button "Aug 2024 - May 2026 MS, Management Information Systems University of Nevada, Las Vegas Expected May 2026" [ref=e317] [cursor=pointer]:
+            - generic [ref=e322]:
+              - generic [ref=e323]: Aug 2024 - May 2026
+              - generic [ref=e324]: MS, Management Information Systems
+              - generic [ref=e325]: University of Nevada, Las Vegas
+            - generic [ref=e326]: Expected May 2026
+          - button "Completed Feb 2021 Bachelor of Information Management Tribhuvan University, Nepal Completed" [ref=e327] [cursor=pointer]:
+            - generic [ref=e332]:
+              - generic [ref=e333]: Completed Feb 2021
+              - generic [ref=e334]: Bachelor of Information Management
+              - generic [ref=e335]: Tribhuvan University, Nepal
+            - generic [ref=e336]: Completed
+        - generic [ref=e337]:
+          - generic [ref=e338]:
+            - generic [ref=e339]:
+              - generic [ref=e340]:
+                - heading "Salesforce Developer" [level=3] [ref=e341]
+                - paragraph [ref=e342]: Office of Information Technology, UNLV · Las Vegas, NV
+                - paragraph [ref=e343]: Aug 2024 - Present
+              - generic [ref=e344]: SF
+            - list [ref=e345]:
+              - listitem [ref=e346]:
+                - text: ▸ Automated CI/CD pipelines across Salesforce Education Cloud and Sales Cloud environments,
+                - strong [ref=e347]: reducing deployment time by 87%
+                - text: and saving the development team an estimated
+                - strong [ref=e348]: 150 hours monthly
+                - text: by streamlining Apex and LWC release cycles
+              - listitem [ref=e349]: ▸ Designed and delivered Salesforce Sales & Service Cloud solutions using Flow, Apex triggers/classes, and LWC, supporting departmental operations and student service workflows
+              - listitem [ref=e350]: ▸ Streamlined management of hundreds of Qualtrics forms by designing scalable Flow automation with Custom Metadata and profile-based access, enabling departments to reuse and manage student application processes annually without redevelopment
+              - listitem [ref=e351]: ▸ Administered roles, profiles, permission sets, public groups, and sharing rules, and performed bulk data operations using Data Loader to maintain secure and compliant access across environments as part of the enterprise release process
+            - generic [ref=e352]:
+              - generic [ref=e353]: Education Cloud
+              - generic [ref=e354]: Apex
+              - generic [ref=e355]: Flow Builder
+              - generic [ref=e356]: LWC
+              - generic [ref=e357]: Copado / GitHub Actions
+              - generic [ref=e358]: Salesforce DX
+          - text: ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸
+  - contentinfo [ref=e359]:
+    - generic [ref=e360]:
+      - paragraph [ref=e361]: © 2026 Rishav Bhattarai
+      - list [ref=e362]:
+        - listitem [ref=e363]:
+          - link "Email" [ref=e364] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+        - listitem [ref=e365]:
+          - link "LinkedIn" [ref=e366] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/rishav-bhattarai-nepal/
+        - listitem [ref=e367]:
+          - link "GitHub" [ref=e368] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai
+  - generic: "Browsersync: connected"

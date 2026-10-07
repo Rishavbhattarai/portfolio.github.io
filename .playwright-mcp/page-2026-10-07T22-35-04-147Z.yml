@@ -1,0 +1,192 @@
+- generic [active] [ref=f6e1]:
+  - banner [ref=f6e2]:
+    - generic [ref=f6e3]:
+      - link [ref=f6e4] [cursor=pointer]:
+        - /url: index.html
+        - strong [ref=f6e5]: Rishav
+      - button "Toggle menu" [ref=f6e6] [cursor=pointer]
+      - navigation [ref=f6e10]:
+        - list [ref=f6e11]:
+          - listitem [ref=f6e12]:
+            - link "Home" [ref=f6e13] [cursor=pointer]:
+              - /url: index.html
+          - listitem [ref=f6e14]:
+            - link "Portfolio" [ref=f6e15] [cursor=pointer]:
+              - /url: portfolio.html
+          - listitem [ref=f6e16]:
+            - link "About Me" [ref=f6e17] [cursor=pointer]:
+              - /url: aboutme.html
+          - listitem [ref=f6e18]:
+            - link "Writing & Research" [ref=f6e19] [cursor=pointer]:
+              - /url: blog.html
+          - listitem [ref=f6e20]:
+            - link "GitHub" [ref=f6e21] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai
+  - main [ref=f6e22]:
+    - generic [ref=f6e25]:
+      - heading "Software Engineer" [level=1] [ref=f6e27]
+      - generic [ref=f6e28]:
+        - paragraph [ref=f6e29]: Salesforce Developer at UNLV. Six years of Java payment systems before that, and open research on AI tooling and public health.
+        - generic [ref=f6e30]:
+          - link "View My Work" [ref=f6e31] [cursor=pointer]:
+            - /url: "#projects"
+          - link "Get In Touch" [ref=f6e32] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+    - region "Results" [ref=f6e33]:
+      - generic [ref=f6e34]:
+        - generic [ref=f6e35]:
+          - generic [ref=f6e36]: 87%
+          - generic [ref=f6e37]: faster Salesforce deployments at UNLV
+        - generic [ref=f6e38]:
+          - generic [ref=f6e39]: 100K+
+          - generic [ref=f6e40]: users on the PayMe and AwiPay wallets
+        - generic [ref=f6e41]:
+          - generic [ref=f6e42]: 4,000+
+          - generic [ref=f6e43]: payment transactions a day
+        - generic [ref=f6e44]:
+          - generic [ref=f6e45]: 16,701
+          - generic [ref=f6e46]: wells scored in the CytoGuard study
+    - generic [ref=f6e48]:
+      - generic [ref=f6e49]:
+        - heading "Projects" [level=2] [ref=f6e50]
+        - paragraph [ref=f6e51]: Research, AI tooling, Salesforce work, and the software I built before that.
+      - tablist "Project categories" [ref=f6e52]:
+        - tab "Research" [selected] [ref=f6e53] [cursor=pointer]
+        - tab "AI & Security" [ref=f6e56] [cursor=pointer]
+        - tab "Enterprise & Data" [ref=f6e61] [cursor=pointer]
+        - tab "Salesforce" [ref=f6e67] [cursor=pointer]
+      - generic [ref=f6e70]:
+        - article [ref=f6e71]:
+          - generic [ref=f6e72]:
+            - 'heading "CytoGuard: Cellular Injury Detection in Cell Painting Screens" [level=3] [ref=f6e73]'
+            - paragraph [ref=f6e74]: An open platform that flags injured wells in Cell Painting drug screens, names the likely injury mechanism, and shows the cells behind every call. Evaluated on 16,701 wells from IDR idr0133, with every compound scored by a model that never saw it.
+            - list [ref=f6e75]:
+              - listitem [ref=f6e76]: Macro-F1 of 0.462 on never-seen compounds, against 0.146 for the published Pycytominer baseline; AUROC 0.947 for injured vs healthy wells
+              - listitem [ref=f6e77]: Raw images to injury calls with OME-Zarr, Cellpose-SAM and cp_measure; pixel-level scores match the published profiles at r = 0.95
+              - listitem [ref=f6e78]: FastAPI job queue, plugin system and a web viewer with segmentation overlays; 20 tests and a one-command Snakemake workflow
+            - generic [ref=f6e79]: Python, Cellpose-SAM, cp_measure, Pycytominer, LightGBM, FastAPI
+            - generic [ref=f6e80]:
+              - link "Read the Paper →" [ref=f6e81] [cursor=pointer]:
+                - /url: cytoguard_paper.html
+              - link "View on GitHub →" [ref=f6e82] [cursor=pointer]:
+                - /url: https://github.com/Rishavbhattarai/cytoguard-cell-painting
+              - generic [ref=f6e83]: Research · September 2026
+          - link [aria-hidden] [ref=f6e84] [cursor=pointer]:
+            - /url: cytoguard_paper.html
+        - article [ref=f6e86]:
+          - 'heading "PCVI Atlas: Heatwave Vulnerability Research" [level=3] [ref=f6e87]'
+          - paragraph [ref=f6e88]: Public-health research pipeline testing whether U.S. communities with high prescriptions of heat-sensitizing medications face greater vulnerability during heatwaves, linking 8.79M Medicare Part D claims to summer heat exposure across Hospital Referral Regions.
+          - list [ref=f6e89]:
+            - listitem [ref=f6e90]: "Four-stage pipeline: drug crosswalk (276 medications resolved to RxCUI/ATC), claims processing, evidence weighting, and causal analysis"
+            - listitem [ref=f6e91]: 6-year daily panel with conditional Poisson regression and 200-permutation placebo testing to separate correlation from causation
+            - listitem [ref=f6e92]: Identified and corrected a prescriber-vs-patient-location denominator artifact by reattributing claims via hospital catchment areas
+            - listitem [ref=f6e93]: Interactive Streamlit app for exploring results across NASA POWER, NOAA, and Census data sources
+          - generic [ref=f6e94]: Python, Streamlit, Pandas, RxNorm/RxClass API, Dartmouth Atlas HRR
+          - generic [ref=f6e95]:
+            - link "Read the Case Study →" [ref=f6e96] [cursor=pointer]:
+              - /url: pcvi_atlas_case_study.html
+            - link "The Winchester Artifact" [ref=f6e97] [cursor=pointer]:
+              - /url: winchester_artifact.html
+            - link "HVID Crosswalk Dataset" [ref=f6e98] [cursor=pointer]:
+              - /url: hvid_crosswalk.html
+            - link "View on GitHub →" [ref=f6e99] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/pcvi-atlas
+            - generic [ref=f6e100]: Research · 2026
+        - article [ref=f6e101]:
+          - 'heading "AMR-Climate Atlas: Antimicrobial Resistance Research" [level=3] [ref=f6e102]'
+          - paragraph [ref=f6e103]: Causal panel testing whether a hotter year makes antibiotic resistance worse across 29 EU/EEA countries. Four government data sources are joined into a 2000-2023 panel, with a mandatory 200-permutation placebo test gating every result.
+          - list [ref=f6e104]:
+            - listitem [ref=f6e105]: Two-way fixed-effects regression across four pathogen-antibiotic combinations, cross-checked against independent genomic resistance data via BigQuery
+            - listitem [ref=f6e106]: Live MCP server (Anthropic's official SDK) exposing live weather and genomic-resistance data, plus an eval-gated CI pipeline that refits every model on push
+            - listitem [ref=f6e107]: Caught and documented a confounder column silently absorbed into the model's fixed effects, a bug with no error message
+            - listitem [ref=f6e108]: "Reported an honest mostly-null result: three of four combinations show nothing, the fourth a narrow, independently-corroborated exception"
+          - generic [ref=f6e109]: Python, Streamlit, MCP SDK, BigQuery, Fixed-Effects Panel Regression
+          - generic [ref=f6e110]:
+            - link "Read the Case Study →" [ref=f6e111] [cursor=pointer]:
+              - /url: amr_climate_case_study.html
+            - link "Live Demo ↗" [ref=f6e112] [cursor=pointer]:
+              - /url: https://amr-climate-a-ijst2rqmsbc8rzrc8jruti.streamlit.app/
+            - link "The Confounder That Wasn't There" [ref=f6e113] [cursor=pointer]:
+              - /url: confounder_bug_log.html
+            - link "View on GitHub →" [ref=f6e114] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/amr-climate-atlas
+            - generic [ref=f6e115]: Research · 2026
+        - article [ref=f6e116]:
+          - generic [ref=f6e117]:
+            - 'heading "mini-swe-agent: Agent-Computer Interface Ablations on SWE-bench Lite" [level=3] [ref=f6e118]'
+            - paragraph [ref=f6e119]: A small SWE-agent-style coding agent that reads a GitHub issue, explores the repo, edits code, runs tests and submits a patch, built to measure whether the tools an LLM is given matter as much as the model. Runs entirely on local Ollama models.
+            - list [ref=f6e120]:
+              - listitem [ref=f6e121]: Swappable agent-computer interface (windowed viewer vs full-file dump, ripgrep vs grep) behind a tool registry, scored in official SWE-bench Docker containers
+              - listitem [ref=f6e122]: "Ablation: the windowed interface converged about 2.5× faster (10.5 vs 26.0 steps) and reached the edit stage where the basic one never did"
+              - listitem [ref=f6e123]: Found and fixed a parser bug that silently discarded 37 consecutive correct tool calls; best attempt passed 9 of 10 tests
+            - generic [ref=f6e124]: Python, Ollama, Docker, SWE-bench harness, pytest
+            - generic [ref=f6e125]:
+              - link "View on GitHub →" [ref=f6e126] [cursor=pointer]:
+                - /url: https://github.com/Rishavbhattarai/mini-swe-agent
+              - generic [ref=f6e127]: Research in progress · 2026
+          - link [aria-hidden] [ref=f6e128] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai/mini-swe-agent
+    - generic [ref=f6e131]:
+      - generic [ref=f6e132]:
+        - heading "Experience & Education" [level=2] [ref=f6e133]
+        - paragraph [ref=f6e134]: Select a role to see what I did there.
+      - generic [ref=f6e135]:
+        - generic [ref=f6e138]:
+          - button "Aug 2024 - Present Salesforce Developer UNLV Office of IT" [expanded] [ref=f6e139] [cursor=pointer]:
+            - generic [ref=f6e143]:
+              - generic [ref=f6e144]: Aug 2024 - Present
+              - generic [ref=f6e145]: Salesforce Developer
+              - generic [ref=f6e146]: UNLV Office of IT
+          - button "Feb 2018 - June 2024 Senior Java Developer Three Monks Pvt. Ltd." [ref=f6e147] [cursor=pointer]:
+            - generic [ref=f6e152]:
+              - generic [ref=f6e153]: Feb 2018 - June 2024
+              - generic [ref=f6e154]: Senior Java Developer
+              - generic [ref=f6e155]: Three Monks Pvt. Ltd.
+          - button "Aug 2024 - May 2026 MS, Information Systems University of Nevada, Las Vegas" [ref=f6e156] [cursor=pointer]:
+            - generic [ref=f6e161]:
+              - generic [ref=f6e162]: Aug 2024 - May 2026
+              - generic [ref=f6e163]: MS, Information Systems
+              - generic [ref=f6e164]: University of Nevada, Las Vegas
+          - button "Feb 2021 Bachelor of Information Management Tribhuvan University, Nepal" [ref=f6e165] [cursor=pointer]:
+            - generic [ref=f6e170]:
+              - generic [ref=f6e171]: Feb 2021
+              - generic [ref=f6e172]: Bachelor of Information Management
+              - generic [ref=f6e173]: Tribhuvan University, Nepal
+        - generic [ref=f6e175]:
+          - generic [ref=f6e176]:
+            - generic [ref=f6e177]:
+              - heading "Salesforce Developer" [level=3] [ref=f6e178]
+              - paragraph [ref=f6e179]: Office of Information Technology, UNLV · Las Vegas, NV
+              - paragraph [ref=f6e180]: Aug 2024 - Present
+            - generic [ref=f6e181]: SF
+          - list [ref=f6e182]:
+            - listitem [ref=f6e183]:
+              - text: Automated CI/CD pipelines across Salesforce Education Cloud and Sales Cloud environments,
+              - strong [ref=f6e184]: reducing deployment time by 87%
+              - text: and saving the development team an estimated
+              - strong [ref=f6e185]: 150 hours a month
+              - text: on Apex and LWC releases
+            - listitem [ref=f6e186]: Designed and delivered Salesforce Sales & Service Cloud solutions using Flow, Apex triggers/classes, and LWC, supporting departmental operations and student service workflows
+            - listitem [ref=f6e187]: Moved hundreds of Qualtrics forms onto Flow automation with Custom Metadata and profile-based access, so departments reuse the student application process each year without a rebuild
+            - listitem [ref=f6e188]: Administered roles, profiles, permission sets, public groups, and sharing rules, and performed bulk data operations using Data Loader to maintain secure and compliant access across environments as part of the enterprise release process
+          - generic [ref=f6e189]:
+            - generic [ref=f6e190]: Education Cloud
+            - generic [ref=f6e191]: Apex
+            - generic [ref=f6e192]: Flow Builder
+            - generic [ref=f6e193]: LWC
+            - generic [ref=f6e194]: Copado / GitHub Actions
+            - generic [ref=f6e195]: Salesforce DX
+  - contentinfo [ref=f6e196]:
+    - generic [ref=f6e197]:
+      - paragraph [ref=f6e198]: © 2026 Rishav Bhattarai
+      - list [ref=f6e199]:
+        - listitem [ref=f6e200]:
+          - link "Email" [ref=f6e201] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+        - listitem [ref=f6e202]:
+          - link "LinkedIn" [ref=f6e203] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/rishav-bhattarai-nepal/
+        - listitem [ref=f6e204]:
+          - link "GitHub" [ref=f6e205] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai
+  - generic: "Browsersync: connected"

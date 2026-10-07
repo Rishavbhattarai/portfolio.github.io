@@ -1,0 +1,142 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link [ref=f4e4] [cursor=pointer]:
+        - /url: index.html
+        - strong [ref=f4e5]: Rishav
+      - button "Toggle menu" [ref=f4e6] [cursor=pointer]
+      - navigation [ref=f4e10]:
+        - list [ref=f4e11]:
+          - listitem [ref=f4e12]:
+            - link "Home" [ref=f4e13] [cursor=pointer]:
+              - /url: index.html
+          - listitem [ref=f4e14]:
+            - link "Portfolio" [ref=f4e15] [cursor=pointer]:
+              - /url: portfolio.html
+          - listitem [ref=f4e16]:
+            - link "About Me" [ref=f4e17] [cursor=pointer]:
+              - /url: aboutme.html
+          - listitem [ref=f4e18]:
+            - link "Writing & Research" [ref=f4e19] [cursor=pointer]:
+              - /url: blog.html
+          - listitem [ref=f4e20]:
+            - link "GitHub" [ref=f4e21] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai
+  - main [ref=f4e22]:
+    - generic [ref=f4e25]:
+      - generic [ref=f4e26]:
+        - paragraph [ref=f4e27]: Rishav Bhattarai
+        - heading "I build software that holds up in production." [level=1] [ref=f4e28]
+      - generic [ref=f4e29]:
+        - paragraph [ref=f4e30]:
+          - text: Software engineer with 7 years in Java and Salesforce, now building
+          - link "AI security infrastructure" [ref=f4e31] [cursor=pointer]:
+            - /url: portfolio.html#projects
+          - text: and
+          - link "applied research" [ref=f4e32] [cursor=pointer]:
+            - /url: blog.html
+          - text: at UNLV.
+        - generic [ref=f4e33]:
+          - link "View My Work" [ref=f4e34] [cursor=pointer]:
+            - /url: portfolio.html
+          - link "Get In Touch" [ref=f4e35] [cursor=pointer]:
+            - /url: "#contact"
+      - generic [ref=f4e37]:
+        - heading "Core Stack" [level=3] [ref=f4e38]
+        - list [ref=f4e39]:
+          - listitem [ref=f4e40]: Java Spring Boot, Apex, LWC
+          - listitem [ref=f4e41]: Python, Streamlit, D3.js
+          - listitem [ref=f4e42]: WebSockets, RBAC, Salesforce DX
+          - listitem [ref=f4e43]: MCP, LightGBM, Cellpose
+    - generic [ref=f4e45]:
+      - generic [ref=f4e46]:
+        - heading "What I'm Building Now" [level=2] [ref=f4e47]
+        - paragraph [ref=f4e48]: "The newest work first: research and AI security infrastructure, then the enterprise foundation it stands on."
+      - generic [ref=f4e49]:
+        - article [ref=f4e50]:
+          - generic [ref=f4e51]:
+            - generic [ref=f4e56]:
+              - generic [ref=f4e57]: New Paper
+              - generic [ref=f4e58]: Computer Vision
+              - generic [ref=f4e59]: Python
+            - 'heading "CytoGuard: Cellular Injury Detection in Cell Painting Screens" [level=3] [ref=f4e60]'
+            - paragraph [ref=f4e61]: An open platform that flags injured wells in drug screens, names the likely injury mechanism, and shows the cells behind every call. On compounds the model never saw, it reaches a macro-F1 of 0.462 against 0.146 for the published baseline.
+            - generic [ref=f4e62]: Cellpose-SAM, LightGBM, FastAPI
+            - generic [ref=f4e63]:
+              - link "Read the Paper →" [ref=f4e64] [cursor=pointer]:
+                - /url: cytoguard_paper.html
+              - link "View on GitHub →" [ref=f4e65] [cursor=pointer]:
+                - /url: https://github.com/Rishavbhattarai/cytoguard-cell-painting
+          - link [aria-hidden] [ref=f4e66] [cursor=pointer]:
+            - /url: cytoguard_paper.html
+        - article [ref=f4e68]:
+          - generic [ref=f4e75]:
+            - generic [ref=f4e76]: MCP
+            - generic [ref=f4e77]: RBAC
+            - generic [ref=f4e78]: AI Security
+          - heading "AI Security & Observability Infrastructure" [level=3] [ref=f4e79]
+          - paragraph [ref=f4e80]: Open-source gateways that sit between AI agents and the systems they touch, checking every action with RBAC, PII redaction, and intent analysis before it runs.
+          - link "See the Projects →" [ref=f4e82] [cursor=pointer]:
+            - /url: portfolio.html#projects
+        - article [ref=f4e83]:
+          - generic [ref=f4e84]: Causal Inference
+          - heading "AMR-Climate & PCVI Atlas Research" [level=3] [ref=f4e91]
+          - paragraph [ref=f4e92]: Two causal panels asking whether heat drives antibiotic resistance and heatwave vulnerability. A 200-permutation placebo test gates every result, including the null ones.
+          - link "Read the Case Studies →" [ref=f4e94] [cursor=pointer]:
+            - /url: amr_climate_case_study.html
+        - article [ref=f4e95]:
+          - generic [ref=f4e102]:
+            - generic [ref=f4e103]: CI/CD
+            - generic [ref=f4e104]: Agentforce
+          - heading "Salesforce CI/CD @ UNLV" [level=3] [ref=f4e105]
+          - paragraph [ref=f4e106]: Automated release pipelines across Education and Sales Cloud. Deployment time down 87%, roughly 150 engineering hours saved every month.
+          - link "Explore CRM Work →" [ref=f4e108] [cursor=pointer]:
+            - /url: portfolio.html#salesforce
+        - article [ref=f4e109]:
+          - generic [ref=f4e110]: Java Spring Boot
+          - heading "Digital Wallet Platform" [level=3] [ref=f4e116]
+          - paragraph [ref=f4e117]: "PayMe and AwiPay: 100K+ users and 4,000+ daily transactions. The Java foundation everything above is built on."
+          - link "See the Build →" [ref=f4e119] [cursor=pointer]:
+            - /url: portfolio.html#enterprise
+    - generic [ref=f4e122]:
+      - generic [ref=f4e123]:
+        - heading "Let's build something that lasts." [level=2] [ref=f4e124]
+        - paragraph [ref=f4e125]: I'm looking for full-time Software Engineering and Salesforce Development roles. Enterprise Java, CRM automation, and AI security research are three disciplines that keep reinforcing each other in my work.
+        - generic [ref=f4e126]:
+          - link "Email Me" [ref=f4e127] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+          - link "My Background" [ref=f4e128] [cursor=pointer]:
+            - /url: aboutme.html
+      - generic [ref=f4e129]:
+        - link [ref=f4e130] [cursor=pointer]:
+          - /url: mailto:bhattarai.rishav@gmail.com
+          - generic [ref=f4e135]:
+            - heading "Email" [level=3] [ref=f4e136]
+            - text: bhattarai.rishav@gmail.com
+        - link [ref=f4e137] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/rishav-bhattarai-nepal/
+          - generic [ref=f4e143]:
+            - heading "LinkedIn" [level=3] [ref=f4e144]
+            - text: rishav-bhattarai-nepal
+        - link [ref=f4e145] [cursor=pointer]:
+          - /url: https://github.com/Rishavbhattarai
+          - generic [ref=f4e149]:
+            - heading "GitHub" [level=3] [ref=f4e150]
+            - text: Rishavbhattarai
+        - generic [ref=f4e156]:
+          - heading "Location" [level=3] [ref=f4e157]
+          - text: Las Vegas, Nevada
+  - contentinfo [ref=f4e158]:
+    - generic [ref=f4e159]:
+      - paragraph [ref=f4e160]: © 2026 Rishav Bhattarai
+      - list [ref=f4e161]:
+        - listitem [ref=f4e162]:
+          - link "Email" [ref=f4e163] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+        - listitem [ref=f4e164]:
+          - link "LinkedIn" [ref=f4e165] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/rishav-bhattarai-nepal/
+        - listitem [ref=f4e166]:
+          - link "GitHub" [ref=f4e167] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai
+  - generic: "Browsersync: connected"

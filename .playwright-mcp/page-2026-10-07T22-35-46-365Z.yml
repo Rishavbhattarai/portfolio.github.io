@@ -1,0 +1,233 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link [ref=f1e4] [cursor=pointer]:
+        - /url: index.html
+        - strong [ref=f1e5]: Rishav
+      - navigation [ref=f1e6]:
+        - list [ref=f1e7]:
+          - listitem [ref=f1e8]:
+            - link "Home" [ref=f1e9] [cursor=pointer]:
+              - /url: index.html
+          - listitem [ref=f1e10]:
+            - link "Portfolio" [ref=f1e11] [cursor=pointer]:
+              - /url: portfolio.html
+          - listitem [ref=f1e12]:
+            - link "About Me" [ref=f1e13] [cursor=pointer]:
+              - /url: aboutme.html
+          - listitem [ref=f1e14]:
+            - link "Writing & Research" [ref=f1e15] [cursor=pointer]:
+              - /url: blog.html
+          - listitem [ref=f1e16]:
+            - link "GitHub" [ref=f1e17] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai
+  - main [ref=f1e18]:
+    - generic [ref=f1e20]:
+      - generic [ref=f1e21]:
+        - paragraph [ref=f1e22]: Writing & Research
+        - heading "Research, Dashboards & Writing" [level=1] [ref=f1e23]
+      - paragraph [ref=f1e24]: Engineering write-ups, research papers, and interactive dashboards that turn complex datasets and research questions into decision-ready tools.
+      - generic [ref=f1e25]:
+        - link "Read the Latest" [ref=f1e26] [cursor=pointer]:
+          - /url: "#latest"
+        - link "Papers & Reports" [ref=f1e27] [cursor=pointer]:
+          - /url: "#research"
+    - generic [ref=f1e29]:
+      - generic [ref=f1e30]:
+        - heading "Latest Engineering Write-ups" [level=2] [ref=f1e31]
+        - paragraph [ref=f1e32]: How I build backend systems that can prove they are correct, and what broke along the way.
+      - article [ref=f1e34]:
+        - generic [ref=f1e40]:
+          - generic [ref=f1e41]: Billing
+          - generic [ref=f1e42]: Python
+          - generic [ref=f1e43]: PostgreSQL
+          - generic [ref=f1e44]: AI Agents
+        - heading "How I Built A Billing Pipeline That Can Prove Every Invoice Is Right, Down To The Cent" [level=3] [ref=f1e45]
+        - paragraph [ref=f1e46]: An invoice you can't recompute is an invoice you can't defend. Four design decisions that held up under 1 million usage events and a live Salesforce org, the two bugs that taught me the most, and why this kind of proof matters more when AI agents write the code.
+        - list [ref=f1e47]:
+          - listitem [ref=f1e48]: "Full event log of 999,589 events replayed twice: all 200 invoices rebuilt with identical SHA-256 hashes"
+          - listitem [ref=f1e49]: "Live Salesforce Developer Edition org queried directly: $598,167.89 on both sides, matched to the cent"
+          - listitem [ref=f1e50]:
+            - text: A 205-second aggregation query cut to 2.1 seconds with one
+            - code [ref=f1e51]: ANALYZE
+            - text: on a temp table
+        - generic [ref=f1e52]: Usage Metering & Billing · October 2026
+        - generic [ref=f1e53]:
+          - link "Read the Article →" [ref=f1e54] [cursor=pointer]:
+            - /url: invoices_you_can_recompute.html
+          - link "View on GitHub →" [ref=f1e55] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai/usage-metering-billing
+          - generic [ref=f1e56]: Article · October 2026
+    - generic [ref=f1e58]:
+      - generic [ref=f1e59]:
+        - heading "Papers & Technical Reports" [level=2] [ref=f1e60]
+        - paragraph [ref=f1e61]: A peer-reviewed conference paper on cybersecurity investment, and a technical report on detecting cellular injury in drug screens.
+      - generic [ref=f1e62]:
+        - article [ref=f1e63]:
+          - generic [ref=f1e64]:
+            - generic [ref=f1e69]:
+              - generic [ref=f1e70]: Computer Vision
+              - generic [ref=f1e71]: Drug Discovery
+              - generic [ref=f1e72]: Python
+            - 'heading "CytoGuard: Detecting and Classifying Cellular Injury in Cell Painting Screens" [level=3] [ref=f1e73]'
+            - paragraph [ref=f1e74]: An open platform that flags injured wells in Cell Painting drug screens, names the likely injury mechanism, and shows the cells behind every call. Evaluated on 16,701 wells from IDR idr0133, with every compound scored by a model that never saw it.
+            - list [ref=f1e75]:
+              - listitem [ref=f1e76]: Macro-F1 of 0.462 on never-seen compounds, against 0.146 for the published Pycytominer baseline; AUROC 0.947 for injured vs healthy wells
+              - listitem [ref=f1e77]: Raw images to injury calls with OME-Zarr, Cellpose-SAM and cp_measure; pixel-level scores match the published profiles at r = 0.95
+              - listitem [ref=f1e78]: FastAPI job queue, plugin system and a web viewer with segmentation overlays; 20 tests and a one-command Snakemake workflow
+            - generic [ref=f1e79]: Cellpose-SAM, cp_measure, Pycytominer, copairs, LightGBM, FastAPI
+            - generic [ref=f1e80]:
+              - link "Read the Report →" [ref=f1e81] [cursor=pointer]:
+                - /url: cytoguard_paper.html
+              - link "View on GitHub →" [ref=f1e82] [cursor=pointer]:
+                - /url: https://github.com/Rishavbhattarai/cytoguard-cell-painting
+              - generic [ref=f1e83]: Technical Report · September 2026
+          - link [aria-hidden] [ref=f1e84] [cursor=pointer]:
+            - /url: cytoguard_paper.html
+        - article [ref=f1e86]:
+          - generic [ref=f1e87]:
+            - generic [ref=f1e93]:
+              - generic [ref=f1e94]: Disaster Recovery
+              - generic [ref=f1e95]: TCO Analysis
+              - generic [ref=f1e96]: CISO Strategy
+            - 'heading "Cost-Benefit Analysis of Cold Site vs. Hot Site Disaster Recovery Strategies: A Framework for CISO Decision Making" [level=3] [ref=f1e97]'
+            - paragraph [ref=f1e98]: A comprehensive analytical framework for CISOs to evaluate and justify disaster recovery investments, comparing Cold Site (slower recovery, lower cost) and Hot Site (immediate recovery, higher cost) strategies through an interactive cost-benefit model.
+            - list [ref=f1e99]:
+              - listitem [ref=f1e100]: Quantifies total cost of ownership including infrastructure, downtime costs tied to RTO/RPO, and opportunity costs
+              - listitem [ref=f1e101]: Interactive calculator for real-time scenario analysis and board-ready reporting
+              - listitem [ref=f1e102]: Evidence-based recommendations for CISO budget defense and executive presentations
+            - generic [ref=f1e103]: Risk Quantification, TCO Modeling, RTO/RPO Analysis, Executive Reporting
+            - generic [ref=f1e104]:
+              - link "Launch the Calculator →" [ref=f1e105] [cursor=pointer]:
+                - /url: https://rishavunlv.github.io/ciso_budget.html
+              - generic [ref=f1e106]: Published Conference Paper · 2025
+          - link [aria-hidden] [ref=f1e107] [cursor=pointer]:
+            - /url: https://rishavunlv.github.io/ciso_budget.html
+    - generic [ref=f1e110]:
+      - generic [ref=f1e111]:
+        - heading "Interactive Dashboards" [level=2] [ref=f1e112]
+        - paragraph [ref=f1e113]: Complex datasets transformed into intuitive, explorable visualizations.
+      - generic [ref=f1e114]:
+        - article [ref=f1e115]:
+          - link [aria-hidden] [ref=f1e116] [cursor=pointer]:
+            - /url: financial_chaos.html
+          - generic [ref=f1e123]:
+            - generic [ref=f1e124]: Finance
+            - generic [ref=f1e125]: Charts
+          - heading "Nepal National Budget Dashboard" [level=3] [ref=f1e126]
+          - paragraph [ref=f1e127]: "The government's consolidated financial statement for FY 2080/081: receipts, payments, and the fiscal deficit, broken down by source."
+          - generic [ref=f1e128]: JavaScript · Chart.js
+          - link "Open Dashboard →" [ref=f1e130] [cursor=pointer]:
+            - /url: financial_chaos.html
+        - article [ref=f1e131]:
+          - link [aria-hidden] [ref=f1e132] [cursor=pointer]:
+            - /url: 21_22_gva_report.html
+          - generic [ref=f1e137]:
+            - generic [ref=f1e138]: Economics
+            - generic [ref=f1e139]: GVA
+          - heading "Gross Value Added Report" [level=3] [ref=f1e140]
+          - paragraph [ref=f1e141]: Sector-wise economic contribution analysis with interactive filtering capabilities.
+          - generic [ref=f1e142]: JavaScript · D3.js
+          - link "Open Dashboard →" [ref=f1e144] [cursor=pointer]:
+            - /url: 21_22_gva_report.html
+        - article [ref=f1e145]:
+          - link [aria-hidden] [ref=f1e146] [cursor=pointer]:
+            - /url: gdp_growth.html
+          - generic [ref=f1e153]:
+            - generic [ref=f1e154]: Time Series
+            - generic [ref=f1e155]: Macro
+          - 'heading "GDP Growth: 15 Years" [level=3] [ref=f1e156]'
+          - paragraph [ref=f1e157]: Long-term economic trend analysis with year-over-year growth comparisons.
+          - generic [ref=f1e158]: JavaScript · Chart.js
+          - link "Open Dashboard →" [ref=f1e160] [cursor=pointer]:
+            - /url: gdp_growth.html
+        - article [ref=f1e161]:
+          - link [aria-hidden] [ref=f1e162] [cursor=pointer]:
+            - /url: realityCheck.html
+          - generic [ref=f1e168]:
+            - generic [ref=f1e169]: Simulation
+            - generic [ref=f1e170]: Policy
+          - heading "Nepal Redistricting Simulator" [level=3] [ref=f1e171]
+          - paragraph [ref=f1e172]: Fair representation analysis comparing current vs. simulated parliamentary seat distribution.
+          - generic [ref=f1e173]: JavaScript · D3.js
+          - link "Open Dashboard →" [ref=f1e175] [cursor=pointer]:
+            - /url: realityCheck.html
+    - generic [ref=f1e177]:
+      - generic [ref=f1e178]:
+        - heading "Technical Writing" [level=2] [ref=f1e179]
+        - paragraph [ref=f1e180]: Notes and lessons from Salesforce, Java, and data visualization work.
+      - generic [ref=f1e181]:
+        - article [ref=f1e182]:
+          - generic [ref=f1e188]:
+            - generic [ref=f1e189]: Data Quality
+            - generic [ref=f1e190]: Public Health
+          - heading "The Winchester Artifact" [level=3] [ref=f1e191]
+          - paragraph [ref=f1e192]: "A debug log: a small Virginia city topped a national health-risk ranking by 8x, not because it was the sickest place in America, but because a hospital catchment area was misattributed to one small county."
+          - generic [ref=f1e193]: PCVI Atlas · August 2026
+          - link "Read the Debug Log →" [ref=f1e195] [cursor=pointer]:
+            - /url: winchester_artifact.html
+        - article [ref=f1e196]:
+          - generic [ref=f1e202]:
+            - generic [ref=f1e203]: Data Quality
+            - generic [ref=f1e204]: Causal Inference
+          - heading "The Confounder That Wasn't There" [level=3] [ref=f1e205]
+          - paragraph [ref=f1e206]: "A debug log: a causal model ran clean and produced a plausible-looking number. It just wasn't controlling for the thing it claimed to, because a confounder column got silently absorbed into the model's own fixed effects."
+          - generic [ref=f1e207]: AMR-Climate Atlas · August 2026
+          - link "Read the Debug Log →" [ref=f1e209] [cursor=pointer]:
+            - /url: confounder_bug_log.html
+        - article [ref=f1e210]:
+          - generic [ref=f1e216]:
+            - generic [ref=f1e217]: Dataset
+            - generic [ref=f1e218]: Health Data
+          - heading "HVID Drug Crosswalk" [level=3] [ref=f1e219]
+          - paragraph [ref=f1e220]: Dataset card for a 276-drug crosswalk of heat-vulnerability-inducing medications, resolved to RxNorm/ATC codes with a full evidence trail, built to connect RCT pharmacology literature to Medicare prescribing data.
+          - generic [ref=f1e221]: PCVI Atlas · August 2026
+          - link "View the Dataset Card →" [ref=f1e223] [cursor=pointer]:
+            - /url: hvid_crosswalk.html
+        - article [ref=f1e224]:
+          - generic [ref=f1e225]: Risk Assessment
+          - heading "Annual Loss Expectancy (ALE) Methodology" [level=3] [ref=f1e231]
+          - paragraph [ref=f1e232]: A comprehensive guide to calculating cybersecurity risk using the ALE formula, with practical examples for small business owners.
+          - generic [ref=f1e233]: March 2025
+        - article [ref=f1e234]:
+          - generic [ref=f1e235]: Salesforce Ecosystem
+          - generic [ref=f1e238]: Agentforce
+          - 'heading "Salesforce Agentforce AI: First Impressions" [level=3] [ref=f1e246]'
+          - paragraph [ref=f1e247]: My experience experimenting with Agentforce AI for workflow automation and the potential impact on CRM development.
+          - generic [ref=f1e248]: February 2025
+        - article [ref=f1e249]:
+          - generic [ref=f1e250]: Java
+          - heading "Java Spring Boot Best Practices" [level=3] [ref=f1e257]
+          - paragraph [ref=f1e258]: Lessons learned from building production-grade digital wallet applications with Spring Boot microservices.
+          - generic [ref=f1e259]: December 2024
+        - article [ref=f1e260]:
+          - generic [ref=f1e261]: Data Viz
+          - heading "Building Interactive Data Dashboards" [level=3] [ref=f1e268]
+          - paragraph [ref=f1e269]: A technical walkthrough of creating interactive data dashboards using D3.js and modern web technologies.
+          - generic [ref=f1e270]: October 2024
+        - article [ref=f1e271]:
+          - generic [ref=f1e272]: Personal
+          - 'heading "From Nepal to UNLV: My Graduate Journey" [level=3] [ref=f1e279]'
+          - paragraph [ref=f1e280]: Reflections on transitioning from enterprise Java development to graduate studies in Management Information Systems.
+          - generic [ref=f1e281]: August 2024
+    - generic [ref=f1e284]:
+      - heading "Interested in My Research or Work?" [level=2] [ref=f1e285]
+      - paragraph [ref=f1e286]: Open to discussing my research, cybersecurity tools, or full-time roles in software engineering and Salesforce development.
+      - generic [ref=f1e287]:
+        - link "View My Portfolio" [ref=f1e288] [cursor=pointer]:
+          - /url: portfolio.html
+        - link "Get In Touch" [ref=f1e289] [cursor=pointer]:
+          - /url: mailto:bhattarai.rishav@gmail.com
+  - contentinfo [ref=f1e290]:
+    - generic [ref=f1e291]:
+      - paragraph [ref=f1e292]: © 2026 Rishav Bhattarai
+      - list [ref=f1e293]:
+        - listitem [ref=f1e294]:
+          - link "Email" [ref=f1e295] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+        - listitem [ref=f1e296]:
+          - link "LinkedIn" [ref=f1e297] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/rishav-bhattarai-nepal/
+        - listitem [ref=f1e298]:
+          - link "GitHub" [ref=f1e299] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai

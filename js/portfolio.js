@@ -69,7 +69,7 @@ filterBtns.forEach(btn => {
 
 // Init with first tab (only on pages that actually have a filter bar)
 if (filterBtns.length) {
-  activateFilter('ai-infra');
+  activateFilter(filterBtns[0].dataset.filter);
 }
 
 /* ── TIMELINE INTERACTION ───────────────────────────── */
@@ -123,7 +123,7 @@ if (timelineLine) {
 
 /* ── SCROLL REVEAL ──────────────────────────────────── */
 const revealElements = document.querySelectorAll(
-  '.section__header, .filter-bar, .contact-card'
+  '.contact-card'
 );
 
 // Mark them initially

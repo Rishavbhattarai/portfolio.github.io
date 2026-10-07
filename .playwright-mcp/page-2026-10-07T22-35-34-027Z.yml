@@ -1,0 +1,187 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: index.html
+        - strong [ref=e5]: Rishav
+      - navigation [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - link "Home" [ref=e9] [cursor=pointer]:
+              - /url: index.html
+          - listitem [ref=e10]:
+            - link "Portfolio" [ref=e11] [cursor=pointer]:
+              - /url: portfolio.html
+          - listitem [ref=e12]:
+            - link "About Me" [ref=e13] [cursor=pointer]:
+              - /url: aboutme.html
+          - listitem [ref=e14]:
+            - link "Writing & Research" [ref=e15] [cursor=pointer]:
+              - /url: blog.html
+          - listitem [ref=e16]:
+            - link "GitHub" [ref=e17] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai
+  - main [ref=e18]:
+    - generic [ref=e21]:
+      - heading "Software Engineer" [level=1] [ref=e23]
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: Salesforce Developer at UNLV. Six years of Java payment systems before that, and open research on AI tooling and public health.
+        - generic [ref=e26]:
+          - link "View My Work" [ref=e27] [cursor=pointer]:
+            - /url: "#projects"
+          - link "Get In Touch" [ref=e28] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+    - region "Results" [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: 87%
+          - generic [ref=e33]: faster Salesforce deployments at UNLV
+        - generic [ref=e34]:
+          - generic [ref=e35]: 100K+
+          - generic [ref=e36]: users on the PayMe and AwiPay wallets
+        - generic [ref=e37]:
+          - generic [ref=e38]: 4,000+
+          - generic [ref=e39]: payment transactions a day
+        - generic [ref=e40]:
+          - generic [ref=e41]: 16,701
+          - generic [ref=e42]: wells scored in the CytoGuard study
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - heading "Projects" [level=2] [ref=e46]
+        - paragraph [ref=e47]: Backend systems, research, AI tooling, Salesforce work, and the software I built before that.
+      - tablist "Project categories" [ref=e48]:
+        - tab "Backend Systems" [selected] [ref=e49] [cursor=pointer]
+        - tab "Research" [ref=e53] [cursor=pointer]
+        - tab "AI & Security" [ref=e56] [cursor=pointer]
+        - tab "Enterprise & Data" [ref=e61] [cursor=pointer]
+        - tab "Salesforce" [ref=e67] [cursor=pointer]
+      - generic [ref=e70]:
+        - article [ref=e71]:
+          - heading "Usage Metering & Billing Pipeline" [level=3] [ref=e72]
+          - paragraph [ref=e73]: A pipeline that turns raw usage events, such as API calls or gigabytes stored, into monthly invoices and syncs customers and invoices to Salesforce. Raw events are never edited, so every invoice amount can be recomputed from the events that produced it.
+          - list [ref=e74]:
+            - listitem [ref=e75]:
+              - text: Ingests 1,000,000 events with 10% duplicates at
+              - strong [ref=e76]: 38,568 events/s
+              - text: and stores exactly the 900,129 unique ones, via
+              - code [ref=e77]: INSERT ... ON CONFLICT DO NOTHING
+              - text: on a client-supplied event ID
+            - listitem [ref=e78]: Replays the full log of 999,589 events twice into an empty database and rebuilds all 200 invoices with identical SHA-256 hashes
+            - listitem [ref=e79]:
+              - text: Pure rating engine (flat, graduated tiers, minimum commit) in
+              - code [ref=e80]: Decimal
+              - text: and integer cents, with Hypothesis property tests; late events become next-invoice adjustments priced at the old period's marginal rate
+            - listitem [ref=e81]:
+              - text: "Close, Salesforce sync and reconciliation run as jobs on jobq with retries and a DLQ. A live Developer Edition org matched the ledger to the cent:"
+              - strong [ref=e82]: $598,167.89
+              - text: ", zero drift"
+          - generic [ref=e83]: Python, FastAPI, PostgreSQL, jobq, Salesforce Bulk API 2.0, HTMX, Hypothesis, Docker
+          - generic [ref=e84]:
+            - link "Read the Write-up →" [ref=e85] [cursor=pointer]:
+              - /url: invoices_you_can_recompute.html
+            - link "View on GitHub →" [ref=e86] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/usage-metering-billing
+            - generic [ref=e87]: 107 Tests · October 2026
+        - article [ref=e88]:
+          - 'heading "jobq: Distributed Job Queue" [level=3] [ref=e89]'
+          - paragraph [ref=e90]: A job queue where a job is never lost and never runs twice by mistake, even when a worker crashes mid-task. Redis dispatches job IDs, PostgreSQL holds the record of every job and attempt, and idempotency keys make the effect happen once.
+          - list [ref=e91]:
+            - listitem [ref=e92]:
+              - text: "Chaos test: 13 workers killed with"
+              - code [ref=e93]: kill -9
+              - text: during a 10,000-job run;
+              - strong [ref=e94]: 10,000 succeeded, 0 lost, 0 run twice
+            - listitem [ref=e95]: Atomic Lua leasing, heartbeats, a reaper and attempt-number fencing so a stale worker can't overwrite a newer result
+            - listitem [ref=e96]:
+              - text: Exponential backoff with full jitter, a replayable dead-letter queue, cron schedules and
+              - code [ref=e97]: "429"
+              - text: backpressure
+            - listitem [ref=e98]: Prometheus and Grafana dashboards, k6 load tests, and 63 tests against real Postgres and Redis
+          - generic [ref=e99]: Python, FastAPI, Redis, PostgreSQL, Prometheus, Grafana, k6
+          - generic [ref=e100]:
+            - link "View on GitHub →" [ref=e101] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/distributed-job-queue
+            - generic [ref=e102]: Open Source · October 2026
+        - article [ref=e103]:
+          - 'heading "Tanks Arena: Real-Time Multiplayer Netcode" [level=3] [ref=e104]'
+          - paragraph [ref=e105]: A browser tank arena built to study multiplayer networking. The server simulates at a fixed 30 ticks per second and is the only source of truth; clients predict their own tank, interpolate everyone else, and hits are lag-compensated. No game engine, so all the netcode is hand-written and tested.
+          - list [ref=e106]:
+            - listitem [ref=e107]:
+              - text: Holds
+              - strong [ref=e108]: 1,680 players
+              - text: on one Node process within the 33 ms tick budget (p99 26.4 ms)
+            - listitem [ref=e109]:
+              - text: Delta snapshots cut downstream bandwidth per player by
+              - strong [ref=e110]: 73%
+              - text: ", from 24.30 to 6.64 KB/s"
+            - listitem [ref=e111]: 0 prediction corrections at 150 ms RTT and 5% packet loss; a cheating client's teleports, input floods and replays are all rejected
+            - listitem [ref=e112]: Reconnect within 30 s keeps the same tank, position and score; 96 tests
+          - generic [ref=e113]: TypeScript, Node.js, WebSockets, Canvas, Vitest, Prometheus, Grafana
+          - generic [ref=e114]:
+            - link "View on GitHub →" [ref=e115] [cursor=pointer]:
+              - /url: https://github.com/Rishavbhattarai/-multiplayer-arena
+            - generic [ref=e116]: Open Source · October 2026
+    - generic [ref=e118]:
+      - generic [ref=e119]:
+        - heading "Experience & Education" [level=2] [ref=e120]
+        - paragraph [ref=e121]: Select a role to see what I did there.
+      - generic [ref=e122]:
+        - generic [ref=e125]:
+          - button "Aug 2024 - Present Salesforce Developer UNLV Office of IT Current" [expanded] [ref=e126] [cursor=pointer]:
+            - generic [ref=e130]:
+              - generic [ref=e131]: Aug 2024 - Present
+              - generic [ref=e132]: Salesforce Developer
+              - generic [ref=e133]: UNLV Office of IT
+            - generic [ref=e134]: Current
+          - button "Feb 2018 - June 2024 Senior Java Developer Three Monks Pvt. Ltd." [ref=e135] [cursor=pointer]:
+            - generic [ref=e140]:
+              - generic [ref=e141]: Feb 2018 - June 2024
+              - generic [ref=e142]: Senior Java Developer
+              - generic [ref=e143]: Three Monks Pvt. Ltd.
+          - button "Aug 2024 - May 2026 MS, Information Systems University of Nevada, Las Vegas" [ref=e144] [cursor=pointer]:
+            - generic [ref=e149]:
+              - generic [ref=e150]: Aug 2024 - May 2026
+              - generic [ref=e151]: MS, Information Systems
+              - generic [ref=e152]: University of Nevada, Las Vegas
+          - button "Feb 2021 Bachelor of Information Management Tribhuvan University, Nepal" [ref=e153] [cursor=pointer]:
+            - generic [ref=e158]:
+              - generic [ref=e159]: Feb 2021
+              - generic [ref=e160]: Bachelor of Information Management
+              - generic [ref=e161]: Tribhuvan University, Nepal
+        - generic [ref=e163]:
+          - generic [ref=e164]:
+            - generic [ref=e165]:
+              - heading "Salesforce Developer" [level=3] [ref=e166]
+              - paragraph [ref=e167]: Office of Information Technology, UNLV · Las Vegas, NV
+              - paragraph [ref=e168]: Aug 2024 - Present
+            - generic [ref=e169]: SF
+          - list [ref=e170]:
+            - listitem [ref=e171]:
+              - text: Automated CI/CD pipelines across Salesforce Education Cloud and Sales Cloud environments,
+              - strong [ref=e172]: reducing deployment time by 87%
+              - text: and saving the development team an estimated
+              - strong [ref=e173]: 150 hours a month
+              - text: on Apex and LWC releases
+            - listitem [ref=e174]: Designed and delivered Salesforce Sales & Service Cloud solutions using Flow, Apex triggers/classes, and LWC, supporting departmental operations and student service workflows
+            - listitem [ref=e175]: Moved hundreds of Qualtrics forms onto Flow automation with Custom Metadata and profile-based access, so departments reuse the student application process each year without a rebuild
+            - listitem [ref=e176]: Administered roles, profiles, permission sets, public groups, and sharing rules, and performed bulk data operations using Data Loader to maintain secure and compliant access across environments as part of the enterprise release process
+          - generic [ref=e177]:
+            - generic [ref=e178]: Education Cloud
+            - generic [ref=e179]: Apex
+            - generic [ref=e180]: Flow Builder
+            - generic [ref=e181]: LWC
+            - generic [ref=e182]: Copado / GitHub Actions
+            - generic [ref=e183]: Salesforce DX
+  - contentinfo [ref=e184]:
+    - generic [ref=e185]:
+      - paragraph [ref=e186]: © 2026 Rishav Bhattarai
+      - list [ref=e187]:
+        - listitem [ref=e188]:
+          - link "Email" [ref=e189] [cursor=pointer]:
+            - /url: mailto:bhattarai.rishav@gmail.com
+        - listitem [ref=e190]:
+          - link "LinkedIn" [ref=e191] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/rishav-bhattarai-nepal/
+        - listitem [ref=e192]:
+          - link "GitHub" [ref=e193] [cursor=pointer]:
+            - /url: https://github.com/Rishavbhattarai

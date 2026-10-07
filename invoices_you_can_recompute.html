@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Billing Pipeline That Can Prove Every Invoice | Rishav Bhattarai</title>
+  <meta name="description" content="How I built a usage-metering pipeline that can prove every invoice down to the cent: 1 million usage events, 2 replays with identical hashes, a live Salesforce org that matched the ledger, and the 2 bugs that taught me the most." />
+  <meta name="author" content="Rishav Bhattarai" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rishavbhattarai.com.np/invoices_you_can_recompute.html" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How I Built A Billing Pipeline That Can Prove Every Invoice Is Right, Down To The Cent" />
+  <meta property="og:description" content="1 million usage events, 2 replays with identical hashes, and a live Salesforce org that matched the ledger to the cent." />
+  <meta property="og:url" content="https://rishavbhattarai.com.np/invoices_you_can_recompute.html" />
+  <meta property="og:site_name" content="Rishav Bhattarai" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="How I Built A Billing Pipeline That Can Prove Every Invoice Is Right, Down To The Cent" />
+  <meta name="twitter:description" content="1 million usage events, 2 replays with identical hashes, and a live Salesforce org that matched the ledger to the cent." />
+
+  <style>
+    :root{
+      --paper:#F6F8F4;
+      --paper-raised:#FFFFFF;
+      --ink:#12211A;
+      --ink-soft:#45544C;
+      --line:#DCE3DA;
+      --violet:#167A4D;
+      --violet-deep:#0F5C39;
+      --rust:#A8462C;
+      --mono-chip:#E8EEE5;
+      --focus:#167A4D;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --paper:#0F1713; --paper-raised:#16211B; --ink:#E8EFEA; --ink-soft:#A8BBB0;
+        --line:#2A3A32; --violet:#5FC48F; --violet-deep:#8FD9B0; --rust:#E08054;
+        --mono-chip:#1D2A23; --focus:#5FC48F;
+      }
+    }
+    :root[data-theme="dark"]{
+      --paper:#0F1713; --paper-raised:#16211B; --ink:#E8EFEA; --ink-soft:#A8BBB0;
+      --line:#2A3A32; --violet:#5FC48F; --violet-deep:#8FD9B0; --rust:#E08054;
+      --mono-chip:#1D2A23; --focus:#5FC48F;
+    }
+
+    *{box-sizing:border-box;}
+    ::selection{background:var(--violet); color:var(--paper);}
+    body{
+      margin:0; background:var(--paper); color:var(--ink);
+      font-family:"DM Sans", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--violet-deep);}
+    a:focus-visible, button:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+    /* ---------- Site integration bar ---------- */
+    .site-topbar{background:var(--paper-raised); border-bottom:1px solid var(--line);}
+    .site-topbar__inner{
+      max-width:760px; margin:0 auto; padding:14px 24px;
+      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px;
+    }
+    .site-topbar__home{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+      color:var(--ink); text-decoration:none;
+    }
+    .site-topbar__home:hover{color:var(--violet-deep);}
+    .site-topbar__links{display:flex; flex-wrap:wrap; gap:6px 18px;}
+    .site-topbar__links a{
+      font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.02em; text-transform:uppercase;
+      color:var(--ink-soft); text-decoration:none;
+    }
+    .site-topbar__links a:hover, .site-topbar__links a.is-active{color:var(--violet-deep);}
+
+    .wrap{max-width:760px; margin:0 auto; padding:0 24px 96px;}
+
+    header.hero{padding:56px 0 44px; border-bottom:1px solid var(--line); margin-bottom:52px;}
+    .kicker{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.78rem;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--rust);
+      display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    }
+    .kicker::before{content:""; width:8px; height:8px; background:var(--rust); border-radius:50%; flex:none;}
+    h1{
+      font-family:"Syne", ui-sans-serif, system-ui, sans-serif; font-weight:600;
+      font-size:clamp(2.1rem, 5.5vw, 3.1rem); line-height:1.06; letter-spacing:-0.01em;
+      margin:0 0 20px; text-wrap:balance; color:var(--ink);
+    }
+    .dek{font-size:1.15rem; line-height:1.55; color:var(--ink-soft); max-width:56ch; margin:0 0 26px;}
+    .meta{
+      display:flex; flex-wrap:wrap; gap:8px 18px;
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+    }
+    .meta span{white-space:nowrap;}
+    .meta strong{color:var(--ink); font-weight:600;}
+
+    .prose{font-size:1.06rem; line-height:1.68;}
+    .prose p{margin:0 0 1.3em;}
+    .prose > p:last-child{margin-bottom:0;}
+    strong{color:var(--ink); font-weight:650;}
+    code{
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.88em;
+      background:var(--mono-chip); padding:0.12em 0.4em; border-radius:4px;
+    }
+
+    .lede{font-size:1.32rem; line-height:1.45; font-weight:500; color:var(--ink); margin:0 0 1.1em;}
+
+    h2{
+      font-family:"Syne", ui-sans-serif, system-ui, sans-serif; font-weight:600; font-size:1.55rem;
+      line-height:1.2; letter-spacing:-0.005em; margin:56px 0 20px; text-wrap:balance;
+    }
+    h2 .num{
+      display:inline-block; font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.8rem;
+      font-weight:600; letter-spacing:0.08em; color:var(--violet-deep);
+      background:var(--paper-raised); border:1px solid var(--line); border-radius:5px;
+      padding:3px 9px; margin-bottom:12px; vertical-align:middle;
+    }
+    h3{font-family:"DM Sans", sans-serif; font-size:1.12rem; font-weight:700; margin:32px 0 12px; color:var(--rust);}
+
+    .callout{
+      background:var(--paper-raised); border:1px solid var(--line); border-left:3px solid var(--violet);
+      border-radius:10px; padding:18px 22px; margin:0 0 1.3em; font-weight:500;
+    }
+
+    .stats{
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px;
+      margin:0 0 52px;
+    }
+    .stat{background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+    .stat b{
+      display:block; font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:1.25rem;
+      font-weight:600; color:var(--violet-deep); margin-bottom:4px; font-variant-numeric:tabular-nums;
+    }
+    .stat span{font-size:0.9rem; color:var(--ink-soft); line-height:1.4;}
+
+    .divider{
+      display:flex; align-items:center; gap:14px; margin:64px 0 40px;
+      color:var(--ink-soft); font-family:"IBM Plex Mono", ui-monospace, monospace;
+      font-size:0.76rem; letter-spacing:0.12em; text-transform:uppercase;
+    }
+    .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+
+    footer{
+      margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+      font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; color:var(--ink-soft);
+      display:flex; flex-wrap:wrap; gap:8px 20px; line-height:1.6;
+    }
+    footer a{color:var(--violet-deep);}
+
+    @media (prefers-reduced-motion: no-preference){
+      header.hero, .stats{animation:rise 0.5s ease both;}
+    }
+    @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="site-topbar">
+    <div class="site-topbar__inner">
+      <a href="index.html" class="site-topbar__home">Rishav Bhattarai</a>
+      <nav class="site-topbar__links">
+        <a href="portfolio.html">Portfolio</a>
+        <a href="blog.html">Writing &amp; Research</a>
+        <a href="invoices_you_can_recompute.html" class="is-active">Article</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="kicker">Engineering write-up · Usage Metering &amp; Billing</div>
+      <h1>How I Built A Billing Pipeline That Can Prove Every Invoice Is Right, Down To The Cent</h1>
+      <p class="dek">For engineers who handle money, or who let AI agents write their code: 1 million usage events, 2 replays with identical hashes, a live Salesforce org that matched the ledger to the cent, and the 2 bugs that taught me the most.</p>
+      <div class="meta">
+        <span><strong>October 2026</strong></span>
+        <span><strong>10</strong> min read</span>
+        <span>Python, PostgreSQL, Salesforce</span>
+      </div>
+    </header>
+
+    <div class="stats">
+      <div class="stat"><b>1,000,000</b><span>usage events, 10% duplicates, zero billed twice</span></div>
+      <div class="stat"><b>200 / 200</b><span>invoices rebuilt with identical SHA-256 hashes</span></div>
+      <div class="stat"><b>$598,167.89</b><span>in a live Salesforce org, matched to the cent</span></div>
+      <div class="stat"><b>205 s → 2.1 s</b><span>after one <code>ANALYZE</code> line</span></div>
+    </div>
+
+    <article class="prose">
+
+      <p class="lede">An invoice you can't recompute is an invoice you can't defend.</p>
+
+      <p>When a customer disputes a charge, pointing at a database row settles nothing. You need to show which events produced each line, how each one was priced, and that running the same math again gives the same number. I built a usage-metering pipeline around that single requirement, built it with the help of AI agents, then tried to break it with a million events and a real Salesforce org.</p>
+
+      <p>This post covers the four decisions that held up, the two bugs I learned the most from, and why this kind of proof matters even more when an agent writes the code.</p>
+
+      <h2><span class="num">01</span><br>Never edit raw events, so every invoice can be rebuilt from scratch.</h2>
+
+      <p>Every usage event (an API call, a gigabyte stored) lands in an append-only table and stays there. Nothing updates it, and nothing deletes it.</p>
+
+      <p>Duplicates are the first problem. Producers retry, networks time out, and the same event shows up twice. Each event carries a client-supplied ID, and ingestion is a single <code>INSERT ... ON CONFLICT DO NOTHING</code> on that ID, so a producer can resend any batch without double billing. In the load test I sent 1,000,000 events with 10% duplicates from 8 concurrent clients. The pipeline ingested them at 38,568 events per second and stored exactly the 900,129 unique ones.</p>
+
+      <p>Because the raw log never changes, an invoice becomes a pure function of three inputs: the events, the cutoff time of each billing period, and the price plans. That makes the strongest test in the project possible. I replayed the full log of 999,589 events into an empty database, twice. Both replays rebuilt all 200 invoices, and every invoice's SHA-256 content hash matched the stored one and the other replay.</p>
+
+      <p class="callout">If your billing can't pass that test, you are trusting it rather than checking it.</p>
+
+      <h2><span class="num">02</span><br>Do money math in integer cents, and round exactly once per line.</h2>
+
+      <p>In binary floating point, <code>0.1 + 0.2</code> does not equal <code>0.3</code>. Worse, the error depends on the order of operations, so float money math can give different totals for the same inputs.</p>
+
+      <p>The pricing engine uses Python's <code>Decimal</code> for quantities and unit prices, and integer cents for every amount. Multiplication runs in a local decimal context with the <code>Inexact</code> trap turned on, so any precision loss raises an error instead of happening silently. A unit test fails if <code>float</code> appears anywhere in the rating code, and the constructors reject non-<code>Decimal</code> input.</p>
+
+      <p>Where you round matters as much as how. Rounding per event accumulates bias and makes totals depend on batch sizes. I round once per invoice line, half-up, and the invoice total is the sum of the rounded lines, so the lines always add up to what the customer sees. Hypothesis property tests pin the rules down: totals are never negative, never drop when usage grows, and are off by at most half a cent per line.</p>
+
+      <h2><span class="num">03</span><br>Book late usage on the next invoice instead of reopening the old one.</h2>
+
+      <p>Usage keeps arriving after a month ends. A producer was offline, or a retry finally succeeded.</p>
+
+      <p>Reopening a sent invoice means versioning it in both the ledger and Salesforce, and customers see numbers change after the fact. Rejecting late events loses revenue and makes retries unsafe. So each month's close records a cutoff time, and an event for an earlier month that arrives after that cutoff becomes an adjustment line on the next invoice, labelled with the month it belongs to.</p>
+
+      <p>The adjustment is priced at the old month's marginal rate: the charge for (billed usage + late usage) minus the charge for billed usage alone, both under the old month's plan. Late usage that pushes a customer into a cheaper tier is priced in that tier. Late usage still under a minimum commit costs $0. Nothing is billed twice.</p>
+
+      <p>The cutoff is set 60 seconds in the past. An ingest transaction still in flight when the close starts has a timestamp before "now" but isn't visible yet, and a cutoff of exactly "now" would skip it forever. With the lag, it lands after the cutoff and gets billed as late usage next month.</p>
+
+      <p>Remember that 60-second lag. It shows up again in bug #2.</p>
+
+      <h2><span class="num">04</span><br>Treat Salesforce as a second ledger, and check it record by record.</h2>
+
+      <p>Sales and finance teams live in the CRM, so invoices have to reach Salesforce. That makes Salesforce a second copy of the truth, and two copies drift apart unless something checks them.</p>
+
+      <p>Only aggregates go to Salesforce: accounts, one record per invoice, and usage summaries per customer and meter. Raw events stay in Postgres. Every write is an upsert keyed by an External ID, so a retried sync updates the same record and never creates a duplicate. Month-end close, sync and reconciliation run as jobs on <a href="https://github.com/Rishavbhattarai/distributed-job-queue" target="_blank" rel="noopener">jobq</a>, the Redis and Postgres job queue I built in an earlier project. Failed jobs retry with backoff, and a job that keeps failing goes to a dead-letter queue (DLQ) instead of disappearing.</p>
+
+      <p>Reconciliation compares the ledger and Salesforce one record at a time, in integer cents.</p>
+
+      <p>I tested the unhappy paths on purpose. A forced Salesforce failure was retried by the queue and drift ended at zero. A longer outage sent the sync to the DLQ after 5 attempts, and replaying it from the DLQ brought drift back to zero. After 1 million events and two closed months, the ledger and Salesforce both totalled $29,403,835.60.</p>
+
+      <p>Those runs used an in-memory fake of Salesforce, which is what CI uses. So I ran it against a real Developer Edition org too: 20,000 events across two months, 100 accounts, 200 invoices and 400 usage summaries. I queried Salesforce directly, bypassing my own client, and it held $598,167.89, the same total as the ledger to the cent. The whole session used 110 of the org's 15,000 daily API requests.</p>
+
+      <h2><span class="num">05</span><br>The two bugs that taught me the most were in the plumbing.</h2>
+
+      <p>The pricing math never produced a wrong number. Both real bugs came from the system around it.</p>
+
+      <h3>Bug #1: a 205-second query fixed by one line.</h3>
+
+      <p>An aggregator rolls raw events into hourly totals for the usage dashboard. To stay correct under retries and crashes, it recomputes every touched hour from all of that hour's raw events, using a temporary table of "dirty" hours.</p>
+
+      <p>At 900,000 events, one pass took 205 seconds.</p>
+
+      <p>The agent working on the load test ran <code>EXPLAIN ANALYZE</code> and found why. Postgres had no statistics for the freshly created temp table, so the planner guessed badly and joined each dirty hour against every event that customer had ever sent. Adding one <code>ANALYZE</code> on the temp table before the query brought the pass to 2.1 seconds. Autovacuum never analyzes temporary tables, so the planner knows nothing about one until you run <code>ANALYZE</code> yourself.</p>
+
+      <h3>Bug #2: the first live run billed nobody.</h3>
+
+      <p>The first time I pointed the full stack at the real Salesforce org, it ingested 20,000 events, closed the month, and produced zero invoices.</p>
+
+      <p>Nothing was wrong with the code. The demo script closes each month a few seconds after sending events, and it expects the stack to run with a 3-second cutoff lag, as CI does. The agent running the setup had started the stack with the default 60 seconds. Every event was still inside the safety window from section 3, so the close correctly treated all of them as too recent to bill.</p>
+
+      <p>Nothing reached Salesforce from that run. The agent spotted the cause, reset the stack with the 3-second lag, reran it, and got the zero-drift result above. Then we added a note to the setup guide, because the same guard that protects in-flight transactions will confuse the next person who runs a fast demo.</p>
+
+      <h2><span class="num">06</span><br>Proof matters more when an AI agent writes the code.</h2>
+
+      <p>Using agents was the plan from the start. I scoped the project and did the research first: how billing systems handle late usage, how to round money, how Salesforce upserts and its Bulk API work. Then I built it with the help of AI agents. I gave them skills and rules they had to follow (free tools only, every number measured, nothing claimed that wasn't run), and I built a separate QA agent whose job was to test what the others wrote.</p>
+
+      <p>Agents write a lot of code quickly, and they can be wrong with total confidence. Both bugs above involved an agent: one caused the empty live run, and another found and fixed the 205-second query. Reading every line of a codebase this size doesn't scale, so the QA agent and I leaned on checks that don't care who wrote the code. Replaying the log has to reproduce every invoice hash. Property tests have to hold for any input Hypothesis generates. Reconciliation has to match Salesforce record by record. And the final total has to match when I query Salesforce directly instead of trusting the pipeline's own report.</p>
+
+      <p>Those checks turned "the agent says it works" into something I could verify in minutes.</p>
+
+    </article>
+
+    <div class="divider">The takeaway</div>
+
+    <div class="prose">
+      <p class="callout">Write the replay test before the invoice template.</p>
+      <p>If you build anything that charges money, make the replay test the first thing you write. Keep raw events immutable, make invoices a pure function of events, cutoffs and plans, and prove it by rebuilding everything from scratch and comparing hashes. Every other guarantee in this post depends on that one, whether a person or an agent writes the code.</p>
+    </div>
+
+    <footer>
+      <span>Code, the five architecture decision records and raw benchmark output: <a href="https://github.com/Rishavbhattarai/usage-metering-billing" target="_blank" rel="noopener">usage-metering-billing on GitHub</a></span>
+      <span>Measured on an Apple M4 MacBook (16 GB) with every service in Docker.</span>
+      <span>Next in this series: the job queue underneath it, and what happened when I killed 13 workers in the middle of 10,000 jobs.</span>
+    </footer>
+
+  </div>
+
+</body>
+</html>

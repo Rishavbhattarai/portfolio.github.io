@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Writing & Research | Rishav Bhattarai</title>
-  <meta name="description" content="Technical writing, conference papers, and interactive data dashboards by Rishav Bhattarai, Salesforce Developer & Software Engineer." />
+  <meta name="description" content="Engineering write-ups, conference papers, and interactive data dashboards by Rishav Bhattarai, Salesforce Developer & Software Engineer." />
   <meta name="author" content="Rishav Bhattarai" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://rishavunlv.github.io/blog.html" />
@@ -57,15 +57,56 @@
       </div>
 
       <p class="header-summary__description">
-        Research papers, technical writing, and interactive dashboards that turn complex datasets and research questions into decision-ready tools.
+        Engineering write-ups, research papers, and interactive dashboards that turn complex datasets and research questions into decision-ready tools.
       </p>
 
       <div class="header-summary__cta">
-        <a href="#research" class="btn btn--primary">Read the Research</a>
-        <a href="#dashboards" class="btn btn--ghost">Explore Dashboards</a>
+        <a href="#latest" class="btn btn--primary">Read the Latest</a>
+        <a href="#research" class="btn btn--ghost">Papers &amp; Reports</a>
       </div>
     </div>
   </header>
+
+  <!-- ░░ LATEST: ENGINEERING WRITE-UPS ░░ -->
+  <section id="latest" class="section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">Latest Engineering Write-ups</h2>
+        <p class="section__subtitle">How I build backend systems that can prove they are correct, and what broke along the way.</p>
+      </div>
+
+      <div class="projects-grid">
+
+        <article class="card card--wide">
+          <div class="card__header">
+            <div class="card__icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 1 .7V2l-1 .7-3-2-3 2-3-2-3 2-3-2z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+            </div>
+            <div class="card__tags">
+              <span class="tag tag--green">Billing</span>
+              <span class="tag tag--python">Python</span>
+              <span class="tag tag--blue">PostgreSQL</span>
+              <span class="tag tag--purple">AI Agents</span>
+            </div>
+          </div>
+          <h3 class="card__title">How I Built A Billing Pipeline That Can Prove Every Invoice Is Right, Down To The Cent</h3>
+          <p class="card__desc">An invoice you can't recompute is an invoice you can't defend. Four design decisions that held up under 1 million usage events and a live Salesforce org, the two bugs that taught me the most, and why this kind of proof matters more when AI agents write the code.</p>
+          <ul class="card__bullets">
+            <li>Full event log of 999,589 events replayed twice: all 200 invoices rebuilt with identical SHA-256 hashes</li>
+            <li>Live Salesforce Developer Edition org queried directly: $598,167.89 on both sides, matched to the cent</li>
+            <li>A 205-second aggregation query cut to 2.1 seconds with one <code>ANALYZE</code> on a temp table</li>
+          </ul>
+          <div class="card__stack">Python, PostgreSQL, Salesforce, Hypothesis, AI agents</div>
+          <div class="card__footer">
+            <a href="invoices_you_can_recompute.html" class="card__link card__link--primary">Read the Article →</a>
+            <a href="https://github.com/Rishavbhattarai/usage-metering-billing" class="card__link" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Article · October 2026</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
 
   <!-- ░░ FEATURED RESEARCH ░░ -->
   <section id="research" class="section">
