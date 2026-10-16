@@ -210,6 +210,23 @@
           </div>
         </article>
 
+        <article class="card card--wide" data-category="systems">
+          <h3 class="card__title">Open-Source Pull Requests: Airflow, OpenDataLoader PDF, hmmix</h3>
+          <p class="card__desc">Three fixes sent to projects I use or study. All three are open and waiting on review.</p>
+          <ul class="card__bullets">
+            <li><strong>Apache Airflow:</strong> a connection password that was URL-encoded in a URI skipped secret masking in the task SDK, so it could show up in logs. The fix masks it, with regression tests for the sync, async and handler paths</li>
+            <li><strong>OpenDataLoader PDF:</strong> PDFs from Google Docs and Chrome got one tag per letter in the structure tree, so Acrobat showed paragraphs as single characters. Adjacent text operators now share one marked-content ID</li>
+            <li><strong>hmmix:</strong> added packaging, tests and CI/Docker to a genomics tool, and made it <strong>6-7× faster</strong> with <strong>2.5-3.5× lower memory</strong>. Output matches the 0.9.2 release</li>
+          </ul>
+          <div class="card__stack">Python, Java, pytest, Docker</div>
+          <div class="card__footer">
+            <a href="https://github.com/apache/airflow/pull/74618" class="card__link card__link--primary" target="_blank" rel="noopener">Airflow #74618 →</a>
+            <a href="https://github.com/opendataloader-project/opendataloader-pdf/pull/776" class="card__link" target="_blank" rel="noopener">OpenDataLoader #776 →</a>
+            <a href="https://github.com/LauritsSkov/Introgression-detection/pull/9" class="card__link" target="_blank" rel="noopener">hmmix #9 →</a>
+            <span class="card__badge">Open Source · Under review · October 2026</span>
+          </div>
+        </article>
+
         <!-- ── ENTERPRISE & DATA ── -->
         <article class="card card--split card--wide" data-category="enterprise">
           <div class="card__body">
@@ -471,6 +488,24 @@
           </div>
           </div>
           <a class="card__media" href="https://github.com/Rishavbhattarai/mini-swe-agent" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="images/work/mini-swe-agent.svg" alt="Terminal output from the mini-swe-agent ablation comparing the windowed and basic interfaces" width="1178" height="660" loading="lazy" decoding="async"></a>
+        </article>
+
+        <article class="card card--split card--wide" data-category="ai-infra">
+          <div class="card__body">
+          <h3 class="card__title">GraphRAG vs Vector RAG: A Local Evaluation on Multi-Hop Questions</h3>
+          <p class="card__desc">Does a knowledge graph help a small local model answer questions that need several documents? I built both retrievers over the same 1,063 paragraphs and graded them on 50 held-out MuSiQue questions, with the model, prompt and 5-paragraph budget held fixed.</p>
+          <ul class="card__bullets">
+            <li>Pure GraphRAG lost to vector RAG, <strong>18% vs 28%</strong>. Removing the triple list from the prompt lifted it to 24%, so the 7B model was treating the triples as noise</li>
+            <li>Interleaving vector and graph results scored best: <strong>34% accuracy</strong> and 66% support recall, at the same latency (5.5 s p50)</li>
+            <li>4-hop questions stayed hard for every setup. With 50 questions the gaps are within noise (paired sign test p = 0.55, hybrid vs vector), and the write-up says so</li>
+          </ul>
+          <div class="card__stack">Python, Ollama (qwen2.5 7B), ChromaDB, MuSiQue</div>
+          <div class="card__footer">
+            <a href="https://github.com/Rishavbhattarai/multihop-rag-showdown-" class="card__link card__link--primary" target="_blank" rel="noopener">View on GitHub →</a>
+            <span class="card__badge">Research · September 2026</span>
+          </div>
+          </div>
+          <a class="card__media" href="https://github.com/Rishavbhattarai/multihop-rag-showdown-" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="images/work/graphrag-vs-rag.png" alt="Evaluation view of the GraphRAG vs Vector RAG comparison: accuracy by number of hops for four retrieval setups, with hybrid highest overall at 34 percent" width="800" height="1128" loading="lazy" decoding="async"></a>
         </article>
 
         <article class="card card--split card--wide" data-category="ai-infra">
