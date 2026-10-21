@@ -1,0 +1,177 @@
+[
+  {
+    "name": "Certification Exam Guide",
+    "type": "Link",
+    "link": "https://help.salesforce.com/s/articleView?id=005298972&type=1"
+  },
+  {
+    "name": "Data Modeling",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/data_modeling?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Data Management",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/lex_implementation_data_management?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Large Data Volumes",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/large-data-volumes?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "The Data Model",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/data_model.htm"
+  },
+  {
+    "name": "Parent-Child Data Skew",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm"
+  },
+  {
+    "name": "Data Quality",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/data_quality?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Managing Duplicate Records",
+    "type": "Link",
+    "link": "https://help.salesforce.com/articleView?id=managing_duplicates_overview.htm&type=5"
+  },
+  {
+    "name": "Scalability with Salesforce",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/scalability-with-salesforce?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Data Governance & Stewardship",
+    "type": "Link",
+    "link": "https://secure2.sfdcstatic.com/assets/pdf/misc/data_Governance_Stewardship_ebook.pdf"
+  },
+  {
+    "name": "Person Accounts",
+    "type": "Link",
+    "link": "https://help.salesforce.com/HTViewHelpDoc?id=account_person.htm"
+  },
+  {
+    "name": "Contacts to Multiple Accounts",
+    "type": "Link",
+    "link": "https://help.salesforce.com/apex/HTViewHelpDoc?id=shared_contacts_overview.htm&language=en_US"
+  },
+  {
+    "name": "Manage Products within Your Org",
+    "type": "Link",
+    "link": "https://help.salesforce.com/apex/HTViewHelpDoc?id=products_landing_page.htm&language=en_US"
+  },
+  {
+    "name": "Implementing State and Country Picklists",
+    "type": "Link",
+    "link": "https://help.salesforce.com/apex/HTViewHelpDoc?id=admin_state_country_picklists_overview.htm&language=en_US"
+  },
+  {
+    "name": "Apex Basics & Database",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/apex_database?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Approaches for Tuning Force.com Performance",
+    "type": "Link",
+    "link": "url?id=19"
+  },
+  {
+    "name": "Query Plan Tool",
+    "type": "Link",
+    "link": "url?id=20"
+  },
+  {
+    "name": "Query and Search Optimization",
+    "type": "Link",
+    "link": "url?id=21"
+  },
+  {
+    "name": "Duplicate Management",
+    "type": "Module",
+    "link": "url?id=23"
+  },
+  {
+    "name": "Big Object Basics",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/big_objects?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Strategies for Big Data Architecture",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/big-data-strategy?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  },
+  {
+    "name": "Extracting LDV in Force.com",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/blogs/engineering/2013/06/extracting-large-data-volume-ldv-in-force-com.html"
+  },
+  {
+    "name": "Automatically Get Geocodes for Addresses",
+    "type": "Link",
+    "link": "https://help.salesforce.com/articleView?id=data_dot_com_clean_admin_automatically_get_geocodes_for_addresses.htm&type=5"
+  },
+  {
+    "name": "AppExchange Data Apps",
+    "type": "Link",
+    "link": "https://appexchange.salesforce.com/collection/data"
+  },
+  {
+    "name": "Agile Data Governance",
+    "type": "Link",
+    "link": "http://agiledata.org/essays/dataGovernance.html"
+  },
+  {
+    "name": "Loading Large Data Sets with Bulk API",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/page/Loading_Large_Data_Sets_with_the_Force.com_Bulk_API"
+  },
+  {
+    "name": "Master Data Management (MDM)",
+    "type": "Link",
+    "link": "http://www.slideshare.net/tataconsultancyservices/master-data-management-mdm-plm-in-context-of-enterprise-product-management"
+  },
+  {
+    "name": "Territory Mgmt Implementation Guide",
+    "type": "Link",
+    "link": "https://trailhead.salesforce.com/me/strailhead3"
+  },
+  {
+    "name": "Asynchronous Apex",
+    "type": "Module",
+    "link": "url?id=34"
+  },
+  {
+    "name": "Backup and Restore Essentials Part 1",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/page/Salesforce_Backup_and_Restore_Essentials_Part_1"
+  },
+  {
+    "name": "Backup and Restore Essentials Part 2",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/page/Salesforce_Backup_and_Restore_Essentials_Part_2"
+  },
+  {
+    "name": "Backup and Restore Essentials Part 3",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/blogs/engineering/2016/02/salesforce-backup-restore-essentials-part-3-learn-customers-experience.html?language=en"
+  },
+  {
+    "name": "Managing Task Locks for Data Loads",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/blogs/engineering/2014/08/managing-task-locks-data-loads.html"
+  },
+  {
+    "name": "PK Chunking",
+    "type": "Link",
+    "link": "https://developer.salesforce.com/blogs/engineering/2015/03/use-pk-chunking-extract-large-data-sets-salesforce.html"
+  },
+  {
+    "name": "CRM Analytics Dashboard Navigation",
+    "type": "Module",
+    "link": "https://trailhead.salesforce.com/content/learn/modules/wave_exploration_dashboard_navigation?trailmix_creator_id=strailhead&trailmix_slug=architect-data-architecture-and-management"
+  }
+]

@@ -1,0 +1,201 @@
+[
+  {
+    "domain": "dm",
+    "title": "Data Modeling & Database Design",
+    "status": "draft",
+    "concepts": [
+      "Master-detail: the child has no owner of its own and inherits sharing from the parent. Deleting the parent deletes the children. Roll-up summary fields work natively.",
+      "Lookup: a loose link. The child keeps its own owner and sharing, and the field can be optional.",
+      "Hierarchical relationships exist only on the User object (for example, Manager).",
+      "External lookup links a standard or custom child to an external object by External ID. Indirect lookup links an external child to a Salesforce parent through a unique External ID field on the parent.",
+      "Big Objects store billions of records with consistent performance. You query them through their defined index, so design the index first.",
+      "Person Accounts merge Account and Contact for B2C. Once enabled, they can't be turned off.",
+      "Contacts to Multiple Accounts uses the AccountContactRelation junction. Each contact still has one primary account.",
+      "Junction objects (two master-detail fields) model many-to-many relationships."
+    ],
+    "rules": [
+      "Need roll-ups and cascade delete with tight ownership? Master-detail.",
+      "High-volume child inserts against a few parents? Prefer lookup, because master-detail locks the parent on every child insert or update.",
+      "Data that only needs to be viewed, not reported on or automated in Salesforce? Virtualize it with Salesforce Connect and external objects.",
+      "Long-term archive inside the platform, read mostly? Big Object.",
+      "A picklist is cheaper than a lookup when many records would point at a few values (avoids lookup skew)."
+    ],
+    "numbers": [
+      "Keep each parent under 10,000 child records (account data skew).",
+      "Keep each user under 10,000 owned records (ownership skew)."
+    ],
+    "traps": [
+      "Changing master-detail to lookup is allowed only when no roll-up summary fields exist on the parent.",
+      "Reports, triggers and flows on Big Objects are limited. Don't propose them for day-to-day transactional data."
+    ],
+    "keywords": [
+      "\"millions of child records under one account\" means data skew, so redesign the hierarchy",
+      "\"only needs to display data from ERP\" means Salesforce Connect, not an import"
+    ],
+    "sources": [
+      "https://trailhead.salesforce.com/content/learn/modules/data_modeling",
+      "https://resources.docs.salesforce.com/256/latest/en-us/sfdc/pdf/salesforce_large_data_volumes_bp.pdf"
+    ]
+  },
+  {
+    "domain": "mdm",
+    "title": "Master Data Management",
+    "status": "draft",
+    "concepts": [
+      "The golden record is the single trusted version of an entity (customer, product) built from several sources.",
+      "Survivorship rules decide which source wins for each field (most recent, most trusted system, most complete).",
+      "Registry style: the hub keeps only a cross-reference of IDs. Data stays in the source systems.",
+      "Consolidation style: the hub builds a golden record for reporting. Sources are not updated.",
+      "Coexistence style: the hub builds the golden record and syncs it back to the sources.",
+      "Centralized (transaction) style: the hub is where master data is created and edited. Sources subscribe."
+    ],
+    "rules": [
+      "Salesforce can be the system of record or a system of engagement. Decide per entity, then define which system owns each field.",
+      "Use External IDs to keep cross-references between Salesforce and other systems."
+    ],
+    "numbers": [],
+    "traps": [
+      "Duplicate Management de-duplicates inside one org. It is not an MDM hub."
+    ],
+    "keywords": [
+      "\"single view of the customer across ERP and CRM\" means MDM plus golden record",
+      "\"source systems must stay untouched\" means Registry or Consolidation"
+    ],
+    "sources": [
+      "https://architect.salesforce.com/decision-guides/data-integration"
+    ]
+  },
+  {
+    "domain": "ldv",
+    "title": "Large Data Volume Considerations",
+    "status": "draft",
+    "verified": "Numbers in this chapter were checked against the LDV whitepaper (Summer '25).",
+    "concepts": [
+      "The query optimizer runs a pre-query against index statistics to decide whether an index is selective enough to use.",
+      "Skinny tables hold frequently used fields from one object to avoid joins. Only Salesforce Support can create or change them, and they stay in sync automatically.",
+      "Indexed by default: record Id, Name, lookup and master-detail fields (including OwnerId), RecordTypeId, Division, CreatedDate, SystemModstamp, and Email on Contact and Lead.",
+      "External ID fields (Auto Number, Email, Number, Text) are indexed automatically.",
+      "Custom indexes exclude null values unless Support enables null indexing.",
+      "Divisions partition very large orgs (needs over 1 million records in an object and more than 35 licenses).",
+      "Defer sharing calculation suspends sharing recalculation during big loads or realignments.",
+      "Soft-deleted records sit in the Recycle Bin for 15 days and still affect performance. Use Bulk API hard delete for very large deletes.",
+      "PK chunking splits a big Bulk API query into ranges of record IDs."
+    ],
+    "rules": [
+      "Make filters selective: index the field and keep the filter under the threshold.",
+      "AND filters use indexes unless one returns more than 20% of records or 666,666 records.",
+      "OR filters need every field indexed, and each under 10% or 333,333 records.",
+      "Deleting 1 million or more records: use the hard delete option of Bulk API or Bulk API 2.0. Delete children first.",
+      "Use a data-tiering strategy: keep active data on core objects, archive the rest."
+    ],
+    "numbers": [
+      "Standard index: used if the filter matches under 30% of the first 1M records and under 15% of the rest, max 1,000,000 records.",
+      "Custom index: used if the filter matches under 10% of total records, max 333,333 records.",
+      "Skinny tables: max 200 columns, no fields from other objects, copied only to Full sandboxes.",
+      "Skew limit: 10,000 children per parent and 10,000 records per owner.",
+      "Recycle Bin: 15 days."
+    ],
+    "traps": [
+      "Negative filters (!=, NOT IN), leading-wildcard LIKE, and non-deterministic formulas are not selective.",
+      "A custom index on a field where most rows share one value does nothing.",
+      "Skinny tables are not a fix for everything. They add maintenance overhead."
+    ],
+    "keywords": [
+      "\"tens of millions of records and report timeouts\" means selectivity, skinny tables or archiving",
+      "\"UNABLE_TO_LOCK_ROW during load\" means lock contention, so sort by parent or reduce parallelism"
+    ],
+    "sources": [
+      "https://resources.docs.salesforce.com/256/latest/en-us/sfdc/pdf/salesforce_large_data_volumes_bp.pdf",
+      "https://resources.docs.salesforce.com/194/0/en-us/sfdc/pdf/salesforce_query_search_optimization_developer_cheatsheet.pdf"
+    ]
+  },
+  {
+    "domain": "sdm",
+    "title": "Salesforce Data Management",
+    "status": "draft",
+    "concepts": [
+      "Matching rules define how records are compared (exact or fuzzy, field by field).",
+      "Duplicate rules define what happens when a match is found: allow with alert, report, or block.",
+      "Upsert with an External ID inserts or updates without needing the Salesforce record ID.",
+      "Data quality dimensions: completeness, accuracy, consistency, timeliness, uniqueness, validity.",
+      "State and Country picklists standardize address data at entry.",
+      "Validation rules, required fields, picklists and lookup filters prevent bad data at the source."
+    ],
+    "rules": [
+      "Prevent duplicates at entry with duplicate rules. Clean existing duplicates with reports, merge, or an AppExchange tool.",
+      "Integrations should upsert on an External ID instead of querying for Salesforce IDs first."
+    ],
+    "numbers": [],
+    "traps": [
+      "A matching rule alone does nothing. It must be used by an active duplicate rule."
+    ],
+    "keywords": [
+      "\"stop users creating duplicate leads\" means matching rule plus duplicate rule (block or alert)",
+      "\"sync without storing Salesforce IDs in ERP\" means External ID upsert"
+    ],
+    "sources": [
+      "https://help.salesforce.com/s/articleView?language=en_US&id=managing_duplicates_overview.htm&type=5",
+      "https://trailhead.salesforce.com/content/learn/modules/data_quality"
+    ]
+  },
+  {
+    "domain": "mig",
+    "title": "Data Migration",
+    "status": "draft",
+    "concepts": [
+      "SOAP and REST APIs are synchronous and suited to small, real-time volumes.",
+      "Bulk API processes records asynchronously in batches. Bulk API 2.0 handles batching for you.",
+      "Parallel processing is fast but can cause lock contention when children share a parent. Bulk API 1.0 offers serial mode; Bulk API 2.0 does not let you choose.",
+      "Tasks can lock both the related What and Who records during loads.",
+      "Batch Apex processes very large record sets in chunks inside the platform."
+    ],
+    "rules": [
+      "Load parents before children and link them through External IDs.",
+      "Sort child records by parent ID so one batch holds one parent's children.",
+      "Before a big load: disable or bypass triggers, flows and validation rules where safe, and consider deferring sharing calculation.",
+      "Extract huge tables with Bulk API query plus PK chunking."
+    ],
+    "numbers": [],
+    "traps": [
+      "Serial mode fixes locking but is slow. Sorting by parent is usually the better first fix.",
+      "Gemini's claim about CSV header case causing silent nulls is unverified. Don't rely on it."
+    ],
+    "keywords": [
+      "\"millions of records, overnight load\" means Bulk API",
+      "\"lock errors on child inserts\" means sort by parent ID or go serial"
+    ],
+    "sources": [
+      "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_intro.htm",
+      "https://developer.salesforce.com/blogs/2014/08/managing-task-locks-data-loads"
+    ]
+  },
+  {
+    "domain": "gov",
+    "title": "Data Governance",
+    "status": "draft",
+    "concepts": [
+      "Governance roles: data owners, data stewards, and a governance council that sets standards.",
+      "Data classification fields on each field: Data Owner, Field Usage, Data Sensitivity Level, Compliance Categorization.",
+      "Field History Tracking records field changes for a limited period.",
+      "Shield Field Audit Trail keeps field history much longer, stored in a Big Object.",
+      "Backup and restore is the customer's responsibility. Plan full, incremental and partial backups and test restores."
+    ],
+    "rules": [
+      "Regulated data with long retention needs: Field Audit Trail, not standard history.",
+      "Assign a steward per data domain and track quality metrics."
+    ],
+    "numbers": [
+      "Field History Tracking: up to 20 fields per object. Data shown for 18 months, available via API for 24 months.",
+      "Field Audit Trail: up to 60 fields per object, retention up to 10 years."
+    ],
+    "traps": [
+      "Field-level security controls visibility. It is not an audit trail."
+    ],
+    "keywords": [
+      "\"auditors need 7 years of field changes\" means Shield Field Audit Trail"
+    ],
+    "sources": [
+      "https://a.sfdcstatic.com/content/dam/www/ocms-backup/assets/pdf/misc/data_Governance_Stewardship_ebook.pdf"
+    ]
+  }
+]

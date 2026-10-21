@@ -1,0 +1,63 @@
+{
+  "exam": {
+    "name": "Salesforce Certified Platform Data Architect",
+    "questions": 60,
+    "unscored": 5,
+    "minutes": 105,
+    "passingScore": 58,
+    "fee": 400,
+    "retakeFee": 200,
+    "credentialUrl": "https://trailhead.salesforce.com/credentials/platformdataarchitect",
+    "defaultExamDate": "2026-11-17"
+  },
+  "domains": [
+    { "id": "dm",  "name": "Data Modeling & Database Design", "weight": 25 },
+    { "id": "mdm", "name": "Master Data Management",          "weight": 5 },
+    { "id": "ldv", "name": "Large Data Volume Considerations", "weight": 20 },
+    { "id": "sdm", "name": "Salesforce Data Management",      "weight": 25 },
+    { "id": "mig", "name": "Data Migration",                  "weight": 15 },
+    { "id": "gov", "name": "Data Governance",                 "weight": 10 },
+    { "id": "ovr", "name": "Exam Overview",                   "weight": 0 }
+  ],
+  "items": {
+    "Certification Exam Guide": { "domain": "ovr", "linkOverride": "https://help.salesforce.com/s/articleView?language=en_US&id=005298972&type=1" },
+    "Data Modeling": { "domain": "dm" },
+    "Data Management": { "domain": "mig" },
+    "Large Data Volumes": { "domain": "ldv" },
+    "The Data Model": { "domain": "dm" },
+    "Parent-Child Data Skew": { "domain": "ldv" },
+    "Data Quality": { "domain": "sdm" },
+    "Managing Duplicate Records": { "domain": "sdm", "linkOverride": "https://help.salesforce.com/s/articleView?language=en_US&id=managing_duplicates_overview.htm&type=5" },
+    "Scalability with Salesforce": { "domain": "ldv" },
+    "Data Governance & Stewardship": { "domain": "gov", "linkOverride": "https://a.sfdcstatic.com/content/dam/www/ocms-backup/assets/pdf/misc/data_Governance_Stewardship_ebook.pdf" },
+    "Person Accounts": { "domain": "dm", "linkOverride": "https://help.salesforce.com/s/articleView?id=account_person.htm&language=en_US&type=5" },
+    "Contacts to Multiple Accounts": { "domain": "dm", "linkOverride": "https://help.salesforce.com/s/articleView?id=shared_contacts_overview.htm&language=en_US&type=5" },
+    "Manage Products within Your Org": { "domain": "dm", "linkOverride": "https://help.salesforce.com/s/articleView?id=products_landing_page.htm&language=en_US&type=5" },
+    "Implementing State and Country Picklists": { "domain": "sdm", "linkOverride": "https://help.salesforce.com/s/articleView?id=admin_state_country_picklists_overview.htm&language=en_US&type=5" },
+    "Apex Basics & Database": { "domain": "dm" },
+    "Approaches for Tuning Force.com Performance": { "domain": "ldv", "linkOverride": "https://developer.salesforce.com/blogs/2014/05/a-guide-to-application-performance-profiling-in-force-com", "note": "Original link was a placeholder. Closest official match: A Guide to Application Performance Profiling." },
+    "Query Plan Tool": { "domain": "ldv", "linkOverride": "https://developer.salesforce.com/docs/platform/webconsole/guide/retrieve-query-plans.html", "note": "Original link was a placeholder." },
+    "Query and Search Optimization": { "domain": "ldv", "linkOverride": "https://resources.docs.salesforce.com/194/0/en-us/sfdc/pdf/salesforce_query_search_optimization_developer_cheatsheet.pdf", "note": "Original link was a placeholder. This is the official cheat sheet PDF." },
+    "Duplicate Management": { "domain": "sdm", "linkOverride": "https://trailhead.salesforce.com/content/learn/modules/sales_admin_duplicate_management", "note": "Original link was a placeholder." },
+    "Big Object Basics": { "domain": "dm" },
+    "Strategies for Big Data Architecture": { "domain": "ldv" },
+    "Extracting LDV in Force.com": { "domain": "mig", "linkOverride": "https://developer.salesforce.com/blogs/2013/06/extracting-large-data-volume-ldv-in-force-com" },
+    "Automatically Get Geocodes for Addresses": { "domain": "sdm", "priority": "low", "linkOverride": "https://help.salesforce.com/s/articleView?language=en_US&id=data_dot_com_clean_admin_automatically_get_geocodes_for_addresses.htm&type=5" },
+    "AppExchange Data Apps": { "domain": "sdm", "priority": "low", "linkOverride": "https://appexchange.salesforce.com/explore/business-needs?category=dataManagement" },
+    "Agile Data Governance": { "domain": "gov", "external": true, "linkOverride": "https://agiledata.org/essays/dataGovernance.html" },
+    "Loading Large Data Sets with Bulk API": { "domain": "mig", "linkOverride": "https://developer.salesforce.com/blogs/2010/08/how-to-load-large-data-sets-with-the-forcecom-bulk-api", "note": "The old wiki page is retired. This is the original announcement post; the current reference is the Bulk API 2.0 guide in Materials." },
+    "Master Data Management (MDM)": { "domain": "mdm", "external": true, "linkOverride": "https://www.slideshare.net/tataconsultancyservices/master-data-management-mdm-plm-in-context-of-enterprise-product-management" },
+    "Territory Mgmt Implementation Guide": { "domain": "ldv", "priority": "low", "linkOverride": "https://resources.docs.salesforce.com/210/latest/en-us/sfdc/pdf/salesforce_implementing_territory_mgmt2_guide.pdf", "note": "Original link pointed to a Trailhead profile (404). This is the official Enterprise Territory Management guide PDF (Winter '18)." },
+    "Asynchronous Apex": { "domain": "mig", "linkOverride": "https://trailhead.salesforce.com/content/learn/modules/asynchronous_apex", "note": "Original link was a placeholder." },
+    "Backup and Restore Essentials Part 1": { "domain": "gov", "linkOverride": "https://developer.salesforce.com/blogs/2015/03/salesforce-backup-and-restore-essentials-part-1-backup-overview-api-options-and-performance", "note": "The old wiki page is retired; moved to the developer blog." },
+    "Backup and Restore Essentials Part 2": { "domain": "gov", "linkOverride": "https://developer.salesforce.com/blogs/2015/06/salesforce-backup-restore-essentials-part-2-restore-strategies-processes-sovan-bin", "note": "The old wiki page is retired; moved to the developer blog." },
+    "Backup and Restore Essentials Part 3": { "domain": "gov", "linkOverride": "https://developer.salesforce.com/blogs/2016/02/salesforce-backup-restore-essentials-part-3-learn-customers-experience" },
+    "Managing Task Locks for Data Loads": { "domain": "mig", "linkOverride": "https://developer.salesforce.com/blogs/2014/08/managing-task-locks-data-loads" },
+    "PK Chunking": { "domain": "ldv", "linkOverride": "https://developer.salesforce.com/blogs/engineering/2015/03/use-pk-chunking-extract-large-data-sets-salesforce" },
+    "CRM Analytics Dashboard Navigation": { "domain": "sdm", "priority": "low" }
+  },
+  "extraItems": [
+    { "name": "Salesforce Ben: Data Architect Certification Guide", "type": "Link", "link": "https://www.salesforceben.com/salesforce-data-architect-certification-guide-tips/", "domain": "ovr", "external": true },
+    { "name": "Official Trailmix: Architect Data Architecture and Management", "type": "Link", "link": "https://trailhead.salesforce.com/users/strailhead/trailmixes/architect-data-architecture-and-management", "domain": "ovr" }
+  ]
+}

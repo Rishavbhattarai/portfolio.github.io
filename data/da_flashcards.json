@@ -1,0 +1,1361 @@
+[
+  {
+    "id": "data-modeling-c1",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "In Salesforce, what is an object?",
+    "back": "A database table."
+  },
+  {
+    "id": "data-modeling-c2",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "In Salesforce, what is a field?",
+    "back": "A column in a table."
+  },
+  {
+    "id": "data-modeling-c3",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "In Salesforce, what is a record?",
+    "back": "A row in a table."
+  },
+  {
+    "id": "data-modeling-c4",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is a data model?",
+    "back": "A human-friendly way to model database tables as objects, fields, and records."
+  },
+  {
+    "id": "data-modeling-c5",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is a standard object?",
+    "back": "An object included with Salesforce, such as Account, Contact, Lead, or Opportunity."
+  },
+  {
+    "id": "data-modeling-c6",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is a custom object?",
+    "back": "An object you create to store information specific to your company or industry."
+  },
+  {
+    "id": "data-modeling-c7",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What suffix marks a custom field's API name?",
+    "back": "__c"
+  },
+  {
+    "id": "data-modeling-c8",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is an identity field?",
+    "back": "An 18-character, case-insensitive ID automatically generated for every record."
+  },
+  {
+    "id": "data-modeling-c9",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is a system field?",
+    "back": "A read-only field that records information like when a record was created or last changed."
+  },
+  {
+    "id": "data-modeling-c10",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is a Formula field?",
+    "back": "A field whose value is automatically calculated from a formula you write."
+  },
+  {
+    "id": "data-modeling-c11",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is a Checkbox field used for?",
+    "back": "Simple yes/no values."
+  },
+  {
+    "id": "data-modeling-c12",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What does creating a custom object automatically build?",
+    "back": "The page layout for the user interface."
+  },
+  {
+    "id": "data-modeling-c13",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "Why should you require important fields?",
+    "back": "To avoid incomplete data on records."
+  },
+  {
+    "id": "data-modeling-c14",
+    "syllabusItem": "Data Modeling",
+    "domain": "dm",
+    "front": "What is the 15-character version of a record ID?",
+    "back": "A case-sensitive version of the record's ID, used for specific applications."
+  },
+  {
+    "id": "apex-basics-and-database-c1",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What kind of language is Apex?",
+    "back": "A hosted, server-side, Java-like, object-oriented language on the Salesforce Platform."
+  },
+  {
+    "id": "apex-basics-and-database-c2",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does the global access modifier allow beyond public?",
+    "back": "Access across namespaces and applications."
+  },
+  {
+    "id": "apex-basics-and-database-c3",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does System.debug() do?",
+    "back": "Writes a value to the debug log."
+  },
+  {
+    "id": "apex-basics-and-database-c4",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "How is a static method called?",
+    "back": "Directly on the class name, without creating an instance."
+  },
+  {
+    "id": "apex-basics-and-database-c5",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What is an sObject?",
+    "back": "The in-memory Apex representation of a Salesforce record."
+  },
+  {
+    "id": "apex-basics-and-database-c6",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "Does creating an sObject with new save it to the database?",
+    "back": "No. It must be passed to a DML statement such as insert."
+  },
+  {
+    "id": "apex-basics-and-database-c7",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What suffix do custom object and field API names end with?",
+    "back": "__c"
+  },
+  {
+    "id": "apex-basics-and-database-c8",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What suffix do custom relationship fields end with?",
+    "back": "__r"
+  },
+  {
+    "id": "apex-basics-and-database-c9",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What is the API name of the Account field labeled 'Employees'?",
+    "back": "NumberOfEmployees"
+  },
+  {
+    "id": "apex-basics-and-database-c10",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "Which Account field must be populated before insert?",
+    "back": "Name"
+  },
+  {
+    "id": "apex-basics-and-database-c11",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "How are fields accessed on a generic sObject variable?",
+    "back": "With put() and get(), not dot notation."
+  },
+  {
+    "id": "apex-basics-and-database-c12",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What are the six DML statements?",
+    "back": "insert, update, upsert, delete, undelete, and merge."
+  },
+  {
+    "id": "apex-basics-and-database-c13",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does upsert match on when no field is specified?",
+    "back": "The record ID."
+  },
+  {
+    "id": "apex-basics-and-database-c14",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What happens when an upsert finds multiple matches?",
+    "back": "An error occurs and the record is neither inserted nor updated."
+  },
+  {
+    "id": "apex-basics-and-database-c15",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What is the DML statement limit per transaction?",
+    "back": "150"
+  },
+  {
+    "id": "apex-basics-and-database-c16",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does DmlException represent?",
+    "back": "The exception thrown when a DML operation fails."
+  },
+  {
+    "id": "apex-basics-and-database-c17",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What is the default allOrNone value for Database methods?",
+    "back": "true"
+  },
+  {
+    "id": "apex-basics-and-database-c18",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does allOrNone=false allow?",
+    "back": "Partial success: valid records save and failures are returned without an exception."
+  },
+  {
+    "id": "apex-basics-and-database-c19",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What result class does Database.insert return?",
+    "back": "Database.SaveResult"
+  },
+  {
+    "id": "apex-basics-and-database-c20",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What result class does Database.upsert return?",
+    "back": "Database.UpsertResult"
+  },
+  {
+    "id": "apex-basics-and-database-c21",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "Can a contact and its account be updated in one DML call?",
+    "back": "No. Each object needs a separate DML call."
+  },
+  {
+    "id": "apex-basics-and-database-c22",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What happens to child records when a parent Account is deleted?",
+    "back": "They are deleted too, as long as each child can be deleted (cascade)."
+  },
+  {
+    "id": "apex-basics-and-database-c23",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What happens to DML operations in a transaction if one fails?",
+    "back": "All of them roll back, so nothing is committed."
+  },
+  {
+    "id": "apex-basics-and-database-c24",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "How long do deleted records stay in the Recycle Bin?",
+    "back": "15 days"
+  },
+  {
+    "id": "apex-basics-and-database-c25",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does SOQL stand for?",
+    "back": "Salesforce Object Query Language"
+  },
+  {
+    "id": "apex-basics-and-database-c26",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "Does SOQL return the Id field automatically?",
+    "back": "Yes. Apex always returns Id."
+  },
+  {
+    "id": "apex-basics-and-database-c27",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What must you use instead of SELECT * in SOQL?",
+    "back": "List the fields, or use FIELDS(STANDARD) in Apex. FIELDS(ALL) and FIELDS(CUSTOM) aren't supported in Apex; they work only through the API or CLI with LIMIT 200 or fewer.",
+    "source": "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_fields.htm"
+  },
+  {
+    "id": "apex-basics-and-database-c28",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What is the required clause order in SOQL?",
+    "back": "SELECT, FROM, WHERE, ORDER BY, LIMIT"
+  },
+  {
+    "id": "apex-basics-and-database-c29",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "Are SOQL string comparisons case-sensitive?",
+    "back": "No. They are case-insensitive."
+  },
+  {
+    "id": "apex-basics-and-database-c30",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "How many sObjects does each SOQL for loop batch process?",
+    "back": "Up to 200"
+  },
+  {
+    "id": "apex-basics-and-database-c31",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What is SOSL?",
+    "back": "Salesforce Object Search Language, a word-based text search across multiple objects."
+  },
+  {
+    "id": "apex-basics-and-database-c32",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "How is a search term written in Query Editor versus Apex?",
+    "back": "{Term} in Query Editor, 'Term' in Apex."
+  },
+  {
+    "id": "apex-basics-and-database-c33",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does the SOSL RETURNING clause specify?",
+    "back": "Which objects and fields are returned."
+  },
+  {
+    "id": "apex-basics-and-database-c34",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does the SOSL wildcard * match?",
+    "back": "Zero or more characters in the middle or end of a term."
+  },
+  {
+    "id": "apex-basics-and-database-c35",
+    "syllabusItem": "Apex Basics & Database",
+    "domain": "dm",
+    "front": "What does the SOSL wildcard ? match?",
+    "back": "Exactly one character in the middle or end of a term."
+  },
+  {
+    "id": "master-data-management-mdm-c1",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "What two forces spread product data across disconnected systems?",
+    "back": "Globalization and mergers and acquisitions."
+  },
+  {
+    "id": "master-data-management-mdm-c2",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "What is PLM's role in product data management?",
+    "back": "Authoring work-in-progress engineering data."
+  },
+  {
+    "id": "master-data-management-mdm-c3",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "What is MDM's role for product data?",
+    "back": "System of record for released product data."
+  },
+  {
+    "id": "master-data-management-mdm-c4",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "Are PLM and MDM redundant according to the deck?",
+    "back": "No, they are complementary."
+  },
+  {
+    "id": "master-data-management-mdm-c5",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "Which data domains does traditional product MDM mostly serve?",
+    "back": "Sales and marketing, such as catalogs and pricing."
+  },
+  {
+    "id": "master-data-management-mdm-c6",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "What scope expansion does the deck argue product MDM needs?",
+    "back": "Engineering and manufacturing data."
+  },
+  {
+    "id": "master-data-management-mdm-c7",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "What is a closed-loop engineering change process?",
+    "back": "A process where engineering changes are managed and fed back to keep product data consistent."
+  },
+  {
+    "id": "master-data-management-mdm-c8",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "What is a listed benefit of uniform product data?",
+    "back": "Better change management."
+  },
+  {
+    "id": "master-data-management-mdm-c9",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "Which standards does the deck say should be evaluated?",
+    "back": "STEP, JT2Go, and PLCS."
+  },
+  {
+    "id": "master-data-management-mdm-c10",
+    "syllabusItem": "Master Data Management (MDM)",
+    "domain": "mdm",
+    "front": "Why is harmonizing product data interfaces slow?",
+    "back": "Business-unit variations in product data."
+  },
+  {
+    "id": "big-object-basics-c1",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Where in Setup do you create a big object?",
+    "back": "Enter 'Big Objects' in Quick Find and select Big Objects."
+  },
+  {
+    "id": "big-object-basics-c2",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What suffix does a big object's API name have after saving?",
+    "back": "__b"
+  },
+  {
+    "id": "big-object-basics-c3",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the purpose of a big object's index?",
+    "back": "It defines the composite primary key and enables querying."
+  },
+  {
+    "id": "big-object-basics-c4",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the initial deployment status of a new big object?",
+    "back": "In Development"
+  },
+  {
+    "id": "big-object-basics-c5",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the minimum number of custom fields an index must contain?",
+    "back": "One"
+  },
+  {
+    "id": "big-object-basics-c6",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the maximum number of custom fields an index can contain?",
+    "back": "Five"
+  },
+  {
+    "id": "big-object-basics-c7",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Must index fields be required?",
+    "back": "Yes"
+  },
+  {
+    "id": "big-object-basics-c8",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Can a Long Text Area field be part of an index?",
+    "back": "No"
+  },
+  {
+    "id": "big-object-basics-c9",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the maximum combined number of characters across text fields in an index?",
+    "back": "100"
+  },
+  {
+    "id": "big-object-basics-c10",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Can an index be edited or deleted after it is created?",
+    "back": "No"
+  },
+  {
+    "id": "big-object-basics-c11",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What must you do to change an existing big object's index?",
+    "back": "Create another big object with a new index."
+  },
+  {
+    "id": "big-object-basics-c12",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "In what order can SOQL query a big object's index fields?",
+    "back": "In the order they were defined in the index"
+  },
+  {
+    "id": "big-object-basics-c13",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Which Apex method inserts a big object record immediately?",
+    "back": "insertImmediate"
+  },
+  {
+    "id": "big-object-basics-c14",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What must the first row of a CSV file contain when loading big object data?",
+    "back": "The field labels used to map the CSV data to the big object"
+  },
+  {
+    "id": "big-object-basics-c15",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "How long are deleted big objects kept before permanent deletion?",
+    "back": "15 days"
+  },
+  {
+    "id": "big-object-basics-c16",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What are the two flavors of big objects?",
+    "back": "Standard big objects and custom big objects"
+  },
+  {
+    "id": "big-object-basics-c17",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Who defines standard big objects?",
+    "back": "Salesforce, within its products"
+  },
+  {
+    "id": "big-object-basics-c18",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Where are custom big objects defined and deployed?",
+    "back": "In Setup"
+  },
+  {
+    "id": "big-object-basics-c19",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Which standard big object archives field history?",
+    "back": "FieldHistoryArchive"
+  },
+  {
+    "id": "big-object-basics-c20",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "How many years of archived field history can FieldHistoryArchive store?",
+    "back": "Up to 10 years"
+  },
+  {
+    "id": "big-object-basics-c21",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Which Salesforce product includes FieldHistoryArchive?",
+    "back": "Field Audit Trail"
+  },
+  {
+    "id": "big-object-basics-c22",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Which API is recommended for querying more than 100k big object records?",
+    "back": "Bulk API"
+  },
+  {
+    "id": "big-object-basics-c23",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the recommended pagination size threshold for batch Apex on big objects?",
+    "back": "50k records"
+  },
+  {
+    "id": "big-object-basics-c24",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Which permissions do big objects support?",
+    "back": "Object and field permissions only"
+  },
+  {
+    "id": "big-object-basics-c25",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Where can a relationship query use a big object's lookup field?",
+    "back": "Only in the select field list"
+  },
+  {
+    "id": "big-object-basics-c26",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is the maximum number of big objects per org?",
+    "back": "100"
+  },
+  {
+    "id": "big-object-basics-c27",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "Can big objects be used in transactions with standard or custom objects?",
+    "back": "No"
+  },
+  {
+    "id": "big-object-basics-c28",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What types of components do big objects use instead of standard UI elements?",
+    "back": "Custom Lightning and Visualforce components"
+  },
+  {
+    "id": "big-object-basics-c29",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "What is one common use case for custom big objects?",
+    "back": "A 360° view of the customer"
+  },
+  {
+    "id": "big-object-basics-c30",
+    "syllabusItem": "Big Object Basics",
+    "domain": "dm",
+    "front": "How do you change a deployed big object's index?",
+    "back": "Start over with a new big object"
+  },
+  {
+    "id": "scalability-with-salesforce-c1",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What defines a scalable org?",
+    "back": "One that maintains performance during or after a steep workload increase without needing a redesign."
+  },
+  {
+    "id": "scalability-with-salesforce-c2",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Define workload in Salesforce scalability.",
+    "back": "Anything that contributes to demand on org resources, such as simultaneous users, increased data or complex transactions."
+  },
+  {
+    "id": "scalability-with-salesforce-c3",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "In the supermarket analogy, what does scalability measure?",
+    "back": "The 'cashiers' (capacity): keeping customer wait times quick and consistent regardless of how many shoppers are in line."
+  },
+  {
+    "id": "scalability-with-salesforce-c4",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is a large data volume (LDV)?",
+    "back": "An excessively high number of records on a single object."
+  },
+  {
+    "id": "scalability-with-salesforce-c5",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Name one effect of LDV on performance.",
+    "back": "Slower queries, search, list views and reports, and more timeouts."
+  },
+  {
+    "id": "scalability-with-salesforce-c6",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Which Salesforce feature virtualizes external data to reduce LDV in the org?",
+    "back": "Salesforce Connect (data virtualization)."
+  },
+  {
+    "id": "scalability-with-salesforce-c7",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is data skew?",
+    "back": "More than 10,000 child records associated with the same parent record."
+  },
+  {
+    "id": "scalability-with-salesforce-c8",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is ownership skew?",
+    "back": "A single owner owning more than 10,000 records of one object."
+  },
+  {
+    "id": "scalability-with-salesforce-c9",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "How do you mitigate ownership skew?",
+    "back": "Distribute record ownership across a greater number of users."
+  },
+  {
+    "id": "scalability-with-salesforce-c10",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is the recommended maximum role hierarchy depth?",
+    "back": "Under 10 levels of branches."
+  },
+  {
+    "id": "scalability-with-salesforce-c11",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Should the role hierarchy mirror the org chart?",
+    "back": "No. Group roles by the data-access level needed and consolidate job titles into single roles."
+  },
+  {
+    "id": "scalability-with-salesforce-c12",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is the recommended limit for ownership-based sharing rules per object?",
+    "back": "100 per object."
+  },
+  {
+    "id": "scalability-with-salesforce-c13",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is the recommended limit for criteria-based sharing rules per object?",
+    "back": "50 per object."
+  },
+  {
+    "id": "scalability-with-salesforce-c14",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "How many triggers per object are recommended?",
+    "back": "One trigger per object, with a naming convention that includes the object name."
+  },
+  {
+    "id": "scalability-with-salesforce-c15",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "How many records should bulkified triggers process per call?",
+    "back": "Up to 200."
+  },
+  {
+    "id": "scalability-with-salesforce-c16",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "How can you reduce timeouts from heavy new-user sign-ups?",
+    "back": "Create the user accounts in advance."
+  },
+  {
+    "id": "scalability-with-salesforce-c17",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What problem can concurrent triggers, workflows and batch jobs cause?",
+    "back": "Record locking scenarios."
+  },
+  {
+    "id": "scalability-with-salesforce-c18",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "When should non-business-critical batch and sync jobs run?",
+    "back": "During off-peak hours."
+  },
+  {
+    "id": "scalability-with-salesforce-c19",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What does data governance establish?",
+    "back": "Rules and policies ensuring the usability, quality and compliance of customer data."
+  },
+  {
+    "id": "scalability-with-salesforce-c20",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is a data steward responsible for?",
+    "back": "Data quality, working with data administration processes, policies and guidelines."
+  },
+  {
+    "id": "scalability-with-salesforce-c21",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is a data custodian?",
+    "back": "An IT partner who understands how data is stored, structured and accessed."
+  },
+  {
+    "id": "scalability-with-salesforce-c22",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is step 1 of importing data into Salesforce?",
+    "back": "Prepare your data: choose what fits, map fields, export CSVs, set load order, and clean and de-duplicate."
+  },
+  {
+    "id": "scalability-with-salesforce-c23",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "In what order should records be loaded?",
+    "back": "Parent records first, then child records."
+  },
+  {
+    "id": "scalability-with-salesforce-c24",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is the record limit of the Data Import Wizard?",
+    "back": "Up to 50,000 records."
+  },
+  {
+    "id": "scalability-with-salesforce-c25",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What is the record range for Data Loader?",
+    "back": "Between 50,000 and 5 million records."
+  },
+  {
+    "id": "scalability-with-salesforce-c26",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Which import tool is cloud-based and powered by MuleSoft?",
+    "back": "dataloader.io."
+  },
+  {
+    "id": "scalability-with-salesforce-c27",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What does Salesforce recommend for LDV loads?",
+    "back": "Data Loader or an ETL tool configured to use the Bulk API."
+  },
+  {
+    "id": "scalability-with-salesforce-c28",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Why test a data load in a full copy sandbox?",
+    "back": "It replicates production data and metadata, exposing locking issues, duplicates and data errors before the real load."
+  },
+  {
+    "id": "scalability-with-salesforce-c29",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What are the final tasks when loading data?",
+    "back": "Check error logs (CSV results) and verify your live data after the import completes."
+  },
+  {
+    "id": "scalability-with-salesforce-c30",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "How can you automate ongoing data loads?",
+    "back": "Use Data Loader batch mode or an ETL tool to schedule regular synchronization."
+  },
+  {
+    "id": "scalability-with-salesforce-c31",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What does scalability testing measure?",
+    "back": "How an application performs as user demand grows, and the point where it can no longer scale."
+  },
+  {
+    "id": "scalability-with-salesforce-c32",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Name the five performance attributes used in scalability testing.",
+    "back": "Response time, throughput, CPU usage, memory usage and network usage."
+  },
+  {
+    "id": "scalability-with-salesforce-c33",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What does load testing measure?",
+    "back": "Response time, or customer experience, under increased user demand."
+  },
+  {
+    "id": "scalability-with-salesforce-c34",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What does Scale Center do?",
+    "back": "Tracks org performance and workload handling by examining user activity events, and helps keep data secure."
+  },
+  {
+    "id": "scalability-with-salesforce-c35",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "Name three events worth monitoring in Scale Center.",
+    "back": "Any three of: logins, logouts, search, URI, Lightning, Visualforce page loads, API calls, Apex executions, report exports."
+  },
+  {
+    "id": "scalability-with-salesforce-c36",
+    "syllabusItem": "Scalability with Salesforce",
+    "domain": "ldv",
+    "front": "What does Salesforce Data Mask do?",
+    "back": "Protects sensitive data in sandboxes during testing."
+  },
+  {
+    "id": "large-data-volumes-c1",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does LDV stand for?",
+    "back": "Large data volumes."
+  },
+  {
+    "id": "large-data-volumes-c2",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "At what child-per-parent count does data skew begin?",
+    "back": "More than 10,000 child records associated with one parent."
+  },
+  {
+    "id": "large-data-volumes-c3",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Name the three types of data skew.",
+    "back": "Account data skew, ownership skew, and lookup skew."
+  },
+  {
+    "id": "large-data-volumes-c4",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is account data skew?",
+    "back": "Too many child records associated with the same parent account (or similar parent) under private sharing."
+  },
+  {
+    "id": "large-data-volumes-c5",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why does updating many contacts under one account in parallel fail?",
+    "back": "Each update locks the contact and its parent account, so concurrent updates hit record locks on the same account."
+  },
+  {
+    "id": "large-data-volumes-c6",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is ownership skew?",
+    "back": "A large number of records of the same object type owned by a single user."
+  },
+  {
+    "id": "large-data-volumes-c7",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why are ownership changes costly with a skewed owner in the role hierarchy?",
+    "back": "Sharing must be removed from the old owner, role-hierarchy parents, and users granted access by sharing rules."
+  },
+  {
+    "id": "large-data-volumes-c8",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How do you reduce the impact of unavoidable ownership skew?",
+    "back": "Ensure the skewed owner has no role."
+  },
+  {
+    "id": "large-data-volumes-c9",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is lookup skew?",
+    "back": "A very large number of records associated with a single record in a lookup object."
+  },
+  {
+    "id": "large-data-volumes-c10",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why does lookup skew cause lock exceptions?",
+    "back": "Salesforce locks each lookup's target record on insert/update, so concurrent saves contend for the same record."
+  },
+  {
+    "id": "large-data-volumes-c11",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is an external object?",
+    "back": "An object similar to a custom object that maps to data stored outside your Salesforce org."
+  },
+  {
+    "id": "large-data-volumes-c12",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Which Salesforce tool uses external data sources to access data outside the org?",
+    "back": "Salesforce Connect (and Files Connect for third-party content systems)."
+  },
+  {
+    "id": "large-data-volumes-c13",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "When do you use an external lookup relationship?",
+    "back": "When the parent is an external object."
+  },
+  {
+    "id": "large-data-volumes-c14",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "When do you use an indirect lookup relationship?",
+    "back": "When a child external object relates to a standard or custom parent and the external data lacks Salesforce record IDs."
+  },
+  {
+    "id": "large-data-volumes-c15",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What parent field does an indirect lookup match against?",
+    "back": "A custom field marked External ID and unique."
+  },
+  {
+    "id": "large-data-volumes-c16",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What must happen to data before it can be searched in Salesforce?",
+    "back": "It must be indexed."
+  },
+  {
+    "id": "large-data-volumes-c17",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What can SOSL do that SOQL doesn't?",
+    "back": "Tokenize multiple terms within a field and search an index built from them."
+  },
+  {
+    "id": "large-data-volumes-c18",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How many SOSL searches are allowed in one transaction?",
+    "back": "20."
+  },
+  {
+    "id": "large-data-volumes-c19",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How many records can each SOSL search return when a transaction has multiple SOSL searches?",
+    "back": "2,000."
+  },
+  {
+    "id": "large-data-volumes-c20",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How many records can SOQL return in one transaction?",
+    "back": "50,000."
+  },
+  {
+    "id": "large-data-volumes-c21",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does the query optimizer's statistics table track?",
+    "back": "The distribution of data in each index, used for pre-queries that decide whether an index will speed a query."
+  },
+  {
+    "id": "large-data-volumes-c22",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Which query types does the query optimizer work on?",
+    "back": "Reports, list views, SOQL queries, and queries that piggyback on them."
+  },
+  {
+    "id": "large-data-volumes-c23",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the best general approach to querying and processing large data sets?",
+    "back": "Process asynchronously in batches, e.g., Batch Apex."
+  },
+  {
+    "id": "large-data-volumes-c24",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the Batch Apex record limit for querying and processing?",
+    "back": "Up to 50 million records."
+  },
+  {
+    "id": "large-data-volumes-c25",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the maximum size of a bulk query result?",
+    "back": "15 GB, split into fifteen 1 GB files."
+  },
+  {
+    "id": "large-data-volumes-c26",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does the Bulk API queryAll operation add compared with query?",
+    "back": "It returns records deleted by merge or delete, plus archived Task and Event information."
+  },
+  {
+    "id": "large-data-volumes-c27",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What error occurs when a bulk query exceeds the two-minute execution limit?",
+    "back": "QUERY_TIMEOUT."
+  },
+  {
+    "id": "large-data-volumes-c28",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What happens after a bulk query's result retrieval fails 30 times?",
+    "back": "The job fails with 'Retried more than thirty times'; use PK chunking to split results."
+  },
+  {
+    "id": "large-data-volumes-c29",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How long are bulk query results stored?",
+    "back": "Seven days."
+  },
+  {
+    "id": "large-data-volumes-c30",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is a skinny table?",
+    "back": "A custom table containing a subset of fields from a standard or custom base object."
+  },
+  {
+    "id": "large-data-volumes-c31",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why are skinny tables faster to read than the base object?",
+    "back": "Narrower rows and less data to scan let more rows be fetched per database read, and soft-deleted rows are excluded."
+  },
+  {
+    "id": "large-data-volumes-c32",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Which objects support skinny tables?",
+    "back": "Custom objects plus Account, Contact, Opportunity, Lead, and Case."
+  },
+  {
+    "id": "large-data-volumes-c33",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What happens to a skinny table if you change a covered field's type?",
+    "back": "It becomes invalid and Salesforce Customer Support must create a new one."
+  },
+  {
+    "id": "large-data-volumes-c34",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does 'loading lean' mean?",
+    "back": "Loading only the data and configuration needed for business-critical operations."
+  },
+  {
+    "id": "large-data-volumes-c35",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why load data as quickly as possible during migration?",
+    "back": "To reduce the scope of synchronization."
+  },
+  {
+    "id": "large-data-volumes-c36",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Which org-wide sharing default lets you defer sharing calculation during loads?",
+    "back": "Public Read/Write."
+  },
+  {
+    "id": "large-data-volumes-c37",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why do many lookup relationships slow data loading?",
+    "back": "The system must perform more checks per record."
+  },
+  {
+    "id": "large-data-volumes-c38",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why do sharing rules slow loading?",
+    "back": "Each inserted record may require sharing calculations if its owner or field values match the rule."
+  },
+  {
+    "id": "large-data-volumes-c39",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Name three automation types that can slow massive loads.",
+    "back": "Workflow rules, validation rules, and triggers."
+  },
+  {
+    "id": "large-data-volumes-c40",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why must master-detail parents be loaded first?",
+    "back": "Child records can't be loaded unless their parents already exist."
+  },
+  {
+    "id": "large-data-volumes-c41",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why shouldn't you defer the role hierarchy during loading?",
+    "back": "Performance is almost always the same, and it's faster for portal accounts, so there is no benefit to deferring it."
+  },
+  {
+    "id": "large-data-volumes-c42",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the SOAP API optimized for?",
+    "back": "Real-time client applications updating a few records at a time."
+  },
+  {
+    "id": "large-data-volumes-c43",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is Bulk API based on?",
+    "back": "REST principles."
+  },
+  {
+    "id": "large-data-volumes-c44",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the max batch size in Bulk API?",
+    "back": "10,000 records."
+  },
+  {
+    "id": "large-data-volumes-c45",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Can Bulk API batches be processed in parallel?",
+    "back": "Yes, in parallel or serially, depending on your needs."
+  },
+  {
+    "id": "large-data-volumes-c46",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does Bulk API do if a job times out?",
+    "back": "It automatically requeues and retries it."
+  },
+  {
+    "id": "large-data-volumes-c47",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the first phase of suspending events for loading?",
+    "back": "Analyzing and preparing data."
+  },
+  {
+    "id": "large-data-volumes-c48",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How do you disable a validation rule for loading?",
+    "back": "Edit the rule and set it to inactive."
+  },
+  {
+    "id": "large-data-volumes-c49",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What mechanism lets you toggle a trigger on and off?",
+    "back": "A Custom Setting with a checkbox field referenced in the trigger code."
+  },
+  {
+    "id": "large-data-volumes-c50",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What must be done to triggers after loading finishes?",
+    "back": "Reset the custom setting fields so triggers fire normally again."
+  },
+  {
+    "id": "large-data-volumes-c51",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Which tools add lookups and roll-ups after a load?",
+    "back": "Batch Apex or Bulk API."
+  },
+  {
+    "id": "large-data-volumes-c52",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is soft deletion in Salesforce?",
+    "back": "Flagging records as deleted and moving them to the Recycle Bin instead of physically removing them."
+  },
+  {
+    "id": "large-data-volumes-c53",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How long do records stay in the Recycle Bin?",
+    "back": "15 days, or until the bin reaches a size limit."
+  },
+  {
+    "id": "large-data-volumes-c54",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does Bulk API hard delete do?",
+    "back": "Bypasses the Recycle Bin so records are immediately eligible for physical deletion."
+  },
+  {
+    "id": "large-data-volumes-c55",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Is Bulk API hard delete enabled by default?",
+    "back": "No, an administrator must enable it."
+  },
+  {
+    "id": "large-data-volumes-c56",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "At what deletion volume is Bulk API hard delete especially recommended?",
+    "back": "One million or more records."
+  },
+  {
+    "id": "large-data-volumes-c57",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the default Bulk API query chunk size?",
+    "back": "100,000 records."
+  },
+  {
+    "id": "large-data-volumes-c58",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is the maximum configurable chunkSize for Bulk API queries?",
+    "back": "250,000 records."
+  },
+  {
+    "id": "large-data-volumes-c59",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What does PK stand for in PK chunking?",
+    "back": "Primary Key (the record ID)."
+  },
+  {
+    "id": "large-data-volumes-c60",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Why is PK chunking effective?",
+    "back": "It splits queries by record ID ranges, and the ID is always indexed."
+  },
+  {
+    "id": "large-data-volumes-c61",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What header enables PK chunking?",
+    "back": "Sforce-Enable-PKChunking."
+  },
+  {
+    "id": "large-data-volumes-c62",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "When should you enable PK chunking?",
+    "back": "For tables over 10 million records or when a bulk query consistently times out."
+  },
+  {
+    "id": "large-data-volumes-c63",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How does each PK chunk count against limits?",
+    "back": "Each chunk is a separate batch counting toward the daily batch limit."
+  },
+  {
+    "id": "large-data-volumes-c64",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What status does the original batch show when PK chunking succeeds?",
+    "back": "NOT_PROCESSED."
+  },
+  {
+    "id": "large-data-volumes-c65",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "What is custom object truncation?",
+    "back": "A fast way to permanently remove all records from a custom object while keeping the object and metadata."
+  },
+  {
+    "id": "large-data-volumes-c66",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Where do you enable custom object truncation?",
+    "back": "Setup > User Interface > Enable Custom Object Truncate."
+  },
+  {
+    "id": "large-data-volumes-c67",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Can truncated records be recovered from the Recycle Bin?",
+    "back": "No, truncation is permanent."
+  },
+  {
+    "id": "large-data-volumes-c68",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "How long does a truncated object's copy stay in Deleted Objects?",
+    "back": "15 days, still counting toward org limits."
+  },
+  {
+    "id": "large-data-volumes-c69",
+    "syllabusItem": "Large Data Volumes",
+    "domain": "ldv",
+    "front": "Can standard objects be truncated?",
+    "back": "No, only eligible custom objects can."
+  }
+]

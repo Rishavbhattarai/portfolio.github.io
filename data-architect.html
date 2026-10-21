@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Data Architect Study | Rishav Bhattarai</title>
+  <meta name="description" content="Study dashboard for the Salesforce Certified Platform Data Architect exam: syllabus, materials, notes, quizzes and flashcards.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F6F7F9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E1013" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="css/data-architect.css">
+  <script>
+    // Apply a saved theme before first paint to avoid a flash
+    try { const t = JSON.parse(localStorage.getItem('daStudy.v1') || '{}').theme; if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+<div class="app">
+
+  <aside class="nav" aria-label="Sections">
+    <div class="nav__brand">
+      <span class="nav__mark" aria-hidden="true"><i class="ph ph-database"></i></span>
+      <span class="nav__title">Data Architect<small>Study dashboard</small></span>
+    </div>
+    <nav class="nav__links" id="navLinks">
+      <a href="#home" data-view="home"><i class="ph ph-squares-four"></i><span>Syllabus</span></a>
+      <a href="#materials" data-view="materials"><i class="ph ph-books"></i><span>Materials</span></a>
+      <a href="#notes" data-view="notes"><i class="ph ph-notebook"></i><span>Notes</span></a>
+      <a href="#quiz" data-view="quiz"><i class="ph ph-list-checks"></i><span>Quiz</span></a>
+      <a href="#cards" data-view="cards"><i class="ph ph-cards"></i><span>Flashcards</span></a>
+    </nav>
+    <div class="nav__foot">
+      <button class="btn btn--ghost btn--sm" id="focusToggle" type="button"><i class="ph ph-timer"></i><span>Focus timer</span></button>
+      <button class="btn btn--ghost btn--sm" id="themeToggle" type="button" aria-label="Switch theme"><i class="ph ph-circle-half"></i><span id="themeLabel">Auto theme</span></button>
+      <a class="btn btn--ghost btn--sm" href="index.html"><i class="ph ph-arrow-left"></i><span>Portfolio</span></a>
+    </div>
+  </aside>
+
+  <main class="main" id="main" tabindex="-1">
+    <div class="skeleton" aria-busy="true" aria-label="Loading">
+      <div class="sk sk--title"></div>
+      <div class="sk-row"><div class="sk sk--block"></div><div class="sk sk--block"></div></div>
+      <div class="sk sk--line"></div><div class="sk sk--line"></div><div class="sk sk--line sk--short"></div>
+    </div>
+  </main>
+
+</div>
+<script src="js/data-architect.js"></script>
+</body>
+</html>

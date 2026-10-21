@@ -1,0 +1,64 @@
+{
+  "core": [
+    {
+      "id": "core-ldv",
+      "title": "Best Practices for Deployments with Large Data Volumes",
+      "domain": "ldv",
+      "why": "Source of the index selectivity thresholds, skinny tables, divisions, defer sharing and the 10,000-record skew rules.",
+      "links": [
+        { "label": "Read online", "url": "https://developer.salesforce.com/docs/platform/salesforce-large-data-volumes-bp/guide/ldv-deployments-best-practices.html" },
+        { "label": "PDF (Summer '25)", "url": "https://resources.docs.salesforce.com/256/latest/en-us/sfdc/pdf/salesforce_large_data_volumes_bp.pdf" }
+      ]
+    },
+    {
+      "id": "core-locking",
+      "title": "Record Locking and Data Skew",
+      "domain": "ldv",
+      "why": "Explains UNABLE_TO_LOCK_ROW, parent locks on child inserts, and account, ownership and lookup skew.",
+      "links": [
+        { "label": "Record Locking Cheat Sheet", "url": "https://resources.docs.salesforce.com/194/latest/en-us/sfdc/pdf/record_locking_cheatsheet.pdf" },
+        { "label": "Parent-Child Data Skew", "url": "https://developer.salesforce.com/docs/atlas.en-us.draes.meta/draes/draes_object_relationships_parent_child_data_skew.htm" },
+        { "label": "Managing Task Locks", "url": "https://developer.salesforce.com/blogs/2014/08/managing-task-locks-data-loads" }
+      ]
+    },
+    {
+      "id": "core-bulk",
+      "title": "Bulk API 2.0 and Bulk API Developer Guide",
+      "domain": "mig",
+      "why": "Covers ingest vs query jobs, hard delete, PK chunking, parallel vs serial (v1 only) and lock avoidance.",
+      "links": [
+        { "label": "Developer guide", "url": "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_intro.htm" }
+      ]
+    },
+    {
+      "id": "core-integration",
+      "title": "Architect Decision Guide: Data Integration",
+      "domain": "mdm",
+      "why": "When to virtualize with Salesforce Connect versus copy data in, and which tools to avoid.",
+      "links": [
+        { "label": "Decision guide", "url": "https://architect.salesforce.com/decision-guides/data-integration" }
+      ]
+    },
+    {
+      "id": "core-sharing",
+      "title": "Sharing Architecture at Scale",
+      "domain": "ldv",
+      "why": "How group maintenance and sharing recalculation behave under load, and how to design record access for scale.",
+      "links": [
+        { "label": "Designing Record Access for Enterprise Scale", "url": "https://developer.salesforce.com/docs/platform/draes/guide/draes-introduction.html" },
+        { "label": "Record-Level Access: Under the Hood", "url": "https://developer.salesforce.com/docs/platform/salesforce-record-access-under-the-hood/guide/record-level-access-under-the-hood.html" }
+      ]
+    }
+  ],
+  "resources": [
+    { "id": "res-credential", "title": "Official exam page on Trailhead", "type": "Official", "domain": "ovr", "free": true, "url": "https://trailhead.salesforce.com/credentials/platformdataarchitect" },
+    { "id": "res-qso", "title": "Query & Search Optimization Cheat Sheet", "type": "PDF", "domain": "ldv", "free": true, "url": "https://resources.docs.salesforce.com/194/0/en-us/sfdc/pdf/salesforce_query_search_optimization_developer_cheatsheet.pdf" },
+    { "id": "res-decision-guides", "title": "All Architect Decision Guides", "type": "Decision guide", "domain": "sdm", "free": true, "url": "https://architect.salesforce.com/decision-guides" },
+    { "id": "res-sfben", "title": "Salesforce Ben: Data Architect Certification Guide", "type": "Community", "domain": "ovr", "free": true, "url": "https://www.salesforceben.com/salesforce-data-architect-certification-guide-tips/" },
+    { "id": "res-fof", "title": "Focus on Force (now K2U) practice exams", "type": "Practice test", "domain": "ovr", "free": false, "url": "https://focusonforce.com/" }
+  ],
+  "avoid": [
+    { "name": "Any site selling \"actual exam questions\" or \"real dumps\"", "reason": "Breaks the Salesforce Credential and Certification Program Agreement. Credentials can be revoked." },
+    { "name": "Certbolt", "reason": "Flagged by the research report as a brain-dump provider." }
+  ]
+}
