@@ -15,6 +15,16 @@
   <script>
     // Apply a saved theme before first paint to avoid a flash
     try { const t = JSON.parse(localStorage.getItem('daStudy.v1') || '{}').theme; if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    // Older iPads (Safari < 14.1) ignore gap in flexbox; flag it so the CSS can space things another way
+    (function () {
+      var d = document.createElement('div');
+      d.style.cssText = 'display:flex;flex-direction:column;row-gap:1px;position:absolute';
+      d.appendChild(document.createElement('div'));
+      d.appendChild(document.createElement('div'));
+      document.documentElement.appendChild(d);
+      if (d.scrollHeight !== 1) document.documentElement.className += ' no-flexgap';
+      document.documentElement.removeChild(d);
+    })();
   </script>
 </head>
 <body>

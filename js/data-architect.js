@@ -38,7 +38,7 @@
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
-  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const slug = (s) => String(s).toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const shuffle = (a) => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
   const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -134,10 +134,13 @@
       ['questions', 'data/da_questions.json', []],
       ['flashcards', 'data/da_flashcards.json', []]
     ];
-    const results = await Promise.allSettled(optional.map(([, p]) => fetchJSON(p)));
+    // Promise.allSettled is missing on older iPads, so settle each fetch by hand
+    const results = await Promise.all(optional.map(([, p]) => fetchJSON(p).then(
+      (value) => ({ status: 'fulfilled', value }),
+      (reason) => ({ status: 'rejected', reason }))));
     results.forEach((r, i) => {
       const [key, path, fallback] = optional[i];
-      if (r.status === 'fulfilled') state[key] = r.value ?? fallback;
+      if (r.status === 'fulfilled') state[key] = r.value == null ? fallback : r.value;
       else { state[key] = fallback; state.warnings.push(path); }
     });
     state.questions = cleanList(state.questions, 'question').filter(validQuestion);
@@ -217,7 +220,7 @@
     state.syllabus.forEach((it) => {
       const last = lastReview(it.id);
       const due = nextDue(it.id);
-      const gaps = p.explain[it.id]?.status === 'gaps';
+      const gaps = !!p.explain[it.id] && p.explain[it.id].status === 'gaps';
       let reason = null;
       if (gaps) reason = 'Explanation has gaps';
       else if (due && due <= today) reason = daysBetween(due, today) > 0 ? `Review overdue since ${shortDate(due)}` : 'Review due today';
@@ -241,7 +244,7 @@
   function metrics() {
     const p = state.progress;
     const syl = state.syllabus;
-    const core = state.materials?.core || [];
+    const core = (state.materials && state.materials.core) || [];
     const notes = state.notes || [];
     const rated = syl.map((i) => lastReview(i.id)).filter(Boolean);
     const attempted = Object.values(p.quizStats).filter((s) => s.right + s.wrong > 0);
@@ -294,7 +297,7 @@
   const countFor = (list, itemName) => list.filter((x) => x.syllabusItem === itemName).length;
   const moduleNotesFor = (itemName) => state.moduleNotes.filter((n) => n.syllabusItem === itemName);
   function noteCount(itemName) {
-    return moduleNotesFor(itemName).reduce((a, n) => a + (n.points?.length || 0) + (n.principles?.length || 0) + (n.recall?.length || 0), 0);
+    return moduleNotesFor(itemName).reduce((a, n) => a + (n.points || []).length + (n.principles || []).length + (n.recall || []).length, 0);
   }
   function dueLabel(id) {
     const due = nextDue(id);
@@ -342,7 +345,7 @@
     const m = metrics();
     const p = state.progress;
     const C = 2 * Math.PI * 56;
-    const ready = m.readiness ?? 0;
+    const ready = m.readiness === null ? 0 : m.readiness;
 
     const today = studyToday();
     const todayHtml = today.length
@@ -376,8 +379,8 @@
         <div class="items">${items.map(renderItem).join('')}</div></details>`;
     }).join('');
 
-    const history = Object.entries(p.reviews)
-      .flatMap(([id, list]) => list.map((r) => ({ id, ...r })))
+    const history = [].concat(...Object.entries(p.reviews)
+      .map(([id, list]) => list.map((r) => ({ id, date: r.date, rating: r.rating }))))
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 40);
 
@@ -414,7 +417,7 @@
       ${groups}
       <details class="group panel history">
         <summary><h3>Review history</h3><span class="grow"></span><span class="mono">${history.length}</span><i class="ph ph-caret-down"></i></summary>
-        ${history.length ? `<div class="history__list">${history.map((h) => `<div class="history__row"><span class="mono">${shortDate(h.date)}</span><span class="history__name">${esc(itemById(h.id)?.name || h.id)}</span><span class="chip chip--${ratingTone(h.rating)}">${h.rating} ${RATING_LABEL[h.rating]}</span></div>`).join('')}</div>` : '<p class="today__empty history__empty">Ratings you give appear here, newest first.</p>'}
+        ${history.length ? `<div class="history__list">${history.map((h) => `<div class="history__row"><span class="mono">${shortDate(h.date)}</span><span class="history__name">${esc((itemById(h.id) || {}).name || h.id)}</span><span class="chip chip--${ratingTone(h.rating)}">${h.rating} ${RATING_LABEL[h.rating]}</span></div>`).join('')}</div>` : '<p class="today__empty history__empty">Ratings you give appear here, newest first.</p>'}
       </details>`;
   }
 
@@ -430,7 +433,7 @@
     const chips = [
       `<span class="chip${isModule ? ' chip--accent' : ''}">${isModule ? '<i class="ph ph-graduation-cap"></i>Trailhead' : '<i class="ph ph-file-text"></i>Doc'}</span>`,
       last ? `<span class="chip chip--${ratingTone(last.rating)}">${last.rating}/5 ${dueLabel(it.id)}</span>` : '',
-      p.explain[it.id]?.status === 'gaps' ? '<span class="chip chip--red"><i class="ph ph-warning-circle"></i>Gaps</span>' : '',
+      p.explain[it.id] && p.explain[it.id].status === 'gaps' ? '<span class="chip chip--red"><i class="ph ph-warning-circle"></i>Gaps</span>' : '',
       p.focus[it.id] ? `<span class="chip"><i class="ph ph-clock"></i>${p.focus[it.id]} min</span>` : '',
       it.priority === 'low' ? '<span class="chip">Low priority</span>' : '',
       it.external ? '<span class="chip">Third party</span>' : '',
@@ -564,12 +567,12 @@
         <div class="chapter__head"><h2>${esc(ch.title)}</h2>
           <div class="item__meta">${recallScore(rid)}<span class="chip">${domainOf(ch.domain).weight}% of exam</span>${ch.status === 'draft' ? '<span class="chip chip--warn">Draft: check against sources</span>' : ''}${recallToggle()}</div></div>
         ${ch.verified ? `<p class="chapter__flag"><i class="ph ph-seal-check"></i> ${esc(ch.verified)}</p>` : ''}
-        ${ch.concepts?.length ? block('ph-lightbulb', 'Key concepts', pointList(ch.concepts, `${rid}:concepts`, src)) : ''}
-        ${ch.rules?.length ? block('ph-git-branch', 'Decision rules', pointList(ch.rules, `${rid}:rules`, src)) : ''}
-        ${ch.numbers?.length ? block('ph-hash', 'Numbers to memorize', numbers) : ''}
-        ${ch.traps?.length ? block('ph-warning', 'Exam traps', pointList(ch.traps, `${rid}:traps`, src, 'traps')) : ''}
-        ${ch.keywords?.length ? block('ph-key', 'Scenario keywords', pointList(ch.keywords, `${rid}:keywords`, src)) : ''}
-        ${ch.sources?.length ? block('ph-link', 'Sources', `<div class="sources">${ch.sources.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//, ''))}</a>`).join('')}</div>`) : ''}
+        ${(ch.concepts || []).length ? block('ph-lightbulb', 'Key concepts', pointList(ch.concepts, `${rid}:concepts`, src)) : ''}
+        ${(ch.rules || []).length ? block('ph-git-branch', 'Decision rules', pointList(ch.rules, `${rid}:rules`, src)) : ''}
+        ${(ch.numbers || []).length ? block('ph-hash', 'Numbers to memorize', numbers) : ''}
+        ${(ch.traps || []).length ? block('ph-warning', 'Exam traps', pointList(ch.traps, `${rid}:traps`, src, 'traps')) : ''}
+        ${(ch.keywords || []).length ? block('ph-key', 'Scenario keywords', pointList(ch.keywords, `${rid}:keywords`, src)) : ''}
+        ${(ch.sources || []).length ? block('ph-link', 'Sources', `<div class="sources">${ch.sources.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//, ''))}</a>`).join('')}</div>`) : ''}
         ${explainBox(rid, `Explain ${ch.title} to a friend in a few sentences. Where you get stuck is what to study next.`)}
         <div class="chapter__foot">
           <button class="btn ${read ? '' : 'btn--primary'}" type="button" data-act="noteread" data-id="${ch.domain}"><i class="ph ${read ? 'ph-check-circle' : 'ph-check'}"></i>${read ? 'Read' : 'Mark as read'}</button>
@@ -582,9 +585,9 @@
   function renderModuleNotes(item) {
     if (!item) return `${topbar()}${backHead('Notes not found', '')}`;
     const entries = moduleNotesFor(item.name);
-    const points = entries.flatMap((e) => e.points || []);
-    const principles = entries.flatMap((e) => e.principles || []);
-    const pairs = entries.flatMap((e) => e.recall || []);
+    const points = [].concat(...entries.map((e) => e.points || []));
+    const principles = [].concat(...entries.map((e) => e.principles || []));
+    const pairs = [].concat(...entries.map((e) => e.recall || []));
     const key = `mod-${item.id}`;
     const p = state.progress;
     const pairHtml = pairs.length
@@ -610,7 +613,7 @@
   function quizPool(scope) {
     const qs = state.questions;
     if (scope === 'all') return qs;
-    if (scope === 'wrong') return qs.filter((q) => state.progress.quizStats[q.id]?.last === false);
+    if (scope === 'wrong') return qs.filter((q) => (state.progress.quizStats[q.id] || {}).last === false);
     const item = itemById(scope);
     return item ? qs.filter((q) => q.syllabusItem === item.name) : [];
   }
@@ -866,7 +869,7 @@
   function stopFocus() {
     const t = state.progress.timer;
     if (t && t.phase === 'work') {
-      const left = t.pausedLeft ?? Math.max(0, t.endAt - Date.now());
+      const left = t.pausedLeft != null ? t.pausedLeft : Math.max(0, t.endAt - Date.now());
       logFocus(t.itemId, Math.floor((t.workMin * 60000 - left) / 60000));
     }
     state.progress.timer = null;
@@ -893,7 +896,7 @@
     const clock = $('#focusClock');
     if (clock) clock.textContent = fmtClock(t.endAt - Date.now());
     const qc = $('#quizClock');
-    if (qc && state.quiz?.endAt) qc.textContent = fmtClock(Math.max(0, state.quiz.endAt - Date.now()));
+    if (qc && state.quiz && state.quiz.endAt) qc.textContent = fmtClock(Math.max(0, state.quiz.endAt - Date.now()));
   }
   function renderTimer() {
     let host = $('#focus');
@@ -901,7 +904,7 @@
     const t = state.progress.timer;
     if (!t) { host.innerHTML = ''; host.className = ''; return; }
     const item = t.itemId ? itemById(t.itemId) : null;
-    const left = t.pausedLeft ?? Math.max(0, t.endAt - Date.now());
+    const left = t.pausedLeft != null ? t.pausedLeft : Math.max(0, t.endAt - Date.now());
     const label = t.phase === 'work' ? 'Focus' : t.phase === 'break' ? 'Break' : 'Session done';
     if (t.min) {
       host.className = 'focus-pill';
@@ -967,7 +970,7 @@
     updateThemeLabel();
   }
   function updateThemeLabel() {
-    const t = state.progress?.theme;
+    const t = state.progress && state.progress.theme;
     const label = $('#themeLabel');
     if (label) label.textContent = t === 'light' ? 'Light theme' : t === 'dark' ? 'Dark theme' : 'Auto theme';
   }
