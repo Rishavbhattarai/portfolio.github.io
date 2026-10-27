@@ -211,14 +211,15 @@
         </article>
 
         <article class="card card--wide" data-category="systems">
-          <h3 class="card__title">Open-Source Pull Requests: Apache SeaTunnel, Docling, OpenDataLoader PDF, Prisma</h3>
-          <p class="card__desc">Five pull requests merged upstream into projects I use or study.</p>
+          <h3 class="card__title">Open-Source Pull Requests: Apache SeaTunnel, Docling, OpenDataLoader PDF, Prisma, TheAlgorithms</h3>
+          <p class="card__desc">Nine pull requests merged upstream into projects I use or study.</p>
           <ul class="card__bullets">
             <li><strong>Apache SeaTunnel (Intercom):</strong> added an Intercom source connector to SeaTunnel's Connector-V2. Fixed all four review items; the integration test passes on Java 11 and 17</li>
             <li><strong>Apache SeaTunnel (Typeform):</strong> added a Typeform source connector. It pages with Typeform's <code>before</code> cursor and waits 500 ms between requests to stay under the 2 requests/s limit, with 20 unit tests</li>
             <li><strong>OpenDataLoader PDF:</strong> PDFs from Google Docs and Chrome got one tag per letter in the structure tree, so Acrobat showed paragraphs as single characters. Adjacent text operators now share one marked-content ID</li>
             <li><strong>Docling:</strong> added an optional <code>filename</code> field to <code>ZipArchiveResult</code>, so a converted zip can carry a real download name instead of <code>converted_docs.zip</code>. Older results still validate. First step of a three-repo change the maintainer laid out for docling-serve</li>
             <li><strong>Prisma Claude Code plugin:</strong> the local MCP server ran <code>npx prisma mcp</code>, which pulled the 8.0 release candidate. That version has no <code>mcp</code> command, so the server failed to start. Pinned it to <code>prisma@7.10.1</code></li>
+            <li><strong>TheAlgorithms/Java:</strong> a differential fuzz harness I wrote found 8 bugs. Four fixes are merged: SwapSort looped forever on duplicate values, TreeSort dropped duplicates, FlashSort crashed on 2-element arrays and DutchNationalFlagSort on empty ones, and case-insensitive Horspool search skipped real matches. Each fix has a regression test that fails on <code>master</code></li>
           </ul>
           <div class="card__stack">Java, Maven, JUnit, Docker, Python, Pydantic, MCP</div>
           <div class="card__footer">
@@ -227,6 +228,7 @@
             <a href="https://github.com/opendataloader-project/opendataloader-pdf/pull/776" class="card__link" target="_blank" rel="noopener">OpenDataLoader #776 →</a>
             <a href="https://github.com/docling-project/docling/pull/4996" class="card__link" target="_blank" rel="noopener">Docling #4996 →</a>
             <a href="https://github.com/prisma/claude-plugin/pull/3" class="card__link" target="_blank" rel="noopener">Prisma plugin #3 →</a>
+            <a href="https://github.com/TheAlgorithms/Java/pulls?q=is%3Apr+author%3ARishavbhattarai+is%3Amerged" class="card__link" target="_blank" rel="noopener">TheAlgorithms (4) →</a>
             <span class="card__badge">Open Source · Merged · October 2026</span>
           </div>
         </article>
