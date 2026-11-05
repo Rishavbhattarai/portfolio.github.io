@@ -124,6 +124,10 @@
   .done-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: .9rem; color: var(--ink-2); }
   .done-row input { width: 20px; height: 20px; accent-color: var(--accent); }
 
+  .tabs-line { font-size: .85rem; color: var(--accent); background: var(--accent-soft); border-radius: 8px; padding: 8px 10px; margin: 0 0 10px; }
+  .say.next { background: transparent; border: 1px dashed var(--accent); }
+  .say.next::before { content: "Transition"; display: block; font: 600 .72rem var(--sans); color: var(--accent); margin-bottom: 4px; }
+
   /* Diagrams */
   .flow { display: grid; gap: 0; margin: 12px 0; }
   .node {
@@ -221,16 +225,37 @@ sf apex run -o agentorg -f scripts/apex/seed-sample-data.apex</pre>Creates Blue 
       <div class="check"><input type="checkbox" id="c7"><label for="c7">If a page looks old after a redeploy: hard-reload, or log out and back in.</label></div>
     </div>
 
+
+    <h2>Chrome tabs, in order</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Tab</th><th>Scene</th></tr></thead>
+      <tbody><tr><td>1</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/app/06mbm00000XGqVCAA1" target="_blank" rel="noopener">FundMate app home</a></td><td>1</td></tr><tr><td>2</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/setup/NamedCredential/home" target="_blank" rel="noopener">Named Credential (click Underwriting API)</a></td><td>2</td></tr><tr><td>3</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/setup/CustomMetadata/page?address=%2Fm01bm00003EI2GH" target="_blank" rel="noopener">Payload Field Map: business.ein</a></td><td>3</td></tr><tr><td>4</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/setup/CustomMetadata/page?address=%2F01Ibm00000E8raB" target="_blank" rel="noopener">Routing Rule type (Manage Routing Rules)</a></td><td>3</td></tr><tr><td>5</td><td>Cedar and Pine application <span class="muted">(link from docs/record-links.sh)</span></td><td>4</td></tr><tr><td>6</td><td>Blue Harbor Coffee account <span class="muted">(link from docs/record-links.sh)</span></td><td>5</td></tr><tr><td>7</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/o/Funding_Application__c/list" target="_blank" rel="noopener">Funding Applications list</a></td><td>5, 7</td></tr><tr><td>8</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/setup/AsyncApexJobs/home" target="_blank" rel="noopener">Apex Jobs</a></td><td>5</td></tr><tr><td>9</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/o/Integration_Log__c/list" target="_blank" rel="noopener">Integration Logs</a></td><td>7</td></tr><tr><td>10</td><td><a href="https://unlv3-dev-ed.develop.lightning.force.com/lightning/setup/ApexTestQueue/home" target="_blank" rel="noopener">Apex Test Execution (optional)</a></td><td>8</td></tr></tbody>
+    </table></div>
+    <p class="muted">Record pages get new IDs after reset and seed. Run <code>docs/record-links.sh</code> for tabs 5 and 6. Reach the Cedar and Pine account and Tom Becker by clicking through from tab 5.</p>
+
+    <h2>VS Code files (scene 6)</h2>
+    <div class="card">
+      <div class="qa"><p class="q">1. UnderwritingClaimService.cls</p><p class="a">The two FOR UPDATE queries</p></div>
+      <div class="qa"><p class="q">2. UnderwritingBatchSender.cls</p><p class="a">sharedKey and retryBatch</p></div>
+      <div class="qa"><p class="q">3. UnderwritingRetryJob.cls</p><p class="a">execute</p></div>
+      <div class="qa"><p class="q">4. UnderwritingDecisionResource.cls</p><p class="a">The permission check, then SignatureVerifier.verify</p></div>
+      <div class="qa"><p class="q">5. DecisionProcessor.cls</p><p class="a">The process method</p></div>
+      <div class="qa"><p class="q">6. Payload_Field_Map.business_ein.md-meta.xml (optional)</p><p class="a">Whole file; also shown in Setup in scene 3</p></div>
+    </div>
+    <p class="muted">All under <code>force-app/main/default/</code>. If you run setup-org.apex live in scene 2, run the pause command again before scene 4.</p>
+
     <h2>Scenes</h2>
 
     <details class="scene" open data-scene="s1">
       <summary><span class="scene-title">1. Intro</span><span class="scene-time">0:00-0:30</span><span class="scene-sub">FundMate app home</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Chrome tab 1, FundMate app home.</div>
         <div class="show"><b>Show:</b> the FundMate app home.</div>
         <div class="say">
           <p>Hi, I'm Rishav. This is my take-home for FundMate: a native Salesforce app that builds funding applications from a business's data, sends them to an underwriting API in batches of 50, and takes signed decisions back through a REST endpoint. Decisions create offers and route the application to the right queue.</p>
           <p>Before building, I sent Deepak a short design doc with three questions. He confirmed all three and asked for one more queue, Integration Exceptions. Everything you'll see includes that.</p>
         </div>
+        <div class="say next"><p>I'll start with how it gets into an org.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -238,6 +263,7 @@ sf apex run -o agentorg -f scripts/apex/seed-sample-data.apex</pre>Creates Blue 
     <details class="scene" data-scene="s2">
       <summary><span class="scene-title">2. Deployment</span><span class="scene-time">0:30-1:30</span><span class="scene-sub">Terminal, then Named Credential</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Terminal, then Chrome tab 2 (Named Credential).</div>
         <div class="show"><b>Show:</b> the terminal. Run the commands, or show output from an earlier run.</div>
 <pre>sf project deploy start --target-org agentorg --source-dir force-app
 sf org assign permset --name FundMate_Admin --target-org agentorg
@@ -248,6 +274,8 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
           <p>The mock Underwriting API is a Cloudflare Worker. Its URL lives in a Named Credential and its API key in an External Credential, so neither is in the code.</p>
         </div>
         <div class="show"><b>Show:</b> Setup → Named Credentials → Underwriting API for two seconds. The URL is visible, the key is not.</div>
+        <div class="say"><p>Locally, the test keys sit in a file that git ignores, so the repository has no secrets in it.</p></div>
+        <div class="say next"><p>With it deployed, here's how the pieces fit together.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -255,15 +283,18 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
     <details class="scene" data-scene="s3">
       <summary><span class="scene-title">3. The design in one minute</span><span class="scene-time">1:30-2:30</span><span class="scene-sub">Data model, Custom Metadata</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Chrome tab 3 (Payload Field Map, business.ein), then tab 4 (Routing Rules).</div>
         <div class="show"><b>Show:</b> the cheatsheet in a browser (org map, then problem, solution, proof), or the Case tab on this page.</div>
         <div class="say">
           <p>Account is the business and Contact is the owner, with SSN and date of birth encrypted. Bank statements belong to the business. When an application is created, it snapshots the last three months, so underwriting always sees exactly what was sent.</p>
-          <p>Most behaviour is configuration, not code.</p>
+          <p>Most of the behaviour lives in configuration.</p>
         </div>
         <div class="show"><b>Show:</b> Setup → Custom Metadata Types → Payload Field Map → <code>business.ein</code>, then Routing Rule.</div>
         <div class="say">
           <p>Each key in the API request is a metadata record: which object, which field, whether it's required, and the format it needs. Routing works the same way: status and amount range to a queue. Approvals over 250,000 go to Senior Funding, and partner rejections and send failures go to Integration Exceptions, as Deepak asked. An admin changes any of this in Setup, and validation rules stop them saving a broken setting.</p>
         </div>
+        <div class="say"><p>So if FundMate raises the revenue minimum or adds a queue next month, an admin makes the change in Setup and no code is deployed.</p></div>
+        <div class="say next"><p>That's the design. Here's what a user sees when the data is wrong.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -271,6 +302,7 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
     <details class="scene" data-scene="s4">
       <summary><span class="scene-title">4. Validation, as a user</span><span class="scene-time">2:30-4:00</span><span class="scene-sub">Cedar and Pine, EIN, owner age</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Chrome tab 5 (Cedar and Pine application). Click through to the business and to Tom Becker from there.</div>
         <div class="show"><b>Show:</b> the <b>Cedar and Pine Landscaping</b> application. Press <b>Send to Underwriting</b>.</div>
         <div class="say"><p>The brief's sample data has problems. Cedar and Pine has no EIN, and its state is "Calif." When I press Send, nothing goes out. The screen lists every reason.</p></div>
         <div class="show"><b>Show:</b> the red <b>Not sent</b> screen. Click Finish, then open the business.</div>
@@ -279,6 +311,8 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
         <div class="say"><p>A validation rule checks the format. Now the correct value.</p></div>
         <div class="show"><b>Show:</b> EIN <code>33-4455667</code>, State <code>CA</code>, Save. Green "Saved" toast. Then open owner <b>Tom Becker</b>, set Date of Birth to <code>2015-01-01</code>, Save: "Business owners must be at least 18". Set it back to <code>1975-05-09</code>.</div>
         <div class="say"><p>Same for owners: SSN and date of birth are encrypted, and the rules check their format and that owners are adults.</p></div>
+        <div class="say"><p>Bad data stops before it leaves Salesforce, and the person who can fix it sees exactly what to fix.</p></div>
+        <div class="say next"><p>Cedar and Pine is clean now, so let's send real applications.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -286,6 +320,7 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
     <details class="scene" data-scene="s5">
       <summary><span class="scene-title">5. Create and send, live</span><span class="scene-time">4:00-5:30</span><span class="scene-sub">Blue Harbor, Apex Jobs</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Chrome tab 6 (Blue Harbor account), tab 8 (Apex Jobs), then tab 7 (Funding Applications list).</div>
         <div class="show"><b>Show:</b> the <b>Blue Harbor Coffee LLC</b> Account. In the New Funding Application form, click Next empty, then enter <code>0</code>.</div>
         <div class="say"><p>Creating an application starts from the business. The form won't take an empty request or a zero amount.</p></div>
         <div class="show"><b>Show:</b> enter <code>75000</code>, choose Working Capital, Next. "Created FA-…, 3 bank statements on file, average monthly deposits $53,250".</div>
@@ -295,6 +330,8 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
           <p>Sending runs in two steps. A claim step locks the Ready records and stamps a batch key, so two runs can't send the same application. Then a batch job sends them, 50 per callout, with one Idempotency-Key for the batch.</p>
           <p>The mock answered: Blue Harbor and Cedar and Pine are Acknowledged with tracking ids. Small Shop Bakery was rejected for low deposits and went straight to the Integration Exceptions queue.</p>
         </div>
+        <div class="say"><p>Every application keeps the partner's status and reason on the record, so a specialist sees why without opening a log.</p></div>
+        <div class="say next"><p>Here's the code behind that send.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -302,6 +339,7 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
     <details class="scene" data-scene="s6">
       <summary><span class="scene-title">6. Code walkthrough</span><span class="scene-time">5:30-7:15</span><span class="scene-sub">About 20 seconds per file</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> VS Code: UnderwritingClaimService, UnderwritingBatchSender, UnderwritingRetryJob, UnderwritingDecisionResource, DecisionProcessor.</div>
         <div class="show"><b><code>UnderwritingClaimService.cls</code></b>, at the two <code>FOR UPDATE</code> queries.</div>
         <div class="say"><p>The claim locks the rows, reads them again under the lock, and only moves the ones still Ready. In my org I started two send runs at the same moment: one batch ran, the other claimed nothing, and all 1,000 applications had a single batch key.</p></div>
         <div class="show"><b><code>UnderwritingBatchSender.cls</code></b>, at <code>sharedKey</code> and <code>retryBatch</code>.</div>
@@ -312,6 +350,7 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
         <div class="say"><p>The inbound endpoint only accepts the integration user: the partner gets a token with OAuth client credentials, and any other token, even mine as admin, gets a 403. Then it checks an HMAC-SHA256 signature over the timestamp and the raw body before parsing anything. A missing, wrong or old signature gets a 401.</p></div>
         <div class="show"><b><code>DecisionProcessor.cls</code></b>, at the <code>process</code> method's steps.</div>
         <div class="say"><p>Every decision gets its own result. It checks the shape, skips duplicates, matches the application and its tracking id, checks offer ids, then saves with partial success, so one bad decision never blocks the others.</p></div>
+        <div class="say next"><p>That covers sending and receiving in code. Let me show decisions arriving for real.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -319,6 +358,7 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
     <details class="scene" data-scene="s7">
       <summary><span class="scene-title">7. Decisions and failures</span><span class="scene-time">7:15-9:00</span><span class="scene-sub">Signed decisions, 401, 403, 429</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Terminal, Chrome tab 7 (Funding Applications list) for the approved application, then tab 9 (Integration Logs).</div>
         <div class="show"><b>Show:</b> the terminal, with the decision file set to Blue Harbor's reference and tracking id.</div>
 <pre>node scripts/send-decisions.mjs data/decisions/sample-decision.json</pre>
         <div class="say"><p>This script plays the underwriting API. It gets a client-credentials token as the integration user, signs the body and posts it. HTTP 200: one decision created.</p></div>
@@ -333,6 +373,8 @@ node scripts/send-decisions.mjs data/decisions/invalid-decisions.json</pre>
 <pre>sf apex run -o agentorg -f scripts/apex/seed-failure-demo.apex
 echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentorg</pre>
         <div class="say"><p>This business name makes the mock return 429 with Retry-After 60. The log shows each retry about a minute apart, and every attempt carries the same Idempotency-Key. Every request and every batch also logs its governor-limit usage. In the 1,000-application run, two runs started at once gave one batch, 20 of 20 executes and all 1,000 acknowledged; and 200 decisions in one request took 6 queries, 4 DML statements and under 400 milliseconds of CPU.</p></div>
+        <div class="say"><p>Every failure here ends somewhere a person can see it: a reason on the record, a queue, or an alert.</p></div>
+        <div class="say next"><p>Last, the tests.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
@@ -340,12 +382,14 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
     <details class="scene" data-scene="s8">
       <summary><span class="scene-title">8. Tests and wrap-up</span><span class="scene-time">9:00-9:30</span><span class="scene-sub">58 tests, 95%</span></summary>
       <div class="scene-body">
+        <div class="tabs-line"><b>On screen:</b> Terminal, or optional tab 10 (Apex Test Execution).</div>
         <div class="show"><b>Show:</b> the last test run in the terminal, or Setup → Apex Test Execution.</div>
 <pre>sf apex run test --target-org agentorg --class-names FundingApplicationValidatorTest,UnderwritingSendTest,UnderwritingDecisionResourceTest,SupportingServicesTest,ValidationRulesTest,SpecialistAccessTest --code-coverage --result-format human --wait 30</pre>
         <div class="say">
           <p>58 tests, 95% coverage. They include sending 1,000 applications, 200 decisions in one request, retries that keep the same key, routing to Integration Exceptions, log masking and the retention purge, a log that survives a rollback, a test that runs as a real funding specialist to prove they can't see other applications or approve one by hand, and one that proves any user other than the integration user gets a 403.</p>
           <p>Bonus items: failure alerts, the offer comparison component, backoff with jitter, a GitHub Actions workflow that tests in a scratch org, and an unlocked package. The README covers setup, payloads, the questions I asked and the answers, results from the org, and my assumptions. Thanks for watching.</p>
         </div>
+        <div class="say"><p>I'm happy to go through any part of it in the follow-up.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
