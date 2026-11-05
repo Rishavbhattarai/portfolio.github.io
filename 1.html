@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>FundMate prep</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --sunken: #eef0f4;
+    --ink: #14171f;
+    --ink-2: #4a5161;
+    --ink-3: #6b7282;
+    --line: #dde1e8;
+    --accent: #2848b8;
+    --accent-soft: #e6ebfa;
+    --ok: #1f7a4d;
+    --warn: #a3540f;
+    --bad: #b42a2a;
+    --radius: 12px;
+    --shadow: 0 1px 2px rgb(20 30 60 / .06), 0 6px 20px rgb(20 30 60 / .05);
+    --sans: ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1116;
+      --surface: #171a21;
+      --sunken: #1e222b;
+      --ink: #e8eaf0;
+      --ink-2: #b4bac7;
+      --ink-3: #8a91a0;
+      --line: #2a2f3a;
+      --accent: #8aa4ff;
+      --accent-soft: #1d2540;
+      --ok: #5cc48f;
+      --warn: #e7a35a;
+      --bad: #f07a7a;
+      --shadow: 0 1px 2px rgb(0 0 0 / .4);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 var(--sans);
+    min-height: 100dvh;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 96px; }
+
+  header.top { padding: 28px 0 8px; }
+  header.top h1 { font-size: 1.5rem; line-height: 1.2; letter-spacing: -.02em; margin: 0 0 6px; }
+  header.top p { margin: 0; color: var(--ink-2); font-size: .95rem; }
+
+  nav.tabs {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    margin: 16px -16px 0; padding: 10px 16px;
+  }
+  .tablist { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--sunken); padding: 4px; border-radius: var(--radius); }
+  .tablist button {
+    appearance: none; border: 0; background: transparent; color: var(--ink-2);
+    font: 600 .9rem/1 var(--sans); padding: 11px 6px; border-radius: 9px; cursor: pointer;
+    white-space: nowrap; transition: background .2s, color .2s, transform .1s;
+  }
+  .tablist button:active { transform: scale(.98); }
+  .tablist button[aria-selected="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
+
+  section.panel { display: none; padding-top: 20px; }
+  section.panel.active { display: block; animation: rise .25s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { section.panel.active { animation: none; } .tablist button { transition: none; } }
+
+  h2 { font-size: 1.2rem; letter-spacing: -.01em; margin: 32px 0 10px; }
+  h2:first-child { margin-top: 4px; }
+  h3 { font-size: 1rem; margin: 20px 0 8px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--ink-3); font-size: .9rem; }
+  code, .mono { font-family: var(--mono); font-size: .86em; }
+  :not(pre) > code { background: var(--sunken); padding: 1px 5px; border-radius: 5px; }
+  pre {
+    background: var(--sunken); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px; overflow-x: auto; font: .8rem/1.55 var(--mono); margin: 8px 0 14px;
+  }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 12px; padding-left: 20px; }
+  li { margin: 4px 0; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin: 12px 0; }
+
+  /* Script tab */
+  .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 18px; }
+  .meta div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; }
+  .meta b { display: block; font-size: 1.15rem; letter-spacing: -.01em; }
+  .meta span { color: var(--ink-3); font-size: .78rem; }
+  .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line); }
+  .check:first-of-type { border-top: 0; }
+  .check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+  .check label { flex: 1; }
+  details.scene { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin: 10px 0; overflow: hidden; }
+  details.scene > summary {
+    list-style: none; cursor: pointer; padding: 14px 16px; display: grid;
+    grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center;
+  }
+  details.scene > summary::-webkit-details-marker { display: none; }
+  .scene-title { font-weight: 650; }
+  .scene-time { font: .8rem var(--mono); color: var(--ink-3); grid-row: span 2; text-align: right; }
+  .scene-sub { color: var(--ink-3); font-size: .85rem; }
+  details.scene[open] > summary { border-bottom: 1px solid var(--line); }
+  details.scene.done .scene-title { color: var(--ink-3); text-decoration: line-through; }
+  .scene-body { padding: 14px 16px 16px; }
+  .show { font-size: .9rem; color: var(--ink-2); padding-left: 12px; border-left: 3px solid var(--line); margin: 12px 0; }
+  .show b { color: var(--ink); }
+  .say { font-size: 1.06rem; line-height: 1.65; padding: 12px 14px; background: var(--accent-soft); border-radius: 10px; margin: 12px 0; }
+  .say p:last-child { margin: 0; }
+  .done-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: .9rem; color: var(--ink-2); }
+  .done-row input { width: 20px; height: 20px; accent-color: var(--accent); }
+
+  /* Diagrams */
+  .flow { display: grid; gap: 0; margin: 12px 0; }
+  .node {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; font-size: .92rem;
+  }
+  .node b { display: block; font-size: .95rem; }
+  .node small { color: var(--ink-3); display: block; line-height: 1.45; }
+  .node.hl { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+  .arrow { text-align: center; color: var(--ink-3); font-size: .8rem; line-height: 1; padding: 5px 0; }
+  .arrow::before { content: "↓"; display: block; font-size: 1rem; color: var(--accent); }
+  .lane { font: 600 .75rem var(--sans); color: var(--accent); margin: 18px 0 6px; }
+  .actors { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+  .actors .node:first-child { grid-column: span 2; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .states { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0; font-size: .85rem; }
+  .pill { border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .pill.ok { border-color: var(--ok); color: var(--ok); }
+  .pill.bad { border-color: var(--bad); color: var(--bad); }
+  .pill.warn { border-color: var(--warn); color: var(--warn); }
+  .sep { color: var(--ink-3); }
+  .gate { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); font-size: .92rem; }
+  .gate:first-child { border-top: 0; }
+  .gate .n { font: 700 .8rem var(--mono); color: var(--accent); width: 22px; height: 22px; border-radius: 999px; background: var(--accent-soft); display: grid; place-items: center; }
+  .gate .code { font: 600 .8rem var(--mono); color: var(--bad); }
+  .timeline { position: relative; margin: 12px 0 12px 8px; padding-left: 18px; border-left: 2px solid var(--line); }
+  .timeline div { position: relative; padding: 4px 0 12px; font-size: .92rem; }
+  .timeline div::before { content: ""; position: absolute; left: -24px; top: 10px; width: 10px; height: 10px; border-radius: 999px; background: var(--surface); border: 2px solid var(--accent); }
+  .timeline div.end::before { background: var(--bad); border-color: var(--bad); }
+
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 8px 0 14px; }
+  th, td { text-align: left; padding: 8px 6px; vertical-align: top; }
+  thead th { font-size: .78rem; color: var(--ink-3); font-weight: 600; border-bottom: 1px solid var(--line); }
+  tbody tr + tr td { border-top: 1px solid var(--line); }
+  .tablewrap { overflow-x: auto; margin: 0 -4px; }
+
+  /* Brief tab */
+  .req { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin: 10px 0; }
+  .req summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; }
+  .req summary::-webkit-details-marker { display: none; }
+  .req .num { font: 700 .8rem var(--mono); color: var(--accent); }
+  .req .t { font-weight: 600; font-size: .95rem; }
+  .req .st { font: 600 .72rem var(--sans); color: var(--ok); border: 1px solid var(--ok); border-radius: 999px; padding: 2px 8px; }
+  .req .body { padding: 0 14px 14px 52px; font-size: .92rem; }
+  .req .body p.ask { color: var(--ink-2); }
+  .req .body p.did { margin-bottom: 4px; }
+  .qa { border-top: 1px solid var(--line); padding: 12px 0; }
+  .qa:first-of-type { border-top: 0; padding-top: 0; }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .qa .a { color: var(--ink-2); font-size: .94rem; margin: 0; }
+  .tag { font: 600 .72rem var(--sans); color: var(--ok); }
+
+  footer { margin-top: 40px; color: var(--ink-3); font-size: .8rem; }
+  @media (min-width: 640px) {
+    header.top h1 { font-size: 1.9rem; }
+    .flow.wide { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>FundMate take-home: prep</h1>
+    <p>Salesforce Developer assignment. Script for the video, how the case fits together, and what the brief asks for.</p>
+  </header>
+
+  <nav class="tabs" aria-label="Sections">
+    <div class="tablist" role="tablist">
+      <button role="tab" id="t-script" aria-controls="script" aria-selected="true">Script</button>
+      <button role="tab" id="t-case" aria-controls="case" aria-selected="false">Case</button>
+      <button role="tab" id="t-brief" aria-controls="brief" aria-selected="false">Brief</button>
+    </div>
+  </nav>
+
+  <!-- ============ SCRIPT ============ -->
+  <section class="panel active" id="script" role="tabpanel" aria-labelledby="t-script">
+    <div class="meta">
+      <div><b>9:30</b><span>target length</span></div>
+      <div><b>8</b><span>scenes</span></div>
+      <div><b>5-10</b><span>minutes allowed</span></div>
+    </div>
+    <p class="muted">Covers what the brief asks for: deployment, a code walkthrough, and a live demo with sample payloads, data written back to Salesforce, and failures handled. Say it in your own words; the times are targets. Ticks are saved on this phone.</p>
+
+    <h2>Before you record</h2>
+    <div class="card" id="checklist">
+      <div class="check"><input type="checkbox" id="c1"><label for="c1">Reset and seed fresh data:
+<pre>sf apex run -o agentorg -f scripts/apex/reset-demo-data.apex
+sf apex run -o agentorg -f scripts/apex/seed-sample-data.apex</pre>Creates Blue Harbor, Ridgeview, Lumen, Cedar and Pine and Small Shop Bakery, each with a Draft application.</label></div>
+      <div class="check"><input type="checkbox" id="c2"><label for="c2"><b>Pause the sweep</b> so nothing sends on its own:
+<pre>echo "for (CronTrigger c : [SELECT Id FROM CronTrigger WHERE CronJobDetail.Name LIKE 'FundMate%']) System.abortJob(c.Id);" | sf apex run -o agentorg</pre>Afterwards turn it back on: <code>sf apex run -o agentorg -f scripts/apex/setup-org.apex</code></label></div>
+      <div class="check"><input type="checkbox" id="c3"><label for="c3">Browser tabs, in order: FundMate app on <b>Cedar and Pine Landscaping</b>, the <b>Funding Applications</b> list, Setup → <b>Apex Jobs</b>, the <b>Integration Logs</b> tab.</label></div>
+      <div class="check"><input type="checkbox" id="c4"><label for="c4">VS Code open with <code>UnderwritingClaimService</code>, <code>UnderwritingBatchSender</code>, <code>UnderwritingRetryJob</code>, <code>UnderwritingDecisionResource</code>, <code>DecisionProcessor</code>, <code>Payload_Field_Map.business_ein</code>.</label></div>
+      <div class="check"><input type="checkbox" id="c5"><label for="c5">In <code>data/decisions/sample-decision.json</code>, set <code>applicationReference</code> and <code>trackingId</code> to the Blue Harbor application's values after it is Acknowledged.</label></div>
+      <div class="check"><input type="checkbox" id="c6"><label for="c6">Terminal font turned up. Slack, email and notifications closed. Nothing showing <code>.env.local</code>.</label></div>
+      <div class="check"><input type="checkbox" id="c7"><label for="c7">If a page looks old after a redeploy: hard-reload, or log out and back in.</label></div>
+    </div>
+
+    <h2>Scenes</h2>
+
+    <details class="scene" open data-scene="s1">
+      <summary><span class="scene-title">1. Intro</span><span class="scene-time">0:00-0:30</span><span class="scene-sub">FundMate app home</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the FundMate app home.</div>
+        <div class="say">
+          <p>Hi, I'm Rishav. This is my take-home for FundMate: a native Salesforce app that builds funding applications from a business's data, sends them to an underwriting API in batches of 50, and takes signed decisions back through a REST endpoint. Decisions create offers and route the application to the right queue.</p>
+          <p>Before building, I sent Deepak a short design doc with three questions. He confirmed all three and asked for one more queue, Integration Exceptions. Everything you'll see includes that.</p>
+        </div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s2">
+      <summary><span class="scene-title">2. Deployment</span><span class="scene-time">0:30-1:30</span><span class="scene-sub">Terminal, then Named Credential</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the terminal. Run the commands, or show output from an earlier run.</div>
+<pre>sf project deploy start --target-org agentorg --source-dir force-app
+sf org assign permset --name FundMate_Admin --target-org agentorg
+sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
+        <div class="say">
+          <p>It's a standard Salesforce DX project. One deploy command pushes everything: the objects, Apex, Flows, Lightning components, permission sets and the five queues. It also installs as one unlocked package.</p>
+          <p>Then I assign the admin permission set and run a setup script. It schedules the send sweep every 15 minutes and adds me to the queues.</p>
+          <p>The mock Underwriting API is a Cloudflare Worker. Its URL lives in a Named Credential and its API key in an External Credential, so neither is in the code.</p>
+        </div>
+        <div class="show"><b>Show:</b> Setup → Named Credentials → Underwriting API for two seconds. The URL is visible, the key is not.</div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s3">
+      <summary><span class="scene-title">3. The design in one minute</span><span class="scene-time">1:30-2:30</span><span class="scene-sub">Data model, Custom Metadata</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the cheatsheet in a browser (org map, then problem, solution, proof), or the Case tab on this page.</div>
+        <div class="say">
+          <p>Account is the business and Contact is the owner, with SSN and date of birth encrypted. Bank statements belong to the business. When an application is created, it snapshots the last three months, so underwriting always sees exactly what was sent.</p>
+          <p>Most behaviour is configuration, not code.</p>
+        </div>
+        <div class="show"><b>Show:</b> Setup → Custom Metadata Types → Payload Field Map → <code>business.ein</code>, then Routing Rule.</div>
+        <div class="say">
+          <p>Each key in the API request is a metadata record: which object, which field, whether it's required, and the format it needs. Routing works the same way: status and amount range to a queue. Approvals over 250,000 go to Senior Funding, and partner rejections and send failures go to Integration Exceptions, as Deepak asked. An admin changes any of this in Setup, and validation rules stop them saving a broken setting.</p>
+        </div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s4">
+      <summary><span class="scene-title">4. Validation, as a user</span><span class="scene-time">2:30-4:00</span><span class="scene-sub">Cedar and Pine, EIN, owner age</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the <b>Cedar and Pine Landscaping</b> application. Press <b>Send to Underwriting</b>.</div>
+        <div class="say"><p>The brief's sample data has problems. Cedar and Pine has no EIN, and its state is "Calif." When I press Send, nothing goes out. The screen lists every reason.</p></div>
+        <div class="show"><b>Show:</b> the red <b>Not sent</b> screen. Click Finish, then open the business.</div>
+        <div class="say"><p>The business page in the FundMate app has a "Business details for underwriting" card, so I can fix the data right here.</p></div>
+        <div class="show"><b>Show:</b> edit <b>EIN</b> to <code>334455667</code> (no dash) and Save. "EIN must be in 12-3456789 format" appears.</div>
+        <div class="say"><p>A validation rule checks the format. Now the correct value.</p></div>
+        <div class="show"><b>Show:</b> EIN <code>33-4455667</code>, State <code>CA</code>, Save. Green "Saved" toast. Then open owner <b>Tom Becker</b>, set Date of Birth to <code>2015-01-01</code>, Save: "Business owners must be at least 18". Set it back to <code>1975-05-09</code>.</div>
+        <div class="say"><p>Same for owners: SSN and date of birth are encrypted, and the rules check their format and that owners are adults.</p></div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s5">
+      <summary><span class="scene-title">5. Create and send, live</span><span class="scene-time">4:00-5:30</span><span class="scene-sub">Blue Harbor, Apex Jobs</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the <b>Blue Harbor Coffee LLC</b> Account. In the New Funding Application form, click Next empty, then enter <code>0</code>.</div>
+        <div class="say"><p>Creating an application starts from the business. The form won't take an empty request or a zero amount.</p></div>
+        <div class="show"><b>Show:</b> enter <code>75000</code>, choose Working Capital, Next. "Created FA-…, 3 bank statements on file, average monthly deposits $53,250".</div>
+        <div class="say"><p>The owners and the last three months of statements come from the business automatically: $53,250 a month, which matches the brief.</p></div>
+        <div class="show"><b>Show:</b> open the application, press <b>Send to Underwriting</b> (green "queued" screen). Also send <b>Cedar and Pine</b> and <b>Small Shop Bakery</b>. Then Apex Jobs: dispatcher, then batch. After about 30 seconds refresh the list.</div>
+        <div class="say">
+          <p>Sending runs in two steps. A claim step locks the Ready records and stamps a batch key, so two runs can't send the same application. Then a batch job sends them, 50 per callout, with one Idempotency-Key for the batch.</p>
+          <p>The mock answered: Blue Harbor and Cedar and Pine are Acknowledged with tracking ids. Small Shop Bakery was rejected for low deposits and went straight to the Integration Exceptions queue.</p>
+        </div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s6">
+      <summary><span class="scene-title">6. Code walkthrough</span><span class="scene-time">5:30-7:15</span><span class="scene-sub">About 20 seconds per file</span></summary>
+      <div class="scene-body">
+        <div class="show"><b><code>UnderwritingClaimService.cls</code></b>, at the two <code>FOR UPDATE</code> queries.</div>
+        <div class="say"><p>The claim locks the rows, reads them again under the lock, and only moves the ones still Ready. In my org I started two send runs at the same moment: one batch ran, the other claimed nothing, and all 1,000 applications had a single batch key.</p></div>
+        <div class="show"><b><code>UnderwritingBatchSender.cls</code></b>, at <code>sharedKey</code> and <code>retryBatch</code>.</div>
+        <div class="say"><p>This sends one batch. The Idempotency-Key is created once per batch and stored on each application. On a 429, a 5xx or a timeout, the same batch is retried with the same key, however long the wait, which is what FundMate confirmed: the partner ignores a repeated key for 24 hours. When a user resends after fixing something, the key is cleared, so the partner never ignores a corrected application.</p></div>
+        <div class="show"><b><code>UnderwritingRetryJob.cls</code></b>, at <code>execute</code>.</div>
+        <div class="say"><p>The retry job resends exactly those applications after the wait: a delayed job for up to 10 minutes, a one-off scheduled job for longer. Retry-After wins, otherwise exponential backoff with jitter. After five attempts the application is marked Send Failed and goes to Integration Exceptions.</p></div>
+        <div class="show"><b><code>UnderwritingDecisionResource.cls</code></b>, at the <code>SignatureVerifier.verify</code> call.</div>
+        <div class="say"><p>The inbound endpoint only accepts the integration user: the partner gets a token with OAuth client credentials, and any other token, even mine as admin, gets a 403. Then it checks an HMAC-SHA256 signature over the timestamp and the raw body before parsing anything. A missing, wrong or old signature gets a 401.</p></div>
+        <div class="show"><b><code>DecisionProcessor.cls</code></b>, at the <code>process</code> method's steps.</div>
+        <div class="say"><p>Every decision gets its own result. It checks the shape, skips duplicates, matches the application and its tracking id, checks offer ids, then saves with partial success, so one bad decision never blocks the others.</p></div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s7">
+      <summary><span class="scene-title">7. Decisions and failures</span><span class="scene-time">7:15-9:00</span><span class="scene-sub">Signed decisions, 401, 403, 429</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the terminal, with the decision file set to Blue Harbor's reference and tracking id.</div>
+<pre>node scripts/send-decisions.mjs data/decisions/sample-decision.json</pre>
+        <div class="say"><p>This script plays the underwriting API. It gets a client-credentials token as the integration user, signs the body and posts it. HTTP 200: one decision created.</p></div>
+        <div class="show"><b>Show:</b> the application: <b>Approved</b>, owner <b>Funding Specialists</b>, and the <b>Offer Comparison</b> panel.</div>
+        <div class="say"><p>The decision moved the application to Approved, and a Flow routed it using the rules in Custom Metadata. The offer shows total payback, payment and an estimated APR. The sample businesses are in states with commercial financing disclosure laws, so specialists need those numbers.</p></div>
+<pre>node scripts/send-decisions.mjs data/decisions/sample-decision.json
+node scripts/send-decisions.mjs data/decisions/sample-decision.json --tamper
+node scripts/send-decisions.mjs data/decisions/sample-decision.json --as-cli
+node scripts/send-decisions.mjs data/decisions/invalid-decisions.json</pre>
+        <div class="say"><p>Same request again: a duplicate, so nothing new is written. A tampered signature gets 401. My own admin token gets 403, because only the integration user may post. A file of bad decisions comes back with a precise reason for each one.</p></div>
+        <div class="show"><b>Show:</b> seed the rate-limit demo and start the send (the sweep is paused). Open Integration Logs about a minute later.</div>
+<pre>sf apex run -o agentorg -f scripts/apex/seed-failure-demo.apex
+echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentorg</pre>
+        <div class="say"><p>This business name makes the mock return 429 with Retry-After 60. The log shows each retry about a minute apart, and every attempt carries the same Idempotency-Key. Every request and every batch also logs its governor-limit usage. In the 1,000-application run, two runs started at once gave one batch, 20 of 20 executes and all 1,000 acknowledged; and 200 decisions in one request took 6 queries, 4 DML statements and under 400 milliseconds of CPU.</p></div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <details class="scene" data-scene="s8">
+      <summary><span class="scene-title">8. Tests and wrap-up</span><span class="scene-time">9:00-9:30</span><span class="scene-sub">58 tests, 95%</span></summary>
+      <div class="scene-body">
+        <div class="show"><b>Show:</b> the last test run in the terminal, or Setup → Apex Test Execution.</div>
+<pre>sf apex run test --target-org agentorg --class-names FundingApplicationValidatorTest,UnderwritingSendTest,UnderwritingDecisionResourceTest,SupportingServicesTest,ValidationRulesTest,SpecialistAccessTest --code-coverage --result-format human --wait 30</pre>
+        <div class="say">
+          <p>58 tests, 95% coverage. They include sending 1,000 applications, 200 decisions in one request, retries that keep the same key, routing to Integration Exceptions, log masking and the retention purge, a log that survives a rollback, a test that runs as a real funding specialist to prove they can't see other applications or approve one by hand, and one that proves any user other than the integration user gets a 403.</p>
+          <p>Bonus items: failure alerts, the offer comparison component, backoff with jitter, a GitHub Actions workflow that tests in a scratch org, and an unlocked package. The README covers setup, payloads, the questions I asked and the answers, results from the org, and my assumptions. Thanks for watching.</p>
+        </div>
+        <label class="done-row"><input type="checkbox"> Rehearsed</label>
+      </div>
+    </details>
+
+    <h2>If something goes wrong</h2>
+    <div class="card">
+      <div class="qa"><p class="q">A send happens before you press the button</p><p class="a">The sweep is still scheduled. Run the pause command.</p></div>
+      <div class="qa"><p class="q">Send Failed with "ApiKey does not exist"</p><p class="a">The External Credential key isn't set. Set it and resend.</p></div>
+      <div class="qa"><p class="q">Decision: "trackingId does not match"</p><p class="a">Copy the Tracking Id from the application into the JSON file.</p></div>
+      <div class="qa"><p class="q">Decision: "can't accept a decision"</p><p class="a">The application isn't Acknowledged yet. Send it first, or use another one.</p></div>
+      <div class="qa"><p class="q">The business or owner card is missing</p><p class="a">You're outside the FundMate app, or the page is cached. Open it from the FundMate app and hard-reload.</p></div>
+      <div class="qa"><p class="q">"Please select a choice" keeps showing</p><p class="a">Pick Use of Funds with the mouse or keyboard, then Next again.</p></div>
+      <div class="qa"><p class="q">Out of emails (15 a day on Developer Edition)</p><p class="a">Alerts still appear in-app under the bell. Say so.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ CASE ============ -->
+  <section class="panel" id="case" role="tabpanel" aria-labelledby="t-case">
+    <h2>The case</h2>
+    <p>FundMate funds small businesses based on their bank cash flow. A business applies, an outside underwriting service reviews it, and a Funding Specialist works the result. The task is to build the Salesforce side of that loop.</p>
+
+    <div class="actors">
+      <div class="node hl"><b>Salesforce (what I built)</b><small>Holds businesses, owners and bank statements. Builds applications, validates them, sends them, receives decisions, creates offers, routes work.</small></div>
+      <div class="node"><b>Underwriting API</b><small>Outside partner. Takes up to 50 applications per call (API key). Sends signed decisions back later.</small></div>
+      <div class="node"><b>Funding Specialists</b><small>Work decided applications from queues. Compare offers. Can't see others' applications or change Status by hand.</small></div>
+    </div>
+    <p class="muted">FundMate's public rules used in the build: average $10,000 a month over 3 months of statements; terms 3 to 18 months; daily, weekly or monthly payments. Sample businesses are in NY, TX, FL and CA, all with commercial financing disclosure laws, so each offer shows payback, payment and an estimated APR.</p>
+
+    <h2>End to end</h2>
+    <div class="lane">Create</div>
+    <div class="flow">
+      <div class="node"><b>Account + Contacts + Bank Statements</b><small>Business, owners (SSN and DOB encrypted), one statement per month</small></div>
+      <div class="arrow">New Funding Application flow</div>
+      <div class="node"><b>Funding Application (Draft)</b><small>Snapshots the latest 3 statements: average deposits, NSF count, months</small></div>
+    </div>
+    <div class="lane">Send</div>
+    <div class="flow">
+      <div class="node"><b>Send to Underwriting</b><small>Trigger re-snapshots and runs every check. Fails → Validation Failed with all reasons</small></div>
+      <div class="arrow">Ready</div>
+      <div class="node hl"><b>Claim (FOR UPDATE)</b><small>Locks Ready rows, re-reads under the lock, Ready → Queued, stamps a batch key. A second run claims nothing</small></div>
+      <div class="arrow">Batch Apex, scope 50</div>
+      <div class="node"><b>One callout per 50</b><small>Named Credential adds X-Api-Key. One Idempotency-Key per batch, stored on each application</small></div>
+      <div class="arrow">response per application</div>
+      <div class="pair">
+        <div class="node"><b>Acknowledged</b><small>Tracking Id saved</small></div>
+        <div class="node"><b>Rejected</b><small>To Integration Exceptions, alert</small></div>
+      </div>
+    </div>
+    <div class="lane">Receive</div>
+    <div class="flow">
+      <div class="node"><b>POST /underwriting/decisions</b><small>Partner calls with an OAuth token and an HMAC signature</small></div>
+      <div class="arrow">gates, then each decision</div>
+      <div class="node hl"><b>DecisionProcessor</b><small>Validates each decision on its own, skips duplicates, saves decisions and offers with partial success</small></div>
+      <div class="arrow">Status = decision</div>
+      <div class="node"><b>Route flow + Routing_Rule__mdt</b><small>Assigns the queue by status and amount</small></div>
+    </div>
+
+    <h2>Status lifecycle</h2>
+    <div class="states">
+      <span class="pill">Draft</span><span class="sep">→</span>
+      <span class="pill">Ready</span><span class="sep">or</span><span class="pill bad">Validation Failed</span><span class="sep">→</span>
+      <span class="pill">Queued</span><span class="sep">→</span>
+      <span class="pill ok">Acknowledged</span>
+      <span class="pill bad">Rejected</span>
+      <span class="pill bad">Send Failed</span><span class="sep">→</span>
+      <span class="pill ok">Approved</span>
+      <span class="pill bad">Declined</span>
+      <span class="pill warn">Needs More Info</span>
+    </div>
+    <p class="muted">Only Acknowledged and Needs More Info can take a decision. A new decision after Needs More Info marks old offers Superseded and keeps them.</p>
+
+    <h2>Data model</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Object</th><th>Is</th><th>Key fields</th></tr></thead>
+      <tbody>
+        <tr><td><b>Account</b></td><td>Business</td><td>Legal name, EIN (encrypted), State, Business Start Date → months in business</td></tr>
+        <tr><td><b>Contact</b></td><td>Owner</td><td>Name, DOB and SSN (encrypted), Ownership %</td></tr>
+        <tr><td><b>Bank_Statement__c</b></td><td>One month</td><td>Month, Total Deposits, NSF Count; unique per business and month</td></tr>
+        <tr><td><b>Funding_Application__c</b></td><td>The request, private</td><td>Amount, Use of Funds, Status, Reason, Tracking Id, Batch Key, Idempotency Key, snapshot</td></tr>
+        <tr><td><b>Underwriting_Decision__c</b></td><td>A decision</td><td>Decision Id (unique), decision, reason</td></tr>
+        <tr><td><b>Funding_Offer__c</b></td><td>An offer</td><td>Offer Id (unique), amount, factor rate, term, frequency; payback, payment, APR</td></tr>
+        <tr><td><b>Integration_Log__c</b></td><td>Log</td><td>Level, source, message (masked), HTTP status, limits snapshot</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Inbound security gates</h2>
+    <div class="card">
+      <div class="gate"><span class="n">1</span><span><b>OAuth token</b><br><span class="muted">Client credentials, runs as the integration user</span></span><span class="code">401</span></div>
+      <div class="gate"><span class="n">2</span><span><b>Custom permission</b><br><span class="muted">Only FundMate_Integration has it. Admin token refused</span></span><span class="code">403</span></div>
+      <div class="gate"><span class="n">3</span><span><b>HMAC-SHA256 signature</b><br><span class="muted">Over timestamp + "." + raw body, 5-minute window, constant-time compare</span></span><span class="code">401</span></div>
+      <div class="gate"><span class="n">4</span><span><b>Request shape and size</b><br><span class="muted">JSON with a decisions array, at most 500</span></span><span class="code">400 / 413</span></div>
+      <div class="gate"><span class="n">5</span><span><b>Each decision</b><br><span class="muted">Known app, matching tracking id, accepting status, valid offers (term 3-18)</span></span><span class="code">rejected</span></div>
+    </div>
+
+    <h2>Retry with the same key</h2>
+    <div class="timeline">
+      <div><b>Attempt 1</b>: batch of 50, key <code>k-7f3…</code> → 429, Retry-After 60</div>
+      <div><b>Wait 60 s</b>: delayed Queueable (up to 10 min) or one-off scheduled job (longer)</div>
+      <div><b>Attempts 2 to 5</b>: same 50 applications, same key <code>k-7f3…</code></div>
+      <div class="end"><b>Still failing</b>: Send Failed → Integration Exceptions, owner and admins alerted</div>
+    </div>
+    <p class="muted">No Retry-After: exponential backoff with full jitter. 400/401/403 are not retried. A user resend clears the key. An application missing from a 2xx response gets a new key.</p>
+
+    <h2>Routing</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Status</th><th>Amount</th><th>Queue</th></tr></thead>
+      <tbody>
+        <tr><td>Approved</td><td>up to $250,000</td><td>Funding Specialists</td></tr>
+        <tr><td>Approved</td><td>over $250,000</td><td>Senior Funding Specialists</td></tr>
+        <tr><td>Needs More Info</td><td>any</td><td>Document Collection</td></tr>
+        <tr><td>Declined</td><td>any</td><td>Declined Review</td></tr>
+        <tr><td>Rejected, Send Failed</td><td>any</td><td>Integration Exceptions</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Sample businesses</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Business</th><th>Outcome</th></tr></thead>
+      <tbody>
+        <tr><td>Blue Harbor Coffee (NY)</td><td><span class="tag">Passes</span>, acknowledged, $53,250 avg</td></tr>
+        <tr><td>Ridgeview Auto (TX)</td><td><span class="tag">Passes</span>, acknowledged</td></tr>
+        <tr><td>Lumen Dental (FL)</td><td>Fails: only 2 statements</td></tr>
+        <tr><td>Cedar and Pine (Calif.)</td><td>Fails: no EIN, bad state. Fix on screen, then passes</td></tr>
+        <tr><td>Small Shop Bakery (my addition)</td><td>Passes validation, partner rejects (low deposits) → Integration Exceptions</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Proof from the org</h2>
+    <div class="tablewrap"><table>
+      <tbody>
+        <tr><td><b>1,000 sends</b></td><td>Two runs at once: 1 batch, 20 of 20 executes, 0 errors, all acknowledged</td></tr>
+        <tr><td><b>Per batch of 50</b></td><td>4 SOQL, 1 DML, about 110 ms CPU, 1 callout</td></tr>
+        <tr><td><b>200 decisions</b></td><td>5.7 s, 6 SOQL, 4 DML, 367 ms CPU</td></tr>
+        <tr><td><b>429 retry</b></td><td>5 attempts about 60 s apart, same key, then Send Failed</td></tr>
+        <tr><td><b>Tests</b></td><td>58, 95% coverage, every class above 85%; CI green; package 1.0.0 built</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- ============ BRIEF ============ -->
+  <section class="panel" id="brief" role="tabpanel" aria-labelledby="t-brief">
+    <h2>What the brief asks, and how I met it</h2>
+    <p class="muted">Tap a requirement to open it.</p>
+
+    <details class="req"><summary><span class="num">01</span><span class="t">Native Salesforce app</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Query sObjects to build applications, send them out, receive decisions, create offers, route to queues. Custom objects, Apex and Flow together; Flow for what admins change.</p>
+      <p class="did">Five custom objects, a platform event, 27 Apex classes, 4 Flows (create, send button, routing, statement defaults), 2 LWCs. Thresholds, field map and routing in Custom Metadata.</p></div></details>
+
+    <details class="req"><summary><span class="num">02</span><span class="t">API endpoint</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">POST /underwriting/decisions; many decisions per request; same decision may repeat; verify the signature and reject what can't be verified.</p>
+      <p class="did">Apex REST. Unique Decision Id makes repeats return "duplicate". HMAC check before parsing; 401 on failure. Only the integration user may call (403).</p></div></details>
+
+    <details class="req"><summary><span class="num">03</span><span class="t">Data handling</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Build the request from Account (name, EIN, state, time in business), Contact (name, DOB, SSN, ownership), statements (average deposits, NSF, count), application (amount, use of funds).</p>
+      <p class="did">Payload_Field_Map__mdt: one record per JSON key with source field, required flag and regex. Statements snapshot onto the application.</p></div></details>
+
+    <details class="req"><summary><span class="num">04</span><span class="t">External API integration</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Create applications, send up to 50 per request, write Status and Status Reason back, mock decisions to create offers, route each decided application.</p>
+      <p class="did">Claim, then Batch Apex scope 50. Status, Reason and Tracking Id per application. send-decisions.mjs plays the partner. Routing flow reads Routing_Rule__mdt.</p></div></details>
+
+    <details class="req"><summary><span class="num">05</span><span class="t">Mock Underwriting API</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Mock POST /v1/applications/batch with X-Api-Key auth.</p>
+      <p class="did">Cloudflare Worker. Failures repeat by business name: RATE LIMIT (429), SERVER ERROR (503), TIMEOUT (25 s), BAD REQUEST (400).</p></div></details>
+
+    <details class="req"><summary><span class="num">06</span><span class="t">Error handling</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Missing fields, bad formats, API errors (auth, 429, validation, timeouts), duplicates, decisions apps can't accept. One bad record can't fail the good ones. Logs survive rollbacks.</p>
+      <p class="did">Validation Failed with reasons; 429/5xx/timeout retried, 4xx not; per-decision results with partial success; Integration_Log_Event__e set to Publish Immediately.</p></div></details>
+
+    <details class="req"><summary><span class="num">07</span><span class="t">Security</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Authenticate the endpoint and verify signatures; no hardcoded secrets; protect SSN, DOB, EIN, bank data (GLBA).</p>
+      <p class="did">OAuth client credentials as an API-only user, custom permission, HMAC. Named/External Credential, protected setting. Classic Encryption, private sharing, masked logs, 90-day purge.</p></div></details>
+
+    <details class="req"><summary><span class="num">08</span><span class="t">Data validation</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Validate applications before sending; validate every decision before writing.</p>
+      <p class="did">33 validation rules (16 on records, 17 on configuration), a pre-send validator, and per-decision checks in DecisionProcessor.</p></div></details>
+
+    <details class="req"><summary><span class="num">09</span><span class="t">Scale and governor limits</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Send 1,000 and accept 200 decisions without hitting limits; never send twice even with two processes; retry respecting Retry-After; show evidence.</p>
+      <p class="did">Batch Apex, FOR UPDATE claim, same key on retry, Retry-After first then backoff with jitter. Limits snapshot in every log; Apex Jobs screenshot.</p></div></details>
+
+    <details class="req"><summary><span class="num">10</span><span class="t">Docs and tests</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Deploy and test instructions, sample payloads and responses, unit tests with 85% or more.</p>
+      <p class="did">README with setup, payloads, curl, results. 58 tests, 95%, every class above 85%.</p></div></details>
+
+    <details class="req"><summary><span class="num">11</span><span class="t">Demo video</span><span class="st" style="color:var(--warn);border-color:var(--warn)">Tonight</span></summary><div class="body">
+      <p class="ask">5-10 minutes: deployment, code walkthrough, live demo with payloads, data written back, at least one failure handled.</p>
+      <p class="did">Script tab. Failures shown: validation, rejection, 401, 403, 429 retry.</p></div></details>
+
+    <details class="req"><summary><span class="num">12</span><span class="t">Code sharing</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Zip of the DX project with all files, a README, and anything needed to run it.</p>
+      <p class="did">Zip built from the pushed commit, no secrets. Private GitHub repo too.</p></div></details>
+
+    <details class="req"><summary><span class="num">13</span><span class="t">Unlocked package (optional)</span><span class="st">Done</span></summary><div class="body">
+      <p class="ask">Package with all components and an install link.</p>
+      <p class="did">FundMate Underwriting 1.0.0, 04tbm000000vSafAAE, install link in the README.</p></div></details>
+
+    <details class="req"><summary><span class="num">+</span><span class="t">Bonus items</span><span class="st">All 4</span></summary><div class="body">
+      <p class="did">Failure alerts (owner, queue members, Integration Admins). Offer Comparison LWC. Exponential backoff with full jitter. GitHub Actions: scratch org deploy and tests, green.</p></div></details>
+
+    <h2>How it's graded</h2>
+    <p>Functionality, the questions asked, code quality, error handling and validation, scale, security, documentation, the video, and bonus items.</p>
+
+    <h2>Questions I asked Deepak</h2>
+    <div class="card">
+      <div class="qa"><p class="q">Is "end of day Wednesday" November 4 or 11?</p><p class="a">November 4.</p></div>
+      <div class="qa"><p class="q">How is each request signed: header, algorithm, coverage?</p><p class="a">Default confirmed: hex HMAC-SHA256 in X-Signature over X-Timestamp + "." + body. Older than 5 minutes rejected; 401 when missing, wrong or too old.</p></div>
+      <div class="qa"><p class="q">Does the batch endpoint take an idempotency key, so a retry after a timeout can't duplicate?</p><p class="a">Default confirmed: reuse the same Idempotency-Key on every retry of a batch; the partner ignores a repeat for 24 hours.</p></div>
+      <div class="qa"><p class="q">Which queues exist, and what decides where an application goes?</p><p class="a">Default confirmed (one queue per decision, over $250,000 to Senior), plus a new Integration Exceptions queue for partner rejections and send failures.</p></div>
+    </div>
+
+    <h2>Likely interview questions</h2>
+    <div class="card">
+      <div class="qa"><p class="q">Why Batch Apex and not chained Queueables?</p><p class="a">Each execute gets fresh limits and one callout per 50. Chained Queueables hit Developer Edition's chain depth, and one transaction allows only 120 s of callouts.</p></div>
+      <div class="qa"><p class="q">How do you stop two runs sending the same application?</p><p class="a">FOR UPDATE locks the Ready rows, the claim re-reads them under the lock and only moves the ones still Ready to Queued with its batch key, before any callout. The second run finds nothing Ready.</p></div>
+      <div class="qa"><p class="q">What if the callout times out but the partner got it?</p><p class="a">The retry sends the same applications with the same Idempotency-Key, so the partner ignores the repeat for 24 hours.</p></div>
+      <div class="qa"><p class="q">Why does the log survive a rollback?</p><p class="a">Logs are published as a platform event set to Publish Immediately; a subscriber writes Integration_Log__c in its own transaction.</p></div>
+      <div class="qa"><p class="q">Why verify the signature before parsing?</p><p class="a">The HMAC is over the raw bytes. Parsing first wastes work on forged requests and re-serialising could change the bytes.</p></div>
+      <div class="qa"><p class="q">Why are some classes without sharing?</p><p class="a">System work must see every relevant record (claiming queue-owned apps, writing results, logging). Each of the 11 says why in its header; user-facing code runs in user mode.</p></div>
+      <div class="qa"><p class="q">What would you change for production?</p><p class="a">Shield Platform Encryption instead of Classic, Retry-After as an HTTP date, a real partner sandbox, monitoring dashboards on Integration_Log__c, and a managed package with a namespace.</p></div>
+      <div class="qa"><p class="q">You used AI tools. Can you explain every part?</p><p class="a">Yes. Walk through the claim, the retry key, the signature check and DecisionProcessor without notes.</p></div>
+    </div>
+  </section>
+
+  <footer>Private prep page. Not linked from the site.</footer>
+</div>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function show(id, push) {
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).classList.toggle('active', on);
+    });
+    if (push) history.replaceState(null, '', '#' + id);
+    window.scrollTo(0, 0);
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { show(t.getAttribute('aria-controls'), true); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus(); next.click();
+    });
+  });
+  var start = location.hash.slice(1);
+  if (['script', 'case', 'brief'].indexOf(start) >= 0) show(start, false);
+
+  // Saved ticks (this device only)
+  var KEY = 'fundmate-prep-v1';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+
+  document.querySelectorAll('#checklist input[type="checkbox"]').forEach(function (box) {
+    box.checked = !!saved[box.id];
+    box.addEventListener('change', function () { saved[box.id] = box.checked; save(); });
+  });
+  document.querySelectorAll('details.scene').forEach(function (d) {
+    var box = d.querySelector('.done-row input');
+    var id = d.getAttribute('data-scene');
+    box.checked = !!saved[id];
+    d.classList.toggle('done', box.checked);
+    box.addEventListener('change', function () {
+      saved[id] = box.checked; save();
+      d.classList.toggle('done', box.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>
