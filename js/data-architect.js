@@ -5,18 +5,28 @@
  * files can grow module by module without resetting anything.
  * NOTE: fetch() requires http(s), e.g. `npx serve` locally.
  *
- * Study system: understand (notes, Explain it), remember (recall ratings,
- * Study today queue, recall mode, SM-2 flashcards, quizzes), focus (timer).
+ * Study system, in three phases:
+ *  Understand: syllabus map (bird's-eye tree, recreate-from-memory mode),
+ *              notes, Explain it (Feynman box).
+ *  Remember:   recall ratings with a forgetting-curve schedule, revision
+ *              timetable, red/amber/green recall matrix, memory hooks,
+ *              interleaved SM-2 flashcards and quizzes.
+ *  Focus:      Pomodoro timer with custom lengths and optional brown noise.
  */
 (function () {
   'use strict';
 
   const STORAGE_KEY = 'daStudy.v1';
   const DAY = 86400000;
-  const VIEWS = ['home', 'materials', 'notes', 'quiz', 'cards'];
+  const VIEWS = ['home', 'map', 'materials', 'notes', 'quiz', 'cards'];
   // Recall rating (1-5) -> days until the next review
   const REVIEW_GAP = { 1: 1, 2: 1, 3: 3, 4: 7, 5: 30 };
   const RATING_LABEL = { 1: 'Blank', 2: 'Shaky', 3: 'Partly', 4: 'Solid', 5: 'Easy' };
+  // Forgetting curve: retention R = e^(-t/S). S is set so R falls to this value on the review day.
+  const TARGET_RETENTION = 0.8;
+  const MAX_GAP = 90;
+  // Recall matrix grades, in key order 1-2-3
+  const RECALL_GRADES = [['missed', 'Missed', 'ph-x', 'red'], ['partial', 'Partly', 'ph-minus', 'amber'], ['got', 'Got it', 'ph-check', 'green']];
   const TODAY_CAP = 8;
 
   const state = {
@@ -31,7 +41,8 @@
     noteDomain: null,
     route: { view: 'home', arg: null },
     expanded: null,    // syllabus row whose study panel is open
-    revealed: new Set(), // recall points revealed this visit
+    revealed: new Set(), // recall points and map nodes revealed this visit
+    lastRevealed: null,  // recall point the 1-3 keys grade
     quiz: null,        // active quiz session
     cards: null,       // active flashcard session
     progress: null
@@ -41,6 +52,21 @@
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const slug = (s) => String(s).toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const shuffle = (a) => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  // Interleave: never two items from the same module in a row while another module still has items
+  function interleave(list) {
+    const groups = new Map();
+    shuffle(list).forEach((x) => { const k = x.syllabusItem || ''; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); });
+    const out = [];
+    let prev = null;
+    while (out.length < list.length) {
+      let best = null;
+      groups.forEach((g, k) => { if (g.length && k !== prev && (best === null || g.length > groups.get(best).length)) best = k; });
+      if (best === null) best = prev;
+      out.push(groups.get(best).pop());
+      prev = best;
+    }
+    return out;
+  }
   const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* =========================================================
@@ -51,15 +77,18 @@
       done: {}, reread: {}, notesRead: {}, examDate: null, theme: null,
       reviews: {},      // itemId -> [{date, rating}]
       explain: {},      // id -> {text, status: 'clear'|'gaps', updated}
-      recall: {},       // note point key -> 'got'|'missed'
-      missed: {},       // note point key -> {front, back, source}
+      recall: {},       // note point key -> 'got'|'partial'|'missed'
+      missed: {},       // note point key -> {front, back, source} (missed or partly recalled)
       recallMode: false,
+      mapRecall: false, // syllabus map: hide node names until recalled
       srs: {},          // card id -> SM-2 state
       newPerDay: 20,
       quizStats: {},    // question id -> {right, wrong, last: true|false}
       focus: {},        // itemId -> minutes
       focusLog: [],     // [{date, itemId, min}]
-      timer: null       // active focus timer
+      timer: null,      // active focus timer
+      timerPreset: { work: 25, brk: 5 }, // last custom Pomodoro lengths
+      ambient: false    // brown noise during focus blocks
     };
   }
   function loadProgress() {
@@ -199,10 +228,29 @@
     const list = state.progress.reviews[id];
     return list && list.length ? list[list.length - 1] : null;
   }
+  // Gap after the latest rating. Each earlier Solid/Easy rating in an unbroken run
+  // doubles it (7 -> 14 -> 28 days), so well-known topics drift out of the way.
+  function reviewGap(id) {
+    const list = state.progress.reviews[id];
+    if (!list || !list.length) return null;
+    const last = list[list.length - 1];
+    let gap = REVIEW_GAP[last.rating];
+    if (last.rating >= 4) for (let i = list.length - 2; i >= 0 && list[i].rating >= 4; i--) gap *= 2;
+    return Math.min(gap, MAX_GAP);
+  }
   function nextDue(id) {
     const last = lastReview(id);
-    return last ? addDaysIso(last.date, REVIEW_GAP[last.rating]) : null;
+    return last ? addDaysIso(last.date, reviewGap(id)) : null;
   }
+  // Estimated share still remembered today, from the Ebbinghaus curve
+  function retention(id) {
+    const last = lastReview(id);
+    if (!last) return null;
+    const t = Math.max(0, daysBetween(last.date, todayIso()));
+    const stability = reviewGap(id) / Math.log(1 / TARGET_RETENTION);
+    return Math.exp(-t / stability);
+  }
+  const retentionTone = (r) => (r < 0.6 ? 'red' : r < TARGET_RETENTION ? 'amber' : 'green');
   function rate(id, rating) {
     const list = state.progress.reviews[id] || (state.progress.reviews[id] = []);
     const today = todayIso();
@@ -223,7 +271,7 @@
       const gaps = !!p.explain[it.id] && p.explain[it.id].status === 'gaps';
       let reason = null;
       if (gaps) reason = 'Explanation has gaps';
-      else if (due && due <= today) reason = daysBetween(due, today) > 0 ? `Review overdue since ${shortDate(due)}` : 'Review due today';
+      else if (due && due <= today) reason = daysBetween(due, today) > 0 ? `Fading, about ${Math.round(retention(it.id) * 100)}% left. Due ${shortDate(due)}` : 'Review due today';
       else if (p.done[it.id] && !last) reason = 'Finished, not rated yet';
       if (reason) rows.push({ it, reason, rating: last ? last.rating : 2.5, due: due || today, gaps });
     });
@@ -241,6 +289,13 @@
     const since = addDaysIso(todayIso(), -6);
     return state.progress.focusLog.filter((f) => f.date >= since).reduce((a, f) => a + f.min, 0);
   }
+  // Topic reviews plus flashcards due in the next 7 days
+  function upcomingReviews() {
+    const until = addDaysIso(todayIso(), 7);
+    const topics = state.syllabus.filter((i) => { const d = nextDue(i.id); return d && d <= until; }).length;
+    const cards = Object.values(state.progress.srs).filter((s) => s.dueDate <= until).length;
+    return topics + cards;
+  }
   function metrics() {
     const p = state.progress;
     const syl = state.syllabus;
@@ -256,7 +311,11 @@
       quizAcc: attempted.length ? attempted.filter((s) => s.last).length / attempted.length : null,
       questions: state.questions.length,
       flashcards: state.flashcards.length,
-      focus: focusThisWeek()
+      focus: focusThisWeek(),
+      // Active recall checks so far: quiz questions answered plus note points graded
+      tested: attempted.length + Object.keys(p.recall).length,
+      fading: syl.filter((i) => { const r = retention(i.id); return r !== null && r < TARGET_RETENTION; }).length,
+      upcoming: upcomingReviews()
     };
     const parts = [m.syllabus, m.core, m.notes].filter((x) => x.d > 0).map((x) => x.n / x.d);
     if (m.recall !== null) parts.push(m.recall / 5);
@@ -303,7 +362,7 @@
     const due = nextDue(id);
     if (!due) return '';
     const d = daysBetween(todayIso(), due);
-    return d <= 0 ? 'Review due' : d === 1 ? 'Review tomorrow' : `Review in ${d} days`;
+    return d < 0 ? 'Review overdue' : d === 0 ? 'Review due' : d === 1 ? 'Review tomorrow' : `Review in ${d} days`;
   }
 
   /* =========================================================
@@ -379,10 +438,10 @@
         <div class="items">${items.map(renderItem).join('')}</div></details>`;
     }).join('');
 
-    const history = [].concat(...Object.entries(p.reviews)
-      .map(([id, list]) => list.map((r) => ({ id, date: r.date, rating: r.rating }))))
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 40);
+    // Revision timetable: one row per rated topic, weakest retention first
+    const timetable = Object.keys(p.reviews).filter((id) => itemById(id) && p.reviews[id].length)
+      .map((id) => ({ id, r: retention(id), list: p.reviews[id].slice(-6) }))
+      .sort((a, b) => a.r - b.r);
 
     return `${topbar()}${banner()}
       <header class="view-head enter" style="--i:0"><h1>Syllabus</h1><p>Every module and document on the official trailmix, grouped by exam domain. Open a module to rate your recall, explain it, or start a focus session.</p></header>
@@ -402,6 +461,9 @@
             <div><dt>Core reading</dt><dd>${m.core.n}/${m.core.d}</dd></div>
             <div><dt>Avg recall</dt><dd class="${m.recall === null ? 'is-empty' : ''}">${m.recall === null ? 'None yet' : m.recall.toFixed(1) + ' / 5'}</dd></div>
             <div><dt>Quiz accuracy</dt><dd class="${m.quizAcc === null ? 'is-empty' : ''}">${m.quizAcc === null ? 'None yet' : Math.round(m.quizAcc * 100) + '%'}</dd></div>
+            <div><dt>Recall checks</dt><dd>${m.tested}</dd></div>
+            <div><dt>Fading topics</dt><dd class="${m.fading ? 'is-warn' : ''}">${m.fading}</dd></div>
+            <div><dt>Reviews, next 7 days</dt><dd>${m.upcoming}</dd></div>
             <div><dt>Focus, 7 days</dt><dd>${m.focus} min</dd></div>
           </dl>
         </article>
@@ -415,9 +477,18 @@
         </article>
       </section>
       ${groups}
-      <details class="group panel history">
-        <summary><h3>Review history</h3><span class="grow"></span><span class="mono">${history.length}</span><i class="ph ph-caret-down"></i></summary>
-        ${history.length ? `<div class="history__list">${history.map((h) => `<div class="history__row"><span class="mono">${shortDate(h.date)}</span><span class="history__name">${esc((itemById(h.id) || {}).name || h.id)}</span><span class="chip chip--${ratingTone(h.rating)}">${h.rating} ${RATING_LABEL[h.rating]}</span></div>`).join('')}</div>` : '<p class="today__empty history__empty">Ratings you give appear here, newest first.</p>'}
+      <details class="group panel history"${timetable.some((t) => t.r < TARGET_RETENTION) ? ' open' : ''}>
+        <summary><h3>Revision timetable</h3><span class="grow"></span><span class="mono">${timetable.length}</span><i class="ph ph-caret-down"></i></summary>
+        ${timetable.length ? `<p class="panel__hint timetable__hint">Each square is one review, oldest on the left. Retention is estimated from the forgetting curve. It drops each day after a review, and the topic is due once it falls below ${Math.round(TARGET_RETENTION * 100)}%.</p>
+        <div class="timetable" role="table" aria-label="Revision timetable">
+          <div class="timetable__row timetable__row--head" role="row"><span role="columnheader">Topic</span><span role="columnheader">Reviews</span><span role="columnheader">Retention</span><span role="columnheader">Next</span></div>
+          ${timetable.map((t) => `<div class="timetable__row" role="row">
+            <button type="button" class="timetable__name" role="cell" data-act="open-row" data-id="${t.id}">${esc(itemById(t.id).name)}</button>
+            <span class="timetable__cells" role="cell">${t.list.map((h) => `<span class="tcell tcell--${ratingTone(h.rating)}" title="${shortDate(h.date)}: ${h.rating} ${RATING_LABEL[h.rating]}"><span class="mono">${h.rating}</span></span>`).join('')}</span>
+            <span class="mono timetable__ret tone--${retentionTone(t.r)}" role="cell">${Math.round(t.r * 100)}%</span>
+            <span class="timetable__next" role="cell">${esc(dueLabel(t.id).replace('Review ', ''))}</span>
+          </div>`).join('')}
+        </div>` : '<p class="today__empty history__empty">Rate a module after you study it. Each rating lands here, and the forgetting curve decides when it comes back.</p>'}
       </details>`;
   }
 
@@ -466,8 +537,8 @@
       ${explainBox(it.id, `What is "${it.name}" about, and when would an architect use it?`)}
       <section class="panel__block panel__row">
         ${rereadBtn(it.id, true)}
-        <button class="btn btn--sm" type="button" data-act="focus-start" data-id="${it.id}" data-val="25"><i class="ph ph-timer"></i>Focus 25 min</button>
-        <button class="btn btn--sm" type="button" data-act="focus-start" data-id="${it.id}" data-val="50"><i class="ph ph-timer"></i>Focus 50 min</button>
+        <button class="btn btn--sm" type="button" data-act="focus-start" data-id="${it.id}" data-val="25" data-brk="5"><i class="ph ph-timer"></i>Focus 25 min</button>
+        <button class="btn btn--sm" type="button" data-act="focus-start" data-id="${it.id}" data-val="50" data-brk="10"><i class="ph ph-timer"></i>Focus 50 min</button>
       </section>
     </div>`;
   }
@@ -516,9 +587,8 @@
     return `<li class="recall${mark ? ' recall--' + mark : ''}">
       ${shown
         ? `<div class="recall__answer"><span class="recall__cue">${esc(front)}</span><span>${esc(back)}</span></div>
-           <span class="seg recall__grade">
-             <button type="button" class="seg__btn${mark === 'got' ? ' is-on is-green' : ''}" data-act="recall-mark" data-id="${esc(key)}" data-val="got" data-front="${esc(front)}" data-back="${esc(back)}" data-source="${esc(source)}"><i class="ph ph-check"></i>Got it</button>
-             <button type="button" class="seg__btn${mark === 'missed' ? ' is-on is-red' : ''}" data-act="recall-mark" data-id="${esc(key)}" data-val="missed" data-front="${esc(front)}" data-back="${esc(back)}" data-source="${esc(source)}"><i class="ph ph-x"></i>Missed</button>
+           <span class="seg recall__grade" role="group" aria-label="How well did you recall it">${RECALL_GRADES.map(([val, label, icon, tone], i) =>
+             `<button type="button" class="seg__btn${mark === val ? ' is-on is-' + tone : ''}" data-act="recall-mark" data-id="${esc(key)}" data-val="${val}" data-front="${esc(front)}" data-back="${esc(back)}" data-source="${esc(source)}"><i class="ph ${icon}"></i>${label}<kbd>${i + 1}</kbd></button>`).join('')}
            </span>`
         : `<button type="button" class="recall__hidden" data-act="reveal" data-id="${esc(key)}"><span class="recall__cue">${esc(front)}</span><span class="recall__tap"><i class="ph ph-eye"></i>Recall, then tap</span></button>`}
     </li>`;
@@ -526,17 +596,19 @@
   // A note point is plain text; in recall mode its cue is shown and the rest hidden
   function pointList(arr, keyBase, source, cls = '') {
     if (!state.progress.recallMode) return `<ul class="${cls}">${arr.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
-    return `<ul class="recall-list ${cls}">${arr.map((x, i) => recallPoint(`${keyBase}:${i}`, cueOf(x), x, source)).join('')}</ul>`;
+    // The cue is shown as the heading, so drop a "Label:" prefix from the revealed text
+    const body = (x, cue) => (x.startsWith(cue + ':') ? x.slice(cue.length + 1).trim().replace(/^./, (c) => c.toUpperCase()) : x);
+    return `<ul class="recall-list ${cls}">${arr.map((x, i) => { const cue = cueOf(x); return recallPoint(`${keyBase}:${i}`, cue, body(x, cue), source); }).join('')}</ul>`;
   }
   function recallToggle() {
     const on = state.progress.recallMode;
-    return `<button type="button" class="btn btn--sm${on ? ' btn--primary' : ''}" data-act="recall-toggle" aria-pressed="${on}"><i class="ph ${on ? 'ph-eye-slash' : 'ph-brain'}"></i>${on ? 'Recall mode on' : 'Recall mode'}</button>`;
+    return `${on ? '<span class="kbd-hint">Space reveals the next point. 1, 2, 3 grade it.</span>' : ''}<button type="button" class="btn btn--sm${on ? ' btn--primary' : ''}" data-act="recall-toggle" aria-pressed="${on}"><i class="ph ${on ? 'ph-eye-slash' : 'ph-brain'}"></i>${on ? 'Recall mode on' : 'Recall mode'}</button>`;
   }
   function recallScore(prefix) {
     const marks = Object.entries(state.progress.recall).filter(([k]) => k.startsWith(prefix + ':'));
     if (!marks.length) return '';
-    const got = marks.filter(([, v]) => v === 'got').length;
-    return `<span class="chip">${got}/${marks.length} recalled</span>`;
+    const n = (v) => marks.filter(([, x]) => x === v).length;
+    return `<span class="chip chip--green">${n('got')} got</span>${n('partial') ? `<span class="chip chip--amber">${n('partial')} partly</span>` : ''}${n('missed') ? `<span class="chip chip--red">${n('missed')} missed</span>` : ''}`;
   }
 
   /* =========================================================
@@ -579,7 +651,69 @@
           ${rereadBtn(rid, true)}
         </div>
       </article>
+      ${memoryHooks()}
       ${withNotes.length ? `<h2 class="section-title">Module notes</h2><div class="decks">${withNotes.map((i) => `<a class="card deck" href="#notes/${i.id}"><span class="deck__name">${esc(i.name)}</span><span class="mono">${noteCount(i.name)} points</span></a>`).join('')}</div>` : ''}`;
+  }
+
+  /* =========================================================
+     MEMORY HOOKS (cheat sheet of every flashcard that carries a mnemonic)
+     ========================================================= */
+  function memoryHooks() {
+    const hooks = state.flashcards.filter((c) => c.mnemonic);
+    if (!hooks.length) return '';
+    const body = state.progress.recallMode
+      ? `<ul class="recall-list">${hooks.map((c) => recallPoint(`hook:${c.id}`, c.front, `${c.back} Hook: ${c.mnemonic}`, c.syllabusItem)).join('')}</ul>`
+      : `<div class="hooks">${hooks.map((c) => `<article class="hook"><span class="hook__mnemonic"><i class="ph ph-lightbulb"></i>${esc(c.mnemonic)}</span><span class="hook__front">${esc(c.front)}</span><span class="hook__back">${esc(c.back)}</span><span class="hook__src">${esc(c.syllabusItem)}</span></article>`).join('')}</div>`;
+    return `<section class="card chapter hooks-wrap" aria-labelledby="hooksTitle">
+      <div class="chapter__head"><h2 id="hooksTitle">Memory hooks</h2><div class="item__meta">${recallScore('hook')}<span class="chip">${hooks.length}</span></div></div>
+      <p class="panel__hint">Short phrases that link a fact to something easy to picture. Read the hook first, then say the fact out loud.</p>
+      ${body}</section>`;
+  }
+
+  /* =========================================================
+     VIEW: MAP (bird's-eye syllabus tree; recreate it from memory)
+     ========================================================= */
+  // Concept labels come from "Label: detail" note points
+  function conceptsFor(itemName) {
+    return [].concat(...moduleNotesFor(itemName).map((n) => n.points || []))
+      .map((x) => { const c = x.indexOf(':'); return c > 0 && c <= 48 ? x.slice(0, c) : null; })
+      .filter(Boolean);
+  }
+  function mapNode(key, label, cls) {
+    if (state.progress.mapRecall && !state.revealed.has(key)) {
+      return `<button type="button" class="mm__blank ${cls}" data-act="map-reveal" data-id="${esc(key)}" aria-label="Hidden. Recall it, then reveal"><span aria-hidden="true">${'&nbsp;'.repeat(Math.min(28, Math.max(8, label.length)))}</span></button>`;
+    }
+    return `<span class="${cls}">${esc(label)}</span>`;
+  }
+  function renderMap() {
+    const p = state.progress;
+    const on = p.mapRecall;
+    let total = 0;
+    const domains = studyDomains().map((d) => {
+      const items = state.syllabus.filter((i) => i.domain === d.id);
+      if (!items.length) return '';
+      const rows = items.map((it) => {
+        const concepts = conceptsFor(it.name);
+        const last = lastReview(it.id);
+        total += 1 + concepts.length;
+        const head = `<span class="conf conf--${last ? ratingTone(last.rating) : 'none'}" aria-hidden="true"></span>${mapNode(`map:${it.id}`, it.name, 'mm__item-name')}
+          ${on ? '' : `<a class="mm__go" href="#notes/${it.id}" aria-label="Notes for ${esc(it.name)}"><i class="ph ph-arrow-right"></i></a>`}`;
+        if (!concepts.length) return `<li class="mm__item"><div class="mm__row">${head}</div></li>`;
+        return `<li class="mm__item"><details${on ? ' open' : ''}><summary class="mm__row">${head}<span class="mono mm__n">${concepts.length}</span></summary>
+          <ul class="mm__concepts">${concepts.map((c, i) => `<li>${mapNode(`map:${it.id}:${i}`, c, 'mm__concept')}</li>`).join('')}</ul></details></li>`;
+      }).join('');
+      return `<li class="mm__domain"><details open><summary><h2>${esc(d.name)}</h2><span class="chip">${d.weight}%</span><span class="mono mm__n">${items.length}</span><i class="ph ph-caret-down"></i></summary>
+        <ul class="mm__items">${rows}</ul></details></li>`;
+    }).join('');
+    const shown = [...state.revealed].filter((k) => k.startsWith('map:')).length;
+    return `${topbar()}${banner()}
+      <header class="view-head"><h1>Syllabus map</h1><p>The whole exam on one page: domains, the modules in each, and the concepts in your notes. Read it top-down before the details. Later, hide the names and rebuild the map from memory.</p></header>
+      <div class="mm__bar">
+        <button type="button" class="btn btn--sm${on ? ' btn--primary' : ''}" data-act="map-recall" aria-pressed="${on}"><i class="ph ${on ? 'ph-eye-slash' : 'ph-brain'}"></i>${on ? 'Recreating from memory' : 'Recreate from memory'}</button>
+        ${on ? `<span class="chip mono">${shown}/${total} revealed</span><button type="button" class="btn btn--sm" data-act="map-hide"><i class="ph ph-arrow-counter-clockwise"></i>Hide all again</button><span class="kbd-hint">Say each name out loud before you reveal it. Space reveals the next one.</span>` : ''}
+      </div>
+      <section class="panel mm"><div class="mm__root"><span class="nav__mark"><i class="ph ph-database"></i></span><span><strong>${esc(state.meta.exam.name)}</strong><small>${state.meta.exam.questions} questions, ${state.meta.exam.minutes} minutes</small></span></div>
+        <ul class="mm__domains">${domains}</ul></section>`;
   }
 
   function renderModuleNotes(item) {
@@ -628,7 +762,7 @@
     return shuffle(picked.slice(0, total));
   }
   function startQuiz(scope, mode) {
-    const pool = mode === 'mock' ? mockPool() : shuffle(quizPool(scope));
+    const pool = mode === 'mock' ? interleave(mockPool()) : interleave(quizPool(scope));
     if (!pool.length) return;
     const minutes = Math.ceil((state.meta.exam.minutes * pool.length) / state.meta.exam.questions);
     state.quiz = { scope, mode, ids: pool.map((q) => q.id), idx: 0, picks: {}, checked: {}, endAt: mode === 'mock' ? Date.now() + minutes * 60000 : null, finished: false };
@@ -775,9 +909,11 @@
   function startCards(scope, cram) {
     const cards = deckFor(scope);
     const today = todayIso();
-    const queue = cram
-      ? shuffle(cards)
-      : shuffle(cards.filter((c) => !isNew(c.id) && srsOf(c.id).dueDate <= today)).concat(shuffle(cards.filter((c) => isNew(c.id))).slice(0, state.progress.newPerDay));
+    const picked = cram
+      ? cards
+      : cards.filter((c) => !isNew(c.id) && srsOf(c.id).dueDate <= today).concat(shuffle(cards.filter((c) => isNew(c.id))).slice(0, state.progress.newPerDay));
+    // Mixed decks alternate modules; a single-module deck is just shuffled
+    const queue = interleave(picked);
     state.cards = { scope, queue, idx: 0, flipped: false, graded: 0, again: 0 };
   }
   function gradeCard(quality) {
@@ -808,7 +944,7 @@
           <h2>${st.total ? `${st.due} due, ${st.fresh} new` : 'No flashcards here yet'}</h2>
           <p>${st.total
             ? (st.due + st.fresh ? `Recall the answer before you flip. Then grade yourself honestly: cards you miss come back sooner.` : `All caught up. Next card is due ${nextDueIso ? shortDate(nextDueIso) : 'later'}.`)
-            : scope === 'missed' ? 'Points you mark "Missed" in recall mode collect here.' : 'Paste your flashcards for this module into the da-ingest agent and they appear here.'}</p>
+            : scope === 'missed' ? 'Points you mark Missed or Partly in recall mode collect here.' : 'Paste your flashcards for this module into the da-ingest agent and they appear here.'}</p>
           ${st.total ? `<div class="panel__row">${st.due + st.fresh ? `<button class="btn btn--primary" type="button" data-act="cards-start" data-id="${esc(scope)}"><i class="ph ph-play"></i>Start review</button>` : ''}<button class="btn" type="button" data-act="cards-cram" data-id="${esc(scope)}"><i class="ph ph-shuffle"></i>Go through all ${st.total}</button></div>` : ''}
         </div>`;
     }
@@ -819,8 +955,8 @@
     return `${topbar()}${banner()}
       <header class="view-head"><h1>Flashcards</h1><p>One deck per module, scheduled with spaced repetition. Review what's due every day, even for 10 minutes.</p></header>
       <section class="quiz-modes">
-        <button class="card mode" type="button" data-act="cards-start" data-id="all"${all.due + all.fresh ? '' : ' disabled'}><i class="ph ph-shuffle"></i><strong>Review all due</strong><span>${all.total ? `${all.due} due and ${all.fresh} new, mixed across modules.` : 'No cards yet.'}</span></button>
-        <a class="card mode" href="#cards/missed"><i class="ph ph-crosshair"></i><strong>Missed from notes</strong><span>${missed.length ? `${missed.length} ${missed.length === 1 ? 'point' : 'points'} you missed in recall mode.` : 'Points you miss in recall mode land here.'}</span></a>
+        <button class="card mode" type="button" data-act="cards-start" data-id="all"${all.due + all.fresh ? '' : ' disabled'}><i class="ph ph-shuffle"></i><strong>Review all due</strong><span>${all.total ? `${all.due} due and ${all.fresh} new, interleaved so no two cards in a row come from the same module.` : 'No cards yet.'}</span></button>
+        <a class="card mode" href="#cards/missed"><i class="ph ph-crosshair"></i><strong>Missed from notes</strong><span>${missed.length ? `${missed.length} ${missed.length === 1 ? 'point' : 'points'} you missed or only partly recalled.` : 'Points you mark Missed or Partly in recall mode land here.'}</span></a>
       </section>
       <div class="new-cap"><label for="newPerDay">New cards per session</label><input type="number" id="newPerDay" min="1" max="100" value="${state.progress.newPerDay}"></div>
       ${decks.length ? `<h2 class="section-title">By module</h2><div class="decks">${decks.map((x) => { const st = deckStats(x.cards); return `<a class="card deck" href="#cards/${x.i.id}"><span class="deck__name">${esc(x.i.name)}</span><span class="mono">${st.due} due · ${st.fresh} new</span></a>`; }).join('')}</div>`
@@ -838,23 +974,99 @@
     const remaining = s.queue.length - s.idx;
     return `${topbar()}
       <div class="quiz-top"><button class="btn btn--sm" type="button" data-act="cards-exit"><i class="ph ph-x"></i>Exit</button><span class="mono">${remaining} left</span><span class="chip">${esc(card.syllabusItem || '')}</span></div>
-      <button type="button" class="flash${s.flipped ? ' is-flipped' : ''}" data-act="cards-flip" aria-label="${s.flipped ? 'Answer shown' : 'Show answer'}">
+      <button type="button" class="flash${s.flipped ? ' is-flipped' : ''}" data-act="cards-flip" aria-label="${s.flipped ? 'Show question' : 'Show answer'}">
         <span class="flash__face flash__front"><small>Question</small><span>${esc(card.front)}</span><em>Recall it, then tap to flip</em></span>
         <span class="flash__face flash__back"><small>Answer</small><span>${esc(card.back)}</span>${card.mnemonic ? `<em><i class="ph ph-lightbulb"></i> ${esc(card.mnemonic)}</em>` : ''}</span>
       </button>
-      ${s.flipped ? `<div class="grades" role="group" aria-label="How well did you recall it">
+      <div class="grades" role="group" aria-label="How well did you recall it">
         <button type="button" class="grade grade--red" data-act="cards-grade" data-val="0">Again<small>1</small></button>
         <button type="button" class="grade grade--amber" data-act="cards-grade" data-val="3">Hard<small>2</small></button>
         <button type="button" class="grade grade--green" data-act="cards-grade" data-val="4">Good<small>3</small></button>
         <button type="button" class="grade grade--accent" data-act="cards-grade" data-val="5">Easy<small>4</small></button>
-      </div>` : '<p class="panel__hint flash__hint">Space flips the card. Keys 1 to 4 grade it.</p>'}`;
+      </div>
+      <p class="panel__hint flash__hint">Tap the card or press Space to flip it. Keys 1 to 4 grade it.</p>`;
+  }
+  // Flip in place: a re-render would replace the card and skip the animation
+  function flipCard() {
+    const s = state.cards;
+    const el = $('.flash');
+    s.flipped = !s.flipped;
+    el.classList.toggle('is-flipped', s.flipped);
+    el.setAttribute('aria-label', s.flipped ? 'Show question' : 'Show answer');
   }
 
   /* =========================================================
      FOCUS TIMER (clock-based, survives reloads)
      ========================================================= */
-  function startFocus(itemId, workMin) {
-    const breakMin = workMin >= 50 ? 10 : 5;
+  /* Sound: brown noise and a chime, made with Web Audio so there are no audio files to load.
+     Browsers only allow audio after a tap, so the context is created on Start. */
+  const audio = { ctx: null, src: null, gain: null };
+  function audioCtx() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!audio.ctx) audio.ctx = new AC();
+    if (audio.ctx.state === 'suspended') audio.ctx.resume();
+    return audio.ctx;
+  }
+  function noiseStart() {
+    const ctx = audioCtx();
+    if (!ctx || audio.src) return;
+    // Brown noise: integrated white noise, low-passed. Steady and low, like rain on a roof.
+    const len = ctx.sampleRate * 4;
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < len; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 900;
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+    gain.gain.setTargetAtTime(0.22, ctx.currentTime, 0.8);
+    src.connect(lp); lp.connect(gain); gain.connect(ctx.destination);
+    src.start();
+    audio.src = src; audio.gain = gain;
+  }
+  function noiseStop() {
+    if (!audio.src) return;
+    const { ctx, src, gain } = audio;
+    gain.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
+    src.stop(ctx.currentTime + 1.5);
+    audio.src = null;
+  }
+  function syncNoise() {
+    const t = state.progress.timer;
+    if (state.progress.ambient && t && t.phase === 'work' && t.pausedLeft === null) noiseStart(); else noiseStop();
+  }
+  function chime() {
+    const ctx = audio.ctx;
+    if (!ctx) return;
+    [0, 0.18].forEach((delay, i) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.frequency.value = i ? 784 : 659;
+      g.gain.setValueAtTime(0.0001, ctx.currentTime + delay);
+      g.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + delay + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + 0.9);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + delay); o.stop(ctx.currentTime + delay + 1);
+    });
+  }
+  // Sidebar button doubles as a live clock while a session runs
+  function updateFocusToggle() {
+    const label = $('#focusToggle span');
+    if (!label) return;
+    const t = state.progress.timer;
+    if (!t || t.phase === 'done') { label.textContent = t ? 'Session done' : 'Focus timer'; return; }
+    const left = t.pausedLeft != null ? t.pausedLeft : Math.max(0, t.endAt - Date.now());
+    label.textContent = `${t.phase === 'work' ? 'Focus' : 'Break'} ${fmtClock(left)}${t.pausedLeft != null ? ', paused' : ''}`;
+  }
+
+  function startFocus(itemId, workMin, breakMin) {
+    workMin = Math.min(120, Math.max(1, workMin || 25));
+    breakMin = Math.min(60, Math.max(1, breakMin || (workMin >= 50 ? 10 : 5)));
+    audioCtx();
     state.progress.timer = { itemId: itemId || null, workMin, breakMin, phase: 'work', endAt: Date.now() + workMin * 60000, pausedLeft: null, startedAt: Date.now(), min: false };
     saveProgress();
     renderTimer();
@@ -889,10 +1101,12 @@
       } else {
         t.phase = 'done';
       }
+      chime();
       saveProgress();
       renderTimer();
       return;
     }
+    updateFocusToggle();
     const clock = $('#focusClock');
     if (clock) clock.textContent = fmtClock(t.endAt - Date.now());
     const qc = $('#quizClock');
@@ -902,6 +1116,8 @@
     let host = $('#focus');
     if (!host) { host = document.createElement('div'); host.id = 'focus'; document.body.appendChild(host); }
     const t = state.progress.timer;
+    syncNoise();
+    updateFocusToggle();
     if (!t) { host.innerHTML = ''; host.className = ''; return; }
     const item = t.itemId ? itemById(t.itemId) : null;
     const left = t.pausedLeft != null ? t.pausedLeft : Math.max(0, t.endAt - Date.now());
@@ -917,11 +1133,12 @@
       <h2>${esc(item ? item.name : 'Study session')}</h2>
       ${t.phase === 'done'
         ? `<p class="focus-note">Nice work. ${t.workMin} minutes logged${item ? ' on this module' : ''}.</p>
-           <div class="panel__row"><button class="btn btn--primary" type="button" data-act="focus-start" data-id="${t.itemId || ''}" data-val="${t.workMin}"><i class="ph ph-play"></i>Another ${t.workMin} min</button><button class="btn" type="button" data-act="focus-stop">Close</button></div>`
+           <div class="panel__row"><button class="btn btn--primary" type="button" data-act="focus-start" data-id="${t.itemId || ''}" data-val="${t.workMin}" data-brk="${t.breakMin}"><i class="ph ph-play"></i>Another ${t.workMin} min</button><button class="btn" type="button" data-act="focus-stop">Close</button></div>`
         : `<span class="focus-clock mono" id="focusClock">${fmtClock(left)}</span>
            <p class="focus-note">${t.phase === 'work' ? 'Phone on Do Not Disturb and out of reach. One tab, one topic.' : 'Stand up, drink water, look away from the screen.'}</p>
            <div class="panel__row">
              <button class="btn" type="button" data-act="focus-pause"><i class="ph ${t.pausedLeft !== null ? 'ph-play' : 'ph-pause'}"></i>${t.pausedLeft !== null ? 'Resume' : 'Pause'}</button>
+             ${noiseBtn()}
              <button class="btn" type="button" data-act="focus-min"><i class="ph ph-arrows-in"></i>Minimize</button>
              <button class="btn" type="button" data-act="focus-stop"><i class="ph ph-stop"></i>Stop</button>
            </div>`}
@@ -931,15 +1148,25 @@
     let host = $('#focus');
     if (!host) { host = document.createElement('div'); host.id = 'focus'; document.body.appendChild(host); }
     if (state.progress.timer) { state.progress.timer.min = false; saveProgress(); renderTimer(); return; }
+    const pre = state.progress.timerPreset || { work: 25, brk: 5 };
     host.className = 'focus-overlay';
     host.innerHTML = `<div class="focus-box" role="dialog" aria-label="Start a focus session">
       <h2>Start a focus session</h2>
       <p class="focus-note">To log time on a specific module, start the timer from that module's panel on the Syllabus page.</p>
       <div class="panel__row">
-        <button class="btn btn--primary" type="button" data-act="focus-start" data-id="" data-val="25"><i class="ph ph-timer"></i>25 min + 5 break</button>
-        <button class="btn btn--primary" type="button" data-act="focus-start" data-id="" data-val="50"><i class="ph ph-timer"></i>50 min + 10 break</button>
-        <button class="btn" type="button" data-act="focus-cancel">Cancel</button>
-      </div></div>`;
+        <button class="btn btn--primary" type="button" data-act="focus-start" data-id="" data-val="25" data-brk="5"><i class="ph ph-timer"></i>25 + 5 break</button>
+        <button class="btn btn--primary" type="button" data-act="focus-start" data-id="" data-val="50" data-brk="10"><i class="ph ph-timer"></i>50 + 10 break</button>
+      </div>
+      <div class="focus-custom">
+        <div class="date-field"><label for="focusWork">Focus minutes</label><input type="number" id="focusWork" min="1" max="120" value="${pre.work}"></div>
+        <div class="date-field"><label for="focusBreak">Break minutes</label><input type="number" id="focusBreak" min="1" max="60" value="${pre.brk}"></div>
+        <button class="btn" type="button" data-act="focus-custom"><i class="ph ph-play"></i>Start custom</button>
+      </div>
+      <div class="panel__row">${noiseBtn()}<button class="btn" type="button" data-act="focus-cancel">Cancel</button></div></div>`;
+  }
+  function noiseBtn() {
+    const on = state.progress.ambient;
+    return `<button class="btn${on ? ' btn--on' : ''}" type="button" data-act="focus-noise" aria-pressed="${on}"><i class="ph ${on ? 'ph-speaker-high' : 'ph-speaker-slash'}"></i>Brown noise ${on ? 'on' : 'off'}</button>`;
   }
 
   /* =========================================================
@@ -955,7 +1182,7 @@
     const main = $('#main');
     const y = window.scrollY;
     main.classList.toggle('is-entering', !keepScroll);
-    main.innerHTML = { home: renderHome, materials: renderMaterials, notes: renderNotes, quiz: renderQuiz, cards: renderCards }[v]();
+    main.innerHTML = { home: renderHome, map: renderMap, materials: renderMaterials, notes: renderNotes, quiz: renderQuiz, cards: renderCards }[v]();
     document.querySelectorAll('#navLinks a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     window.scrollTo(0, keepScroll ? y : 0);
     updateThemeLabel();
@@ -1008,13 +1235,17 @@
         return render(true);
       }
       case 'recall-toggle': p.recallMode = !p.recallMode; state.revealed.clear(); saveProgress(); return render(true);
-      case 'reveal': state.revealed.add(id); return render(true);
+      case 'reveal': state.revealed.add(id); state.lastRevealed = id; return render(true);
       case 'recall-mark':
         p.recall[id] = val;
-        if (val === 'missed') p.missed[id] = { front: el.dataset.front, back: el.dataset.back, source: el.dataset.source };
-        else delete p.missed[id];
+        // Missed and partly recalled points both go to the "Missed from notes" deck
+        if (val === 'got') delete p.missed[id];
+        else p.missed[id] = { front: el.dataset.front, back: el.dataset.back, source: el.dataset.source };
         saveProgress();
         return render(true);
+      case 'map-reveal': state.revealed.add(id); return render(true);
+      case 'map-recall': p.mapRecall = !p.mapRecall; saveProgress(); return render(true);
+      case 'map-hide': [...state.revealed].filter((k) => k.startsWith('map:')).forEach((k) => state.revealed.delete(k)); return render(true);
       case 'quiz-start': startQuiz(id, val); state.route.arg === id || (id === 'all' && !state.route.arg) ? render(false) : (location.hash = `#quiz/${id}`); return;
       case 'quiz-pick': {
         const z = state.quiz; const q = qById(z.ids[z.idx]);
@@ -1035,12 +1266,27 @@
       case 'quiz-exit': state.quiz = null; return render(false);
       case 'cards-start': startCards(id, false); (state.route.arg || 'all') === id ? render(false) : (location.hash = `#cards/${id}`); return;
       case 'cards-cram': startCards(id, true); return render(false);
-      case 'cards-flip': if (!state.cards.flipped) { state.cards.flipped = true; render(true); } return;
+      case 'cards-flip': return flipCard();
       case 'cards-grade': gradeCard(Number(val)); return render(true);
       case 'cards-exit': state.cards = null; return render(false);
       case 'focus-open': return openFocusPicker();
       case 'focus-cancel': return renderTimer();
-      case 'focus-start': startFocus(id || null, Number(val)); return;
+      case 'focus-start': startFocus(id || null, Number(val), Number(el.dataset.brk) || null); return;
+      case 'focus-custom': {
+        const work = parseInt(($('#focusWork') || {}).value, 10) || 25;
+        const brk = parseInt(($('#focusBreak') || {}).value, 10) || 5;
+        p.timerPreset = { work, brk };
+        startFocus(null, work, brk);
+        return;
+      }
+      case 'focus-noise': {
+        p.ambient = !p.ambient;
+        saveProgress();
+        audioCtx();
+        // Swap only the button, so typed custom lengths in the picker survive
+        el.outerHTML = noiseBtn();
+        return syncNoise();
+      }
       case 'focus-pause': {
         const t = p.timer;
         if (t.pausedLeft !== null) { t.endAt = Date.now() + t.pausedLeft; t.pausedLeft = null; } else t.pausedLeft = Math.max(0, t.endAt - Date.now());
@@ -1067,11 +1313,38 @@
   function onInput(e) {
     if (e.target.dataset.explain !== undefined) onExplainInput(e.target);
   }
+  // Recall matrix keys (notes and map): Space reveals the next hidden point, 1-3 grade the last one revealed
+  function recallKey(e) {
+    const v = state.route.view;
+    const inNotes = v === 'notes' && state.progress.recallMode;
+    const inMap = v === 'map' && state.progress.mapRecall;
+    if (!inNotes && !inMap) return false;
+    if (e.key === ' ' && !e.target.closest('button, a, summary')) {
+      const next = $(inMap ? '.mm__blank' : '.recall__hidden');
+      if (!next) return false;
+      e.preventDefault();
+      next.click();
+      const shown = inMap ? null : $(`[data-act="recall-mark"][data-id="${CSS.escape(state.lastRevealed)}"]`);
+      if (shown) shown.scrollIntoView({ block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' });
+      return true;
+    }
+    if (inNotes && state.lastRevealed && ['1', '2', '3'].includes(e.key)) {
+      const btn = $(`[data-act="recall-mark"][data-id="${CSS.escape(state.lastRevealed)}"][data-val="${RECALL_GRADES[Number(e.key) - 1][0]}"]`);
+      if (btn) { btn.click(); return true; }
+    }
+    return false;
+  }
   function onKey(e) {
-    if (state.route.view !== 'cards' || !state.cards || /input|textarea/i.test(e.target.tagName)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test(e.target.tagName)) return;
+    if (recallKey(e)) return;
+    if (state.route.view !== 'cards' || !state.cards) return;
     const s = state.cards;
     if (!s.queue[s.idx]) return;
-    if (e.key === ' ' && !s.flipped) { e.preventDefault(); s.flipped = true; render(true); }
+    if (e.key === ' ') {
+      if (e.target.closest('.flash')) return; // the focused card flips itself through its click
+      e.preventDefault();
+      if (!e.repeat) flipCard();
+    }
     else if (s.flipped && ['1', '2', '3', '4'].includes(e.key)) { gradeCard([0, 3, 4, 5][Number(e.key) - 1]); render(true); }
   }
 
