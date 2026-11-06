@@ -262,5 +262,79 @@
       "Use truncation to quickly purge test data from custom objects (it is irreversible).",
       "Use these strategies regularly to keep LDV from degrading org performance."
     ]
+  },
+  {
+    "id": "data-integration-decision-guide-n1",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "points": [
+      "Scope: the guide covers three directions of data integration: Salesforce to external systems (outbound), external systems to Salesforce (inbound), and Salesforce org to Salesforce org.",
+      "Tool tiers: for each direction, tools are grouped into low-code, hybrid and pro-code options.",
+      "Change Data Capture: publishes record-level changes from Salesforce asynchronously. No custom payload, outbound only, and an add-on is needed for high volume.",
+      "Platform Events: carry a custom, structured payload for near real-time changes in either direction. They are not published automatically when a record changes; you publish them from Apex or Flow.",
+      "External Services: calls an external API described by an OpenAPI 2.0 or 3.0 spec from Flow, Apex, Einstein Bots or OmniStudio. Synchronous, outbound only, authenticated with Named Credentials.",
+      "Salesforce Connect: shows external data in the Salesforce UI as external objects without copying it into Salesforce. Uses OData or GraphQL, or a custom Apex adapter for other protocols.",
+      "Cross-Org adapter: a Salesforce Connect adapter that lets users in one org view or edit records in another org without replication.",
+      "Heroku Connect: bidirectional, asynchronous sync between Salesforce and a Heroku Postgres database. Needs a license; encrypted data is supported through Shield Connect.",
+      "MuleSoft Anypoint: enterprise API management for building, orchestrating and governing integrations, with prebuilt connectors and DataWeave for transformation. Capacity is sized in vCores.",
+      "Data 360: harmonizes data from many sources into one store. Actions and activations push data to other orgs; Data Cloud One lets other Salesforce orgs read it without replication, but not non-Salesforce platforms.",
+      "Outbound Messaging: sends SOAP messages over HTTP(S) when a workflow rule fires. Retries until delivered or 24 hours old, then drops the message. Salesforce no longer invests in it.",
+      "Event Relays: send platform events and change events from Salesforce to Amazon EventBridge only.",
+      "Native Salesforce APIs: REST, SOAP, Bulk, GraphQL and gRPC for inbound work. Composite APIs handle several objects, and allOrNone gives rollback protection.",
+      "Not integration foundations: Lightning Web Components, Flow on its own, Data Import Wizard, Data Loader, Salesforce CLI, a standalone OmniStudio Data Mapper and dataloader.io.",
+      "Salesforce to Salesforce: the old product has reached end of life. Use Data 360, Heroku Connect, MuleSoft, native APIs or the Cross-Org adapter instead."
+    ],
+    "principles": [
+      "Avoid unnecessary replication. If the data doesn't have to live in Salesforce, virtualize it with Salesforce Connect. If it already lives in Salesforce, let the external system call the Salesforce APIs.",
+      "If MuleSoft or another ESB or ETL tool is already in the landscape, reuse it instead of adding a new tool.",
+      "Run every integration as an Integration user with the API Only profile, and authenticate through External Client Applications rather than connected apps or SOAP login.",
+      "Apex callouts from a trigger or after DML must run in a future or queueable method.",
+      "When a flow updates a record and then inserts an external object, add a zero-second pause between them so the mixed transaction is split.",
+      "Platform events and custom Apex are not recommended for org-to-org integration. Platform events can't listen for the same event between orgs.",
+      "Don't use the Cross-Org adapter for aggregated reporting. Remote records appear as separate objects, so you can't total opportunity amounts across orgs.",
+      "The Replication API (getUpdated, getDeleted) can sync orgs but is not recommended."
+    ],
+    "recall": [
+      {
+        "q": "What is the first takeaway of the Data Integration decision guide?",
+        "a": "Avoid unnecessary data replication. Virtualize with Salesforce Connect, or have external systems read Salesforce through its APIs."
+      },
+      {
+        "q": "When is Change Data Capture the right outbound tool?",
+        "a": "When you need to publish record-level changes to an external system and don't need a custom payload."
+      },
+      {
+        "q": "When do you pick Platform Events over Change Data Capture?",
+        "a": "When you need a custom-defined, structured payload, or the event comes from an external system."
+      },
+      {
+        "q": "Which tool shows external data in Salesforce without storing it?",
+        "a": "Salesforce Connect with external objects (OData, GraphQL, a custom Apex adapter, or the Cross-Org adapter)."
+      },
+      {
+        "q": "What happens to an Outbound Message that can't be delivered?",
+        "a": "It stays in the queue and is retried until it is 24 hours old, then it is dropped."
+      },
+      {
+        "q": "Why is the Cross-Org adapter weak for a single view of opportunities across many orgs?",
+        "a": "Each remote org's records appear as a different external object, so you can't add up amounts across orgs."
+      },
+      {
+        "q": "Which auth setup does the guide recommend for every integration?",
+        "a": "An Integration user license with the API Only profile, authenticated through External Client Applications."
+      },
+      {
+        "q": "What can't Data Cloud One do?",
+        "a": "Share data with non-Salesforce platforms. It only lets other Salesforce orgs access Data 360 data by reference."
+      },
+      {
+        "q": "Which inbound low-code tool is ruled out when the ERP doesn't use Heroku Postgres?",
+        "a": "Heroku Connect, because it only syncs Salesforce with Heroku Postgres."
+      },
+      {
+        "q": "What is the main risk of exposing an OmniStudio Integration Procedure for ERP contact updates?",
+        "a": "Concurrency: several calls updating the same contact at once cause problems, because the API runs directly in Salesforce."
+      }
+    ]
   }
 ]

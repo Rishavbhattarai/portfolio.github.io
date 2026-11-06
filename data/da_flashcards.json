@@ -1357,5 +1357,274 @@
     "domain": "ldv",
     "front": "Can standard objects be truncated?",
     "back": "No, only eligible custom objects can."
+  },
+  {
+    "id": "data-integration-decision-guide-c1",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What are the three directions covered by the Data Integration decision guide?",
+    "back": "Salesforce to external systems, external systems to Salesforce, and Salesforce org to Salesforce org."
+  },
+  {
+    "id": "data-integration-decision-guide-c2",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What is the first takeaway of the Data Integration guide?",
+    "back": "Avoid unnecessary data replication.",
+    "mnemonic": "Don't copy, connect."
+  },
+  {
+    "id": "data-integration-decision-guide-c3",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "If data doesn't need to live in Salesforce, what does the guide suggest instead of copying it?",
+    "back": "Data virtualization with Salesforce Connect."
+  },
+  {
+    "id": "data-integration-decision-guide-c4",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "If data already lives in Salesforce and an external system needs it, what should the external system do?",
+    "back": "Read it through the Salesforce APIs instead of copying it out."
+  },
+  {
+    "id": "data-integration-decision-guide-c5",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What should you do if MuleSoft or another ESB/ETL tool is already in the landscape?",
+    "back": "Reuse it for the integration."
+  },
+  {
+    "id": "data-integration-decision-guide-c6",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which user setup is recommended for every integration?",
+    "back": "An Integration user license with the API Only profile."
+  },
+  {
+    "id": "data-integration-decision-guide-c7",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What should integrations authenticate with instead of connected apps or SOAP login?",
+    "back": "External Client Applications."
+  },
+  {
+    "id": "data-integration-decision-guide-c8",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Does Change Data Capture support a custom payload?",
+    "back": "No. It publishes record-level changes as they are.",
+    "mnemonic": "CDC sends Changes, not Custom data."
+  },
+  {
+    "id": "data-integration-decision-guide-c9",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which direction does Change Data Capture support?",
+    "back": "Outbound only: from Salesforce to external systems."
+  },
+  {
+    "id": "data-integration-decision-guide-c10",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What does Change Data Capture need for high-volume use?",
+    "back": "An add-on license."
+  },
+  {
+    "id": "data-integration-decision-guide-c11",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "When do you choose Platform Events?",
+    "back": "When you need a custom-defined, structured payload for near real-time changes, in either direction."
+  },
+  {
+    "id": "data-integration-decision-guide-c12",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Are Platform Events published automatically when a record changes?",
+    "back": "No. You publish them from Apex or Flow."
+  },
+  {
+    "id": "data-integration-decision-guide-c13",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What spec must an API follow to be used with External Services?",
+    "back": "OpenAPI 2.0 or 3.0."
+  },
+  {
+    "id": "data-integration-decision-guide-c14",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Is External Services synchronous or asynchronous?",
+    "back": "Synchronous (request and reply)."
+  },
+  {
+    "id": "data-integration-decision-guide-c15",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Does Salesforce Connect copy external data into Salesforce?",
+    "back": "No. It shows the data as external objects while the data stays in the external system."
+  },
+  {
+    "id": "data-integration-decision-guide-c16",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which protocols does Salesforce Connect support without custom code?",
+    "back": "OData and GraphQL."
+  },
+  {
+    "id": "data-integration-decision-guide-c17",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "How do you use Salesforce Connect with a system that doesn't speak OData or GraphQL?",
+    "back": "Write a custom adapter with the Apex Connector Framework."
+  },
+  {
+    "id": "data-integration-decision-guide-c18",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What does the Salesforce Connect Cross-Org adapter do?",
+    "back": "Lets users in one org view or edit records in another org without replication."
+  },
+  {
+    "id": "data-integration-decision-guide-c19",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Why can't the Cross-Org adapter total opportunity amounts across orgs?",
+    "back": "Each remote org's records appear as a different external object."
+  },
+  {
+    "id": "data-integration-decision-guide-c20",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What does Heroku Connect sync Salesforce with?",
+    "back": "A Heroku Postgres database, in both directions."
+  },
+  {
+    "id": "data-integration-decision-guide-c21",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "How does Heroku Connect support data encrypted at rest?",
+    "back": "Through Shield Connect."
+  },
+  {
+    "id": "data-integration-decision-guide-c22",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What unit is MuleSoft Anypoint capacity sized in?",
+    "back": "vCores."
+  },
+  {
+    "id": "data-integration-decision-guide-c23",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which MuleSoft language handles mapping and transformation?",
+    "back": "DataWeave."
+  },
+  {
+    "id": "data-integration-decision-guide-c24",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "When does the guide recommend MuleSoft Anypoint?",
+    "back": "When you need one enterprise-grade platform to build and manage integrations, replace point-to-point links, or get API management."
+  },
+  {
+    "id": "data-integration-decision-guide-c25",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What does Data Cloud One let other Salesforce orgs do?",
+    "back": "Access Data 360 data by reference, without replicating it."
+  },
+  {
+    "id": "data-integration-decision-guide-c26",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Does Data Cloud One support non-Salesforce platforms?",
+    "back": "No."
+  },
+  {
+    "id": "data-integration-decision-guide-c27",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "How does Data 360 move data out to another org?",
+    "back": "Through data actions and activations (batch, near real time or API based)."
+  },
+  {
+    "id": "data-integration-decision-guide-c28",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What message format does Outbound Messaging send?",
+    "back": "SOAP over HTTP(S)."
+  },
+  {
+    "id": "data-integration-decision-guide-c29",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "How long are undelivered Outbound Messages retried?",
+    "back": "Up to 24 hours, then they are dropped.",
+    "mnemonic": "Outbound Messages live for one day."
+  },
+  {
+    "id": "data-integration-decision-guide-c30",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What is Salesforce's investment stance on Outbound Messaging?",
+    "back": "Still supported, but no further investment planned."
+  },
+  {
+    "id": "data-integration-decision-guide-c31",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Where do Event Relays send events?",
+    "back": "Only to Amazon EventBridge."
+  },
+  {
+    "id": "data-integration-decision-guide-c32",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Where must an Apex callout from a trigger run?",
+    "back": "In a future or queueable method."
+  },
+  {
+    "id": "data-integration-decision-guide-c33",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which API parameter rolls back a composite request if one part fails?",
+    "back": "allOrNone."
+  },
+  {
+    "id": "data-integration-decision-guide-c34",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which Data Loader feature is Windows only?",
+    "back": "The command-line interface."
+  },
+  {
+    "id": "data-integration-decision-guide-c35",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "What happened to the Salesforce to Salesforce product?",
+    "back": "It reached end of life."
+  },
+  {
+    "id": "data-integration-decision-guide-c36",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Why are Platform Events a poor fit for org-to-org integration?",
+    "back": "They can't listen between orgs for the same event."
+  },
+  {
+    "id": "data-integration-decision-guide-c37",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "Which native API operations could sync orgs but are not recommended?",
+    "back": "The Replication API's getUpdated and getDeleted."
+  },
+  {
+    "id": "data-integration-decision-guide-c38",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "front": "How do you avoid a mixed DML error when a flow updates a record and then inserts an external object?",
+    "back": "Add a zero-second pause between the two steps."
   }
 ]

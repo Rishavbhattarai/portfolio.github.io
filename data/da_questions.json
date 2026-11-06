@@ -1472,5 +1472,246 @@
       "C"
     ],
     "explanation": "Objects on the master side, referenced by lookups, or having custom indexes, external IDs, or skinny tables can't be truncated."
+  },
+  {
+    "id": "data-integration-decision-guide-q1",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Universal Containers wants ERP order data visible on the Account page. The data must not be stored in Salesforce, and the ERP exposes an OData 4.0 endpoint. What should the architect recommend?",
+    "options": [
+      "A) Heroku Connect",
+      "B) Salesforce Connect with external objects",
+      "C) Change Data Capture",
+      "D) A nightly Bulk API 2.0 load"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Salesforce Connect shows external data in the Salesforce UI without replicating it, and OData 4.0 is a supported standard protocol."
+  },
+  {
+    "id": "data-integration-decision-guide-q2",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "When an opportunity is won, an external ERP must receive the changed opportunity fields. No custom payload is needed and the integration should be asynchronous. Which tool fits best?",
+    "options": [
+      "A) Change Data Capture",
+      "B) External Services",
+      "C) Outbound Messaging",
+      "D) Salesforce Connect"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Change Data Capture publishes record-level changes asynchronously. It is the fit when you don't need a custom payload. Outbound Messaging still works but receives no further investment."
+  },
+  {
+    "id": "data-integration-decision-guide-q3",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "An order system needs a payload that combines fields from Opportunity, its products and the owning region, published in near real time. Which tool fits best?",
+    "options": [
+      "A) Change Data Capture",
+      "B) Platform Events",
+      "C) Outbound Messaging",
+      "D) Data Loader"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Platform Events carry a custom-defined, structured payload. They are published from Apex or Flow, not automatically on record change."
+  },
+  {
+    "id": "data-integration-decision-guide-q4",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "An admin wants to call an ERP's create-order API from a record-triggered flow without writing Apex. The ERP API is described with an OpenAPI 3.0 spec. What should they use?",
+    "options": [
+      "A) Apex Actions",
+      "B) External Services",
+      "C) Platform Events",
+      "D) Heroku Connect"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "External Services registers an OpenAPI 2.0 or 3.0 described API and exposes its operations as invocable actions in Flow."
+  },
+  {
+    "id": "data-integration-decision-guide-q5",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "A developer makes an HTTP callout from an Opportunity trigger. What must they do?",
+    "options": [
+      "A) Run the callout in a future or queueable method",
+      "B) Wrap the callout in a Platform Event",
+      "C) Use Outbound Messaging instead",
+      "D) Nothing, triggers can call out synchronously"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Callouts from a trigger or after DML must use a future method or a queueable job. A callout in a trigger would hold the database connection open."
+  },
+  {
+    "id": "data-integration-decision-guide-q6",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Which two statements about Outbound Messaging are true? (Choose 2)",
+    "options": [
+      "A) It sends SOAP messages over HTTP(S)",
+      "B) It supports a custom JSON payload",
+      "C) Undelivered messages are dropped after 24 hours",
+      "D) It is the recommended tool for new outbound integrations"
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "explanation": "Outbound Messaging sends SOAP messages and retries for up to 24 hours. Salesforce keeps supporting it but no longer invests in it, so build new integrations with care."
+  },
+  {
+    "id": "data-integration-decision-guide-q7",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Each business unit runs its own Salesforce org. Leadership wants one org to show an aggregated view of accounts and opportunities from all BUs, with the least data replication. Which approach fits best?",
+    "options": [
+      "A) Salesforce Connect Cross-Org adapter",
+      "B) Data 360 ingestion with Data Cloud One access",
+      "C) Platform Events between orgs",
+      "D) Custom Apex callouts between orgs"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Data 360 ingests and harmonizes data from each org, and Data Cloud One lets other orgs access it without replication. The Cross-Org adapter shows each org's records as separate objects, so totals across orgs aren't possible."
+  },
+  {
+    "id": "data-integration-decision-guide-q8",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Why is the Salesforce Connect Cross-Org adapter a poor fit for summing opportunity amounts across several orgs?",
+    "options": [
+      "A) It doesn't support Opportunity",
+      "B) Each remote org's records appear as a different external object",
+      "C) It only works synchronously",
+      "D) It requires Heroku Postgres"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Records from each remote org appear as different objects in the central org, so there is no way to total amounts across all of them."
+  },
+  {
+    "id": "data-integration-decision-guide-q9",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Why are Platform Events not recommended for org-to-org data integration?",
+    "options": [
+      "A) They need a MuleSoft license",
+      "B) They can't listen for the same event between orgs",
+      "C) They only support SOAP",
+      "D) They are limited to one object"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The guide notes that platform events can't listen between organizations for the same event, which makes them a poor fit for org-to-org integration."
+  },
+  {
+    "id": "data-integration-decision-guide-q10",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "A company already runs MuleSoft Anypoint across its enterprise. A new ERP-to-Salesforce contact sync is needed, with complex transformation and other systems also receiving the contact. What should the architect recommend?",
+    "options": [
+      "A) Custom Apex REST service",
+      "B) MuleSoft Anypoint with the Salesforce connector and DataWeave",
+      "C) Data Import Wizard on a schedule",
+      "D) Outbound Messaging"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Reuse the existing ESB. MuleSoft provides prebuilt ERP and Salesforce connectors, DataWeave for transformation, and can syndicate to other systems."
+  },
+  {
+    "id": "data-integration-decision-guide-q11",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Which tool should NOT be the base of a data integration strategy?",
+    "options": [
+      "A) MuleSoft Anypoint",
+      "B) Native Salesforce APIs",
+      "C) Data Loader",
+      "D) Change Data Capture"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Data Loader and the Data Import Wizard complement data stewardship. They are not a recommended base for integration, and the Data Loader command line is Windows only."
+  },
+  {
+    "id": "data-integration-decision-guide-q12",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Which setup does the guide recommend for authenticating every integration?",
+    "options": [
+      "A) A System Administrator user with a connected app",
+      "B) An Integration user license with the API Only profile and External Client Applications",
+      "C) SOAP login with a shared user",
+      "D) A Named Credential owned by a sales user"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The guide recommends an Integration user with the API Only profile, and External Client Applications instead of connected apps or SOAP login."
+  },
+  {
+    "id": "data-integration-decision-guide-q13",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "Platform events and change events need to reach Amazon EventBridge with no middleware. Which feature does this?",
+    "options": [
+      "A) Event Relays",
+      "B) Outbound Messaging",
+      "C) External Services",
+      "D) Heroku Connect"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Event Relays send platform events and change data capture events from Salesforce to Amazon EventBridge, and to no other target."
+  },
+  {
+    "id": "data-integration-decision-guide-q14",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "An external system must create an Account, its Contacts and an Opportunity in one call, rolling everything back if any part fails. What should be used?",
+    "options": [
+      "A) Composite API with allOrNone set to true",
+      "B) Three separate Bulk API jobs",
+      "C) Outbound Messaging",
+      "D) Salesforce Connect"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Composite APIs support several objects in one request, and the allOrNone parameter rolls back the whole request if one part fails."
+  },
+  {
+    "id": "data-integration-decision-guide-q15",
+    "syllabusItem": "Data Integration Decision Guide",
+    "domain": "mdm",
+    "question": "A record-triggered flow updates an Opportunity and then inserts a record into a related external object. What should be added to avoid a mixed transaction error?",
+    "options": [
+      "A) A zero-second pause between the update and the external object insert",
+      "B) A Platform Event between the two steps",
+      "C) A second flow running in system mode",
+      "D) Nothing, external objects share the transaction"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "A zero-second pause closes the first transaction before the external object insert starts a new one."
   }
 ]

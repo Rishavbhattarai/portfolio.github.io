@@ -58,6 +58,7 @@
   },
   "extraItems": [
     { "name": "Salesforce Ben: Data Architect Certification Guide", "type": "Link", "link": "https://www.salesforceben.com/salesforce-data-architect-certification-guide-tips/", "domain": "ovr", "external": true },
-    { "name": "Official Trailmix: Architect Data Architecture and Management", "type": "Link", "link": "https://trailhead.salesforce.com/users/strailhead/trailmixes/architect-data-architecture-and-management", "domain": "ovr" }
+    { "name": "Official Trailmix: Architect Data Architecture and Management", "type": "Link", "link": "https://trailhead.salesforce.com/users/strailhead/trailmixes/architect-data-architecture-and-management", "domain": "ovr" },
+    { "name": "Data Integration Decision Guide", "type": "Link", "link": "https://architect.salesforce.com/docs/architect/decision-guides/guide/data-integration.html", "domain": "mdm" }
   ]
 }
