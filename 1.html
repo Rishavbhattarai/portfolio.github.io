@@ -7,190 +7,269 @@
 <meta name="color-scheme" content="light dark">
 <title>FundMate prep</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /*
+    Shape rule: containers 10px, code and inline chips 6px, status pills full round.
+    One accent (cobalt). Green, amber and red appear only on status pills, where they carry meaning.
+  */
   :root {
-    --bg: #f6f7f9;
+    --bg: #f7f7f8;
     --surface: #ffffff;
-    --sunken: #eef0f4;
-    --ink: #14171f;
-    --ink-2: #4a5161;
-    --ink-3: #6b7282;
-    --line: #dde1e8;
-    --accent: #2848b8;
-    --accent-soft: #e6ebfa;
-    --ok: #1f7a4d;
-    --warn: #a3540f;
-    --bad: #b42a2a;
-    --radius: 12px;
-    --shadow: 0 1px 2px rgb(20 30 60 / .06), 0 6px 20px rgb(20 30 60 / .05);
-    --sans: ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sunken: #f0f0f2;
+    --ink: #18181b;
+    --ink-2: #3f3f46;
+    --ink-3: #6b6b74;
+    --line: #e4e4e7;
+    --line-2: #d4d4d8;
+    --accent: #2447c7;
+    --accent-ink: #1d3aa6;
+    --accent-soft: #eef1fc;
+    --ok: #17784a;
+    --warn: #9a5208;
+    --bad: #b3261e;
+    --r: 10px;
+    --r-sm: 6px;
+    --sans: "Geist", ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0f1116;
-      --surface: #171a21;
-      --sunken: #1e222b;
-      --ink: #e8eaf0;
-      --ink-2: #b4bac7;
-      --ink-3: #8a91a0;
-      --line: #2a2f3a;
-      --accent: #8aa4ff;
-      --accent-soft: #1d2540;
-      --ok: #5cc48f;
-      --warn: #e7a35a;
-      --bad: #f07a7a;
-      --shadow: 0 1px 2px rgb(0 0 0 / .4);
+      --bg: #0e0e11;
+      --surface: #16161a;
+      --sunken: #1c1c21;
+      --ink: #ececef;
+      --ink-2: #c4c4cc;
+      --ink-3: #8e8e98;
+      --line: #26262c;
+      --line-2: #34343c;
+      --accent: #8ea6ff;
+      --accent-ink: #a9bbff;
+      --accent-soft: #1a1f35;
+      --ok: #5ccf96;
+      --warn: #eaa45e;
+      --bad: #f38a82;
+      color-scheme: dark;
     }
   }
+
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 76px; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 16px/1.6 var(--sans);
+    font: 16px/1.65 var(--sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
     min-height: 100dvh;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 96px; }
+  ::selection { background: var(--accent-soft); color: var(--accent-ink); }
+  a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--accent-ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
-  header.top { padding: 28px 0 8px; }
-  header.top h1 { font-size: 1.5rem; line-height: 1.2; letter-spacing: -.02em; margin: 0 0 6px; }
-  header.top p { margin: 0; color: var(--ink-2); font-size: .95rem; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px 96px; }
 
+  /* Header */
+  header.top { padding: 40px 0 20px; max-width: 720px; }
+  header.top h1 {
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
+    line-height: 1.1; letter-spacing: -.035em; font-weight: 650; margin: 0 0 10px;
+  }
+  header.top p { margin: 0; color: var(--ink-3); font-size: 1rem; max-width: 60ch; }
+
+  /* Tabs: underline style, sticky */
   nav.tabs {
     position: sticky; top: 0; z-index: 10;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
     border-bottom: 1px solid var(--line);
-    margin: 16px -16px 0; padding: 10px 16px;
+    margin: 0 -16px; padding: 0 16px;
   }
-  .tablist { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--sunken); padding: 4px; border-radius: var(--radius); }
+  .tablist { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .tablist::-webkit-scrollbar { display: none; }
   .tablist button {
-    appearance: none; border: 0; background: transparent; color: var(--ink-2);
-    font: 600 .9rem/1 var(--sans); padding: 11px 6px; border-radius: 9px; cursor: pointer;
-    white-space: nowrap; transition: background .2s, color .2s, transform .1s;
+    appearance: none; border: 0; background: none; cursor: pointer;
+    position: relative; flex: 1 0 auto;
+    color: var(--ink-3); font: 550 .92rem/1 var(--sans); letter-spacing: -.005em;
+    padding: 18px 12px 17px; white-space: nowrap;
+    transition: color .2s var(--ease);
   }
-  .tablist button:active { transform: scale(.98); }
-  .tablist button[aria-selected="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
+  .tablist button::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px;
+    background: var(--accent); border-radius: 2px;
+    transform: scaleX(0); transition: transform .3s var(--ease);
+  }
+  .tablist button:hover { color: var(--ink); }
+  .tablist button[aria-selected="true"] { color: var(--ink); }
+  .tablist button[aria-selected="true"]::after { transform: scaleX(1); }
+  @media (min-width: 640px) { .tablist { margin-left: -16px; } .tablist button { flex: 0 0 auto; padding-inline: 16px; } .tablist button::after { left: 16px; right: 16px; } }
 
-  section.panel { display: none; padding-top: 20px; }
-  section.panel.active { display: block; animation: rise .25s ease both; }
-  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { section.panel.active { animation: none; } .tablist button { transition: none; } }
+  /* Two-column body with an index on wide screens */
+  .layout { display: block; }
+  .toc { display: none; }
+  @media (min-width: 1024px) {
+    .layout { display: grid; grid-template-columns: minmax(0, 720px) 220px; gap: 72px; justify-content: space-between; }
+    .toc { display: block; position: sticky; top: 84px; align-self: start; padding-top: 30px; max-height: calc(100dvh - 100px); overflow-y: auto; }
+    .toc p { font: 600 .72rem var(--sans); color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 10px; }
+    .toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); }
+    .toc li { margin: 0; }
+    .toc a {
+      display: block; padding: 5px 0 5px 14px; margin-left: -1px; border-left: 2px solid transparent;
+      color: var(--ink-3); text-decoration: none; font-size: .86rem; line-height: 1.4;
+      transition: color .2s var(--ease), border-color .2s var(--ease);
+    }
+    .toc a:hover { color: var(--ink); }
+    .toc a.on { color: var(--accent); border-left-color: var(--accent); }
+  }
 
-  h2 { font-size: 1.2rem; letter-spacing: -.01em; margin: 32px 0 10px; }
-  h2:first-child { margin-top: 4px; }
-  h3 { font-size: 1rem; margin: 20px 0 8px; }
-  p { margin: 0 0 12px; }
-  .muted { color: var(--ink-3); font-size: .9rem; }
-  code, .mono { font-family: var(--mono); font-size: .86em; }
-  :not(pre) > code { background: var(--sunken); padding: 1px 5px; border-radius: 5px; }
+  section.panel { display: none; padding-top: 28px; min-width: 0; }
+  section.panel.active { display: block; animation: rise .4s var(--ease) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* Type */
+  h2 { font-size: 1.4rem; line-height: 1.25; letter-spacing: -.025em; font-weight: 650; margin: 56px 0 14px; }
+  h2:first-child { margin-top: 8px; }
+  .meta + p + h2 { margin-top: 36px; }
+  h3 { font-size: 1.02rem; letter-spacing: -.01em; font-weight: 620; margin: 28px 0 10px; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--ink-3); font-size: .92rem; }
+  ul, ol { margin: 0 0 14px; padding-left: 20px; }
+  li { margin: 6px 0; }
+  li::marker { color: var(--ink-3); }
+  b, strong { font-weight: 620; }
+  code, .mono { font-family: var(--mono); font-size: .84em; }
+  :not(pre) > code { background: var(--sunken); border: 1px solid var(--line); padding: 1px 5px; border-radius: var(--r-sm); white-space: break-spaces; }
   pre {
-    background: var(--sunken); border: 1px solid var(--line); border-radius: 10px;
-    padding: 12px; overflow-x: auto; font: .8rem/1.55 var(--mono); margin: 8px 0 14px;
+    background: var(--sunken); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 14px 16px; overflow-x: auto; font: .8rem/1.6 var(--mono); margin: 10px 0 16px;
+    color: var(--ink-2); tab-size: 2;
   }
-  a { color: var(--accent); }
-  ul, ol { margin: 0 0 12px; padding-left: 20px; }
-  li { margin: 4px 0; }
 
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin: 12px 0; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 4px 18px; margin: 14px 0; }
 
-  /* Script tab */
-  .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 18px; }
-  .meta div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; }
-  .meta b { display: block; font-size: 1.15rem; letter-spacing: -.01em; }
-  .meta span { color: var(--ink-3); font-size: .78rem; }
-  .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line); }
+  /* Stat row */
+  .meta { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 22px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .meta div { padding: 16px 0 14px 16px; border-left: 1px solid var(--line); }
+  .meta div:first-child { border-left: 0; padding-left: 0; }
+  .meta b { display: block; font: 600 1.7rem/1.1 var(--sans); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .meta span { color: var(--ink-3); font-size: .8rem; }
+
+  /* Checklist */
+  .check { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-top: 1px solid var(--line); }
   .check:first-of-type { border-top: 0; }
-  .check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
-  .check label { flex: 1; }
-  details.scene { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin: 10px 0; overflow: hidden; }
+  .check input, .done-row input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--accent); flex: none; cursor: pointer; }
+  .check label { flex: 1; min-width: 0; cursor: pointer; }
+  .check input:checked + label { color: var(--ink-3); }
+
+  /* Scenes */
+  details.scene { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); margin: 10px 0; overflow: hidden; transition: border-color .2s var(--ease); }
+  details.scene:hover { border-color: var(--line-2); }
   details.scene > summary {
-    list-style: none; cursor: pointer; padding: 14px 16px; display: grid;
-    grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center;
+    list-style: none; cursor: pointer; padding: 16px 18px; display: grid;
+    grid-template-columns: 1fr auto; gap: 2px 14px; align-items: center;
   }
   details.scene > summary::-webkit-details-marker { display: none; }
-  .scene-title { font-weight: 650; }
-  .scene-time { font: .8rem var(--mono); color: var(--ink-3); grid-row: span 2; text-align: right; }
-  .scene-sub { color: var(--ink-3); font-size: .85rem; }
+  .scene-title { font-weight: 620; letter-spacing: -.01em; }
+  .scene-time { font: 500 .78rem var(--mono); color: var(--ink-3); grid-row: span 2; text-align: right; font-variant-numeric: tabular-nums; }
+  .scene-sub { color: var(--ink-3); font-size: .86rem; }
   details.scene[open] > summary { border-bottom: 1px solid var(--line); }
-  details.scene.done .scene-title { color: var(--ink-3); text-decoration: line-through; }
-  .scene-body { padding: 14px 16px 16px; }
-  .show { font-size: .9rem; color: var(--ink-2); padding-left: 12px; border-left: 3px solid var(--line); margin: 12px 0; }
+  details.scene.done { background: transparent; }
+  details.scene.done .scene-title { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--line-2); }
+  .scene-body { padding: 16px 18px 18px; }
+  .show { font-size: .92rem; color: var(--ink-2); padding-left: 14px; border-left: 2px solid var(--line-2); margin: 14px 0; }
   .show b { color: var(--ink); }
-  .say { font-size: 1.06rem; line-height: 1.65; padding: 12px 14px; background: var(--accent-soft); border-radius: 10px; margin: 12px 0; }
+  .say {
+    font-size: 1.06rem; line-height: 1.7; color: var(--ink);
+    padding: 16px 18px; background: var(--accent-soft); border-radius: var(--r);
+    border-left: 3px solid var(--accent); margin: 14px 0;
+  }
   .say p:last-child { margin: 0; }
-  .done-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: .9rem; color: var(--ink-2); }
-  .done-row input { width: 20px; height: 20px; accent-color: var(--accent); }
-
-  .tabs-line { font-size: .85rem; color: var(--accent); background: var(--accent-soft); border-radius: 8px; padding: 8px 10px; margin: 0 0 10px; }
-  .say.next { background: transparent; border: 1px dashed var(--accent); }
-  .say.next::before { content: "Transition"; display: block; font: 600 .72rem var(--sans); color: var(--accent); margin-bottom: 4px; }
+  .say.next { background: transparent; border: 1px dashed var(--line-2); border-left: 3px solid var(--line-2); }
+  .say.next::before { content: "Transition"; display: block; font: 600 .74rem var(--sans); color: var(--ink-3); margin-bottom: 6px; }
+  .tabs-line { font-size: .86rem; color: var(--ink-2); background: var(--sunken); border-radius: var(--r-sm); padding: 8px 12px; margin: 0 0 12px; }
+  .tabs-line b { color: var(--accent); }
+  .done-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-2); }
 
   /* Diagrams */
-  .flow { display: grid; gap: 0; margin: 12px 0; }
-  .node {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-    padding: 10px 12px; font-size: .92rem;
-  }
-  .node b { display: block; font-size: .95rem; }
-  .node small { color: var(--ink-3); display: block; line-height: 1.45; }
-  .node.hl { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
-  .arrow { text-align: center; color: var(--ink-3); font-size: .8rem; line-height: 1; padding: 5px 0; }
-  .arrow::before { content: "↓"; display: block; font-size: 1rem; color: var(--accent); }
-  .lane { font: 600 .75rem var(--sans); color: var(--accent); margin: 18px 0 6px; }
-  .actors { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+  .flow { display: grid; margin: 12px 0; }
+  .node { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; font-size: .92rem; }
+  .node b { display: block; font-size: .96rem; letter-spacing: -.01em; }
+  .node small { color: var(--ink-3); display: block; line-height: 1.5; font-size: .85rem; margin-top: 2px; }
+  .node.hl { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: var(--accent-soft); }
+  .arrow { text-align: center; color: var(--ink-3); font: 500 .76rem var(--mono); line-height: 1.2; padding: 6px 0; }
+  .arrow::before { content: ""; display: block; width: 1px; height: 14px; background: var(--line-2); margin: 0 auto 5px; }
+  .lane { font: 600 .74rem var(--sans); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin: 26px 0 8px; }
+  .actors { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
   .actors .node:first-child { grid-column: span 2; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .states { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0; font-size: .85rem; }
-  .pill { border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-  .pill.ok { border-color: var(--ok); color: var(--ok); }
-  .pill.bad { border-color: var(--bad); color: var(--bad); }
-  .pill.warn { border-color: var(--warn); color: var(--warn); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 420px) { .actors, .pair { grid-template-columns: 1fr; } .actors .node:first-child { grid-column: auto; } }
+
+  .states { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 12px 0 16px; font-size: .84rem; }
+  .pill { border: 1px solid var(--line-2); background: var(--surface); padding: 3px 11px; border-radius: 999px; white-space: nowrap; font-weight: 500; }
+  .pill.ok { border-color: color-mix(in srgb, var(--ok) 50%, transparent); color: var(--ok); }
+  .pill.bad { border-color: color-mix(in srgb, var(--bad) 50%, transparent); color: var(--bad); }
+  .pill.warn { border-color: color-mix(in srgb, var(--warn) 50%, transparent); color: var(--warn); }
   .sep { color: var(--ink-3); }
-  .gate { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); font-size: .92rem; }
+
+  .gate { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); font-size: .92rem; }
   .gate:first-child { border-top: 0; }
-  .gate .n { font: 700 .8rem var(--mono); color: var(--accent); width: 22px; height: 22px; border-radius: 999px; background: var(--accent-soft); display: grid; place-items: center; }
-  .gate .code { font: 600 .8rem var(--mono); color: var(--bad); }
-  .timeline { position: relative; margin: 12px 0 12px 8px; padding-left: 18px; border-left: 2px solid var(--line); }
-  .timeline div { position: relative; padding: 4px 0 12px; font-size: .92rem; }
-  .timeline div::before { content: ""; position: absolute; left: -24px; top: 10px; width: 10px; height: 10px; border-radius: 999px; background: var(--surface); border: 2px solid var(--accent); }
+  .gate .n { font: 600 .76rem var(--mono); color: var(--accent); width: 24px; height: 24px; border-radius: 999px; background: var(--accent-soft); display: grid; place-items: center; }
+  .gate .code { font: 600 .78rem var(--mono); color: var(--bad); }
+
+  .timeline { position: relative; margin: 14px 0 14px 6px; padding-left: 20px; border-left: 1px solid var(--line-2); }
+  .timeline div { position: relative; padding: 4px 0 14px; font-size: .92rem; }
+  .timeline div::before { content: ""; position: absolute; left: -25px; top: 11px; width: 9px; height: 9px; border-radius: 999px; background: var(--bg); border: 2px solid var(--accent); }
   .timeline div.end::before { background: var(--bad); border-color: var(--bad); }
 
-  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 8px 0 14px; }
-  th, td { text-align: left; padding: 8px 6px; vertical-align: top; }
-  thead th { font-size: .78rem; color: var(--ink-3); font-weight: 600; border-bottom: 1px solid var(--line); }
+  /* Tables */
+  .tablewrap { overflow-x: auto; margin: 10px 0 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 0; }
+  th, td { text-align: left; padding: 10px 14px; vertical-align: top; }
+  thead th { font-size: .76rem; color: var(--ink-3); font-weight: 600; background: var(--sunken); border-bottom: 1px solid var(--line); }
   tbody tr + tr td { border-top: 1px solid var(--line); }
-  .tablewrap { overflow-x: auto; margin: 0 -4px; }
+  td:first-child { color: var(--ink); }
+  td { color: var(--ink-2); }
 
-  /* Brief tab */
-  .req { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin: 10px 0; }
-  .req summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; }
+  /* Brief */
+  .req { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); margin: 8px 0; transition: border-color .2s var(--ease); }
+  .req:hover { border-color: var(--line-2); }
+  .req summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; }
   .req summary::-webkit-details-marker { display: none; }
-  .req .num { font: 700 .8rem var(--mono); color: var(--accent); }
-  .req .t { font-weight: 600; font-size: .95rem; }
-  .req .st { font: 600 .72rem var(--sans); color: var(--ok); border: 1px solid var(--ok); border-radius: 999px; padding: 2px 8px; }
-  .req .body { padding: 0 14px 14px 52px; font-size: .92rem; }
-  .req .body p.ask { color: var(--ink-2); }
-  .req .body p.did { margin-bottom: 4px; }
-  .qa { border-top: 1px solid var(--line); padding: 12px 0; }
-  .qa:first-of-type { border-top: 0; padding-top: 0; }
-  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .req .num { font: 600 .8rem var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .req[open] .num { color: var(--accent); }
+  .req .t { font-weight: 600; font-size: .96rem; letter-spacing: -.01em; }
+  .req .st { font: 600 .72rem var(--sans); color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 50%, transparent); border-radius: 999px; padding: 2px 9px; }
+  .req .body { padding: 2px 16px 16px 54px; font-size: .92rem; }
+  .req .body p.ask { color: var(--ink-3); }
+  .req .body p.did { margin-bottom: 6px; }
+  @media (max-width: 480px) { .req .body { padding-left: 16px; } }
+
+  .qa { border-top: 1px solid var(--line); padding: 14px 0; }
+  .qa:first-of-type { border-top: 0; }
+  .qa .q { font-weight: 620; margin-bottom: 4px; letter-spacing: -.005em; }
   .qa .a { color: var(--ink-2); font-size: .94rem; margin: 0; }
-  .tag { font: 600 .72rem var(--sans); color: var(--ok); }
-  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--sunken); padding: 4px; border-radius: 10px; margin: 0 0 16px; }
-  .seg button { appearance: none; border: 0; background: transparent; color: var(--ink-2); font: 600 .85rem/1 var(--sans); padding: 10px 6px; border-radius: 7px; cursor: pointer; }
-  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
-  .pdf h2 { font-size: 1.05rem; margin: 26px 0 8px; }
+  .tag { font: 600 .7rem var(--mono); color: var(--ok); margin-right: 4px; }
+
+  .seg { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--sunken); border: 1px solid var(--line); padding: 3px; border-radius: var(--r); margin: 0 0 20px; }
+  .seg button { appearance: none; border: 0; background: transparent; color: var(--ink-3); font: 550 .86rem/1 var(--sans); padding: 9px 16px; border-radius: 7px; cursor: pointer; transition: background .2s var(--ease), color .2s var(--ease); }
+  .seg button:active, .tablist button:active { transform: translateY(1px); }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 12%, transparent); }
+  .pdf h2 { font-size: 1.1rem; margin: 30px 0 8px; }
   .pdf ul ul { margin: 2px 0 6px; }
   .pdf .lbl { font-weight: 600; }
   .pdf pre { font-size: .74rem; }
 
-  footer { margin-top: 40px; color: var(--ink-3); font-size: .8rem; }
-  @media (min-width: 640px) {
-    header.top h1 { font-size: 1.9rem; }
-    .flow.wide { grid-template-columns: 1fr; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: .82rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    section.panel.active { animation: none; }
+    *, *::before, *::after { transition: none !important; }
   }
 </style>
 </head>
@@ -198,7 +277,7 @@
 <div class="wrap">
   <header class="top">
     <h1>FundMate take-home: prep</h1>
-    <p>Salesforce Developer assignment. Script for the video, how the case fits together, and what the brief asks for.</p>
+    <p>Salesforce Developer assignment. The video script, how the case fits together, what the brief asks for, and notes for the interview.</p>
   </header>
 
   <nav class="tabs" aria-label="Sections">
@@ -206,8 +285,12 @@
       <button role="tab" id="t-script" aria-controls="script" aria-selected="true">Script</button>
       <button role="tab" id="t-case" aria-controls="case" aria-selected="false">Case</button>
       <button role="tab" id="t-brief" aria-controls="brief" aria-selected="false">Brief</button>
+      <button role="tab" id="t-interview" aria-controls="interview" aria-selected="false">Interview</button>
     </div>
   </nav>
+
+  <div class="layout">
+  <main class="content">
 
   <!-- ============ SCRIPT ============ -->
   <section class="panel active" id="script" role="tabpanel" aria-labelledby="t-script">
@@ -842,6 +925,283 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
     </div>
   </section>
 
+  <!-- ============ INTERVIEW ============ -->
+  <section class="panel" id="interview" role="tabpanel" aria-labelledby="t-interview">
+    <div class="meta">
+      <div><b>7</b><span>objects</span></div>
+      <div><b>33</b><span>validation rules</span></div>
+      <div><b>4</b><span>flows</span></div>
+    </div>
+    <p class="muted">Everything the project changed in the org: schema, data, validation and automation, then the full algorithm end to end. Use it to answer "walk me through what you built".</p>
+
+    <h2>The one-paragraph answer</h2>
+    <div class="say">
+      <p>A native Salesforce app that builds a Funding Application from Account (the business), Contact (the owners) and Bank Statements. It validates the application, sends it to the Underwriting API in batches of 50, and saves Status, Status Reason and Tracking Id back on each record. Decisions come in signed on my own REST endpoint, which creates Decision and Offer records, and a Flow routes each decided application to a queue. Thresholds, the payload mapping and the routing rules are Custom Metadata, so an admin changes them in Setup without a deployment.</p>
+    </div>
+
+    <h2>Org changes: schema</h2>
+    <h3>Standard objects extended</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Object</th><th>Fields added</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Account</b><br><span class="muted">business</span></td><td><code>EIN__c</code> (Classic Encrypted, last four shown), <code>Business_Start_Date__c</code>, <code>Time_in_Business_Months__c</code> (formula)</td><td>Legal Name is <code>Name</code>, State is <code>BillingState</code></td></tr>
+        <tr><td><b>Contact</b><br><span class="muted">owner</span></td><td><code>SSN__c</code> (Encrypted, SSN mask), <code>Date_of_Birth__c</code> (Encrypted text, YYYY-MM-DD), <code>Ownership_Percentage__c</code></td><td>Date of birth is text because Classic Encryption only works on text</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Custom objects</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Object</th><th>Relationship</th><th>Key fields</th></tr></thead>
+      <tbody>
+        <tr><td><code>Bank_Statement__c</code></td><td>Master-detail to Account</td><td>Statement Month, Total Deposits, NSF Count, <code>Month_Key__c</code> (unique: one statement per business per month)</td></tr>
+        <tr><td><code>Funding_Application__c</code></td><td>Lookup to Account. <b>Private</b> sharing</td><td>Name is an auto-number (FA-000123) used as <code>applicationReference</code>. Requested Amount, Use of Funds, <b>Status</b> (restricted picklist, history tracked), Status Reason, Tracking Id (unique), Batch Key, Idempotency Key, Retry Count, Next Retry At, Sent At, Decided At, Decision. <b>Snapshot</b> fields (statement count, total deposits, NSF, first and last month). Formulas: Average Monthly Deposits, Below Revenue Minimum</td></tr>
+        <tr><td><code>Underwriting_Decision__c</code></td><td>Master-detail to Application</td><td><code>Decision_Id__c</code> (unique external id, used to catch duplicates), Decision, Reason, Tracking Id, Received At</td></tr>
+        <tr><td><code>Funding_Offer__c</code></td><td>Master-detail to Application, lookup to Decision</td><td><code>Offer_Id__c</code> (unique), Amount, Factor Rate, Term, Frequency, Superseded. Formulas: Total Payback, Cost of Financing, Number of Payments, Payment Amount. <code>Estimated_APR__c</code> is set by a trigger</td></tr>
+        <tr><td><code>Integration_Log__c</code></td><td>none</td><td>Level, Source, Message, Details, Record Id, Batch Key, HTTP Status, Limits Snapshot, <code>Event_Uuid__c</code> (unique, so a redelivered event can't create a second log)</td></tr>
+        <tr><td><code>Integration_Log_Event__e</code></td><td>Platform event</td><td><b>Publish Immediately</b>, so a log survives a rollback</td></tr>
+        <tr><td><code>Underwriting_Secret__c</code></td><td>Protected custom setting</td><td><code>Signing_Secret__c</code>, the HMAC secret</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Status lifecycle</h3>
+    <div class="states">
+      <span class="pill">Draft</span><span class="sep">→</span>
+      <span class="pill">Ready</span><span class="sep">or</span><span class="pill bad">Validation Failed</span><span class="sep">→</span>
+      <span class="pill">Queued</span><span class="sep">→</span>
+      <span class="pill">Acknowledged</span><span class="pill bad">Rejected</span><span class="pill bad">Send Failed</span><span class="sep">→</span>
+      <span class="pill ok">Approved</span><span class="pill warn">Declined</span><span class="pill warn">Needs More Info</span>
+    </div>
+
+    <h3>Custom Metadata (admin settings)</h3>
+    <div class="card">
+      <div class="qa"><p class="q">Integration_Setting__mdt.Default</p><p class="a">Batch size 50; max attempts 5; backoff 30 s base, 3,600 s cap; timeout 20 s; signature window 300 s; 3 statements, latest no older than 3 months; owners at 20% or more; revenue minimum $10,000; offer terms 3 to 18 months; accepting statuses Acknowledged and Needs More Info; at most 500 decisions per request; <b>Send Enabled</b> kill switch; alert group; log retention 90 days.</p></div>
+      <div class="qa"><p class="q">Payload_Field_Map__mdt (14 records)</p><p class="a">One per JSON key: section, source object and field, required flag, optional regex and message. The validator and the payload builder both read it, so adding a key is a metadata change.</p></div>
+      <div class="qa"><p class="q">Routing_Rule__mdt (6 records)</p><p class="a">Approved up to $250,000 → Funding Specialists. Approved over $250,000 → Senior Funding Specialists. Needs More Info → Document Collection. Declined → Declined Review. Rejected and Send Failed → Integration Exceptions.</p></div>
+    </div>
+
+    <h3>Security and access</h3>
+    <ul>
+      <li><b>Named Credential</b> <code>Underwriting_API</code> and <b>External Credential</b>, which adds <code>X-Api-Key</code>. No URL or key in code.</li>
+      <li><b>Permission sets.</b> <code>FundMate_Admin</code>: everything, including View Encrypted Data. <code>FundMate_Funding_Specialist</code>: SSN, EIN and date of birth masked, Status read-only, no access to logs. <code>FundMate_Integration</code>: API only, and the only one with the custom permission.</li>
+      <li><b>Custom permission</b> <code>FundMate_Post_Underwriting_Decisions</code>. Without it the endpoint returns 403.</li>
+      <li>5 <b>queues</b>, the <b>Integration_Admins</b> group, and the <b>FundMate_Send_Failure</b> notification type.</li>
+      <li><b>UI:</b> FundMate app, three record pages (business, owner, application), quick actions (New Funding Application, Send to Underwriting), LWCs <code>offerComparison</code> and <code>fundmateFields</code>.</li>
+      <li><b>Set up in the org, not in source:</b> the API-only integration user, the client-credentials connected app that runs as that user, and the signing secret.</li>
+    </ul>
+
+    <h2>Org changes: data</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Script</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>seed-sample-data</code></td><td>The brief's four businesses plus Small Shop Bakery, each with an owner, statements and a Draft application</td></tr>
+        <tr><td><code>seed-failure-demo</code></td><td>Businesses named RATE LIMIT and SERVER ERROR; the mock answers 429 and 503</td></tr>
+        <tr><td><code>seed-scale</code> ×4</td><td>1,000 Ready applications</td></tr>
+        <tr><td><code>setup-org</code></td><td>Schedules the send at :00, :15, :30 and :45 and the 2 AM log purge; adds you to the queues</td></tr>
+        <tr><td><code>reset-demo-data</code></td><td>Removes the sample data</td></tr>
+      </tbody>
+    </table></div>
+    <div class="card">
+      <div class="qa"><p class="q">Blue Harbor Coffee, Ridgeview Auto</p><p class="a"><span class="tag">PASS</span> Validated and Acknowledged.</p></div>
+      <div class="qa"><p class="q">Lumen Dental</p><p class="a">Validation Failed: only two statements.</p></div>
+      <div class="qa"><p class="q">Cedar and Pine</p><p class="a">Validation Failed: no EIN, and "Calif." is not a two-letter state. Fix both on the business page and resend.</p></div>
+      <div class="qa"><p class="q">Small Shop Bakery</p><p class="a">Passes, flagged below the revenue minimum. The partner rejects it, so it lands in Integration Exceptions.</p></div>
+    </div>
+
+    <h2>Validation, three layers</h2>
+    <h3>1. Validation rules on records (16)</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Object</th><th>Rules</th></tr></thead>
+      <tbody>
+        <tr><td>Account</td><td><code>EIN_Format</code> (<code>\d{2}-\d{7}</code>), <code>Business_Start_Date_Not_Future</code></td></tr>
+        <tr><td>Contact</td><td><code>SSN_Format</code>, <code>Date_of_Birth_Format</code>, <code>Owner_Must_Be_Adult</code> (DOB + 216 months), <code>Ownership_Percentage_Range</code> (written as <code>&gt; 1</code> because a percent is a fraction in formulas)</td></tr>
+        <tr><td>Bank Statement</td><td>Deposits not negative, NSF not negative, month not in the future</td></tr>
+        <tr><td>Funding Application</td><td><code>Business_Required</code>, <code>Requested_Amount_Positive</code>, <code>Locked_While_With_Underwriting</code> (business, amount and use of funds can't change unless the old status was Draft, Validation Failed, Send Failed or Needs More Info)</td></tr>
+        <tr><td>Funding Offer</td><td>Amount above zero, factor rate 1 to 5, frequency required, <code>Term_Range</code> reads min and max from Custom Metadata</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>2. Validation rules on Custom Metadata (17)</h3>
+    <p>An admin can't save a broken configuration. <b>Integration Setting:</b> batch size 1 to 50, attempts 1 to 10, backoff, timeout 1,000 to 120,000 ms, signature window 30 to 3,600 s, retention 7 to 3,650 days, statement rules, term range, batch path starts with <code>/</code>. <b>Payload Field Map:</b> JSON key format, allowed source object, source field required, a regex needs a message. <b>Routing Rule:</b> valid status, min no more than max, queue and priority required.</p>
+
+    <h3>3. Apex and Flow</h3>
+    <div class="card">
+      <div class="qa"><p class="q">FundingApplicationValidator, before sending</p><p class="a">Collects every error, not just the first. Business linked, amount above zero, an owner at 20% or more, total ownership no more than 100%. Each field map checked for required and regex; a map pointing at a missing field is reported as a configuration error. Statements: N of them, the last N consecutive months, the latest within 3 months. Messages use the labels users see, e.g. "Owner Maria Lopez: SSN must be in 123-45-6789 format."</p></div>
+      <div class="qa"><p class="q">DecisionProcessor, for each incoming decision</p><p class="a">Shape: decisionId (40 characters max), applicationReference and trackingId required, decision is one of three values. Offers: Approved needs at least one, the others none; offer id unique in the request, amount above zero, factor 1 to 5, whole-number term in range, Daily, Weekly or Monthly. Against the database: not already processed, application exists and is in an accepting status, trackingId matches, one decision per application per request, offer ids not already used.</p></div>
+      <div class="qa"><p class="q">Flows</p><p class="a"><code>Bank_Statement_Defaults</code> moves the month to the 1st and builds the unique month key. The New Funding Application screen checks amount and use of funds.</p></div>
+    </div>
+
+    <h2>Automation</h2>
+    <h3>Flows: what an admin can change</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Flow</th><th>Type</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>New_Funding_Application</code></td><td>Screen, button on Account</td><td>Asks for amount and use of funds, creates the application</td></tr>
+        <tr><td><code>Send_to_Underwriting</code></td><td>Screen, button on Application</td><td>Calls <code>SendToUnderwritingAction</code>, shows "Queued" or every reason it failed</td></tr>
+        <tr><td><code>Route_Decided_Funding_Application</code></td><td>Before-save, on update</td><td>When Status changes to a decided value, loops <code>Routing_Rule__mdt</code> by priority, takes the first rule whose amount range fits, finds the queue and sets <b>OwnerId</b> with no extra DML. No match: says so in Status Reason</td></tr>
+        <tr><td><code>Bank_Statement_Defaults</code></td><td>Before-save, Bank Statement</td><td>Normalises the month, sets the month key</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Triggers: one per object, logic in handlers</h3>
+    <ul>
+      <li><code>FundingApplicationTrigger</code>. Before insert: Draft and snapshot. After insert: validates records inserted as Ready. Before update, moving to Ready: snapshot again and validate. A failure goes to Validation Failed with the reasons; a pass resets the retry fields and clears the Idempotency Key.</li>
+      <li><code>FundingOfferTrigger</code>: sets Estimated APR with <code>OfferMath</code> (bisection).</li>
+      <li><code>IntegrationLogEventTrigger</code>: upserts each event into <code>Integration_Log__c</code> on its UUID.</li>
+    </ul>
+
+    <h3>Apex classes by job</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Job</th><th>Classes</th></tr></thead>
+      <tbody>
+        <tr><td>Send</td><td><code>SendToUnderwritingAction</code> (invocable), <code>UnderwritingScheduler</code> (every 15 min), <code>UnderwritingDispatcher</code> (Queueable entry), <code>UnderwritingClaimService</code> (FOR UPDATE), <code>UnderwritingSendBatch</code> (Batch, scope 50), <code>UnderwritingBatchSender</code>, <code>UnderwritingApiClient</code>, <code>UnderwritingPayloadBuilder</code></td></tr>
+        <tr><td>Retry</td><td><code>RetryPolicy</code> (Retry-After, else backoff with full jitter), <code>UnderwritingRetryJob</code> (same key), <code>UnderwritingRetryScheduler</code> (waits over 10 min)</td></tr>
+        <tr><td>Receive</td><td><code>UnderwritingDecisionResource</code> (<code>/underwriting/decisions</code>), <code>SignatureVerifier</code>, <code>DecisionProcessor</code></td></tr>
+        <tr><td>Data</td><td><code>FundingApplicationSelector</code>, <code>FinancialSnapshotService</code>, <code>FundingApplicationValidator</code>, <code>IntegrationConfig</code>, <code>FundingStatus</code></td></tr>
+        <tr><td>Operations</td><td><code>IntegrationLogger</code> (redaction, limits), <code>IntegrationLogEventHandler</code>, <code>SendFailureAlertService</code>, <code>IntegrationLogPurge</code></td></tr>
+        <tr><td>UI</td><td><code>OfferComparisonController</code> (user mode) for the <code>offerComparison</code> LWC</td></tr>
+        <tr><td>Tests</td><td>6 test classes and <code>TestDataFactory</code>: 58 tests, 95% coverage</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Outside Salesforce</h3>
+    <ul>
+      <li><b>Mock API</b>: Cloudflare Worker. Checks <code>X-Api-Key</code>; names with RATE LIMIT, SERVER ERROR, TIMEOUT or BAD REQUEST return 429, 503, a 25 s wait or 400.</li>
+      <li><b>send-decisions.mjs</b> plays the partner: client-credentials token, signs the body, posts. Flags: <code>--generate 200</code>, <code>--tamper</code>, <code>--stale</code>, <code>--as-cli</code>.</li>
+      <li><b>CI</b>: GitHub Actions, scratch org, deploy, tests, fails under 85%.</li>
+      <li><b>Unlocked package</b> 1.0.0, <code>04tbm000000vSafAAE</code>.</li>
+    </ul>
+
+    <h2>The algorithm, end to end</h2>
+<pre>A. CREATE
+ 1. Business (Account) with owners (Contact) and monthly Bank_Statement__c.
+ 2. "New Funding Application" flow inserts the application.
+ 3. Before insert: Status = Draft; copy the latest 3 statements into the
+    snapshot fields. Formulas give average deposits and the revenue flag.
+
+B. SUBMIT AND VALIDATE
+ 4. "Send to Underwriting" → SendToUnderwritingAction (reads in user mode)
+    sets Status = Ready.
+ 5. Before update (to Ready): snapshot again, then
+      errors = FundingApplicationValidator.validate(app)
+      errors?  Status = Validation Failed, reasons in Status Reason. Stop.
+      none?    reset Retry Count, Next Retry At, Idempotency Key.
+ 6. Enqueue UnderwritingDispatcher (the schedule also does this every 15 min).
+
+C. CLAIM (never send twice)
+ 7. Send Enabled off → log and stop.
+ 8. batchKey = new UUID
+    SELECT Ready (retry time passed) FOR UPDATE
+    SELECT the same rows again FOR UPDATE; keep those still Ready
+    UPDATE → Queued, Batch Key = batchKey        (before any callout)
+    A second run waits on the lock, then finds nothing Ready.
+ 9. executeBatch(UnderwritingSendBatch(batchKey), 50)
+    1,000 applications = 20 executes, each with its own limits, 1 callout.
+
+D. SEND ONE BATCH
+10. Load application, business, owners at 20%+, statements.
+    key = the batch's shared Idempotency Key, or a new UUID.
+11. Body from Payload_Field_Map__mdt.
+    POST callout:Underwriting_API/v1/applications/batch
+    Headers: X-Api-Key (Named Credential), Idempotency-Key; timeout 20 s.
+12. 2xx: match each result by applicationReference
+          Acknowledged → Status, Tracking Id, Sent At
+          Rejected     → Rejected (routed to Integration Exceptions)
+          missing      → back to Ready with a new key
+    429 / 5xx / 408 / timeout:
+          attempt = highest Retry Count + 1
+          attempt ≥ Max Attempts → Send Failed, alert
+          else delay = Retry-After (capped)
+                       or random(0, min(base × 2^(attempt-1), cap))
+               stay Queued, store Retry Count and Next Retry At
+               delay ≤ 10 min → enqueueJob(RetryJob, minutes)
+               delay  > 10 min → one-off scheduled job → RetryJob
+               RetryJob resends the SAME applications with the SAME key
+    other 4xx or bad config → Send Failed, no retry, alert
+13. Database.update(..., false): one bad row doesn't block the rest.
+    Log with a limits snapshot.
+14. finish(): run summary; alert the owner or queue members and
+    Integration Admins (bell notification and email).
+
+E. RECEIVE  POST /services/apexrest/underwriting/decisions
+15. OAuth client credentials as the integration user.
+    No FundMate_Post_Underwriting_Decisions → 403.
+16. Secret from the protected setting. Missing headers, timestamp off by
+    more than 300 s, or HMAC-SHA256(secret, ts + "." + rawBody) not equal
+    to X-Signature (constant-time) → 401.
+17. Not JSON or no "decisions" array → 400. More than 500 → 413.
+18. Savepoint, then DecisionProcessor:
+      a. check shape and offers               → rejected with a reason
+      b. decisionId seen before or repeated   → duplicate, nothing written
+      c. unknown reference, wrong status, trackingId mismatch,
+         second decision for one application  → rejected
+      d. offerId already used                 → rejected
+      e. insert decisions, then offers (allOrNone false);
+         an offer fails → delete that decision and its offers
+      f. mark the application's older offers Superseded
+      g. application Status = decision, Decided At, Status Reason
+    200 {received, created, duplicate, rejected, results[]}
+    Unexpected error → rollback, log (survives), 500 "safe to retry".
+
+F. ROUTE
+19. Before-save flow: rules for this status, active, by priority;
+    first where Min ≤ Requested Amount ≤ Max → OwnerId = queue.
+    No match → note it in Status Reason.
+
+G. OFFERS
+20. Offer trigger sets Estimated APR. offerComparison LWC shows offers
+    side by side, best value per row, superseded on request.
+
+H. OPERATIONS
+21. Errors and limits → Integration_Log_Event__e (Publish Immediately)
+    → upsert Integration_Log__c on the event UUID. Text goes through
+    redact(): SSN, EIN, DOB, deposits, keys.
+22. 2 AM purge deletes logs older than 90 days, 9,000 per run.</pre>
+
+    <h2>Brief → where it's done</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Requirement</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr><td>Objects, Apex and Flow together</td><td>7 objects, 22 classes, 4 flows; routing and screens in Flow</td></tr>
+        <tr><td>Endpoint, many decisions, duplicates</td><td><code>UnderwritingDecisionResource</code>, <code>DecisionProcessor</code>, unique <code>Decision_Id__c</code></td></tr>
+        <tr><td>Verify every signature</td><td><code>SignatureVerifier</code>: HMAC, timestamp, constant time</td></tr>
+        <tr><td>Build the request</td><td><code>UnderwritingPayloadBuilder</code> and <code>Payload_Field_Map__mdt</code></td></tr>
+        <tr><td>Up to 50 per request</td><td>Batch scope from <code>Batch_Size__c</code></td></tr>
+        <tr><td>Status and StatusReason upserted</td><td><code>UnderwritingBatchSender</code></td></tr>
+        <tr><td>Route to queues</td><td>Routing flow and <code>Routing_Rule__mdt</code></td></tr>
+        <tr><td>One bad record doesn't fail the rest</td><td>allOrNone false everywhere; a result per decision</td></tr>
+        <tr><td>Log survives a rollback</td><td>Publish Immediately platform event</td></tr>
+        <tr><td>No hardcoded secrets</td><td>Named and External Credential, protected setting, <code>.env.local</code></td></tr>
+        <tr><td>Sensitive data (GLBA)</td><td>Encrypted fields, masking, permission sets, private sharing, redaction, retention</td></tr>
+        <tr><td>1,000 sends, 200 decisions</td><td>Live: 20 executes, 0 errors; 200 decisions in 6 SOQL and 4 DML</td></tr>
+        <tr><td>Never sent twice</td><td>FOR UPDATE claim, batch key, Idempotency-Key</td></tr>
+        <tr><td>Retry-After</td><td><code>RetryPolicy</code>, plus jitter</td></tr>
+        <tr><td>Bonus</td><td><span class="tag">ALL</span> Alerts, LWC, backoff with jitter, CI, unlocked package</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Likely questions</h2>
+    <div class="card">
+      <div class="qa"><p class="q">Why Batch Apex, not chained Queueables?</p><p class="a">Developer Edition caps the chain depth, and one transaction gets only 120 s of callout time in total. A batch gives each 50 their own limits.</p></div>
+      <div class="qa"><p class="q">How do you stop a double send?</p><p class="a">The claim locks with FOR UPDATE, re-reads under the lock, and moves Ready to Queued with a batch key before any callout. After a timeout the retry sends the same Idempotency-Key, and the partner ignores a repeat for 24 hours.</p></div>
+      <div class="qa"><p class="q">Why clear the key on a user resend but keep it on a retry?</p><p class="a">A resend may carry corrected data, so it's a new request. A retry is the same request.</p></div>
+      <div class="qa"><p class="q">Why log through a platform event?</p><p class="a">A normal insert rolls back with the transaction. A Publish Immediately event is delivered anyway.</p></div>
+      <div class="qa"><p class="q">Why OAuth and HMAC both?</p><p class="a">OAuth proves who is calling. HMAC proves the body wasn't changed and isn't a replay.</p></div>
+      <div class="qa"><p class="q">Why 11 classes without sharing?</p><p class="a">System processes must see private, queue-owned records. Each one has a reason in the README. The user entry points, the Send action and the offer controller, run in user mode.</p></div>
+      <div class="qa"><p class="q">Why is date of birth a text field?</p><p class="a">Classic Encryption only works on text. A regex validation rule enforces the format.</p></div>
+      <div class="qa"><p class="q">What changed after your questions email?</p><p class="a">Statements moved from the application to the Account, with a snapshot on the application, because they exist before any application. Needs More Info can take a second decision that supersedes older offers. Rejections and send failures got their own Integration Exceptions queue, from the product owner's answer.</p></div>
+    </div>
+
+    <h2>Be honest about</h2>
+    <ul>
+      <li>The finish checklist had three test-class fixes not yet deployed; the last full run was 57 of 58. Rerun before you quote 58 and 95%.</li>
+      <li>The live timeout case was never run. Only the unit test <code>timeoutIsRetriedWithBackoff</code> covers it.</li>
+    </ul>
+  </section>
+
+  </main>
+  <aside class="toc" aria-label="On this page"><p>On this page</p><ol id="toc"></ol></aside>
+  </div>
+
   <footer>Private prep page. Not linked from the site.</footer>
 </div>
 
@@ -856,6 +1216,30 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
     });
     if (push) history.replaceState(null, '', '#' + id);
     window.scrollTo(0, 0);
+    buildToc(id);
+  }
+
+  // Desktop index: the active tab's section headings, highlighted while in view
+  var toc = document.getElementById('toc');
+  var spy = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      toc.querySelectorAll('a').forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id); });
+    });
+  }, { rootMargin: '-80px 0px -70% 0px' }) : null;
+  function buildToc(id) {
+    if (!toc) return;
+    if (spy) spy.disconnect();
+    toc.innerHTML = '';
+    document.querySelectorAll('#' + id + ' h2').forEach(function (h, i) {
+      if (h.offsetParent === null) return;
+      if (!h.id) h.id = id + '-' + h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      var li = document.createElement('li'), a = document.createElement('a');
+      a.href = '#' + h.id; a.textContent = h.textContent;
+      a.addEventListener('click', function (e) { e.preventDefault(); h.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); });
+      li.appendChild(a); toc.appendChild(li);
+      if (spy) spy.observe(h);
+    });
   }
   tabs.forEach(function (t, i) {
     t.addEventListener('click', function () { show(t.getAttribute('aria-controls'), true); });
@@ -866,7 +1250,7 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
     });
   });
   var start = location.hash.slice(1);
-  if (['script', 'case', 'brief'].indexOf(start) >= 0) show(start, false);
+  if (['script', 'case', 'brief', 'interview'].indexOf(start) >= 0) show(start, false); else buildToc('script');
 
   // Brief view toggle: my brief vs the assignment PDF
   var segs = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
@@ -877,6 +1261,7 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
       document.getElementById(b.getAttribute('data-view')).hidden = !on;
     });
     try { localStorage.setItem('fundmate-brief-view', id); } catch (e) {}
+    if (document.getElementById('brief').classList.contains('active')) buildToc('brief');
   }
   segs.forEach(function (b) { b.addEventListener('click', function () { view(b.getAttribute('data-view')); }); });
   var v = null; try { v = localStorage.getItem('fundmate-brief-view'); } catch (e) {}
