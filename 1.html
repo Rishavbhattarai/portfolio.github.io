@@ -179,6 +179,13 @@
   .qa .q { font-weight: 600; margin-bottom: 4px; }
   .qa .a { color: var(--ink-2); font-size: .94rem; margin: 0; }
   .tag { font: 600 .72rem var(--sans); color: var(--ok); }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--sunken); padding: 4px; border-radius: 10px; margin: 0 0 16px; }
+  .seg button { appearance: none; border: 0; background: transparent; color: var(--ink-2); font: 600 .85rem/1 var(--sans); padding: 10px 6px; border-radius: 7px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
+  .pdf h2 { font-size: 1.05rem; margin: 26px 0 8px; }
+  .pdf ul ul { margin: 2px 0 6px; }
+  .pdf .lbl { font-weight: 600; }
+  .pdf pre { font-size: .74rem; }
 
   footer { margin-top: 40px; color: var(--ink-3); font-size: .8rem; }
   @media (min-width: 640px) {
@@ -531,6 +538,11 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
 
   <!-- ============ BRIEF ============ -->
   <section class="panel" id="brief" role="tabpanel" aria-labelledby="t-brief">
+    <div class="seg" role="group" aria-label="Brief view">
+      <button type="button" data-view="brief-mine" aria-pressed="true">My brief</button>
+      <button type="button" data-view="brief-pdf" aria-pressed="false">Assignment (PDF)</button>
+    </div>
+    <div id="brief-mine">
     <h2>What the brief asks, and how I met it</h2>
     <p class="muted">Tap a requirement to open it.</p>
 
@@ -611,6 +623,223 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
       <div class="qa"><p class="q">What would you change for production?</p><p class="a">Shield Platform Encryption instead of Classic, Retry-After as an HTTP date, a real partner sandbox, monitoring dashboards on Integration_Log__c, and a managed package with a namespace.</p></div>
       <div class="qa"><p class="q">You used AI tools. Can you explain every part?</p><p class="a">Yes. Walk through the claim, the retry key, the signature check and DecisionProcessor without notes.</p></div>
     </div>
+    </div>
+    <div id="brief-pdf" class="pdf" hidden>
+    <h2 style="margin-top:4px">Take-Home Assignment: Native Salesforce Application for Submitting, Underwriting and Routing Small-Business Funding Applications</h2>
+    <p><span class="lbl">Objective:</span> Develop a Native Salesforce Application to create Funding Application records in Salesforce and integrate them with an external Underwriting API that reviews each application and sends a decision back. Decided applications should be queued for Funding Specialists to work.</p>
+    <p><span class="lbl">Questions:</span> This document intentionally leaves out some of the details you would need on a real project. Ask us, the same way you would ask a product owner before you start building. The questions you ask are part of the evaluation, so ask early and ask as many as you need. Email your questions to dev@fundmatellc.com.</p>
+
+    <h2>Requirements:</h2>
+    <h2>1. Native Salesforce Application</h2>
+    <ul>
+      <li>Create a Salesforce Application that queries data persisting in sObjects in order to create Funding Application record(s) that get sent to an External Underwriting API. The Salesforce Application should be able to receive decisions from the External API and create Funding Offer records from them. Decided Funding Applications should be sent to various Queues for Funding Specialists to work.</li>
+      <li>The application should use custom objects, Apex and Flow working together. Use Flow for the parts an administrator should be able to change without a developer.</li>
+    </ul>
+
+    <h2>2. API Endpoint:</h2>
+    <ul>
+      <li>Create a Salesforce RESTful API endpoint (e.g. POST /underwriting/decisions) that accepts JSON-formatted decisions to create Funding Offer records and link them back to the Funding Application (you will have to mock the decisions sent to your API)</li>
+      <li>A single request may carry many decisions, and the Underwriting API may send the same decision more than once</li>
+      <li>Every request the Underwriting API sends is signed. Your endpoint must verify the signature and reject any request it cannot verify</li>
+    </ul>
+
+    <h2>3. Data Handling:</h2>
+    <ul>
+      <li>The Salesforce application should be able to aggregate various data from sObjects and create the request that looks similar to below:
+        <ul>
+          <li>Business Details (Account)<ul><li>Legal Name</li><li>EIN (Tax ID)</li><li>State</li><li>Time in Business</li></ul></li>
+          <li>Owner Details (Contact)<ul><li>FirstName</li><li>LastName</li><li>Date of Birth</li><li>Social Security Number</li><li>Ownership Percentage</li></ul></li>
+          <li>Financials (Bank Statements)<ul><li>Average Monthly Deposits</li><li>Total NSF (returned payment) Count</li><li>Number of Statements</li></ul></li>
+          <li>Funding Request (Funding Application)<ul><li>Requested Amount</li><li>Use of Funds (e.g. working capital, equipment, inventory)</li></ul></li>
+        </ul>
+      </li>
+    </ul>
+    <p class="lbl">Sample Data:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Business</th><th>EIN</th><th>State</th><th>Owner</th><th>Requested</th><th>Monthly Deposits</th></tr></thead>
+      <tbody>
+        <tr><td>Blue Harbor Coffee LLC</td><td>12-3456789</td><td>NY</td><td>Maria Lopez</td><td>$75,000</td><td>52,100 / 54,900 / 52,750</td></tr>
+        <tr><td>Ridgeview Auto Repair Inc</td><td>98-7654321</td><td>TX</td><td>Daniel Okafor</td><td>$150,000</td><td>140,000 / 151,500 / 138,200</td></tr>
+        <tr><td>Lumen Dental Studio PLLC</td><td>45-6789012</td><td>FL</td><td>Priya Shah</td><td>$40,000</td><td>61,000 / 58,400</td></tr>
+        <tr><td>Cedar and Pine Landscaping</td><td></td><td>Calif.</td><td>Tom Becker</td><td>$600,000</td><td>31,000 / 29,500 / 33,200</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>4. External API Integration:</h2>
+    <ul>
+      <li>Implement logic to:
+        <ul>
+          <li>Create a Funding Application record in Salesforce</li>
+          <li>Send Funding Applications to the External API, which accepts up to 50 applications per request</li>
+          <li>External API status to be upserted back onto each Funding Application record (Status, StatusReason)</li>
+          <li>“Mock” an Underwriting Decision received from the External API to create Funding Offer record(s) linked to the appropriate Funding Application</li>
+          <li>Route each decided Funding Application to the right Queue</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>5. External Underwriting API Details:</h2>
+    <ul>
+      <li>Endpoint: you will have to mock this API (e.g. Beeceptor, Mockoon, Postman Mock Server)<br><code>POST /v1/applications/batch</code></li>
+      <li>Authentication: API key, sent in the X-Api-Key header</li>
+      <li>Sample Response:</li>
+    </ul>
+<pre>{
+  "batchId": "b-20261030-0001",
+  "results": [
+    {
+      "applicationReference": "FA-000123",
+      "status": "Acknowledged",
+      "statusReason": "Queued for review.",
+      "trackingId": "UW-88412"
+    },
+    {
+      "applicationReference": "FA-000124",
+      "status": "Rejected",
+      "statusReason": "Identity not verified."
+    }
+  ]
+}</pre>
+    <p class="lbl">Sample Decision (sent to your endpoint):</p>
+<pre>{
+  "decisions": [
+    {
+      "decisionId": "DEC-55102",
+      "trackingId": "UW-88412",
+      "applicationReference": "FA-000123",
+      "decision": "Approved",
+      "decisionReason": "Meets guidelines.",
+      "offers": [
+        {
+          "offerId": "OFR-9001",
+          "fundingAmount": 75000.00,
+          "factorRate": 1.32,
+          "termMonths": 12,
+          "paymentFrequency": "Weekly"
+        }
+      ]
+    }
+  ]
+}</pre>
+    <ul><li>Decision values: Approved, Declined, Needs More Info</li></ul>
+
+    <h2>6. Error Handling:</h2>
+    <ul>
+      <li>Implement robust error handling for scenarios such as:
+        <ul>
+          <li>Missing required fields</li>
+          <li>Invalid data formats</li>
+          <li>External API errors (e.g. authentication, rate limiting, data validation, timeouts)</li>
+          <li>Duplicate decisions, and decisions for applications that cannot accept them</li>
+        </ul>
+      </li>
+      <li>Provide meaningful error responses for Salesforce errors and consider how to handle errors related to the external API (e.g. 4xx, 429, 5xx)</li>
+      <li>One bad record must not cause the good records in the same request to fail</li>
+      <li>Logging must still record an error even when the transaction that hit it rolls back</li>
+    </ul>
+
+    <h2>7. Security:</h2>
+    <ul>
+      <li>Implement Authentication for your Salesforce RESTful endpoint, and verify the signature on every request</li>
+      <li>Ensure HTTP callout details and secrets are not hardcoded</li>
+      <li>Handle sensitive data appropriately (SSN, date of birth, EIN, bank data), ensuring compliance with relevant regulations (e.g. GLBA)</li>
+    </ul>
+
+    <h2>8. Data Validation:</h2>
+    <ul>
+      <li>Validate that each Funding Application has all the required fields and is correctly formatted before it is sent to the External API</li>
+      <li>Validate every decision your endpoint receives before writing it to Salesforce</li>
+    </ul>
+
+    <h2>9. Scale and Governor Limits:</h2>
+    <ul>
+      <li>The application must send 1,000 waiting Funding Applications, and accept 200 decisions in a single request, without hitting governor limits</li>
+      <li>The same Funding Application must never be sent twice, even when two processes run at the same time</li>
+      <li>Implement a retry mechanism for transient errors that respects the External API’s Retry-After header</li>
+      <li>Show evidence from your org that the limits held (e.g. Apex Jobs, limits usage recorded in your logs)</li>
+    </ul>
+
+    <h2>10. Documentation and Testing:</h2>
+    <ul>
+      <li>Provide clear instructions on deploying and testing the Salesforce Application</li>
+      <li>Include sample request payloads and describe expected responses</li>
+      <li>Provide unit tests with meaningful assertions (minimum 85% code coverage)</li>
+    </ul>
+
+    <h2>11. Demonstration Video:</h2>
+    <ul>
+      <li>Create a short video (5-10 minutes) highlighting:
+        <ul>
+          <li>The deployment process of the Salesforce Application</li>
+          <li>A walkthrough of the code, highlighting key components and logic</li>
+          <li>A live demonstration of the application in action, including sample request payloads, data being written back to Salesforce correctly, and at least one failure being handled</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>12. Code Sharing:</h2>
+    <ul>
+      <li>Submit the complete source code of your Salesforce application as a single zip file of your Salesforce DX project</li>
+      <li>Ensure the zip includes:
+        <ul>
+          <li>All project files and configurations</li>
+          <li>A comprehensive README file with setup instructions</li>
+          <li>Any additional resources or documentation necessary to understand and run the application</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>13. [Optional] Distribution:</h2>
+    <ul>
+      <li>Create an Unlocked Package or Second Generation Managed Package (2GP) with all your application components</li>
+      <li>Provide an installation link to facilitate reuse and discovery</li>
+    </ul>
+
+    <h2>Bonus Points:</h2>
+    <ul>
+      <li>Implement Alerting to notify administrators when Funding Applications fail to send</li>
+      <li>Implement a Lightning Web Component to compare the offers on a Funding Application</li>
+      <li>Implement exponential backoff with jitter for retries</li>
+      <li>Implement a CI pipeline (e.g. GitHub Actions) that deploys to a scratch org and runs your tests</li>
+    </ul>
+
+    <h2>Submission Guidelines:</h2>
+    <ul>
+      <li>Submit the Salesforce DX Project files as a zip, including all configurations and dependencies</li>
+      <li>Include a README file detailing:
+        <ul><li>Setup Instructions</li><li>Assumptions made during development</li></ul>
+      </li>
+      <li>Provide a link to your 5-10 minute demonstration video</li>
+      <li>If applicable, provide a link to install the package in Salesforce</li>
+      <li>Plan on 6-8 hours and submit within 5 days of receiving this assignment</li>
+      <li>You may use any tools, including AI assistants; be ready to explain every part of your code in a follow-up interview</li>
+      <li>Email any questions to dev@fundmatellc.com</li>
+    </ul>
+
+    <h2>Evaluation Criteria:</h2>
+    <ul>
+      <li>Functionality: Correctness and completeness of the implemented features</li>
+      <li>Questions: The quality of the questions asked before and during the build</li>
+      <li>Code Quality: Cleanliness, readability, and adherence to best practices</li>
+      <li>Error Handling and Validation: Robustness of error handling and accuracy of data validation</li>
+      <li>Scale: Behavior at volume and within governor limits</li>
+      <li>Security Measures: Effectiveness of implemented security protocols</li>
+      <li>Documentation Quality: Clarity and thoroughness of the provided documentation</li>
+      <li>Demonstration Video: Clarity and comprehensiveness of the demonstration</li>
+      <li>Bonus Implementations: Additional features or considerations beyond the core requirements</li>
+    </ul>
+
+    <h2>Resources:</h2>
+    <ul>
+      <li>Apex Developer Guide: Apex REST</li>
+      <li>Apex Developer Guide: Named Credentials as Callout Endpoints</li>
+      <li>Apex Developer Guide: Execution Governors and Limits</li>
+      <li>Platform Events Developer Guide</li>
+      <li>Salesforce DX Developer Guide: Second-Generation Packaging</li>
+    </ul>
+
+    <p>This assignment aims to assess your ability to design and implement a Salesforce Application that integrates with an external underwriting system to move a small business from application to funding offer, demonstrating technical proficiency, sound judgment and adherence to best practices.</p>
+    </div>
   </section>
 
   <footer>Private prep page. Not linked from the site.</footer>
@@ -638,6 +867,20 @@ echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentor
   });
   var start = location.hash.slice(1);
   if (['script', 'case', 'brief'].indexOf(start) >= 0) show(start, false);
+
+  // Brief view toggle: my brief vs the assignment PDF
+  var segs = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
+  function view(id) {
+    segs.forEach(function (b) {
+      var on = b.getAttribute('data-view') === id;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      document.getElementById(b.getAttribute('data-view')).hidden = !on;
+    });
+    try { localStorage.setItem('fundmate-brief-view', id); } catch (e) {}
+  }
+  segs.forEach(function (b) { b.addEventListener('click', function () { view(b.getAttribute('data-view')); }); });
+  var v = null; try { v = localStorage.getItem('fundmate-brief-view'); } catch (e) {}
+  view(v === 'brief-pdf' ? 'brief-pdf' : 'brief-mine');
 
   // Saved ticks (this device only)
   var KEY = 'fundmate-prep-v1';
