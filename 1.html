@@ -286,6 +286,7 @@
       <button role="tab" id="t-case" aria-controls="case" aria-selected="false">Case</button>
       <button role="tab" id="t-brief" aria-controls="brief" aria-selected="false">Brief</button>
       <button role="tab" id="t-interview" aria-controls="interview" aria-selected="false">Interview</button>
+      <button role="tab" id="t-classes" aria-controls="classes" aria-selected="false">Classes</button>
     </div>
   </nav>
 
@@ -1198,6 +1199,105 @@ H. OPERATIONS
     </ul>
   </section>
 
+  <!-- ============ CLASSES ============ -->
+  <section class="panel" id="classes" role="tabpanel" aria-labelledby="t-classes">
+    <div class="meta">
+      <div><b>27</b><span>Apex classes</span></div>
+      <div><b>7</b><span>test classes</span></div>
+      <div><b>3</b><span>triggers</span></div>
+    </div>
+    <p class="muted">Every Apex class, grouped by the part of the brief it covers, in the order data moves through the system. Use it to answer "what does this class do?".</p>
+
+    <h2>The one-paragraph answer</h2>
+    <div class="say">
+      <p>Apex does the work that needs code: the integration, scale, security and logging. A send run claims Ready applications under a lock, then a batch sends them 50 per callout through a Named Credential and writes the result back on each record. Retries follow Retry-After and reuse the same Idempotency-Key. Decisions arrive at a REST endpoint that checks OAuth, a custom permission and an HMAC signature, then a processor saves each decision on its own so one bad decision never blocks the rest. Logs go out as a Publish Immediately platform event, so they survive a rollback. Routing and screens are in Flow.</p>
+    </div>
+
+    <h2>Outbound: sending applications</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Class</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>SendToUnderwritingAction</code></td><td>The Send to Underwriting button and Flow action (<code>@InvocableMethod</code>). Sets the applications to Ready, which makes the trigger validate them, then starts a send run. Reads in user mode, writes in system mode because Status is read-only for specialists.</td></tr>
+        <tr><td><code>UnderwritingScheduler</code></td><td>Runs every 15 minutes and picks up every Ready application, including retries whose wait was longer than 10 minutes. Scheduled Apex can't call out, so it only enqueues the dispatcher.</td></tr>
+        <tr><td><code>UnderwritingDispatcher</code></td><td>Starts each send run (Queueable). Claims Ready applications, then launches <code>UnderwritingSendBatch</code> with a scope of <code>Batch_Size__c</code> (50).</td></tr>
+        <tr><td><code>UnderwritingClaimService</code></td><td><b>Never sent twice.</b> In its own transaction, before any callout: locks rows with <code>FOR UPDATE</code>, re-reads them under the lock, and moves only those still Ready to Queued with a batch key. A second run waits on the lock, then skips them.</td></tr>
+        <tr><td><code>UnderwritingSendBatch</code></td><td>Batch Apex (<code>AllowsCallouts</code>, <code>Stateful</code>). 50 records and one callout per execute, so 1,000 applications are 20 executes, each with its own governor limits.</td></tr>
+        <tr><td><code>UnderwritingBatchSender</code></td><td>Does the work for one batch: builds the payload, calls out, writes Status, Status Reason and Tracking Id back to each record. Owns the Idempotency-Key rules: one key per batch, reused on every retry.</td></tr>
+        <tr><td><code>UnderwritingApiClient</code></td><td>The HTTP callout through the <code>Underwriting_API</code> Named Credential, which adds <code>X-Api-Key</code>. Parses the response and sorts errors into transient (429, 5xx, timeout) and permanent (other 4xx).</td></tr>
+        <tr><td><code>UnderwritingPayloadBuilder</code></td><td>Builds the JSON body: <code>business</code>, <code>owners[]</code>, <code>financials</code>, <code>fundingRequest</code>. Keys and source fields come from <code>Payload_Field_Map__mdt</code>.</td></tr>
+        <tr><td><code>FundingApplicationSelector</code></td><td>Loads the application, Account, owner Contacts and Bank Statements in bulk queries. Field list comes from the same metadata. System mode, so the integration can read encrypted SSN and EIN.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Retries</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Class</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>RetryPolicy</code></td><td>How long to wait. Retry-After wins when the API sends it. Otherwise exponential backoff with full jitter, capped by <code>Max_Backoff_Seconds__c</code>.</td></tr>
+        <tr><td><code>UnderwritingRetryJob</code></td><td>Queueable that resends exactly the same applications with the same Idempotency-Key. Delayed by up to 10 minutes, the platform maximum.</td></tr>
+        <tr><td><code>UnderwritingRetryScheduler</code></td><td>For waits over 10 minutes: a one-off scheduled job that enqueues the retry job later. A class can't be both Queueable and Schedulable, and Schedulable can't call out.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Inbound: receiving decisions</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Class</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>UnderwritingDecisionResource</code></td><td><code>POST /services/apexrest/underwriting/decisions</code>. OAuth as the integration user plus the custom permission (else 403), valid signature (else 401), JSON with a decisions array (else 400), size cap (else 413). A savepoint means an unexpected 500 leaves nothing half-written.</td></tr>
+        <tr><td><code>SignatureVerifier</code></td><td><code>hex(HMAC-SHA256(secret, timestamp + "." + rawBody))</code>. Timestamp window blocks replays; constant-time comparison. Secret lives in a protected custom setting.</td></tr>
+        <tr><td><code>DecisionProcessor</code></td><td>Validates and saves up to 200 decisions in bulk; each gets its own result: created, duplicate or rejected with a reason. Catches repeated <code>decisionId</code>s and applications that can't accept a decision. Inserts with allOrNone false, undoes a decision whose offers fail, supersedes older offers, updates the application.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Validation and data</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Class</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>FundingApplicationValidator</code></td><td>Checks an application before it is sent. Required fields and formats from <code>Payload_Field_Map__mdt</code>; statement count, age and ownership thresholds from <code>Integration_Setting__mdt</code>. Messages use field labels, not JSON keys.</td></tr>
+        <tr><td><code>FinancialSnapshotService</code></td><td>Copies the latest statements onto the application: total deposits, count, NSF, month range. On create and again on submit, so the record shows exactly what was sent.</td></tr>
+        <tr><td><code>FundingApplicationTriggerHandler</code></td><td>Takes the snapshot; on the move to Ready re-snapshots and validates. Failures go to Validation Failed with the reasons. A fresh resend clears the Idempotency-Key.</td></tr>
+        <tr><td><code>FundingStatus</code></td><td>The Status picklist values as constants, so no class repeats the strings.</td></tr>
+        <tr><td><code>IntegrationConfig</code></td><td>Reads every setting from <code>Integration_Setting__mdt.Default</code>: batch size, attempts, backoff, timeout, signature window, thresholds, alert group, signing secret.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Offers</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Class</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>OfferMath</code></td><td>Number of payments per frequency and an estimated APR, solved by bisection. State disclosure laws (NY, CA, FL, TX) ask for cost and APR.</td></tr>
+        <tr><td><code>FundingOfferTriggerHandler</code></td><td>Before save, keeps <code>Estimated_APR__c</code> in step with the offer terms.</td></tr>
+        <tr><td><code>OfferComparisonController</code></td><td>Data for the <code>offerComparison</code> LWC. With sharing, so specialists see only what their permission sets allow.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Logging, alerts, compliance</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Class</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>IntegrationLogger</code></td><td>Publishes logs as <code>Integration_Log_Event__e</code> (Publish Immediately), so a log survives a rollback. Redacts SSN, EIN, date of birth, bank figures and keys. Records limits usage as evidence.</td></tr>
+        <tr><td><code>IntegrationLogEventHandler</code></td><td>Saves events as <code>Integration_Log__c</code>, upserting on the event UUID so a redelivered event can't create a second log.</td></tr>
+        <tr><td><code>IntegrationLogPurge</code></td><td>Daily scheduled job that deletes logs older than the retention setting (90 days), up to 9,000 per run. GLBA: keep data only as long as needed.</td></tr>
+        <tr><td><code>SendFailureAlertService</code></td><td>One in-app notification and one email per person per run when sends fail: record owner or queue members, plus the alert group. An alert error never undoes saved results.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Triggers and tests</h2>
+    <ul>
+      <li><code>FundingApplicationTrigger</code> → <code>FundingApplicationTriggerHandler</code></li>
+      <li><code>FundingOfferTrigger</code> → <code>FundingOfferTriggerHandler</code></li>
+      <li><code>IntegrationLogEventTrigger</code> → <code>IntegrationLogEventHandler</code></li>
+      <li><b>Tests:</b> <code>TestDataFactory</code>, <code>UnderwritingSendTest</code>, <code>UnderwritingDecisionResourceTest</code>, <code>FundingApplicationValidatorTest</code>, <code>ValidationRulesTest</code>, <code>SpecialistAccessTest</code>, <code>SupportingServicesTest</code>.</li>
+    </ul>
+
+    <h2>Likely questions</h2>
+    <div class="card">
+      <div class="qa"><p class="q">Why is routing not in Apex?</p><p class="a">The brief says admin-changeable logic belongs in Flow. <code>Route_Decided_Funding_Application</code> reads <code>Routing_Rule__mdt</code>, so queues and thresholds change in Setup.</p></div>
+      <div class="qa"><p class="q">Why split UnderwritingSendBatch and UnderwritingBatchSender?</p><p class="a">The batch handles scope and run totals; the sender handles one batch. The retry job reuses the sender, so first sends and retries follow the same rules.</p></div>
+      <div class="qa"><p class="q">Why a separate claim transaction?</p><p class="a">You can't make a callout after DML in the same transaction, and the lock has to be released before the send so the second run can see the rows are Queued.</p></div>
+    </div>
+  </section>
+
   </main>
   <aside class="toc" aria-label="On this page"><p>On this page</p><ol id="toc"></ol></aside>
   </div>
@@ -1250,7 +1350,7 @@ H. OPERATIONS
     });
   });
   var start = location.hash.slice(1);
-  if (['script', 'case', 'brief', 'interview'].indexOf(start) >= 0) show(start, false); else buildToc('script');
+  if (['script', 'case', 'brief', 'interview', 'classes'].indexOf(start) >= 0) show(start, false); else buildToc('script');
 
   // Brief view toggle: my brief vs the assignment PDF
   var segs = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
