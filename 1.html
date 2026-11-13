@@ -296,11 +296,61 @@
   <!-- ============ SCRIPT ============ -->
   <section class="panel active" id="script" role="tabpanel" aria-labelledby="t-script">
     <div class="meta">
-      <div><b>9:30</b><span>target length</span></div>
+      <div><b>9:45</b><span>target length</span></div>
       <div><b>8</b><span>scenes</span></div>
-      <div><b>5-10</b><span>minutes allowed</span></div>
+      <div><b>40+</b><span>"why" answers</span></div>
     </div>
-    <p class="muted">Covers what the brief asks for: deployment, a code walkthrough, and a live demo with sample payloads, data written back to Salesforce, and failures handled. Say it in your own words; the times are targets. Ticks are saved on this phone.</p>
+    <p class="muted">The video script and the explanation behind it. Each scene says what to click, what runs underneath (button, flow, trigger, class, record), what you say, and why it was built that way. The last sections answer "why this and not something else". Say it in your own words; ticks are saved on this device.</p>
+
+    <h2>What I built, in 30 seconds</h2>
+    <div class="say">
+      <p>A native Salesforce app for FundMate. A specialist creates a Funding Application from a business, and the app pulls in the owners and the last three bank statements. One button validates it and queues it. A batch job sends applications to the Underwriting API, 50 per callout, and writes the partner's status back on each record. The partner posts signed decisions to my REST endpoint, which creates Decision and Offer records, and a Flow routes the application to the right queue.</p>
+      <p>Underneath: no application is ever sent twice, even with two runs at once; retries follow Retry-After and reuse the same Idempotency-Key; every inbound request must pass OAuth, a custom permission and an HMAC signature; one bad record never fails the others; and logs survive rollbacks. Anything an admin might change, such as fields, thresholds and routing, is Custom Metadata or Flow, so it changes in Setup without a deployment.</p>
+    </div>
+
+    <h2>What I achieved (numbers to quote)</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Claim</th><th>Evidence from the org</th></tr></thead>
+      <tbody>
+        <tr><td>1,000 applications sent, none twice</td><td>Two runs started at the same moment: 1 batch job, 20 of 20 executes, 0 errors, all 1,000 with one batch key, all acknowledged</td></tr>
+        <tr><td>Stayed well inside limits</td><td>Claim of 1,000: 2 SOQL, 1 DML, 390 ms CPU. Each batch of 50: 4 SOQL, 1 DML, ~110 ms CPU, 1 callout</td></tr>
+        <tr><td>200 decisions in one request</td><td>All 200 created in 5.7 s: 6 SOQL, 4 DML statements, 367 ms CPU</td></tr>
+        <tr><td>Retry-After respected</td><td>429 with Retry-After 60: 5 attempts about 60 s apart, same Idempotency-Key each time, then Send Failed → Integration Exceptions</td></tr>
+        <tr><td>Endpoint security</td><td>Tampered, stale and unsigned: 401. Admin token: 403. Replay: no duplicate written</td></tr>
+        <tr><td>Tests</td><td>58 tests, 95% coverage <span class="muted">(last full run was 57 of 58; rerun before quoting)</span></td></tr>
+        <tr><td>Built</td><td>7 objects, 27 Apex classes + 7 test classes, 3 triggers, 4 flows, 2 LWCs, 3 Custom Metadata types, 33 validation rules, 5 queues, 3 permission sets</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Every button and what it fires</h2>
+    <p class="muted">The cause-and-effect chain. If they ask "what happens when I click this", answer from this table.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>You do</th><th>What runs, in order</th><th>Records changed</th></tr></thead>
+      <tbody>
+        <tr><td><b>Save a Bank Statement</b> on a business</td><td><b>Flow</b> <code>Bank_Statement_Defaults</code> (before-save) moves the month to the 1st and sets <code>Month_Key__c</code>. The unique key blocks a second statement for the same month</td><td><code>Bank_Statement__c</code></td></tr>
+        <tr><td><b>New Funding Application</b> (quick action / sidebar on the business page)</td><td><b>Screen Flow</b> <code>New_Funding_Application</code>: amount and use of funds → Create record → <b>trigger</b> <code>FundingApplicationTrigger</code> before insert → <code>FundingApplicationTriggerHandler.beforeInsert</code> sets Draft and calls <code>FinancialSnapshotService</code>, which copies the last 3 statements onto the application. Flow shows "Created FA-…, 3 statements, average $X"</td><td><code>Funding_Application__c</code> (Draft)</td></tr>
+        <tr><td><b>Send to Underwriting</b> (quick action on the application)</td><td><b>Screen Flow</b> <code>Send_to_Underwriting</code> → <b>Apex action</b> <code>SendToUnderwritingAction.send</code> sets Status = Ready → trigger before update → handler re-snapshots, loads data with <code>FundingApplicationSelector</code>, runs <code>FundingApplicationValidator</code>. Fails: status becomes Validation Failed with every reason, the flow shows red "Not sent". Passes: stays Ready, Idempotency-Key cleared, action enqueues <code>UnderwritingDispatcher</code>, flow shows green "Queued"</td><td>Application: Ready or Validation Failed</td></tr>
+        <tr><td><i>Async, seconds later</i></td><td><code>UnderwritingDispatcher</code> (Queueable) → <code>UnderwritingClaimService.claim</code> locks Ready rows <code>FOR UPDATE</code>, re-reads, sets Queued + Batch Key → <code>Database.executeBatch(UnderwritingSendBatch, 50)</code></td><td>Application: Queued, Batch Key</td></tr>
+        <tr><td><i>Each batch execute (50 records)</i></td><td><code>UnderwritingSendBatch.execute</code> → <code>UnderwritingBatchSender.send</code> → <code>FundingApplicationSelector.load</code> → <code>UnderwritingPayloadBuilder.build</code> (reads <code>Payload_Field_Map__mdt</code>) → <code>UnderwritingApiClient.sendBatch</code> via Named Credential (adds <code>X-Api-Key</code>) → results written back. <code>IntegrationLogger.limits</code> records usage</td><td>Application: Acknowledged + Tracking Id, or Rejected, or Queued for retry, or Send Failed. <code>Integration_Log__c</code></td></tr>
+        <tr><td><i>Status becomes Rejected / Send Failed / Approved / Declined / Needs More Info</i></td><td><b>Flow</b> <code>Route_Decided_Funding_Application</code> (before-save on status change) loops <code>Routing_Rule__mdt</code> by priority, first rule whose amount range fits wins, sets <code>OwnerId</code> to that queue. No match: owner stays, reason noted</td><td>Application owner = queue</td></tr>
+        <tr><td><i>429 / 5xx / timeout</i></td><td><code>RetryPolicy.delaySeconds</code> (Retry-After, else backoff + jitter) → <code>UnderwritingBatchSender.enqueueRetry</code>: ≤10 min a delayed <code>UnderwritingRetryJob</code>; longer, <code>UnderwritingRetryScheduler</code> one-off job that starts it. Same ids, same key. After 5 attempts: Send Failed → <code>SendFailureAlertService</code> bell + email</td><td>Retry Count, Next Retry At, Status Reason</td></tr>
+        <tr><td><b>Partner posts decisions</b> (<code>send-decisions.mjs</code>)</td><td>OAuth client credentials as integration user → <code>UnderwritingDecisionResource.receive</code>: custom permission (403) → <code>SignatureVerifier.verify</code> (401) → parse (400) → size cap (413) → savepoint → <code>DecisionProcessor.process</code>: shape check, duplicates, match application + tracking id, offer ids, save → <b>trigger</b> <code>FundingOfferTrigger</code> → <code>FundingOfferTriggerHandler</code> → <code>OfferMath</code> sets APR → application status updated → routing Flow fires</td><td><code>Underwriting_Decision__c</code>, <code>Funding_Offer__c</code>, Application: Approved / Declined / Needs More Info, owner = queue</td></tr>
+        <tr><td><b>Open an approved application</b></td><td>LWC <code>offerComparison</code> → <code>OfferComparisonController.getOffers</code> (with sharing)</td><td>read only</td></tr>
+        <tr><td><b>Edit EIN / SSN</b> on business or owner page</td><td>LWC <code>fundmateFields</code> (lightning-record-form) → validation rules on Account / Contact</td><td>Account, Contact</td></tr>
+        <tr><td><i>Any error or limit snapshot</i></td><td><code>IntegrationLogger</code> redacts, publishes <code>Integration_Log_Event__e</code> (Publish Immediately) → <b>trigger</b> <code>IntegrationLogEventTrigger</code> → <code>IntegrationLogEventHandler</code> upserts on event UUID</td><td><code>Integration_Log__c</code></td></tr>
+        <tr><td><i>Schedules</i></td><td><code>UnderwritingScheduler</code> at :00, :15, :30, :45 enqueues the dispatcher. <code>IntegrationLogPurge</code> at 2 AM deletes logs over 90 days</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Status lifecycle</h2>
+    <div class="states">
+      <span class="pill">Draft</span><span class="sep">→</span>
+      <span class="pill">Ready</span><span class="sep">or</span><span class="pill bad">Validation Failed</span><span class="sep">→</span>
+      <span class="pill">Queued</span><span class="sep">→</span>
+      <span class="pill">Acknowledged</span><span class="pill bad">Rejected</span><span class="pill bad">Send Failed</span><span class="sep">→</span>
+      <span class="pill ok">Approved</span><span class="pill warn">Declined</span><span class="pill warn">Needs More Info</span>
+    </div>
+    <p class="muted">Who moves it: user (Draft → Ready via the action), trigger (→ Validation Failed), claim (→ Queued), batch sender (→ Acknowledged / Rejected / Send Failed), decision processor (→ decision). Specialists can't edit Status directly, so nobody can approve by hand.</p>
 
     <h2>Before you record</h2>
     <div class="card" id="checklist">
@@ -316,7 +366,6 @@ sf apex run -o agentorg -f scripts/apex/seed-sample-data.apex</pre>Creates Blue 
       <div class="check"><input type="checkbox" id="c7"><label for="c7">If a page looks old after a redeploy: hard-reload, or log out and back in.</label></div>
     </div>
 
-
     <h2>Chrome tabs, in order</h2>
     <div class="tablewrap"><table>
       <thead><tr><th>#</th><th>Tab</th><th>Scene</th></tr></thead>
@@ -324,27 +373,18 @@ sf apex run -o agentorg -f scripts/apex/seed-sample-data.apex</pre>Creates Blue 
     </table></div>
     <p class="muted">Record pages get new IDs after reset and seed. Run <code>docs/record-links.sh</code> for tabs 5 and 6. Reach the Cedar and Pine account and Tom Becker by clicking through from tab 5.</p>
 
-    <h2>VS Code files (scene 6)</h2>
-    <div class="card">
-      <div class="qa"><p class="q">1. UnderwritingClaimService.cls</p><p class="a">The two FOR UPDATE queries</p></div>
-      <div class="qa"><p class="q">2. UnderwritingBatchSender.cls</p><p class="a">sharedKey and retryBatch</p></div>
-      <div class="qa"><p class="q">3. UnderwritingRetryJob.cls</p><p class="a">execute</p></div>
-      <div class="qa"><p class="q">4. UnderwritingDecisionResource.cls</p><p class="a">The permission check, then SignatureVerifier.verify</p></div>
-      <div class="qa"><p class="q">5. DecisionProcessor.cls</p><p class="a">The process method</p></div>
-      <div class="qa"><p class="q">6. Payload_Field_Map.business_ein.md-meta.xml (optional)</p><p class="a">Whole file; also shown in Setup in scene 3</p></div>
-    </div>
-    <p class="muted">All under <code>force-app/main/default/</code>. If you run setup-org.apex live in scene 2, run the pause command again before scene 4.</p>
-
     <h2>Scenes</h2>
 
     <details class="scene" open data-scene="s1">
       <summary><span class="scene-title">1. Intro</span><span class="scene-time">0:00-0:30</span><span class="scene-sub">FundMate app home</span></summary>
       <div class="scene-body">
         <div class="tabs-line"><b>On screen:</b> Chrome tab 1, FundMate app home.</div>
-        <div class="show"><b>Show:</b> the FundMate app home.</div>
         <div class="say">
           <p>Hi, I'm Rishav. This is my take-home for FundMate: a native Salesforce app that builds funding applications from a business's data, sends them to an underwriting API in batches of 50, and takes signed decisions back through a REST endpoint. Decisions create offers and route the application to the right queue.</p>
-          <p>Before building, I sent Deepak a short design doc with three questions. He confirmed all three and asked for one more queue, Integration Exceptions. Everything you'll see includes that.</p>
+          <p>Before building, I sent Deepak a short design doc with three questions: how requests are signed, whether the batch endpoint takes an idempotency key, and which queues exist. He confirmed all three and asked for one more queue, Integration Exceptions. Everything you'll see includes that.</p>
+        </div>
+        <div class="card">
+          <div class="qa"><p class="q">Why ask questions first?</p><p class="a">The brief said the questions are part of the evaluation, and three things changed the design: the signature format decides the verifier, the idempotency answer decides the retry design, and the queue answer decides the routing rules. Guessing any of them would have meant rework.</p></div>
         </div>
         <div class="say next"><p>I'll start with how it gets into an org.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
@@ -352,20 +392,25 @@ sf apex run -o agentorg -f scripts/apex/seed-sample-data.apex</pre>Creates Blue 
     </details>
 
     <details class="scene" data-scene="s2">
-      <summary><span class="scene-title">2. Deployment</span><span class="scene-time">0:30-1:30</span><span class="scene-sub">Terminal, then Named Credential</span></summary>
+      <summary><span class="scene-title">2. Deployment</span><span class="scene-time">0:30-1:30</span><span class="scene-sub">Terminal, Named Credential</span></summary>
       <div class="scene-body">
         <div class="tabs-line"><b>On screen:</b> Terminal, then Chrome tab 2 (Named Credential).</div>
-        <div class="show"><b>Show:</b> the terminal. Run the commands, or show output from an earlier run.</div>
 <pre>sf project deploy start --target-org agentorg --source-dir force-app
 sf org assign permset --name FundMate_Admin --target-org agentorg
 sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
         <div class="say">
-          <p>It's a standard Salesforce DX project. One deploy command pushes everything: the objects, Apex, Flows, Lightning components, permission sets and the five queues. It also installs as one unlocked package.</p>
-          <p>Then I assign the admin permission set and run a setup script. It schedules the send sweep every 15 minutes and adds me to the queues.</p>
+          <p>It's a Salesforce DX project. One deploy pushes everything: objects, Apex, Flows, Lightning components, permission sets and the five queues. It also installs as one unlocked package.</p>
+          <p>Then I assign the admin permission set and run a setup script. It schedules the send sweep every 15 minutes and the nightly log purge, and adds me to the queues.</p>
           <p>The mock Underwriting API is a Cloudflare Worker. Its URL lives in a Named Credential and its API key in an External Credential, so neither is in the code.</p>
         </div>
         <div class="show"><b>Show:</b> Setup → Named Credentials → Underwriting API for two seconds. The URL is visible, the key is not.</div>
-        <div class="say"><p>Locally, the test keys sit in a file that git ignores, so the repository has no secrets in it.</p></div>
+        <div class="say"><p>Locally, test keys sit in a gitignored file, so the repository has no secrets.</p></div>
+        <div class="tabs-line"><b>Under the hood:</b> <code>UnderwritingApiClient</code> calls <code>callout:Underwriting_API/v1/applications/batch</code>. The External Credential injects <code>X-Api-Key</code>. <code>setup-org.apex</code> calls <code>UnderwritingScheduler.scheduleEvery15Minutes()</code> and <code>IntegrationLogPurge.scheduleDaily()</code>.</div>
+        <div class="card">
+          <div class="qa"><p class="q">Why Named + External Credential, not a Custom Setting with the key?</p><p class="a">A Named Credential keeps the key out of code and out of any field a developer can query. The platform adds the header, and the endpoint is allow-listed automatically, so there's no Remote Site Setting. Rotating the key is a Setup change.</p></div>
+          <div class="qa"><p class="q">Why a Cloudflare Worker, not Beeceptor or Postman mocks?</p><p class="a">I needed logic, not canned responses: check the API key, return 429 with Retry-After or 503 based on the business name, reject identity or low deposits, and echo a batch id. A static mock can't make retries demonstrable.</p></div>
+          <div class="qa"><p class="q">Why an unlocked package?</p><p class="a">It installs as one versioned unit and can be upgraded, which is how a real team would ship it. CI runs the tests in a fresh scratch org on every push.</p></div>
+        </div>
         <div class="say next"><p>With it deployed, here's how the pieces fit together.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
@@ -375,16 +420,23 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
       <summary><span class="scene-title">3. The design in one minute</span><span class="scene-time">1:30-2:30</span><span class="scene-sub">Data model, Custom Metadata</span></summary>
       <div class="scene-body">
         <div class="tabs-line"><b>On screen:</b> Chrome tab 3 (Payload Field Map, business.ein), then tab 4 (Routing Rules).</div>
-        <div class="show"><b>Show:</b> the cheatsheet in a browser (org map, then problem, solution, proof), or the Case tab on this page.</div>
         <div class="say">
-          <p>Account is the business and Contact is the owner, with SSN and date of birth encrypted. Bank statements belong to the business. When an application is created, it snapshots the last three months, so underwriting always sees exactly what was sent.</p>
+          <p>Account is the business and Contact is the owner, with SSN, EIN and date of birth encrypted. Bank statements belong to the business. When an application is created and again when it is sent, it snapshots the last three months, so underwriting always sees exactly what was sent.</p>
           <p>Most of the behaviour lives in configuration.</p>
         </div>
         <div class="show"><b>Show:</b> Setup → Custom Metadata Types → Payload Field Map → <code>business.ein</code>, then Routing Rule.</div>
         <div class="say">
-          <p>Each key in the API request is a metadata record: which object, which field, whether it's required, and the format it needs. Routing works the same way: status and amount range to a queue. Approvals over 250,000 go to Senior Funding, and partner rejections and send failures go to Integration Exceptions, as Deepak asked. An admin changes any of this in Setup, and validation rules stop them saving a broken setting.</p>
+          <p>Each key in the API request is a metadata record: which object, which field, whether it's required, and the format. The validator and the payload builder both read it. Routing works the same way: status and amount range to a queue. Approvals over 250,000 go to Senior Funding, and partner rejections and send failures go to Integration Exceptions, as Deepak asked. Validation rules on the metadata stop an admin saving a broken setting.</p>
+          <p>So if FundMate raises the revenue minimum or adds a queue, an admin changes it in Setup and no code is deployed.</p>
         </div>
-        <div class="say"><p>So if FundMate raises the revenue minimum or adds a queue next month, an admin makes the change in Setup and no code is deployed.</p></div>
+        <div class="tabs-line"><b>Under the hood:</b> <code>FundingApplicationSelector.fieldMaps()</code> reads <code>Payload_Field_Map__mdt</code> and builds the SOQL. <code>FundingApplicationValidator</code> checks required + regex from the same records. <code>UnderwritingPayloadBuilder</code> groups by section. <code>IntegrationConfig</code> reads <code>Integration_Setting__mdt.Default</code>. Flow <code>Route_Decided_Funding_Application</code> reads <code>Routing_Rule__mdt</code>.</div>
+        <div class="card">
+          <div class="qa"><p class="q">Why Custom Metadata, not Custom Settings or hardcoded values?</p><p class="a">Custom Metadata deploys with the package, can be cached and queried without counting against SOQL limits, supports validation rules and is visible to Flow. Custom Settings are data, so they don't move between orgs with the code. The one exception is the signing secret, which is in a <b>protected</b> custom setting because secrets shouldn't be in deployable metadata.</p></div>
+          <div class="qa"><p class="q">Why are statements on the Account, not on the application?</p><p class="a">Statements exist before any application and are reused across applications. I changed this after the questions email. The snapshot fields on the application freeze what was sent, so a later statement doesn't change history.</p></div>
+          <div class="qa"><p class="q">Why a separate Underwriting Decision object instead of fields on the application?</p><p class="a">An application can get more than one decision (Needs More Info, then Approved). A separate record keeps the audit trail, and its unique <code>Decision_Id__c</code> is what makes duplicate detection a one-query check.</p></div>
+          <div class="qa"><p class="q">Why Classic Encryption, not Shield?</p><p class="a">Shield is a paid add-on and not available in a Developer Edition. Classic Encryption masks on screen and only users with View Encrypted Data see the value. In production with Shield I'd use deterministic encryption so EIN can still be filtered.</p></div>
+          <div class="qa"><p class="q">Why is date of birth a text field?</p><p class="a">Classic Encryption only works on text. A regex validation rule enforces YYYY-MM-DD and another enforces 18+.</p></div>
+        </div>
         <div class="say next"><p>That's the design. Here's what a user sees when the data is wrong.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
@@ -394,15 +446,19 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
       <summary><span class="scene-title">4. Validation, as a user</span><span class="scene-time">2:30-4:00</span><span class="scene-sub">Cedar and Pine, EIN, owner age</span></summary>
       <div class="scene-body">
         <div class="tabs-line"><b>On screen:</b> Chrome tab 5 (Cedar and Pine application). Click through to the business and to Tom Becker from there.</div>
-        <div class="show"><b>Show:</b> the <b>Cedar and Pine Landscaping</b> application record (tab 5, not the business page). Press <b>Send to Underwriting</b> in the top-right of the record, next to Edit. Don't use the New Funding Application form here: it only creates a Draft and doesn't run the checks.</div>
-        <div class="say"><p>The brief's sample data has problems. Cedar and Pine has no EIN, and its state is "Calif." When I press Send, nothing goes out. The screen lists every reason.</p></div>
-        <div class="show"><b>Show:</b> the red <b>Not sent</b> screen. Click Finish, then open the business.</div>
-        <div class="say"><p>The business page in the FundMate app has a "Business details for underwriting" card, so I can fix the data right here.</p></div>
-        <div class="show"><b>Show:</b> edit <b>EIN</b> to <code>334455667</code> (no dash) and Save. "EIN must be in 12-3456789 format" appears.</div>
-        <div class="say"><p>A validation rule checks the format. Now the correct value.</p></div>
-        <div class="show"><b>Show:</b> EIN <code>33-4455667</code>, State <code>CA</code>, Save. Green "Saved" toast. Then open owner <b>Tom Becker</b>, set Date of Birth to <code>2015-01-01</code>, Save: "Business owners must be at least 18". Set it back to <code>1975-05-09</code>.</div>
-        <div class="say"><p>Same for owners: SSN and date of birth are encrypted, and the rules check their format and that owners are adults.</p></div>
-        <div class="say"><p>Bad data stops before it leaves Salesforce, and the person who can fix it sees exactly what to fix.</p></div>
+        <div class="show"><b>Show:</b> the <b>Cedar and Pine Landscaping</b> application record. Press <b>Send to Underwriting</b> top-right, next to Edit.</div>
+        <div class="say"><p>The brief's sample data has problems. Cedar and Pine has no EIN, and its state is "Calif." When I press Send, nothing goes out. The screen lists every reason at once, not just the first.</p></div>
+        <div class="tabs-line"><b>Under the hood:</b> Quick action → Screen Flow <code>Send_to_Underwriting</code> → Apex action <code>SendToUnderwritingAction</code> sets Status = Ready → <code>FundingApplicationTrigger</code> before update → <code>FundingApplicationTriggerHandler.beforeUpdate</code> → <code>FinancialSnapshotService.apply</code> → <code>FundingApplicationSelector.load</code> → <code>FundingApplicationValidator.validate</code>. Errors found, so the handler sets Validation Failed and the reasons in the same save. Flow decision "Was Sent?" shows the red screen. No dispatcher is enqueued.</div>
+        <div class="show"><b>Show:</b> click Finish, open the business. Edit <b>EIN</b> to <code>334455667</code>, Save: "EIN must be in 12-3456789 format". Then <code>33-4455667</code>, State <code>CA</code>, Save. Open owner <b>Tom Becker</b>, Date of Birth <code>2015-01-01</code>: "Business owners must be at least 18". Set back to <code>1975-05-09</code>.</div>
+        <div class="say"><p>The business page has a "Business details for underwriting" card, so I fix the data right here. A validation rule checks the format. Same for owners: SSN and date of birth are encrypted, and rules check format and that owners are adults. Bad data stops before it leaves Salesforce, and the person who can fix it sees exactly what to fix.</p></div>
+        <div class="tabs-line"><b>Under the hood:</b> LWC <code>fundmateFields</code> wraps <code>lightning-record-form</code>, so field-level security, encrypted masking and validation-rule messages come from the platform.</div>
+        <div class="card">
+          <div class="qa"><p class="q">Why validate in Apex in the trigger, not only with validation rules?</p><p class="a">Validation rules check one record. Sending needs cross-record checks: at least one owner at 20%+, three consecutive statements, the latest within 3 months, every mapped field present. That needs queries, so it's Apex. Field formats stay in validation rules so they apply everywhere, including the API and data loads.</p></div>
+          <div class="qa"><p class="q">Why run validation in the trigger and not in the button's Apex?</p><p class="a">Any path that sets Ready gets checked: the button, a data load, a Flow an admin builds later. An application can never reach Ready incomplete.</p></div>
+          <div class="qa"><p class="q">Why mark it Validation Failed instead of throwing an error?</p><p class="a">An error rolls back and the reason disappears. Saving the status and reasons keeps them on the record, works in bulk (one bad record doesn't block the others), and the user can fix and resend.</p></div>
+          <div class="qa"><p class="q">Why a Screen Flow for the button and not an LWC?</p><p class="a">The brief says to use Flow where an admin should be able to change things. The screens and messages are Flow, so an admin can reword them. The logic that must be safe is the Apex action behind it.</p></div>
+          <div class="qa"><p class="q">Why an LWC for the business and owner cards?</p><p class="a">To show the FundMate fields without changing the org's existing page layouts. It's one generic component configured with a field list.</p></div>
+        </div>
         <div class="say next"><p>Cedar and Pine is clean now, so let's send real applications.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
@@ -412,16 +468,24 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
       <summary><span class="scene-title">5. Create and send, live</span><span class="scene-time">4:00-5:30</span><span class="scene-sub">Blue Harbor, Apex Jobs</span></summary>
       <div class="scene-body">
         <div class="tabs-line"><b>On screen:</b> Chrome tab 6 (Blue Harbor account), tab 8 (Apex Jobs), then tab 7 (Funding Applications list).</div>
-        <div class="show"><b>Show:</b> the <b>Blue Harbor Coffee LLC</b> Account. In the New Funding Application form, click Next empty, then enter <code>0</code>.</div>
+        <div class="show"><b>Show:</b> <b>Blue Harbor Coffee LLC</b> Account. In the New Funding Application panel click Next empty, then enter <code>0</code>.</div>
         <div class="say"><p>Creating an application starts from the business. The form won't take an empty request or a zero amount.</p></div>
-        <div class="show"><b>Show:</b> enter <code>75000</code>, choose Working Capital, Next. "Created FA-…, 3 bank statements on file, average monthly deposits $53,250".</div>
+        <div class="show"><b>Show:</b> <code>75000</code>, Working Capital, Next: "Created FA-…, 3 bank statements on file, average monthly deposits $53,250".</div>
         <div class="say"><p>The owners and the last three months of statements come from the business automatically: $53,250 a month, which matches the brief.</p></div>
-        <div class="show"><b>Show:</b> open the application, press <b>Send to Underwriting</b> (green "queued" screen). Also send <b>Cedar and Pine</b> and <b>Small Shop Bakery</b>. Then Apex Jobs: dispatcher, then batch. After about 30 seconds refresh the list.</div>
+        <div class="tabs-line"><b>Under the hood:</b> Screen Flow <code>New_Funding_Application</code> → Create Records → <code>FundingApplicationTrigger</code> before insert → handler sets Draft → <code>FinancialSnapshotService.apply</code> fills Statement Count, Total Deposits, NSF, first/last month. Average Monthly Deposits is a formula. The flow's Get Records reads it back for the message.</div>
+        <div class="show"><b>Show:</b> open the application, press <b>Send to Underwriting</b> (green screen). Also send <b>Cedar and Pine</b> and <b>Small Shop Bakery</b>. Then Apex Jobs: dispatcher, then batch. After about 30 seconds refresh the list.</div>
         <div class="say">
           <p>Sending runs in two steps. A claim step locks the Ready records and stamps a batch key, so two runs can't send the same application. Then a batch job sends them, 50 per callout, with one Idempotency-Key for the batch.</p>
-          <p>The mock answered: Blue Harbor and Cedar and Pine are Acknowledged with tracking ids. Small Shop Bakery was rejected for low deposits and went straight to the Integration Exceptions queue.</p>
+          <p>The mock answered: Blue Harbor and Cedar and Pine are Acknowledged with tracking ids. Small Shop Bakery was rejected for low deposits and went straight to the Integration Exceptions queue. Every application keeps the partner's status and reason on the record, so a specialist sees why without opening a log.</p>
         </div>
-        <div class="say"><p>Every application keeps the partner's status and reason on the record, so a specialist sees why without opening a log.</p></div>
+        <div class="tabs-line"><b>Under the hood:</b> <code>SendToUnderwritingAction</code> enqueues <code>UnderwritingDispatcher</code> → <code>UnderwritingClaimService.claim</code> (Ready → Queued, Batch Key) → <code>UnderwritingSendBatch</code> scope 50 → <code>UnderwritingBatchSender.send</code> → <code>UnderwritingPayloadBuilder</code> → <code>UnderwritingApiClient</code> → per result: Acknowledged + Tracking Id, or Rejected + reason. Rejected fires Flow <code>Route_Decided_Funding_Application</code> → owner = Integration Exceptions queue. <code>finish</code> logs the run summary and calls <code>SendFailureAlertService</code> if anything failed.</div>
+        <div class="card">
+          <div class="qa"><p class="q">Why Batch Apex, not chained Queueables or @future?</p><p class="a">Batch gives every 50 records a fresh transaction with its own limits and one callout. One transaction gets only 120 s of total callout time and 100 callouts, Developer Edition caps Queueable chain depth, and @future can't be chained or monitored. Batch also shows up in Apex Jobs, which is my evidence.</p></div>
+          <div class="qa"><p class="q">Why a separate claim step before the batch?</p><p class="a">Salesforce doesn't allow a callout after DML in the same transaction, and the lock must be committed before sending so a second run sees the rows as Queued. Claiming in its own transaction solves both.</p></div>
+          <div class="qa"><p class="q">Why FOR UPDATE and a re-read, not just checking Status?</p><p class="a">Two runs can both read "Ready" before either writes. FOR UPDATE makes the second wait until the first commits; re-reading under the lock then finds them Queued and skips them. Checking status alone is a race.</p></div>
+          <div class="qa"><p class="q">Why send on a button and also every 15 minutes?</p><p class="a">The button gives instant feedback for one application. The sweep catches everything else: bulk-loaded Ready records, retries longer than 10 minutes, and anything the button's job missed. Both go through the same claim, so they can't double-send.</p></div>
+          <div class="qa"><p class="q">Why does the partner's status go on the application?</p><p class="a">The brief asks for Status and StatusReason upserted back. Keeping it on the record means a specialist sees it in list views and reports without reading logs.</p></div>
+        </div>
         <div class="say next"><p>Here's the code behind that send.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
@@ -430,60 +494,125 @@ sf apex run --target-org agentorg --file scripts/apex/setup-org.apex</pre>
     <details class="scene" data-scene="s6">
       <summary><span class="scene-title">6. Code walkthrough</span><span class="scene-time">5:30-7:15</span><span class="scene-sub">About 20 seconds per file</span></summary>
       <div class="scene-body">
-        <div class="tabs-line"><b>On screen:</b> VS Code: UnderwritingClaimService, UnderwritingBatchSender, UnderwritingRetryJob, UnderwritingDecisionResource, DecisionProcessor.</div>
-        <div class="show"><b><code>UnderwritingClaimService.cls</code></b>, at the two <code>FOR UPDATE</code> queries.</div>
+        <div class="tabs-line"><b>On screen:</b> VS Code, files under <code>force-app/main/default/classes/</code>.</div>
+        <div class="show"><b><code>UnderwritingClaimService.cls</code></b>, the two <code>FOR UPDATE</code> queries.</div>
         <div class="say"><p>The claim locks the rows, reads them again under the lock, and only moves the ones still Ready. In my org I started two send runs at the same moment: one batch ran, the other claimed nothing, and all 1,000 applications had a single batch key.</p></div>
-        <div class="show"><b><code>UnderwritingBatchSender.cls</code></b>, at <code>sharedKey</code> and <code>retryBatch</code>.</div>
-        <div class="say"><p>This sends one batch. The Idempotency-Key is created once per batch and stored on each application. On a 429, a 5xx or a timeout, the same batch is retried with the same key, however long the wait, which is what FundMate confirmed: the partner ignores a repeated key for 24 hours. When a user resends after fixing something, the key is cleared, so the partner never ignores a corrected application.</p></div>
-        <div class="show"><b><code>UnderwritingRetryJob.cls</code></b>, at <code>execute</code>.</div>
-        <div class="say"><p>The retry job resends exactly those applications after the wait: a delayed job for up to 10 minutes, a one-off scheduled job for longer. Retry-After wins, otherwise exponential backoff with jitter. After five attempts the application is marked Send Failed and goes to Integration Exceptions.</p></div>
-        <div class="show"><b><code>UnderwritingDecisionResource.cls</code></b>, at the <code>SignatureVerifier.verify</code> call.</div>
+        <div class="show"><b><code>UnderwritingBatchSender.cls</code></b>, <code>sharedKey</code> and <code>retryBatch</code>.</div>
+        <div class="say"><p>This sends one batch. The Idempotency-Key is created once per batch and stored on each application. On a 429, a 5xx or a timeout, the same batch is retried with the same key, which is what FundMate confirmed: the partner ignores a repeated key for 24 hours. When a user resends after fixing something, the key is cleared, so the partner never ignores a corrected application.</p></div>
+        <div class="show"><b><code>UnderwritingRetryJob.cls</code></b>, <code>execute</code>.</div>
+        <div class="say"><p>The retry job resends exactly those applications after the wait: a delayed Queueable for up to 10 minutes, a one-off scheduled job for longer. Retry-After wins, otherwise exponential backoff with jitter. After five attempts the application is Send Failed and goes to Integration Exceptions with an alert.</p></div>
+        <div class="show"><b><code>UnderwritingDecisionResource.cls</code></b>, the permission check, then <code>SignatureVerifier.verify</code>.</div>
         <div class="say"><p>The inbound endpoint only accepts the integration user: the partner gets a token with OAuth client credentials, and any other token, even mine as admin, gets a 403. Then it checks an HMAC-SHA256 signature over the timestamp and the raw body before parsing anything. A missing, wrong or old signature gets a 401.</p></div>
-        <div class="show"><b><code>DecisionProcessor.cls</code></b>, at the <code>process</code> method's steps.</div>
-        <div class="say"><p>Every decision gets its own result. It checks the shape, skips duplicates, matches the application and its tracking id, checks offer ids, then saves with partial success, so one bad decision never blocks the others.</p></div>
+        <div class="show"><b><code>DecisionProcessor.cls</code></b>, the <code>process</code> method.</div>
+        <div class="say"><p>Five steps, each one query or one DML for the whole request: shape check, duplicates, match the application and tracking id, check offer ids, then save with partial success. Every decision gets its own result, so one bad decision never blocks the others.</p></div>
+        <div class="card">
+          <div class="qa"><p class="q">Why one Idempotency-Key per batch, not per application?</p><p class="a">That's the partner's contract: the key goes on the request, and a request is a batch. Retries must resend the identical batch with the identical key, so the job stores the ids and key and resends exactly those.</p></div>
+          <div class="qa"><p class="q">When does an application get a new key?</p><p class="a">A user resend (data may have changed, so it's a new request), and an application missing from a 2xx response (the partner may have stored the key without processing it, so the same key would be ignored).</p></div>
+          <div class="qa"><p class="q">Why full jitter?</p><p class="a">If many batches fail at once, plain exponential backoff makes them all retry at the same second and hit the rate limit again. Random delay up to the cap spreads them out. Retry-After from the server always wins.</p></div>
+          <div class="qa"><p class="q">Why a Queueable delay plus a scheduled job for long waits?</p><p class="a">Queueable delay maxes out at 10 minutes. Retry-After can be longer, so a one-off Schedulable starts the retry job at the right time. Schedulable can't call out itself, and a class can't be both, hence the small <code>UnderwritingRetryScheduler</code> wrapper.</p></div>
+          <div class="qa"><p class="q">Which errors are retried?</p><p class="a">429, 5xx and timeouts are transient. 400, 401, 403 aren't: retrying won't fix them, so they go straight to Send Failed with the message and an alert. A missing Named Credential key also fails fast instead of looping.</p></div>
+          <div class="qa"><p class="q">Why OAuth and HMAC both?</p><p class="a">OAuth proves who is calling. HMAC proves the body wasn't changed and, with the timestamp, isn't a replay. The custom permission makes sure only the integration user, not any logged-in admin, can post.</p></div>
+          <div class="qa"><p class="q">Why constant-time comparison?</p><p class="a">A normal string compare stops at the first different character, so timing can leak how much of a guessed signature is right. Comparing every character removes that.</p></div>
+          <div class="qa"><p class="q">Why sign the raw body, not the parsed JSON?</p><p class="a">Re-serialising changes whitespace and key order, so the signature would never match. And parsing before verifying means processing untrusted input.</p></div>
+        </div>
         <div class="say next"><p>That covers sending and receiving in code. Let me show decisions arriving for real.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
 
     <details class="scene" data-scene="s7">
-      <summary><span class="scene-title">7. Decisions and failures</span><span class="scene-time">7:15-9:00</span><span class="scene-sub">Signed decisions, 401, 403, 429</span></summary>
+      <summary><span class="scene-title">7. Decisions and failures</span><span class="scene-time">7:15-9:15</span><span class="scene-sub">Signed decisions, 401, 403, 429</span></summary>
       <div class="scene-body">
-        <div class="tabs-line"><b>On screen:</b> Terminal, Chrome tab 7 (Funding Applications list) for the approved application, then tab 9 (Integration Logs).</div>
-        <div class="show"><b>Show:</b> the terminal, with the decision file set to Blue Harbor's reference and tracking id.</div>
+        <div class="tabs-line"><b>On screen:</b> Terminal, Chrome tab 7 for the approved application, then tab 9 (Integration Logs).</div>
 <pre>node scripts/send-decisions.mjs data/decisions/sample-decision.json</pre>
         <div class="say"><p>This script plays the underwriting API. It gets a client-credentials token as the integration user, signs the body and posts it. HTTP 200: one decision created.</p></div>
-        <div class="show"><b>Show:</b> the application: <b>Approved</b>, owner <b>Funding Specialists</b>, and the <b>Offer Comparison</b> panel.</div>
+        <div class="tabs-line"><b>Under the hood:</b> <code>UnderwritingDecisionResource.receive</code> → <code>DecisionProcessor.process</code> inserts <code>Underwriting_Decision__c</code>, then <code>Funding_Offer__c</code> → <code>FundingOfferTrigger</code> → <code>FundingOfferTriggerHandler</code> → <code>OfferMath.estimateApr</code> → older offers marked Superseded → application Status = Approved, Decision, Decided At → Flow <code>Route_Decided_Funding_Application</code> → owner = Funding Specialists (≤ $250k) → <code>IntegrationLogger.limits</code> records the request.</div>
+        <div class="show"><b>Show:</b> the application: <b>Approved</b>, owner <b>Funding Specialists</b>, the <b>Offer Comparison</b> panel.</div>
         <div class="say"><p>The decision moved the application to Approved, and a Flow routed it using the rules in Custom Metadata. The offer shows total payback, payment and an estimated APR. The sample businesses are in states with commercial financing disclosure laws, so specialists need those numbers.</p></div>
 <pre>node scripts/send-decisions.mjs data/decisions/sample-decision.json
 node scripts/send-decisions.mjs data/decisions/sample-decision.json --tamper
 node scripts/send-decisions.mjs data/decisions/sample-decision.json --as-cli
 node scripts/send-decisions.mjs data/decisions/invalid-decisions.json</pre>
-        <div class="say"><p>Same request again: a duplicate, so nothing new is written. A tampered signature gets 401. My own admin token gets 403, because only the integration user may post. A file of bad decisions comes back with a precise reason for each one.</p></div>
-        <div class="show"><b>Show:</b> seed the rate-limit demo and start the send (the sweep is paused). Open Integration Logs about a minute later.</div>
+        <div class="say"><p>Same request again: duplicate, nothing new written. Tampered signature: 401. My own admin token: 403, because only the integration user may post. A file of bad decisions comes back with a precise reason for each one.</p></div>
+        <div class="show"><b>Show:</b> seed the rate-limit demo and start a send. Open Integration Logs about a minute later.</div>
 <pre>sf apex run -o agentorg -f scripts/apex/seed-failure-demo.apex
 echo "System.enqueueJob(new UnderwritingDispatcher());" | sf apex run -o agentorg</pre>
-        <div class="say"><p>This business name makes the mock return 429 with Retry-After 60. The log shows each retry about a minute apart, and every attempt carries the same Idempotency-Key. Every request and every batch also logs its governor-limit usage. In the 1,000-application run, two runs started at once gave one batch, 20 of 20 executes and all 1,000 acknowledged; and 200 decisions in one request took 6 queries, 4 DML statements and under 400 milliseconds of CPU.</p></div>
-        <div class="say"><p>Every failure here ends somewhere a person can see it: a reason on the record, a queue, or an alert.</p></div>
+        <div class="say"><p>This business name makes the mock return 429 with Retry-After 60. The log shows each retry about a minute apart, all with the same Idempotency-Key. Every request and batch also logs its governor-limit usage: in the 1,000-application run, 20 of 20 executes and all acknowledged; 200 decisions in one request took 6 queries, 4 DML statements and under 400 ms of CPU. Every failure ends somewhere a person can see it: a reason on the record, a queue, or an alert.</p></div>
+        <div class="card">
+          <div class="qa"><p class="q">Why a REST Apex endpoint, not the standard sObject API or Platform Events?</p><p class="a">The partner shouldn't know Salesforce's schema, and the brief needs signature checks, per-decision validation and a result per decision. The standard API can't verify an HMAC or return "duplicate". Platform Events don't give the caller a synchronous answer.</p></div>
+          <div class="qa"><p class="q">How are duplicates handled?</p><p class="a">One query for existing <code>Decision_Id__c</code> values plus a set for repeats inside the same request. A duplicate returns "duplicate" and writes nothing. The unique field is the backstop if two requests race.</p></div>
+          <div class="qa"><p class="q">Which applications can accept a decision?</p><p class="a">Only Acknowledged and Needs More Info (a setting). The tracking id must match. Anything else is rejected with the current status in the reason.</p></div>
+          <div class="qa"><p class="q">Why partial success and also a savepoint?</p><p class="a">Partial success (allOrNone false) is for expected bad records: each is rejected and the rest save. The savepoint is for an unexpected exception: roll everything back and return 500, so the partner can safely resend, and the request is never half-applied.</p></div>
+          <div class="qa"><p class="q">What if a decision saves but its offer fails?</p><p class="a">That decision is deleted again and reported as rejected, so there's never a decision without its offers.</p></div>
+          <div class="qa"><p class="q">Why log through a platform event?</p><p class="a">A normal insert rolls back with the transaction, so you'd lose the log of the error that caused the rollback. A Publish Immediately event is delivered anyway, and the handler upserts on the event UUID so redelivery doesn't duplicate.</p></div>
+          <div class="qa"><p class="q">Why route with a before-save Flow, not Assignment Rules or Apex?</p><p class="a">The brief asks for Flow where admins should change behaviour, and routing is exactly that. Before-save sets OwnerId with no extra DML. Assignment Rules only work for Leads and Cases. The rules themselves are Custom Metadata, so an admin edits a row, not the Flow.</p></div>
+          <div class="qa"><p class="q">Why queues, not Omni-Channel?</p><p class="a">Queues meet the brief and work in any org. Omni-Channel could sit on top of the same queues later to push work to available specialists.</p></div>
+        </div>
         <div class="say next"><p>Last, the tests.</p></div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
 
     <details class="scene" data-scene="s8">
-      <summary><span class="scene-title">8. Tests and wrap-up</span><span class="scene-time">9:00-9:30</span><span class="scene-sub">58 tests, 95%</span></summary>
+      <summary><span class="scene-title">8. Tests and wrap-up</span><span class="scene-time">9:15-9:45</span><span class="scene-sub">58 tests, 95%</span></summary>
       <div class="scene-body">
         <div class="tabs-line"><b>On screen:</b> Terminal, or optional tab 10 (Apex Test Execution).</div>
-        <div class="show"><b>Show:</b> the last test run in the terminal, or Setup → Apex Test Execution.</div>
 <pre>sf apex run test --target-org agentorg --class-names FundingApplicationValidatorTest,UnderwritingSendTest,UnderwritingDecisionResourceTest,SupportingServicesTest,ValidationRulesTest,SpecialistAccessTest --code-coverage --result-format human --wait 30</pre>
         <div class="say">
           <p>58 tests, 95% coverage. They include sending 1,000 applications, 200 decisions in one request, retries that keep the same key, routing to Integration Exceptions, log masking and the retention purge, a log that survives a rollback, a test that runs as a real funding specialist to prove they can't see other applications or approve one by hand, and one that proves any user other than the integration user gets a 403.</p>
-          <p>Bonus items: failure alerts, the offer comparison component, backoff with jitter, a GitHub Actions workflow that tests in a scratch org, and an unlocked package. The README covers setup, payloads, the questions I asked and the answers, results from the org, and my assumptions. Thanks for watching.</p>
+          <p>Bonus items: failure alerts, the offer comparison component, backoff with jitter, a GitHub Actions workflow that tests in a scratch org, and an unlocked package. The README covers setup, payloads, the questions I asked, results from the org and my assumptions. Thanks for watching.</p>
         </div>
-        <div class="say"><p>I'm happy to go through any part of it in the follow-up.</p></div>
+        <div class="card">
+          <div class="qa"><p class="q">How do you test callouts?</p><p class="a"><code>HttpCalloutMock</code> returns 200, 429 with Retry-After, 503, timeouts and bad bodies. <code>RetryPolicy</code> has a test hook for a fixed random value so the backoff is predictable.</p></div>
+          <div class="qa"><p class="q">How do you test as a specialist?</p><p class="a"><code>SpecialistAccessTest</code> creates a user with the specialist permission set and uses <code>System.runAs</code> to prove private sharing and the read-only Status.</p></div>
+          <div class="qa"><p class="q">Why a TestDataFactory?</p><p class="a">One place builds valid businesses, owners and statements, so each test only states what's different about its case.</p></div>
+        </div>
         <label class="done-row"><input type="checkbox"> Rehearsed</label>
       </div>
     </details>
+
+    <h2>Why this, not that</h2>
+    <p class="muted">The design choices most likely to come up, with the alternative you rejected and why.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Chose</th><th>Over</th><th>Because</th></tr></thead>
+      <tbody>
+        <tr><td>Batch Apex, scope 50</td><td>Queueable chain, @future</td><td>Fresh limits per 50, 1 callout each, visible in Apex Jobs; chain depth and 120 s callout cap rule out the others</td></tr>
+        <tr><td>Claim with FOR UPDATE in its own transaction</td><td>Status check only; a lock field</td><td>Real database lock, no race; no callout after DML; lock released before sending</td></tr>
+        <tr><td>One Idempotency-Key per batch, reused on retry</td><td>Key per application; new key per retry</td><td>The partner's confirmed contract; a new key would let a timed-out request be processed twice</td></tr>
+        <tr><td>Retry-After, else backoff + full jitter</td><td>Fixed delay</td><td>Respects the server; avoids every batch retrying at once</td></tr>
+        <tr><td>Delayed Queueable ≤10 min, scheduled job beyond</td><td>Only the 15-minute sweep</td><td>Honours the exact wait; the sweep stays as a safety net</td></tr>
+        <tr><td>Apex REST endpoint</td><td>Standard sObject API, Platform Events</td><td>Signature check, per-decision results, schema hidden from the partner, synchronous answer</td></tr>
+        <tr><td>OAuth client credentials + custom permission + HMAC</td><td>Only one of them</td><td>Identity, authorisation and message integrity are three different questions</td></tr>
+        <tr><td>Partial success + savepoint</td><td>All-or-none</td><td>One bad record mustn't fail the others; an unexpected error mustn't half-apply</td></tr>
+        <tr><td>Platform event logging (Publish Immediately)</td><td>Insert a log record</td><td>Survives rollback, which the brief requires</td></tr>
+        <tr><td>Custom Metadata for fields, thresholds, routing</td><td>Hardcoded, Custom Settings</td><td>Admin-changeable, deploys with the package, validation rules, no SOQL cost</td></tr>
+        <tr><td>Flow for routing, screens, statement defaults</td><td>Apex everywhere</td><td>The brief: Flow where an admin should change it without a developer</td></tr>
+        <tr><td>Apex for send, endpoint, validation</td><td>Flow everywhere</td><td>Locks, callouts in batches, HMAC, bulk partial saves and tests need code</td></tr>
+        <tr><td>Before-save Flow sets queue owner</td><td>Assignment Rules, after-save Flow</td><td>Assignment Rules don't exist for custom objects; before-save needs no extra DML</td></tr>
+        <tr><td>Statements on Account + snapshot</td><td>Statements on application</td><td>Statements exist before applications; snapshot freezes what was sent</td></tr>
+        <tr><td>Validation in the trigger</td><td>Only in the button</td><td>Every path to Ready is checked, including data loads</td></tr>
+        <tr><td>Validation Failed status with reasons</td><td>Throwing an error</td><td>Reasons persist, bulk-safe, user can fix and resend</td></tr>
+        <tr><td>Named + External Credential</td><td>Key in a setting or code</td><td>No secret in code or queryable data; header added by the platform</td></tr>
+        <tr><td>Classic Encryption + masking</td><td>Shield</td><td>Shield isn't in Developer Edition; I'd move to it in production</td></tr>
+        <tr><td>Private sharing, Status read-only</td><td>Public read/write</td><td>GLBA least privilege; nobody approves by hand</td></tr>
+        <tr><td>Without sharing on 11 system classes</td><td>With sharing everywhere</td><td>System processes must see queue-owned private records; user entry points stay in user mode</td></tr>
+        <tr><td>Separate Decision object</td><td>Fields on the application</td><td>Multiple decisions, audit trail, unique id for duplicates</td></tr>
+        <tr><td>Cloudflare Worker mock</td><td>Beeceptor, Postman</td><td>Needed logic: key check, 429/503 on demand, rejections</td></tr>
+        <tr><td>Unlocked package + CI</td><td>Change sets</td><td>Versioned, repeatable install; tests run on every push</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Hard follow-up questions</h2>
+    <div class="card">
+      <div class="qa"><p class="q">What would you change for production?</p><p class="a"><span class="muted">(Suggested answer, make it yours.)</span> Shield deterministic encryption, a real partner sandbox instead of the mock, Omni-Channel on top of the queues, a dashboard over Integration_Log__c, and rotating the signing secret with two active secrets during changeover.</p></div>
+      <div class="qa"><p class="q">What if 100,000 applications are Ready?</p><p class="a">The claim takes up to 5,000 per run to stay inside the 10,000 DML row limit. The rest wait for the next run every 15 minutes. If that's too slow, run the claim more often or claim inside the batch start query.</p></div>
+      <div class="qa"><p class="q">What if the partner sends a decision before the Acknowledged response is saved?</p><p class="a">The application is still Queued, which can't accept a decision, so it's rejected with the reason. The partner retries and it succeeds once the status is Acknowledged.</p></div>
+      <div class="qa"><p class="q">How do you stop the whole integration in an emergency?</p><p class="a"><code>Send_Enabled__c</code> on the settings record is a kill switch. Untick it in Setup and the dispatcher stops claiming.</p></div>
+      <div class="qa"><p class="q">How is sensitive data kept out of logs?</p><p class="a"><code>IntegrationLogger.redact()</code> masks SSN and EIN patterns and anything labelled as a key, signature, date of birth or bank figure, before publishing. Logs are purged after 90 days.</p></div>
+      <div class="qa"><p class="q">The full SSN goes to the partner?</p><p class="a">Yes, the API needs it for identity checks. It goes only over HTTPS through the Named Credential, is never logged, and only admins can see it in Salesforce.</p></div>
+      <div class="qa"><p class="q">What did you not finish or not test live?</p><p class="a">A live timeout was never run; only the unit test covers it. The last full test run was 57 of 58 before three test fixes were deployed. Be honest about both.</p></div>
+      <div class="qa"><p class="q">What would you do differently?</p><p class="a"><span class="muted">(Suggested answer, make it yours.)</span> Start with statements on the Account from day one, and write the evidence scripts earlier so limits were captured from the first run.</p></div>
+    </div>
 
     <h2>If something goes wrong</h2>
     <div class="card">
