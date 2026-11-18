@@ -233,19 +233,20 @@
 
         <article class="card card--wide" data-category="open-source">
           <h3 class="card__title">Apache Beam: Tests Moved Off the Deprecated DoFnTester</h3>
-          <p class="card__desc">Three test classes ported off <code>DoFnTester</code>, each closing a long-open Beam issue. Each one needed a different approach, chosen by what was blocking <code>TestPipeline</code>.</p>
+          <p class="card__desc">Four test classes ported off <code>DoFnTester</code>, each closing a long-open Beam issue. Each one needed a different approach, chosen by what was blocking <code>TestPipeline</code>.</p>
           <ul class="card__bullets">
             <li><strong>SplittableParDoProcessFnTest:</strong> the tests advance processing time and fire timers by hand, which <code>TestPipeline</code> can't do, so the helper runs <code>ProcessFn</code> through <code>DoFnRunners.simpleRunner</code>, the runner the DirectRunner uses. All 15 tests pass with bodies unchanged</li>
             <li><strong>DatastoreV1Test:</strong> the fns hold a Mockito mock that can't be serialized, so one in-process <code>processBundle</code> helper replaced 10 call sites and every <code>DO_NOT_CLONE</code> workaround. All 62 tests pass</li>
             <li><strong>BigQueryIOWriteTest:</strong> nothing blocked a real pipeline, so <code>WritePartition</code> now runs through <code>TestPipeline</code> with a real side input and the coders <code>BatchLoads</code> uses, checked with <code>PAssert</code></li>
-            <li>In review: the same port for <code>ReadSpannerSchemaTest</code> (<a href="https://github.com/apache/beam/pull/41138" target="_blank" rel="noopener">#41138</a>)</li>
+            <li><strong>ReadSpannerSchemaTest:</strong> the fake Spanner service is serializable, so both tests now run through <code>TestPipeline</code> with the dialect as a real side input, the way <code>SpannerIO</code> wires it</li>
           </ul>
           <div class="card__stack">Java, Gradle, Apache Beam, JUnit, Mockito</div>
           <div class="card__footer">
             <a href="https://github.com/apache/beam/pull/40865" class="card__link card__link--primary" target="_blank" rel="noopener">Beam #40865 →</a>
             <a href="https://github.com/apache/beam/pull/40866" class="card__link" target="_blank" rel="noopener">Beam #40866 →</a>
             <a href="https://github.com/apache/beam/pull/40871" class="card__link" target="_blank" rel="noopener">Beam #40871 →</a>
-            <span class="card__badge">3 Merged · October 2026</span>
+            <a href="https://github.com/apache/beam/pull/41138" class="card__link" target="_blank" rel="noopener">Beam #41138 →</a>
+            <span class="card__badge">4 Merged · October–November 2026</span>
           </div>
         </article>
 
@@ -269,7 +270,6 @@
           <p class="card__desc">Generated DDL for PostgreSQL functions dropped <code>REVOKE ... FROM PUBLIC</code>, so running it recreated a locked-down function open to everyone.</p>
           <ul class="card__bullets">
             <li>DDL now emits the REVOKE the way pg_dump does, and GRANT on aggregate and window functions uses <code>ON FUNCTION</code> instead of syntax PostgreSQL rejects. Checked on PostgreSQL 18.6</li>
-            <li>In review: a follow-up for functions whose ACL is empty after revoking from both PUBLIC and the owner (<a href="https://github.com/dbeaver/dbeaver/pull/42839" target="_blank" rel="noopener">#42839</a>)</li>
           </ul>
           <div class="card__stack">Java, PostgreSQL, JUnit</div>
           <div class="card__footer">
@@ -305,23 +305,16 @@
           </div>
         </article>
 
-        <article class="card card--wide" data-category="open-source">
-          <h3 class="card__title">In Review: Keycloak, Spring AI, Apache Airflow, LangChain4j, skrub, Vavr</h3>
-          <p class="card__desc">Open pull requests, each reproducing the bug first and adding a regression test.</p>
+        <article class="card" data-category="open-source">
+          <h3 class="card__title">skrub: Percentages in ToFloat</h3>
+          <p class="card__desc"><code>ToFloat</code> could not parse values like <code>"12%"</code>.</p>
           <ul class="card__bullets">
-            <li><strong>Keycloak:</strong> when several nodes imported the same LDAP user or group at once, all but one hit a unique constraint and the login failed. Each import now runs in its own transaction and re-reads the existing record on a duplicate. A second PR makes the OTP device picker in the <code>keycloak.v2</code> login theme usable by keyboard and screen reader</li>
-            <li><strong>Spring AI:</strong> Typesense <code>genre == 'drama'</code> also matched "romantic drama", and Neo4j <code>NOT (a AND b)</code> lost its parentheses. Both checked against live Typesense 27.1 and Neo4j 5.24 against <code>SimpleVectorStore</code></li>
-            <li><strong>Apache Airflow:</strong> the task SDK masked only the decoded connection password, so a password with special characters leaked in URL-encoded form</li>
-            <li><strong>LangChain4j:</strong> <code>CachingChatModel</code>, exact-match response caching with a pluggable store and a thread-safe LRU default</li>
-            <li><strong>skrub:</strong> a <code>percentage</code> option on <code>ToFloat</code> for pandas and polars; <strong>Vavr:</strong> <code>patch</code> returned wrong results when <code>from + replaced</code> overflowed</li>
+            <li>Added an opt-in <code>convert_percentage</code> option: <code>"1%"</code> becomes 0.01, while <code>"0.3"</code> in the same column stays 0.3. Works with the decimal, thousand and parentheses options on both pandas and polars</li>
           </ul>
-          <div class="card__stack">Java, Python, Keycloak, Spring AI, Neo4j, Typesense, pandas, polars</div>
+          <div class="card__stack">Python, pandas, polars, pytest</div>
           <div class="card__footer">
-            <a href="https://github.com/keycloak/keycloak/pull/54208" class="card__link card__link--primary" target="_blank" rel="noopener">Keycloak #54208 →</a>
-            <a href="https://github.com/spring-projects/spring-ai/pull/7221" class="card__link" target="_blank" rel="noopener">Spring AI #7221 →</a>
-            <a href="https://github.com/apache/airflow/pull/74618" class="card__link" target="_blank" rel="noopener">Airflow #74618 →</a>
-            <a href="https://github.com/langchain4j/langchain4j/pull/6842" class="card__link" target="_blank" rel="noopener">LangChain4j #6842 →</a>
-            <span class="card__badge">Open · October–November 2026</span>
+            <a href="https://github.com/skrub-data/skrub/pull/2407" class="card__link card__link--primary" target="_blank" rel="noopener">skrub #2407 →</a>
+            <span class="card__badge">Merged · November 2026</span>
           </div>
         </article>
 
