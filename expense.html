@@ -206,9 +206,9 @@
   <!-- ===================== SAM'S PANEL ===================== -->
   <div class="panel active" id="panelSams">
     <div class="stats">
-      <div class="stat"><div class="l">Grand total</div><div class="v" id="samsStatTotal" style="color:var(--rust)"></div><div class="s">15 store trips · 4 fill-ups</div></div>
+      <div class="stat"><div class="l">Grand total</div><div class="v" id="samsStatTotal" style="color:var(--rust)"></div><div class="s" id="samsStatTrips"></div></div>
       <div class="stat"><div class="l">Merchandise</div><div class="v" id="samsStatMerch"></div><div class="s" id="samsStatItems"></div></div>
-      <div class="stat"><div class="l">Fuel</div><div class="v" style="color:var(--fuel)">$131.92</div><div class="s">29.5 gal</div></div>
+      <div class="stat"><div class="l">Fuel</div><div class="v" id="samsStatFuel" style="color:var(--fuel)"></div><div class="s" id="samsStatGal"></div></div>
       <div class="stat"><div class="l">Avg per trip</div><div class="v" id="samsStatAvg"></div><div class="s">merchandise only</div></div>
     </div>
 
@@ -323,23 +323,118 @@ function fmtDateShort(iso){
 }
 
 /* ============================== SAM'S CLUB DATA ============================== */
-const SAMS_CATEGORIES = [
-  { key:"grocery",   label:"Grocery",                    total:700.45, color:"var(--grocery)"  },
-  { key:"clothing",  label:"Clothing",                    total:235.82, color:"var(--clothing)" },
-  { key:"household", label:"Household & Personal Care",   total:186.99, color:"var(--household)"},
-  { key:"alcohol",   label:"Beer",                        total:101.24, color:"var(--beer)"     },
-  { key:"fuel",      label:"Fuel",                        total:131.92, color:"var(--fuel)"     },
+const SAMS_CAT_META = [
+  { key:"grocery",   label:"Grocery",                    color:"var(--grocery)"  },
+  { key:"clothing",  label:"Clothing",                    color:"var(--clothing)" },
+  { key:"household", label:"Household & Personal Care",   color:"var(--household)"},
+  { key:"alcohol",   label:"Beer",                        color:"var(--beer)"     },
+  { key:"fuel",      label:"Fuel",                        color:"var(--fuel)"     },
 ];
-const SAMS_TOTAL = SAMS_CATEGORIES.reduce((s,c)=>s+c.total,0);
 
-const SAMS_MONTHLY = [
-  { month:"May", grocery:203.62, clothing:0,      household:91.37, alcohol:0,     fuel:39.10 },
-  { month:"Jun", grocery:116.29, clothing:0,      household:9.96,  alcohol:75.48, fuel:31.70 },
-  { month:"Jul", grocery:256.77, clothing:12.98,  household:45.51, alcohol:25.76, fuel:32.41 },
-  { month:"Aug", grocery:123.77, clothing:222.84, household:40.15, alcohol:0,     fuel:28.71 },
+/* Sales tax per month. It is folded into Grocery, as it always has been. */
+const SAMS_TAX = {
+  "2026-05":7.33, "2026-06":6.32, "2026-07":6.16, "2026-08":25.22,
+  "2026-09":4.30, "2026-10":8.01, "2026-11":1.09,
+};
+
+/* Fuel fill-ups, one row per fuel station receipt. */
+const SAMS_FUEL = [
+  { date:"2026-05-13", amount:39.10, gal:8.216 },
+  { date:"2026-06-15", amount:31.70, gal:7.373 },
+  { date:"2026-07-18", amount:32.41, gal:7.538 },
+  { date:"2026-08-02", amount:28.71, gal:6.381 },
+  { date:"2026-09-09", amount:34.07, gal:7.409 },
+  { date:"2026-09-29", amount:31.07, gal:6.154 },
+  { date:"2026-10-17", amount:42.16, gal:9.168 },
 ];
 
 const SAMS_ITEMS = [
+  { date:"2026-11-16", name:"Blade Steak", qty:1, price:17.80, cat:"grocery" },
+  { date:"2026-11-16", name:"Green Grapes", qty:1, price:6.97, cat:"grocery" },
+  { date:"2026-11-16", name:"Carver Ham", qty:1, price:9.50, cat:"grocery" },
+  { date:"2026-11-16", name:"Cage-Free Eggs 60ct", qty:1, price:7.94, cat:"grocery" },
+  { date:"2026-11-16", name:"Babybel Org", qty:1, price:10.72, cat:"grocery" },
+  { date:"2026-11-16", name:"Mini Cucumbers", qty:1, price:3.97, cat:"grocery" },
+  { date:"2026-11-16", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
+  { date:"2026-11-16", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.60, cat:"grocery" },
+  { date:"2026-11-16", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-11-16", name:"MM Veggie Straws", qty:1, price:5.98, cat:"grocery" },
+  { date:"2026-11-16", name:"Listerine Cool Mint", qty:1, price:10.98, cat:"household" },
+  { date:"2026-11-09", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
+  { date:"2026-11-09", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-11-09", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
+  { date:"2026-11-09", name:"Garlic 2 lb", qty:1, price:4.96, cat:"grocery" },
+  { date:"2026-11-09", name:"Basmati Rice", qty:1, price:19.98, cat:"grocery" },
+  { date:"2026-11-09", name:"Starbucks Pike Place 32oz", qty:1, price:13.98, cat:"grocery" },
+  { date:"2026-11-03", name:"Cage-Free Eggs 60ct", qty:1, price:8.12, cat:"grocery" },
+  { date:"2026-11-03", name:"Horizon Whole Milk", qty:1, price:14.82, cat:"grocery" },
+  { date:"2026-11-03", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-11-03", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
+  { date:"2026-11-03", name:"BC Avocado Cups (18)", qty:1, price:6.88, cat:"grocery" },
+  { date:"2026-11-03", name:"Green Grapes", qty:1, price:5.97, cat:"grocery" },
+  { date:"2026-10-27", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.31, cat:"grocery" },
+  { date:"2026-10-27", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
+  { date:"2026-10-27", name:"Guac Minis", qty:1, price:8.46, cat:"grocery" },
+  { date:"2026-10-27", name:"Plums", qty:1, price:6.96, cat:"grocery" },
+  { date:"2026-10-27", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
+  { date:"2026-10-27", name:"Green Grapes", qty:1, price:5.97, cat:"grocery" },
+  { date:"2026-10-27", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-10-27", name:"MM Black Pepper Grinder", qty:1, price:7.98, cat:"grocery" },
+  { date:"2026-10-27", name:"B&C Spoons", qty:1, price:16.82, cat:"household" },
+  { date:"2026-10-27", name:"Quilted Northern 32 (toilet paper)", qty:1, price:24.48, cat:"household" },
+  { date:"2026-10-20", name:"Green Grapes", qty:1, price:5.97, cat:"grocery" },
+  { date:"2026-10-20", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
+  { date:"2026-10-20", name:"Vitafusion (vitamins)", qty:1, price:13.38, cat:"household" },
+  { date:"2026-10-20", name:"Starbucks Pike Place 32oz", qty:1, price:19.98, cat:"grocery" },
+  { date:"2026-10-20", name:"13 Gal Trash Bags", qty:1, price:19.98, cat:"household" },
+  { date:"2026-10-20", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
+  { date:"2026-10-20", name:"Horizon Whole Milk", qty:1, price:14.82, cat:"grocery" },
+  { date:"2026-10-20", name:"MM Wavy Chips", qty:1, price:3.28, cat:"grocery" },
+  { date:"2026-10-20", name:"MM Paper Towels", qty:1, price:20.93, cat:"household" },
+  { date:"2026-10-20", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-10-20", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
+  { date:"2026-09-29", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
+  { date:"2026-09-29", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
+  { date:"2026-09-29", name:"Pork Chops", qty:1, price:13.94, cat:"grocery" },
+  { date:"2026-09-29", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-09-29", name:"MM Veggie Straws", qty:1, price:5.98, cat:"grocery" },
+  { date:"2026-09-23", name:"Moon Drop Grapes", qty:1, price:5.97, cat:"grocery" },
+  { date:"2026-09-23", name:"MM Water (2)", qty:2, price:8.56, cat:"grocery" },
+  { date:"2026-09-23", name:"Organic Bananas", qty:1, price:2.16, cat:"grocery" },
+  { date:"2026-09-15", name:"Organic Green Grapes", qty:1, price:6.77, cat:"grocery" },
+  { date:"2026-09-15", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
+  { date:"2026-09-15", name:"Chicken Burgers", qty:1, price:14.46, cat:"grocery" },
+  { date:"2026-09-15", name:"Dove Men+Care Shampoo", qty:1, price:9.98, cat:"household" },
+  { date:"2026-09-09", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
+  { date:"2026-09-09", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
+  { date:"2026-09-09", name:"Constellation (beverage)", qty:1, price:6.12, cat:"grocery" },
+  { date:"2026-09-09", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
+  { date:"2026-09-09", name:"17Z BC Tortillas", qty:1, price:4.91, cat:"grocery" },
+  { date:"2026-09-09", name:"Organic Green Grapes", qty:1, price:5.77, cat:"grocery" },
+  { date:"2026-09-09", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.84, cat:"grocery" },
+  { date:"2026-09-09", name:"Starbucks Pike Place 32oz", qty:1, price:17.48, cat:"grocery" },
+  { date:"2026-09-09", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
+  { date:"2026-09-09", name:"Rana Lasagna", qty:1, price:13.82, cat:"grocery" },
+  { date:"2026-09-01", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
+  { date:"2026-09-01", name:"Ziploc Slider Bags", qty:1, price:11.73, cat:"household" },
+  { date:"2026-09-01", name:"Organic Green Grapes", qty:1, price:5.77, cat:"grocery" },
+  { date:"2026-09-01", name:"Standard Foil 2pk", qty:1, price:24.98, cat:"household" },
+  { date:"2026-09-01", name:"Kinder's Bacon Seasoning", qty:1, price:5.98, cat:"grocery" },
+  { date:"2026-08-25", name:"CK One EDT 6.7oz", qty:1, price:29.84, cat:"household" },
+  { date:"2026-08-25", name:"Pork Chops", qty:1, price:12.20, cat:"grocery" },
+  { date:"2026-08-25", name:"Organic Green Grapes", qty:1, price:6.77, cat:"grocery" },
+  { date:"2026-08-25", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
+  { date:"2026-08-25", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
+  { date:"2026-08-25", name:"Bread", qty:1, price:5.38, cat:"grocery" },
+  { date:"2026-08-25", name:"MM Auto Dish (dishwasher pods)", qty:1, price:14.98, cat:"household" },
+  { date:"2026-08-18", name:"Starbucks Pike Place 32oz", qty:1, price:19.98, cat:"grocery" },
+  { date:"2026-08-18", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
+  { date:"2026-08-18", name:"Basmati Rice", qty:1, price:19.98, cat:"grocery" },
+  { date:"2026-08-18", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
+  { date:"2026-08-18", name:"Sweet Sapphire Grapes", qty:1, price:5.87, cat:"grocery" },
+  { date:"2026-08-18", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:14.10, cat:"grocery" },
+  { date:"2026-08-18", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.74, cat:"grocery" },
+  { date:"2026-08-18", name:"Bar Soap", qty:1, price:15.48, cat:"household" },
   { date:"2026-08-08", name:"RBK 8pk Sock", qty:1, price:8.98, cat:"clothing" },
   { date:"2026-08-08", name:"Papaya (each)", qty:1, price:3.97, cat:"grocery" },
   { date:"2026-08-08", name:"Oranges 6 lb", qty:1, price:8.42, cat:"grocery" },
@@ -352,9 +447,9 @@ const SAMS_ITEMS = [
   { date:"2026-08-08", name:"Candy Hearts", qty:1, price:6.87, cat:"grocery" },
   { date:"2026-08-08", name:"Toothpaste", qty:1, price:13.98, cat:"household" },
   { date:"2026-08-08", name:"Constellation (beverage)", qty:1, price:6.12, cat:"grocery" },
-  { date:"2026-08-02", name:"MM Twin Pack (paper towels)", qty:1, price:16.29, cat:"household" },
+  { date:"2026-08-02", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:16.29, cat:"grocery" },
   { date:"2026-08-02", name:"Black Grapes", qty:1, price:4.87, cat:"grocery" },
-  { date:"2026-08-02", name:"MM Coffee", qty:1, price:4.72, cat:"grocery" },
+  { date:"2026-08-02", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.72, cat:"grocery" },
   { date:"2026-08-02", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
   { date:"2026-08-02", name:"Hoka (shoes)", qty:1, price:99.98, cat:"clothing" },
   { date:"2026-08-02", name:"EB Shirt Flannel (2)", qty:2, price:29.96, cat:"clothing" },
@@ -364,22 +459,22 @@ const SAMS_ITEMS = [
   { date:"2026-08-02", name:"Crewneck", qty:1, price:24.98, cat:"clothing" },
   { date:"2026-08-02", name:"Lay's Sco Chips", qty:1, price:4.48, cat:"grocery" },
   { date:"2026-07-26", name:"Babybel Org", qty:1, price:10.72, cat:"grocery" },
-  { date:"2026-07-26", name:"MM Coffee", qty:1, price:4.72, cat:"grocery" },
+  { date:"2026-07-26", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.72, cat:"grocery" },
   { date:"2026-07-26", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
   { date:"2026-07-18", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
   { date:"2026-07-18", name:"Sweet Chili Sauce", qty:1, price:5.91, cat:"grocery" },
   { date:"2026-07-18", name:"17Z BC Tortillas", qty:1, price:6.98, cat:"grocery" },
-  { date:"2026-07-18", name:"MM Coffee", qty:1, price:4.62, cat:"grocery" },
+  { date:"2026-07-18", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.62, cat:"grocery" },
   { date:"2026-07-18", name:"Tiramisu", qty:1, price:14.98, cat:"grocery" },
-  { date:"2026-07-18", name:"MM Twin Pack (paper towels)", qty:1, price:14.55, cat:"household" },
+  { date:"2026-07-18", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:14.55, cat:"grocery" },
   { date:"2026-07-18", name:"MM 10-Plate", qty:1, price:18.98, cat:"household" },
   { date:"2026-07-12", name:"Coke 16.9oz", qty:1, price:17.78, cat:"grocery" },
   { date:"2026-07-12", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-07-12", name:"MM Coffee", qty:1, price:4.62, cat:"grocery" },
+  { date:"2026-07-12", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.62, cat:"grocery" },
   { date:"2026-07-12", name:"Limes", qty:1, price:3.67, cat:"grocery" },
   { date:"2026-07-12", name:"Starbucks Pike Place Ground Coffee", qty:1, price:24.98, cat:"grocery" },
   { date:"2026-07-12", name:"Guac Minis", qty:1, price:7.98, cat:"grocery" },
-  { date:"2026-07-05", name:"Cheese Slice (2)", qty:2, price:3.96, cat:"grocery" },
+  { date:"2026-07-05", name:"Cafe Cheese Pizza Slice (2)", qty:2, price:3.96, cat:"grocery" },
   { date:"2026-07-05", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
   { date:"2026-07-05", name:"Gap Wash Tee", qty:1, price:12.98, cat:"clothing" },
   { date:"2026-07-05", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
@@ -396,13 +491,13 @@ const SAMS_ITEMS = [
   { date:"2026-07-03", name:"Tiramisu", qty:1, price:14.98, cat:"grocery" },
   { date:"2026-07-03", name:"Red Onion", qty:1, price:5.12, cat:"grocery" },
   { date:"2026-06-26", name:"17Z BC Tortillas", qty:1, price:6.98, cat:"grocery" },
-  { date:"2026-06-26", name:"BC Avocado PC 18", qty:1, price:5.48, cat:"grocery" },
+  { date:"2026-06-26", name:"BC Avocado Cups (18)", qty:1, price:5.48, cat:"grocery" },
   { date:"2026-06-26", name:"CRM Potato", qty:1, price:5.93, cat:"grocery" },
   { date:"2026-06-26", name:"Bluemoon Beer", qty:1, price:16.76, cat:"alcohol" },
   { date:"2026-06-26", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
   { date:"2026-06-26", name:"French Bread (2ct)", qty:1, price:2.98, cat:"grocery" },
   { date:"2026-06-26", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-06-26", name:"Coke Mini 30pk", qty:1, price:17.28, cat:"grocery" },
+  { date:"2026-06-26", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
   { date:"2026-06-15", name:"Stella 24pk", qty:1, price:29.36, cat:"alcohol" },
   { date:"2026-06-15", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
   { date:"2026-06-15", name:"Black Grapes", qty:1, price:6.87, cat:"grocery" },
@@ -418,16 +513,16 @@ const SAMS_ITEMS = [
   { date:"2026-05-21", name:"Safeguard Hand Wash", qty:1, price:7.96, cat:"household" },
   { date:"2026-05-21", name:"MM Water (2)", qty:2, price:7.96, cat:"grocery" },
   { date:"2026-05-21", name:"9 9/16 Plate", qty:1, price:12.53, cat:"household" },
-  { date:"2026-05-21", name:"MM Towels", qty:1, price:18.93, cat:"household" },
-  { date:"2026-05-21", name:"Bri Hot 6P S (buns)", qty:1, price:3.98, cat:"grocery" },
+  { date:"2026-05-21", name:"MM Paper Towels", qty:1, price:18.93, cat:"household" },
+  { date:"2026-05-21", name:"Brioche Hot Dog Buns (6)", qty:1, price:3.98, cat:"grocery" },
   { date:"2026-05-21", name:"CeraVe Cleanser", qty:1, price:18.96, cat:"household" },
   { date:"2026-05-21", name:"Basmati Rice", qty:1, price:21.98, cat:"grocery" },
-  { date:"2026-05-21", name:"MM Twin Pack (paper towels)", qty:1, price:13.13, cat:"household" },
+  { date:"2026-05-21", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.13, cat:"grocery" },
   { date:"2026-05-13", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
   { date:"2026-05-13", name:"Starbucks Pike Place Ground Coffee", qty:1, price:24.98, cat:"grocery" },
   { date:"2026-05-13", name:"Oranges", qty:1, price:6.34, cat:"grocery" },
   { date:"2026-05-13", name:"Pork Belly", qty:1, price:14.21, cat:"grocery" },
-  { date:"2026-05-13", name:"MM Coffee", qty:1, price:4.67, cat:"grocery" },
+  { date:"2026-05-13", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.67, cat:"grocery" },
   { date:"2026-05-13", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
   { date:"2026-05-13", name:"Chicken", qty:1, price:4.98, cat:"grocery" },
   { date:"2026-05-03", name:"Coke 16.9oz", qty:1, price:15.98, cat:"grocery" },
@@ -438,6 +533,22 @@ const SAMS_ITEMS = [
   { date:"2026-05-03", name:"Green Grapes", qty:1, price:7.87, cat:"grocery" },
   { date:"2026-05-03", name:"Clementines", qty:1, price:5.67, cat:"grocery" },
 ];
+
+/* Totals are derived from the rows above, so adding a receipt updates everything. */
+const SAMS_MONTHLY = (() => {
+  const keys = new Set([...Object.keys(SAMS_TAX), ...SAMS_ITEMS.map(i=>i.date.slice(0,7)), ...SAMS_FUEL.map(f=>f.date.slice(0,7))]);
+  return [...keys].sort().map(k => {
+    const row = { key:k, month: monthLabel(k + '-01'), grocery: SAMS_TAX[k] || 0, clothing:0, household:0, alcohol:0, fuel:0 };
+    SAMS_ITEMS.filter(i=>i.date.startsWith(k)).forEach(i=>{ row[i.cat] += i.price; });
+    SAMS_FUEL.filter(f=>f.date.startsWith(k)).forEach(f=>{ row.fuel += f.amount; });
+    return row;
+  });
+})();
+const SAMS_CATEGORIES = SAMS_CAT_META.map(c => ({ ...c, total: SAMS_MONTHLY.reduce((s,m)=>s+m[c.key],0) }));
+const SAMS_TOTAL = SAMS_CATEGORIES.reduce((s,c)=>s+c.total,0);
+const SAMS_FUEL_TOTAL = SAMS_FUEL.reduce((s,f)=>s+f.amount,0);
+const SAMS_FUEL_GAL = SAMS_FUEL.reduce((s,f)=>s+f.gal,0);
+const SAMS_TRIPS = new Set(SAMS_ITEMS.map(i=>i.date)).size;
 
 /* ============================== POSTMATES DATA ============================== */
 const PM_PALETTE = ["var(--pm1)","var(--pm2)","var(--pm3)","var(--pm4)","var(--pm5)","var(--pm6)"];
@@ -547,9 +658,12 @@ document.getElementById('tabSamsTotal').textContent = `· ${fmt(SAMS_TOTAL)}`;
 document.getElementById('tabPMTotal').textContent = `· ${fmt(PM_TOTAL)}`;
 document.getElementById('tabHashtagTotal').textContent = `· ${fmt(HASHTAG_TOTAL)}`;
 document.getElementById('samsStatTotal').textContent = fmt(SAMS_TOTAL);
-document.getElementById('samsStatMerch').textContent = fmt(SAMS_TOTAL - 131.92);
+document.getElementById('samsStatMerch').textContent = fmt(SAMS_TOTAL - SAMS_FUEL_TOTAL);
+document.getElementById('samsStatTrips').textContent = `${SAMS_TRIPS} store trips · ${SAMS_FUEL.length} fill-ups`;
+document.getElementById('samsStatFuel').textContent = fmt(SAMS_FUEL_TOTAL);
+document.getElementById('samsStatGal').textContent = `${SAMS_FUEL_GAL.toFixed(1)} gal`;
 document.getElementById('samsStatItems').textContent = `${SAMS_ITEMS.length} line items`;
-document.getElementById('samsStatAvg').textContent = fmt((SAMS_TOTAL - 131.92) / 15);
+document.getElementById('samsStatAvg').textContent = fmt((SAMS_TOTAL - SAMS_FUEL_TOTAL) / SAMS_TRIPS);
 document.getElementById('pmStatTotal').textContent = fmt(PM_TOTAL);
 document.getElementById('pmStatAvg').textContent = fmt(PM_TOTAL / 13);
 
