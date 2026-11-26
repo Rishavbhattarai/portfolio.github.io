@@ -19,33 +19,36 @@
     --paper:#f6f8f4;
     --card:#ffffff;
     --ink:#12211a;
-    --muted:rgba(18,33,26,0.5);
+    --ink-2:#3d4a43;
+    --muted:rgba(18,33,26,0.56);
     --line:rgba(15,26,20,0.09);
     --line-soft:rgba(15,26,20,0.06);
     --electric:#167a4d;
-    --electric-dim:rgba(22,122,77,0.12);
-    --sf-blue:#00A1E0;
+    --electric-dim:rgba(22,122,77,0.10);
     --rust:#a9542c;
-    --grocery:#1f6f54;
-    --clothing:#a9542c;
-    --household:#6b5b95;
-    --beer:#c99a2e;
-    --fuel:#2f4f6f;
+    /* Sam's categories */
+    --c-produce:#4c9a5a; --c-meat:#b5462f; --c-dairy:#d9ad3c; --c-drinks:#3f6d8e;
+    --c-pantry:#9a7b4f; --c-bakery:#c86f8c; --c-ready:#e07b39; --c-clothing:#6b5b95;
+    --c-home:#5b7a6b; --c-personal:#0e7c7b; --c-beer:#8c6d1f; --c-fuel:#2f3f5f;
     --pm1:#b5462f; --pm2:#c98a2e; --pm3:#5b7a6b; --pm4:#6b5b95; --pm5:#3f6d8e; --pm6:#a06b3f;
     --hashtag:#0e7c7b;
     --shadow-sm: 0 4px 16px rgba(16,36,26,0.05);
     --shadow-md: 0 20px 50px rgba(16,36,26,0.08);
     --radius-lg: 20px;
-    --transition: 0.28s cubic-bezier(0.4,0,0.2,1);
+    --radius-sm: 12px;
+    --transition: 0.28s cubic-bezier(0.16,1,0.3,1);
   }
   *{box-sizing:border-box;}
+  html{ -webkit-text-size-adjust:100%; }
   body{
     margin:0; background:var(--paper); color:var(--ink);
     font-family:'DM Sans','Helvetica Neue',sans-serif;
-    padding:32px 24px 48px;
+    padding:32px 24px 56px;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{ max-width:1180px; margin:0 auto; }
+  .num{ font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; }
+
   .tool-nav{
     display:flex; align-items:center; justify-content:space-between; gap:24px;
     max-width:640px; margin:0 auto 28px; padding:12px 22px;
@@ -57,116 +60,205 @@
   .tool-nav__links{ display:flex; gap:20px; }
   .tool-nav__links a{ font-size:0.85rem; font-weight:500; color:var(--muted); text-decoration:none; transition:color var(--transition); }
   .tool-nav__links a:hover{ color:var(--electric); }
+
   .eyebrow{
     font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em;
     text-transform:uppercase; color:var(--muted); margin-bottom:6px;
   }
-  h1{
-    font-family:'Syne',sans-serif; font-weight:800; font-size:36px; margin:0 0 4px;
-    letter-spacing:-0.02em;
-  }
+  h1{ font-family:'Syne',sans-serif; font-weight:800; font-size:36px; margin:0 0 4px; letter-spacing:-0.02em; line-height:1.1; }
+  h2{ font-family:'Syne',sans-serif; font-weight:700; font-size:18px; margin:0; letter-spacing:-0.01em; }
 
   /* ---- Pseudo total banner ---- */
   .pseudo-total{
     margin:22px 0 26px;
     background:linear-gradient(135deg, var(--electric) 0%, #0e5c39 100%);
-    color:#fff;
-    border-radius:var(--radius-lg);
-    padding:22px 26px;
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
-    position:relative; overflow:hidden;
+    color:#fff; border-radius:var(--radius-lg); padding:22px 26px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px;
     box-shadow:0 20px 50px rgba(22,122,77,0.22);
   }
-  .pseudo-total::after{
-    content:""; position:absolute; right:-40px; top:-40px; width:160px; height:160px;
-    border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.14), transparent 70%);
-  }
-  .pseudo-total .label{
-    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em;
-    text-transform:uppercase; color:rgba(255,255,255,0.72); margin-bottom:6px;
-  }
-  .pseudo-total .amount{
-    font-family:'Syne',sans-serif; font-weight:800; font-size:40px; letter-spacing:-0.01em;
-  }
-  .pseudo-total .note{
-    font-size:12.5px; color:rgba(255,255,255,0.72); max-width:340px; line-height:1.5;
-  }
-  .pseudo-total .split{ display:flex; gap:22px; }
+  .pseudo-total .label{ font-size:13px; color:rgba(255,255,255,0.78); margin-bottom:4px; }
+  .pseudo-total .amount{ font-family:'Syne',sans-serif; font-weight:800; font-size:40px; letter-spacing:-0.01em; }
+  .pseudo-total .note{ font-size:12.5px; color:rgba(255,255,255,0.78); max-width:360px; line-height:1.5; margin-top:4px; }
+  .pseudo-total .split{ display:flex; gap:24px; }
   .pseudo-total .split div{ text-align:right; }
-  .pseudo-total .split .k{ font-family:'JetBrains Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,0.6); }
+  .pseudo-total .split .k{ font-size:12px; color:rgba(255,255,255,0.7); }
   .pseudo-total .split .v{ font-family:'Syne',sans-serif; font-size:19px; font-weight:700; margin-top:2px; }
 
   /* ---- Tabs ---- */
-  .tabs{ display:inline-flex; background:var(--line); border-radius:999px; padding:4px; margin-bottom:24px; }
+  .tabs-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin:0 -24px 24px; padding:0 24px; }
+  .tabs-scroll::-webkit-scrollbar{ display:none; }
+  .tabs{ display:inline-flex; background:var(--line); border-radius:999px; padding:4px; white-space:nowrap; }
   .tab-btn{
-    padding:9px 22px; border-radius:999px; font-size:14px; font-weight:600;
-    color:var(--muted); cursor:pointer; user-select:none; transition:all var(--transition); border:none; background:transparent;
-    font-family:'DM Sans',sans-serif;
+    padding:9px 20px; border-radius:999px; font-size:14px; font-weight:600;
+    color:var(--muted); cursor:pointer; user-select:none; transition:background var(--transition), color var(--transition);
+    border:none; background:transparent; font-family:'DM Sans',sans-serif;
   }
+  .tab-btn:active{ transform:scale(0.98); }
   .tab-btn.active{ background:var(--electric); color:#fff; }
-  .tab-btn .sub{ opacity:.7; font-weight:500; }
+  .tab-btn .sub{ opacity:.75; font-weight:500; margin-left:4px; }
 
   /* ---- Stat cards ---- */
-  .stats{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
-  .stat{
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg);
-    padding:16px 18px; flex:1; min-width:150px;
-    box-shadow:var(--shadow-sm);
-    transition:transform var(--transition), box-shadow var(--transition);
-  }
-  .stat:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
-  .stat .l{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-  .stat .v{ font-family:'Syne',sans-serif; font-size:28px; font-weight:700; margin-top:4px; }
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  .stat{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); padding:16px 18px; box-shadow:var(--shadow-sm); min-width:0; }
+  .stat .l{ font-size:12.5px; color:var(--muted); font-weight:500; }
+  .stat .v{ font-family:'Syne',sans-serif; font-size:26px; font-weight:700; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .stat .s{ font-size:12px; color:var(--muted); margin-top:2px; }
 
   /* ---- Layout ---- */
-  .grid{ display:grid; grid-template-columns:320px 1fr; gap:20px; align-items:start; }
-  @media (max-width:820px){ .grid{ grid-template-columns:1fr; } }
-  .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); }
-  .card-title{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-  .col{ display:flex; flex-direction:column; gap:20px; }
-
+  .grid{ display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start; }
+  .col{ display:flex; flex-direction:column; gap:20px; min-width:0; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); min-width:0; }
+  .card-head{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .card-head .meta{ font-size:12.5px; color:var(--muted); }
+  .card-title{ font-size:13px; font-weight:600; color:var(--muted); margin-bottom:10px; }
   .chart-box{ height:190px; position:relative; }
 
-  .cat-row{ padding:8px 0; border-bottom:1px solid var(--line-soft); cursor:pointer; transition:opacity .15s ease; }
-  .cat-row:hover{ opacity:.85; }
-  .cat-row .top{ display:flex; justify-content:space-between; font-size:13px; }
-  .cat-row .name{ display:flex; align-items:center; gap:7px; font-weight:500; }
-  .swatch{ width:8px; height:8px; border-radius:2px; display:inline-block; flex:none; }
-  .cat-row .amt{ font-family:'JetBrains Mono',monospace; }
-  .cat-row .pct{ color:var(--muted); }
-  .cat-row .orders{ font-size:11px; color:var(--muted); margin-top:2px; margin-left:15px; }
+  /* Sam's layout: explicit areas so mobile order is intentional */
+  .sams-grid{
+    display:grid; gap:20px; align-items:start;
+    grid-template-columns:360px 1fr;
+    grid-template-areas:
+      "cats receipts"
+      "clothes receipts"
+      "trend receipts";
+  }
+  .a-cats{ grid-area:cats; } .a-clothes{ grid-area:clothes; } .a-trend{ grid-area:trend; } .a-receipts{ grid-area:receipts; }
 
-  .list-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
-  .chip-link{ cursor:pointer; font-size:12px; font-weight:500; user-select:none; }
-  .chip-clear{ color:var(--rust); }
-  .chip-sort{ color:var(--muted); border-bottom:1px dashed var(--muted); }
+  /* Category rows */
+  .cat-group{ font-size:12px; font-weight:600; color:var(--muted); margin:14px 0 4px; }
+  .cat-group:first-child{ margin-top:4px; }
+  .cat-row{
+    display:grid; grid-template-columns:1fr auto; gap:2px 10px; align-items:center;
+    padding:9px 8px; margin:0 -8px; border-radius:10px; cursor:pointer;
+    transition:background var(--transition), opacity var(--transition);
+  }
+  .cat-row:hover{ background:var(--electric-dim); }
+  .cat-row.on{ background:var(--electric-dim); }
+  .cat-row.dim{ opacity:.4; }
+  .cat-row .name{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:500; min-width:0; }
+  .cat-row .amt{ font-size:13.5px; text-align:right; }
+  .cat-row .sub{ grid-column:1 / -1; display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--muted); padding-left:18px; }
+  .cat-row .bar{ height:3px; border-radius:2px; flex:none; }
+  .swatch{ width:10px; height:10px; border-radius:3px; display:inline-block; flex:none; }
 
-  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
-  thead th{ text-align:left; padding:6px 8px 10px 4px; color:var(--muted); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:.05em; position:sticky; top:0; background:var(--card); }
-  th.num, td.num{ text-align:right; }
-  th.center, td.center{ text-align:center; }
-  tbody tr{ border-bottom:1px solid var(--line-soft); }
-  tbody tr:hover{ background:#faf6ea; }
-  td{ padding:8px; }
-  td.date{ padding-left:4px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px; white-space:nowrap; }
-  td.price{ font-family:'JetBrains Mono',monospace; padding-right:4px; }
-  .scroll{ max-height:560px; overflow-y:auto; }
+  /* Clothing */
+  .cl-total{ font-family:'Syne',sans-serif; font-weight:700; font-size:22px; }
+  .cl-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .cl-item{ display:grid; grid-template-columns:1fr auto; gap:2px 12px; padding:12px 14px; border-radius:var(--radius-sm); background:#f3f1f8; }
+  .cl-item .n{ font-weight:600; font-size:14.5px; }
+  .cl-item .p{ font-size:14px; font-weight:600; text-align:right; }
+  .cl-item .d{ grid-column:1 / -1; font-size:12px; color:var(--muted); }
+  .cl-item .t{ grid-column:1 / -1; font-size:12px; color:var(--ink-2); }
 
-  .order-card{ border:1px solid var(--line-soft); border-radius:8px; padding:10px 12px; margin-bottom:10px; }
-  .order-top{ display:flex; justify-content:space-between; align-items:baseline; }
-  .order-rest{ display:flex; align-items:center; gap:7px; }
-  .order-rest .name{ font-weight:600; font-size:13.5px; }
-  .order-rest .date{ font-size:11.5px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-  .order-total{ font-family:'JetBrains Mono',monospace; font-weight:600; }
-  .order-items{ margin-top:6px; display:flex; flex-direction:column; gap:2px; }
-  .order-item{ display:flex; justify-content:space-between; font-size:12.5px; color:#5c5644; }
-  .order-note{ margin-top:6px; font-size:11px; color:var(--rust); font-style:italic; }
+  /* Receipts / items */
+  .controls{ display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12.5px; font-weight:600; color:var(--ink-2); }
+  .field input{
+    font:inherit; font-size:15px; padding:11px 14px; border-radius:var(--radius-sm);
+    border:1px solid rgba(15,26,20,0.22); background:#fff; color:var(--ink); width:100%;
+  }
+  .field input::placeholder{ color:#6b7670; }
+  .field input:focus{ outline:2px solid var(--electric); outline-offset:1px; border-color:var(--electric); }
+  .seg-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .seg{ display:inline-flex; background:var(--line); border-radius:999px; padding:3px; }
+  .seg button{
+    border:none; background:transparent; font:inherit; font-size:13px; font-weight:600; color:var(--muted);
+    padding:7px 14px; border-radius:999px; cursor:pointer; transition:background var(--transition), color var(--transition);
+  }
+  .seg button.active{ background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(16,36,26,0.12); }
+  .seg button:active{ transform:scale(0.98); }
+  .filter-pill{
+    display:none; align-items:center; gap:8px; font-size:13px; font-weight:600;
+    padding:7px 12px; border-radius:999px; background:var(--electric-dim); color:var(--electric);
+    border:none; cursor:pointer; font-family:inherit;
+  }
+  .filter-pill.show{ display:inline-flex; }
 
-  .footnote{ margin-top:22px; font-size:11px; color:#a89f86; font-family:'JetBrains Mono',monospace; line-height:1.6; }
+  .rcpt{ border:1px solid var(--line); border-radius:var(--radius-sm); margin-bottom:10px; background:#fff; transition:border-color var(--transition); }
+  .rcpt[open]{ border-color:rgba(22,122,77,0.35); }
+  .rcpt summary{
+    list-style:none; cursor:pointer; display:grid; grid-template-columns:auto 1fr auto; gap:4px 14px; align-items:center;
+    padding:13px 14px;
+  }
+  .rcpt summary::-webkit-details-marker{ display:none; }
+  .rcpt .when{ font-weight:700; font-size:14.5px; min-width:52px; }
+  .rcpt .when small{ display:block; font-weight:500; font-size:11.5px; color:var(--muted); }
+  .rcpt .what{ font-size:12.5px; color:var(--muted); min-width:0; }
+  .rcpt .what .dots{ display:flex; gap:3px; margin-top:5px; flex-wrap:wrap; }
+  .rcpt .what .dots i{ width:7px; height:7px; border-radius:2px; display:block; }
+  .rcpt .paid{ font-weight:600; font-size:15px; text-align:right; }
+  .rcpt .paid small{ display:block; font-family:'DM Sans',sans-serif; font-weight:500; font-size:11px; color:var(--electric); }
+  .rcpt-body{ padding:0 14px 14px; border-top:1px solid var(--line-soft); }
+  .line{ display:grid; grid-template-columns:auto 1fr auto; gap:2px 10px; align-items:start; padding:10px 0; border-bottom:1px solid var(--line-soft); }
+  .line:last-child{ border-bottom:none; }
+  .line.dim{ opacity:.35; }
+  .line .swatch{ margin-top:5px; }
+  .line .n{ font-size:14px; font-weight:500; line-height:1.35; }
+  .line .c{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .line .c .save{ color:var(--electric); font-weight:600; }
+  .line .pr{ font-size:13.5px; text-align:right; white-space:nowrap; }
+  .line .pr small{ display:block; font-size:11px; color:var(--muted); }
+  .totals{ margin:10px 0 0; padding:10px 12px; background:var(--paper); border-radius:10px; display:grid; grid-template-columns:1fr auto; gap:5px 12px; font-size:13px; }
+  .totals dt{ color:var(--muted); } .totals dd{ margin:0; text-align:right; }
+  .totals .paid-row{ font-weight:700; color:var(--ink); }
+  .empty{ padding:28px 12px; text-align:center; color:var(--muted); font-size:14px; }
+  .list-scroll{ max-height:none; }
+
+  /* Postmates / Hashtag order cards */
+  .cat-row-pm{ padding:9px 8px; margin:0 -8px; border-radius:10px; cursor:pointer; transition:background var(--transition), opacity var(--transition); }
+  .cat-row-pm:hover{ background:var(--electric-dim); }
+  .cat-row-pm .top{ display:flex; justify-content:space-between; gap:10px; font-size:14px; }
+  .cat-row-pm .name{ display:flex; align-items:center; gap:8px; font-weight:500; min-width:0; }
+  .cat-row-pm .orders{ font-size:11.5px; color:var(--muted); margin-top:2px; margin-left:18px; }
+  .chip-clear{ cursor:pointer; font-size:13px; font-weight:600; color:var(--rust); user-select:none; }
+  .scroll{ max-height:640px; overflow-y:auto; }
+  .order-card{ border:1px solid var(--line-soft); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:10px; }
+  .order-top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .order-rest{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0; }
+  .order-rest .name{ font-weight:600; font-size:14px; }
+  .order-rest .date{ font-size:12px; color:var(--muted); }
+  .order-total{ font-family:'JetBrains Mono',monospace; font-weight:600; white-space:nowrap; }
+  .order-items{ margin-top:6px; display:flex; flex-direction:column; gap:3px; }
+  .order-item{ display:flex; justify-content:space-between; gap:12px; font-size:13px; color:#4f5a53; }
+  .order-note{ margin-top:6px; font-size:12px; color:var(--rust); }
+
+  .footnote{ margin-top:22px; font-size:12px; color:var(--muted); line-height:1.6; max-width:72ch; }
 
   .panel{ display:none; }
   .panel.active{ display:block; }
+
+  @media (max-width:980px){
+    .sams-grid{
+      grid-template-columns:1fr;
+      grid-template-areas: "cats" "clothes" "receipts" "trend";
+    }
+  }
+  @media (max-width:820px){
+    .grid{ grid-template-columns:1fr; }
+    .stats{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:560px){
+    body{ padding:16px 16px 40px; }
+    .tabs-scroll{ margin:0 -16px 20px; padding:0 16px; }
+    .tool-nav{ padding:10px 16px; margin-bottom:20px; gap:12px; }
+    .tool-nav__links{ gap:14px; }
+    h1{ font-size:28px; }
+    .pseudo-total{ padding:18px; gap:14px; }
+    .pseudo-total .amount{ font-size:32px; }
+    .pseudo-total .split{ width:100%; justify-content:space-between; gap:12px; }
+    .pseudo-total .split div{ text-align:left; }
+    .pseudo-total .split .v{ font-size:16px; }
+    .stats{ gap:10px; }
+    .stat{ padding:13px 14px; border-radius:16px; }
+    .stat .v{ font-size:21px; }
+    .card{ padding:16px; border-radius:16px; }
+    .rcpt summary{ padding:12px; gap:4px 10px; }
+    .rcpt-body{ padding:0 12px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
 </style>
 </head>
 <body>
@@ -183,12 +275,11 @@
   <div class="eyebrow">Spending overview</div>
   <h1>Where the money's going</h1>
 
-  <!-- Pseudo total -->
   <div class="pseudo-total">
     <div>
-      <div class="label">Combined pseudo-total · all sources</div>
-      <div class="amount" id="pseudoTotal">$0.00</div>
-      <div class="note">Sam's Club, Postmates and the Hashtag app track different kinds of spending — this figure just adds them together so you can see the full outflow at a glance.</div>
+      <div class="label">Combined total, all sources</div>
+      <div class="amount num" id="pseudoTotal">$0.00</div>
+      <div class="note">Sam's Club, Postmates and the Hashtag app track different kinds of spending. This adds them together so the full outflow is visible at once.</div>
     </div>
     <div class="split">
       <div><div class="k">Sam's Club</div><div class="v" id="pseudoSams">$0.00</div></div>
@@ -197,61 +288,76 @@
     </div>
   </div>
 
-  <div class="tabs">
-    <button class="tab-btn active" id="tabBtnSams" onclick="switchTab('sams')">Sam's <span class="sub" id="tabSamsTotal">· $0.00</span></button>
-    <button class="tab-btn" id="tabBtnPM" onclick="switchTab('pm')">Postmates <span class="sub" id="tabPMTotal">· $0.00</span></button>
-    <button class="tab-btn" id="tabBtnHashtag" onclick="switchTab('hashtag')">Hashtag App <span class="sub" id="tabHashtagTotal">· $0.00</span></button>
+  <div class="tabs-scroll">
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" id="tabBtnSams" onclick="switchTab('sams')">Sam's<span class="sub" id="tabSamsTotal"></span></button>
+      <button class="tab-btn" id="tabBtnPM" onclick="switchTab('pm')">Postmates<span class="sub" id="tabPMTotal"></span></button>
+      <button class="tab-btn" id="tabBtnHashtag" onclick="switchTab('hashtag')">Hashtag App<span class="sub" id="tabHashtagTotal"></span></button>
+    </div>
   </div>
 
   <!-- ===================== SAM'S PANEL ===================== -->
   <div class="panel active" id="panelSams">
     <div class="stats">
-      <div class="stat"><div class="l">Grand total</div><div class="v" id="samsStatTotal" style="color:var(--rust)"></div><div class="s" id="samsStatTrips"></div></div>
-      <div class="stat"><div class="l">Merchandise</div><div class="v" id="samsStatMerch"></div><div class="s" id="samsStatItems"></div></div>
-      <div class="stat"><div class="l">Fuel</div><div class="v" id="samsStatFuel" style="color:var(--fuel)"></div><div class="s" id="samsStatGal"></div></div>
-      <div class="stat"><div class="l">Avg per trip</div><div class="v" id="samsStatAvg"></div><div class="s">merchandise only</div></div>
+      <div class="stat"><div class="l">Total paid</div><div class="v num" id="samsStatTotal" style="color:var(--rust)"></div><div class="s" id="samsStatTrips"></div></div>
+      <div class="stat"><div class="l">Merchandise</div><div class="v num" id="samsStatMerch"></div><div class="s" id="samsStatItems"></div></div>
+      <div class="stat"><div class="l">Fuel</div><div class="v num" id="samsStatFuel" style="color:var(--c-fuel)"></div><div class="s" id="samsStatGal"></div></div>
+      <div class="stat"><div class="l">Saved at checkout</div><div class="v num" id="samsStatSaved" style="color:var(--electric)"></div><div class="s" id="samsStatTax"></div></div>
     </div>
 
-    <div class="grid">
-      <div class="col">
-        <div class="card">
-          <div class="card-title">By category</div>
-          <div class="chart-box"><canvas id="samsDonut"></canvas></div>
-          <div id="samsCatList"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Monthly trend</div>
-          <div class="chart-box"><canvas id="samsBar"></canvas></div>
-        </div>
+    <div class="sams-grid">
+      <div class="card a-cats">
+        <div class="card-head"><h2>By category</h2><span class="meta">tap to filter</span></div>
+        <div class="chart-box"><canvas id="samsDonut" aria-label="Spending by category"></canvas></div>
+        <div id="samsCatList"></div>
       </div>
 
-      <div class="card">
-        <div class="list-head">
-          <div class="card-title" id="samsListTitle" style="margin-bottom:0;">Every item purchased</div>
-          <div style="display:flex; gap:8px;">
-            <span class="chip-link chip-clear" id="samsClearFilter" style="display:none;" onclick="samsSetFilter('all')">Clear filter ×</span>
-            <span class="chip-link chip-sort" id="samsSortToggle" onclick="samsToggleSort()">Sort: Newest first</span>
+      <div class="card a-clothes">
+        <div class="card-head">
+          <h2>Clothing and shoes</h2>
+          <span class="cl-total num" id="clothTotal"></span>
+        </div>
+        <ul class="cl-list" id="clothList"></ul>
+      </div>
+
+      <div class="card a-trend">
+        <div class="card-head"><h2>Month by month</h2></div>
+        <div class="chart-box"><canvas id="samsBar" aria-label="Monthly Sam's Club spending"></canvas></div>
+      </div>
+
+      <div class="card a-receipts">
+        <div class="card-head"><h2 id="samsListTitle">Receipts</h2><span class="meta" id="samsListMeta"></span></div>
+        <div class="controls">
+          <div class="field">
+            <label for="samsSearch">Search items</label>
+            <input id="samsSearch" type="search" placeholder="e.g. salmon, tee, water" autocomplete="off" oninput="samsSetQuery(this.value)">
+          </div>
+          <div class="seg-row">
+            <div class="seg" role="group" aria-label="View">
+              <button class="active" id="viewTrips" onclick="samsSetView('trips')">By receipt</button>
+              <button id="viewItems" onclick="samsSetView('items')">By item</button>
+            </div>
+            <div class="seg" role="group" aria-label="Sort" id="sortSeg" style="display:none">
+              <button class="active" id="sortDate" onclick="samsSetSort('date')">Newest</button>
+              <button id="sortPrice" onclick="samsSetSort('price')">Priciest</button>
+            </div>
+            <button class="filter-pill" id="samsClearFilter" onclick="samsSetFilter('all')"></button>
           </div>
         </div>
-        <div class="scroll">
-          <table>
-            <thead><tr><th>Date</th><th>Item</th><th class="center">Qty</th><th class="num">Price</th></tr></thead>
-            <tbody id="samsTableBody"></tbody>
-          </table>
-        </div>
+        <div id="samsList"></div>
       </div>
     </div>
 
-    <div class="footnote">Click a category to filter the item list. Grocery includes food, drinks, coffee &amp; MM Water; Household covers paper goods, cleaning &amp; personal care.</div>
+    <div class="footnote">Prices are what was charged after instant savings. Sales tax (8.375%) only applies to non-food items, so each taxed item carries its share of the receipt's tax and the category totals include it. Two items were reclassified after checking the receipts: "P LFE PUR D" is Pure Life bottled water, not dog food, and the Nov 24 henleys carried a $4.00 discount that the receipt didn't itemize.</div>
   </div>
 
   <!-- ===================== POSTMATES PANEL ===================== -->
   <div class="panel" id="panelPM">
     <div class="stats">
-      <div class="stat"><div class="l">Total spent</div><div class="v" id="pmStatTotal" style="color:var(--pm1)"></div><div class="s">13 orders · Feb–Aug 2026</div></div>
-      <div class="stat"><div class="l">Avg per order</div><div class="v" id="pmStatAvg"></div><div class="s">after fees, tip &amp; promos</div></div>
-      <div class="stat"><div class="l">Top restaurant</div><div class="v" style="color:var(--pm1)">Hashtag India</div><div class="s">$201.90 · 6 orders</div></div>
-      <div class="stat"><div class="l">Items ordered</div><div class="v">31</div><div class="s">across 13 orders</div></div>
+      <div class="stat"><div class="l">Total spent</div><div class="v num" id="pmStatTotal" style="color:var(--pm1)"></div><div class="s">13 orders, Feb to Aug 2026</div></div>
+      <div class="stat"><div class="l">Avg per order</div><div class="v num" id="pmStatAvg"></div><div class="s">after fees, tip and promos</div></div>
+      <div class="stat"><div class="l">Top restaurant</div><div class="v" style="color:var(--pm1)">Hashtag India</div><div class="s">$201.90, 6 orders</div></div>
+      <div class="stat"><div class="l">Items ordered</div><div class="v num">31</div><div class="s">across 13 orders</div></div>
     </div>
 
     <div class="grid">
@@ -268,24 +374,24 @@
       </div>
 
       <div class="card">
-        <div class="list-head">
-          <div class="card-title" id="pmListTitle" style="margin-bottom:0;">Order history</div>
-          <span class="chip-link chip-clear" id="pmClearFilter" style="display:none;" onclick="pmSetFilter('all')">Clear filter ×</span>
+        <div class="card-head">
+          <h2 id="pmListTitle">Order history</h2>
+          <span class="chip-clear" id="pmClearFilter" style="display:none;" onclick="pmSetFilter('all')">Clear filter</span>
         </div>
         <div class="scroll" id="pmOrderList"></div>
       </div>
     </div>
 
-    <div class="footnote">Click a restaurant to filter order history. Totals reflect what was actually charged, including fees, tips and promo discounts.</div>
+    <div class="footnote">Tap a restaurant to filter order history. Totals reflect what was actually charged, including fees, tips and promo discounts.</div>
   </div>
 
   <!-- ===================== HASHTAG APP PANEL ===================== -->
   <div class="panel" id="panelHashtag">
     <div class="stats">
-      <div class="stat"><div class="l">Total spent</div><div class="v" id="hashtagStatTotal" style="color:var(--hashtag)"></div><div class="s" id="hashtagStatOrders"></div></div>
-      <div class="stat"><div class="l">Avg per order</div><div class="v" id="hashtagStatAvg"></div><div class="s">after fees, tip &amp; promos</div></div>
-      <div class="stat"><div class="l">Largest order</div><div class="v" id="hashtagStatMax" style="color:var(--hashtag)"></div><div class="s" id="hashtagStatMaxDate"></div></div>
-      <div class="stat"><div class="l">Items ordered</div><div class="v" id="hashtagStatItems"></div><div class="s" id="hashtagStatItemsSub"></div></div>
+      <div class="stat"><div class="l">Total spent</div><div class="v num" id="hashtagStatTotal" style="color:var(--hashtag)"></div><div class="s" id="hashtagStatOrders"></div></div>
+      <div class="stat"><div class="l">Avg per order</div><div class="v num" id="hashtagStatAvg"></div><div class="s">after fees, tip and promos</div></div>
+      <div class="stat"><div class="l">Largest order</div><div class="v num" id="hashtagStatMax" style="color:var(--hashtag)"></div><div class="s" id="hashtagStatMaxDate"></div></div>
+      <div class="stat"><div class="l">Items ordered</div><div class="v num" id="hashtagStatItems"></div><div class="s" id="hashtagStatItemsSub"></div></div>
     </div>
 
     <div class="grid">
@@ -295,11 +401,8 @@
           <div class="chart-box"><canvas id="hashtagBar"></canvas></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="list-head">
-          <div class="card-title" style="margin-bottom:0;">Order history</div>
-        </div>
+        <div class="card-head"><h2>Order history</h2></div>
         <div class="scroll" id="hashtagOrderList"></div>
       </div>
     </div>
@@ -311,244 +414,342 @@
 
 <script>
 const fmt = n => `$${n.toFixed(2)}`;
-function fmtDate(iso){
-  const [y,m,d] = iso.split('-').map(Number);
-  const dt = new Date(y, m-1, d);
-  return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-}
-function fmtDateShort(iso){
-  const [y,m,d] = iso.split('-').map(Number);
-  const dt = new Date(y, m-1, d);
-  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
+const r2 = n => Math.round(n * 100) / 100;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function parseISO(iso){ const [y,m,d] = iso.split('-').map(Number); return new Date(y, m-1, d); }
+function fmtDate(iso){ return parseISO(iso).toLocaleDateString('en-US', { month:'long', day:'numeric' }); }
+function fmtDateShort(iso){ return parseISO(iso).toLocaleDateString('en-US', { month:'short', day:'numeric' }); }
+function fmtDow(iso){ return parseISO(iso).toLocaleDateString('en-US', { weekday:'short' }); }
+function monthLabel(iso){ return parseISO(iso).toLocaleDateString('en-US', { month:'short' }); }
 
 /* ============================== SAM'S CLUB DATA ============================== */
-const SAMS_CAT_META = [
-  { key:"grocery",   label:"Grocery",                    color:"var(--grocery)"  },
-  { key:"clothing",  label:"Clothing",                    color:"var(--clothing)" },
-  { key:"household", label:"Household & Personal Care",   color:"var(--household)"},
-  { key:"alcohol",   label:"Beer",                        color:"var(--beer)"     },
-  { key:"fuel",      label:"Fuel",                        color:"var(--fuel)"     },
+/* Every row below was checked against the emailed receipt (May 3 to Nov 24, 2026). */
+const SAMS_CATS = [
+  { key:"produce",  label:"Produce",                   group:"Food and drink" },
+  { key:"meat",     label:"Meat and seafood",          group:"Food and drink" },
+  { key:"dairy",    label:"Dairy and eggs",            group:"Food and drink" },
+  { key:"ready",    label:"Ready meals and frozen",    group:"Food and drink" },
+  { key:"pantry",   label:"Pantry and snacks",         group:"Food and drink" },
+  { key:"bakery",   label:"Bakery and sweets",         group:"Food and drink" },
+  { key:"drinks",   label:"Water, soda and coffee",    group:"Food and drink" },
+  { key:"beer",     label:"Beer",                      group:"Food and drink" },
+  { key:"clothing", label:"Clothing and shoes",        group:"Everything else" },
+  { key:"home",     label:"Home and kitchen supplies", group:"Everything else" },
+  { key:"personal", label:"Personal care",             group:"Everything else" },
+  { key:"fuel",     label:"Fuel",                      group:"Everything else" },
+].map(c => ({ ...c, color:`var(--c-${c.key})` }));
+
+/* Item: [display name, receipt code, qty, price charged, category, extras]
+   extras: off = instant savings already taken off the price, tx = override taxable, note */
+const I = (name, code, qty, price, cat, x = {}) => ({ name, code, qty, price, cat, ...x });
+
+const SAMS_TRIPS = [
+  { date:"2026-11-24", time:"6:26 pm", via:"Scan & Go", pay:"Visa", tax:1.34, paid:81.97, items:[
+    I("Member's Mark henley", "MM HENLEY", 1, 7.98, "clothing", { off:2.00 }),
+    I("Member's Mark henley (second colour)", "MM HENLEY", 1, 7.98, "clothing", { off:2.00 }),
+    I("Spicy chicken, 3 pack", "SPICY CHK 3", 1, 17.57, "ready"),
+    I("Organic bananas", "OG BANANAS", 1, 2.16, "produce"),
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Horizon whole milk", "HO WHOLE MLK", 1, 14.82, "dairy"),
+  ]},
+  { date:"2026-11-24", time:"6:04 pm", via:"Fuel pump 8", pay:"Visa", tax:0, paid:29.67, fuel:true, items:[
+    I("Unleaded, 7.239 gal at $4.099", "FUEL UNLEAD", 1, 29.67, "fuel", { gal:7.239 }),
+  ]},
+  { date:"2026-11-16", time:"6:04 pm", via:"Scan & Go", pay:"Visa", tax:1.09, paid:102.86, items:[
+    I("Blade steak", "BLADE STEAK", 1, 17.80, "meat"),
+    I("Green grapes", "GREENGRAPES", 1, 6.97, "produce"),
+    I("Carver ham", "CARVERHAM", 1, 9.50, "meat"),
+    I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 7.94, "dairy"),
+    I("Babybel organic cheese", "BABYBEL ORG", 1, 10.72, "dairy"),
+    I("Mini cucumbers", "MINI CUCUMBE", 1, 3.97, "produce"),
+    I("Bananas", "BANANAS", 1, 1.47, "produce"),
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 13.60, "meat"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Member's Mark veggie straws", "MM VEG STRAW", 1, 5.98, "pantry"),
+    I("Listerine Cool Mint", "LIST. COOL M", 1, 10.98, "personal", { off:2.00 }),
+  ]},
+  { date:"2026-11-09", time:"5:49 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:70.51, items:[
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Bananas", "BANANAS", 1, 1.47, "produce"),
+    I("Garlic, 2 lb", "GARLIC 2 LB", 1, 4.96, "produce"),
+    I("Basmati rice", "BASMATI RICE", 1, 19.98, "pantry"),
+    I("Starbucks Pike Place, 32 oz", "SBUXPIKE32OZ", 1, 13.98, "drinks", { off:6.00 }),
+  ]},
+  { date:"2026-11-03", time:"5:56 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:50.10, items:[
+    I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 8.12, "dairy"),
+    I("Horizon whole milk", "HO WHOLE MLK", 1, 14.82, "dairy"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Bananas", "BANANAS", 1, 1.47, "produce"),
+    I("Avocado cups, 18 ct", "BC AVO PC 18", 1, 6.88, "pantry"),
+    I("Green grapes", "GREENGRAPES", 1, 5.97, "produce"),
+  ]},
+  { date:"2026-10-27", time:"6:08 pm", via:"Scan & Go", pay:"Visa", tax:3.46, paid:126.69, items:[
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 13.31, "meat"),
+    I("Salmon", "SALMON", 1, 24.94, "meat"),
+    I("Guacamole minis", "GUACMINIS", 1, 8.46, "pantry"),
+    I("Plums", "PLUMS", 1, 6.96, "produce"),
+    I("Bananas", "BANANAS", 1, 1.47, "produce"),
+    I("Green grapes", "GREENGRAPES", 1, 5.97, "produce"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Member's Mark black pepper grinder", "MM BK PEP GR", 1, 7.98, "pantry"),
+    I("Disposable spoons", "B&C SPOON", 1, 16.82, "home"),
+    I("Quilted Northern toilet paper, 32 rolls", "QN32J TISSUE", 1, 24.48, "home"),
+  ]},
+  { date:"2026-10-20", time:"6:25 pm", via:"Scan & Go", pay:"Visa", tax:4.55, paid:143.42, items:[
+    I("Green grapes", "GREENGRAPES", 1, 5.97, "produce"),
+    I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 8.94, "dairy"),
+    I("Vitafusion vitamins", "VITAFUSION", 1, 13.38, "personal"),
+    I("Starbucks Pike Place, 32 oz", "SBUXPIKE32OZ", 1, 19.98, "drinks"),
+    I("13 gallon trash bags", "13GAL TRSH", 1, 19.98, "home"),
+    I("Bananas", "BANANAS", 1, 1.47, "produce"),
+    I("Horizon whole milk", "HO WHOLE MLK", 1, 14.82, "dairy"),
+    I("Member's Mark wavy chips", "MM WAVY", 1, 3.28, "pantry"),
+    I("Member's Mark paper towels", "MM TOWELS", 1, 20.93, "home"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+  ]},
+  { date:"2026-10-17", via:"Fuel", pay:"Visa", tax:0, paid:42.16, fuel:true, items:[ I("Unleaded, 9.168 gal", "FUEL UNLEAD", 1, 42.16, "fuel", { gal:9.168 }) ]},
+  { date:"2026-09-29", time:"6:28 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:58.98, items:[
+    I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 8.94, "dairy"),
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+    I("Pork chops", "PORK CHOPS", 1, 13.94, "meat"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Member's Mark veggie straws", "MM VEG STRAW", 1, 5.98, "pantry"),
+  ]},
+  { date:"2026-09-29", via:"Fuel", pay:"Visa", tax:0, paid:31.07, fuel:true, items:[ I("Unleaded, 6.154 gal", "FUEL UNLEAD", 1, 31.07, "fuel", { gal:6.154 }) ]},
+  { date:"2026-09-23", time:"6:16 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:16.69, items:[
+    I("Moon Drop grapes", "MOON DROP", 1, 5.97, "produce"),
+    I("Member's Mark water", "MM WATER", 2, 8.56, "drinks"),
+    I("Organic bananas", "OG BANANAS", 1, 2.16, "produce"),
+  ]},
+  { date:"2026-09-15", time:"6:20 pm", via:"Scan & Go", pay:"Visa", tax:1.00, paid:45.05, items:[
+    I("Organic green grapes", "GREEN GRAPES", 1, 6.77, "produce"),
+    I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
+    I("Chicken burgers", "CHCKN BURGER", 1, 14.46, "ready"),
+    I("Dove Men+Care shampoo", "DMC SH", 1, 9.98, "personal", { off:2.00 }),
+  ]},
+  { date:"2026-09-09", time:"6:53 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:101.57, items:[
+    I("Bananas", "BANANAS", 1, 1.47, "produce"),
+    I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 8.94, "dairy"),
+    I("Constellation (drink)", "CONSTELATION", 1, 6.12, "drinks"),
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+    I("Flour tortillas, 17 oz", "17Z BC TORT.", 1, 4.91, "pantry"),
+    I("Organic green grapes", "ORG GR GRAPE", 1, 5.77, "produce"),
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 13.84, "meat"),
+    I("Starbucks Pike Place, 32 oz", "SBUXPIKE32OZ", 1, 17.48, "drinks", { off:2.50 }),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Rana lasagna", "RANA LASAGNA", 1, 13.82, "ready"),
+  ]},
+  { date:"2026-09-09", via:"Fuel", pay:"Visa", tax:0, paid:34.07, fuel:true, items:[ I("Unleaded, 7.409 gal", "FUEL UNLEAD", 1, 34.07, "fuel", { gal:7.409 }) ]},
+  { date:"2026-09-01", time:"6:29 pm", via:"Scan & Go", pay:"Visa", tax:3.30, paid:63.70, items:[
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Ziploc slider bags", "ZPLC SLIDER", 1, 11.73, "home", { off:2.75 }),
+    I("Organic green grapes", "ORG GR GRAPE", 1, 5.77, "produce"),
+    I("Aluminium foil, 2 pack", "STD FOIL 2PK", 1, 24.98, "home"),
+    I("Kinder's bacon seasoning", "KINDER BACON", 1, 5.98, "pantry"),
+  ]},
+  { date:"2026-08-25", time:"7:13 pm", via:"Scan & Go", pay:"Visa", tax:1.25, paid:61.46, items:[
+    I("Pork chops", "PORK CHOPS", 1, 12.20, "meat"),
+    I("Organic green grapes", "ORG GR GRAPE", 1, 6.77, "produce"),
+    I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 8.94, "dairy"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Bread", "BREAD", 1, 5.38, "bakery"),
+    I("Dishwasher pods", "AUTO DISH", 1, 14.98, "home"),
+  ]},
+  { date:"2026-08-25", time:"7:12 pm", via:"Register", pay:"Discover", tax:2.50, paid:32.34, items:[
+    I("CK One eau de toilette, 6.7 oz", "CKONEEDT6.7", 1, 29.84, "personal"),
+  ]},
+  { date:"2026-08-18", time:"7:06 pm", via:"Scan & Go", pay:"Visa", tax:1.30, paid:110.67, items:[
+    I("Starbucks Pike Place, 32 oz", "SBUXPIKE32OZ", 1, 19.98, "drinks"),
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+    I("Basmati rice", "BASMATI RICE", 1, 19.98, "pantry"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Sweet Sapphire grapes", "SWT SAPPHIRE", 1, 5.87, "produce"),
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 14.10, "meat"),
+    I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.74, "dairy"),
+    I("Bar soap", "BAR SOAP", 1, 15.48, "personal"),
+  ]},
+  { date:"2026-08-08", time:"6:56 pm", via:"Scan & Go", pay:"Visa", tax:2.26, paid:112.69, items:[
+    I("Reebok socks, 8 pack", "RBK 8PK SOCK", 1, 8.98, "clothing", { off:2.00 }),
+    I("Papaya", "PAPAYA EACH", 1, 3.97, "produce"),
+    I("Oranges, 6 lb", "ORANGES 6 LB", 1, 8.42, "produce"),
+    I("Cantaloupe", "CANTALOUPE", 1, 2.97, "produce"),
+    I("Clorox wipes, 60 ct", "CL OTG 60CT", 1, 9.88, "home", { tx:false }),
+    I("Salmon", "SALMON", 1, 24.94, "meat"),
+    I("Member's Mark honey vanilla yogurt", "MM HONEY VAN", 1, 5.84, "dairy"),
+    I("Chicken cordon bleu", "CORDONBLEU", 1, 12.98, "ready"),
+    I("1 gallon water", "1 GALLON WTR", 1, 5.48, "drinks"),
+    I("Candy hearts", "CANDY HEARTS", 1, 6.87, "bakery"),
+    I("Toothpaste", "TOOTHPASTE", 1, 13.98, "personal", { off:2.00 }),
+    I("Constellation (drink)", "CONSTELATION", 1, 6.12, "drinks"),
+  ]},
+  { date:"2026-08-02", time:"5:06 pm", via:"Scan & Go", pay:"Visa", tax:17.91, paid:274.07, items:[
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 16.29, "meat"),
+    I("Black grapes", "BLACK GRAPES", 1, 4.87, "produce"),
+    I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.72, "dairy"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Hoka shoes", "HOKA", 1, 99.98, "clothing"),
+    I("Eddie Bauer flannel shirt", "EB SHIRT FLN", 2, 29.96, "clothing"),
+    I("Short-sleeve tee", "SS TEE", 1, 16.98, "clothing"),
+    I("Short-sleeve tee (second colour)", "SS TEE", 1, 16.98, "clothing"),
+    I("Crewneck sweatshirt", "CREWNECK", 1, 24.98, "clothing"),
+    I("Crewneck sweatshirt (second colour)", "CREWNECK", 1, 24.98, "clothing"),
+    I("Lay's chips", "LAYS SCO", 1, 4.48, "pantry"),
+  ]},
+  { date:"2026-08-02", via:"Fuel", pay:"Visa", tax:0, paid:28.71, fuel:true, items:[ I("Unleaded, 6.381 gal", "FUEL UNLEAD", 1, 28.71, "fuel", { gal:6.381 }) ]},
+  { date:"2026-07-26", time:"7:03 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:27.38, items:[
+    I("Babybel organic cheese", "BABYBEL ORG", 1, 10.72, "dairy"),
+    I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.72, "dairy"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+  ]},
+  { date:"2026-07-18", time:"6:04 pm", via:"Scan & Go", pay:"Visa", tax:1.59, paid:79.55, items:[
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Sweet chili sauce", "SWEET CHILI", 1, 5.91, "pantry"),
+    I("Flour tortillas, 17 oz", "17Z BC TORT.", 1, 6.98, "pantry"),
+    I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.62, "dairy"),
+    I("Tiramisu", "TIRAMISU", 1, 14.98, "bakery"),
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 14.55, "meat"),
+    I("Member's Mark plates", "MM 10 PLATE", 1, 18.98, "home"),
+  ]},
+  { date:"2026-07-18", via:"Fuel", pay:"Visa", tax:0, paid:32.41, fuel:true, items:[ I("Unleaded, 7.538 gal", "FUEL UNLEAD", 1, 32.41, "fuel", { gal:7.538 }) ]},
+  { date:"2026-07-12", time:"1:42 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:70.97, items:[
+    I("Coke, 16.9 oz bottles", "COKE 16.9 OZ", 1, 17.78, "drinks"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.62, "dairy"),
+    I("Limes", "LIMES", 1, 3.67, "produce"),
+    I("Starbucks Pike Place ground coffee", "PIKEPLACEGD", 1, 24.98, "drinks"),
+    I("Guacamole minis", "GUACMINIS", 1, 7.98, "pantry"),
+  ]},
+  { date:"2026-07-05", time:"4:39 pm", via:"Scan & Go", pay:"Visa", tax:3.24, paid:112.82, items:[
+    I("XL pineapple", "XL PINEAPPLE", 1, 2.97, "produce"),
+    I("Gap washed tee", "GAP WASH TEE", 1, 12.98, "clothing"),
+    I("Salmon", "SALMON", 1, 24.94, "meat"),
+    I("Red onions", "RED ONION", 1, 5.12, "produce"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Garlic, 2 lb", "GARLIC 2 LB", 1, 4.96, "produce"),
+    I("Tomatoes, 3 lb", "TOMATO 3LBS", 1, 4.97, "produce"),
+    I("Pacifico beer", "PACIFICO", 1, 25.76, "beer"),
+    I("Chicken tenders", "CHICKEN TEND", 1, 11.98, "ready"),
+    I("Sourdough", "SOURDOUGH", 1, 3.96, "bakery"),
+  ]},
+  { date:"2026-07-05", time:"4:26 pm", via:"Cafe", pay:"Visa", tax:0.33, paid:4.29, items:[
+    I("Cafe cheese pizza slice", "CHEESE SLICE", 2, 3.96, "ready", { tx:true }),
+  ]},
+  { date:"2026-07-03", time:"4:47 pm", via:"Scan & Go", pay:"Visa", tax:1.00, paid:46.01, items:[
+    I("Member's Mark water", "MM WATER", 2, 7.96, "drinks"),
+    I("Tomatoes, 3 lb", "TOMATO 3LBS", 1, 4.97, "produce"),
+    I("Sparklers", "SPARKLERS", 1, 11.98, "home"),
+    I("Tiramisu", "TIRAMISU", 1, 14.98, "bakery"),
+    I("Red onions", "RED ONION", 1, 5.12, "produce"),
+  ]},
+  { date:"2026-06-26", time:"6:28 pm", via:"Scan & Go", pay:"Visa", tax:1.40, paid:71.72, items:[
+    I("Flour tortillas, 17 oz", "17Z BC TORT.", 1, 6.98, "pantry"),
+    I("Avocado cups, 18 ct", "BC AVO PC 18", 1, 5.48, "pantry", { off:1.00 }),
+    I("Creamer potatoes", "CRM POTATO", 1, 5.93, "produce"),
+    I("Blue Moon beer", "BLUEMOON", 1, 16.76, "beer"),
+    I("XL pineapple", "XL PINEAPPLE", 1, 2.97, "produce"),
+    I("French bread, 2 ct", "FRENCHBRD2CT", 1, 2.98, "bakery"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
+  ]},
+  { date:"2026-06-15", time:"7:46 pm", via:"Scan & Go", pay:"Visa", tax:2.46, paid:51.62, items:[
+    I("Stella Artois, 24 pack", "STELLA 24PK", 1, 29.36, "beer"),
+    I("XL pineapple", "XL PINEAPPLE", 1, 2.97, "produce"),
+    I("Black grapes", "BLACK GRAPES", 1, 6.87, "produce"),
+    I("1 gallon water", "1 GALLON WTR", 2, 9.96, "drinks", { off:1.00 }),
+  ]},
+  { date:"2026-06-15", via:"Fuel", pay:"Visa", tax:0, paid:31.70, fuel:true, items:[ I("Unleaded, 7.373 gal", "FUEL UNLEAD", 1, 31.70, "fuel", { gal:7.373 }) ]},
+  { date:"2026-06-10", time:"6:06 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:13.94, items:[
+    I("Pure Life bottled water", "P LFE PUR D", 2, 9.96, "drinks"),
+    I("Lay's wavy chips", "LAYS WAVY", 1, 3.98, "pantry", { off:0.50 }),
+  ]},
+  { date:"2026-06-04", time:"6:32 pm", via:"Scan & Go", pay:"Visa", tax:2.46, paid:64.45, items:[
+    I("Black grapes", "BLACK GRAPES", 1, 6.87, "produce"),
+    I("Member's Mark canola oil", "MMPURCANOIL", 1, 12.88, "pantry"),
+    I("XL pineapple", "XL PINEAPPLE", 1, 2.97, "produce"),
+    I("Member's Mark water", "MM WATER", 1, 3.98, "drinks"),
+    I("Creamer potatoes", "CRM POTATO", 1, 5.93, "produce"),
+    I("Stella Artois, 24 pack", "STELLA 24PK", 1, 29.36, "beer"),
+  ]},
+  { date:"2026-05-21", time:"6:21 pm", via:"Scan & Go", pay:"Visa", tax:5.25, paid:110.68, items:[
+    I("Safeguard hand wash", "SAFEGUARD HW", 1, 7.96, "personal", { off:1.00 }),
+    I("Member's Mark water", "MM WATER", 2, 7.96, "drinks"),
+    I("Paper plates, 9 9/16 in", "9 9/16 PLATE", 1, 12.53, "home", { off:3.25 }),
+    I("Member's Mark paper towels", "MM TOWELS", 1, 18.93, "home", { off:2.00 }),
+    I("Brioche hot dog buns, 6 ct", "BRI HOT 6P S", 1, 3.98, "bakery"),
+    I("CeraVe cleanser", "CERAVE CLNSR", 1, 18.96, "personal"),
+    I("Basmati rice", "BASMATI RICE", 1, 21.98, "pantry"),
+    I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 13.13, "meat"),
+  ]},
+  { date:"2026-05-13", time:"7:03 pm", via:"Scan & Go", pay:"Visa", tax:0.42, paid:92.48, items:[
+    I("Salmon", "SALMON", 1, 24.94, "meat"),
+    I("Starbucks Pike Place ground coffee", "PIKEPLACEGD", 1, 24.98, "drinks"),
+    I("Oranges", "ORANGES", 1, 6.34, "produce"),
+    I("Pork belly", "PORK BELLY", 1, 14.21, "meat"),
+    I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.67, "dairy"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Hot chicken (taxed as prepared food)", "CHICKEN", 1, 4.98, "ready", { tx:true }),
+  ]},
+  { date:"2026-05-13", via:"Fuel", pay:"Visa", tax:0, paid:39.10, fuel:true, items:[ I("Unleaded, 8.216 gal", "FUEL UNLEAD", 1, 39.10, "fuel", { gal:8.216 }) ]},
+  { date:"2026-05-03", time:"2:29 pm", via:"Scan & Go", pay:"Visa", tax:1.66, paid:91.83, items:[
+    I("Coke, 16.9 oz bottles", "COKE 16.9 OZ", 1, 15.98, "drinks"),
+    I("CeraVe lotion", "CERAVELOTION", 1, 19.86, "personal"),
+    I("Tiramisu", "TIRAMISU", 1, 14.98, "bakery"),
+    I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
+    I("Just Bare chicken fillets", "JSTBAREFILET", 1, 13.87, "meat"),
+    I("Green grapes", "GREEN GRAPES", 1, 7.87, "produce"),
+    I("Clementines", "CLEMENTINES", 1, 5.67, "produce"),
+  ]},
 ];
 
-/* Sales tax per month. It is folded into Grocery, as it always has been. */
-const SAMS_TAX = {
-  "2026-05":7.33, "2026-06":6.32, "2026-07":6.16, "2026-08":25.22,
-  "2026-09":4.30, "2026-10":8.01, "2026-11":1.09,
-};
-
-/* Fuel fill-ups, one row per fuel station receipt. */
-const SAMS_FUEL = [
-  { date:"2026-05-13", amount:39.10, gal:8.216 },
-  { date:"2026-06-15", amount:31.70, gal:7.373 },
-  { date:"2026-07-18", amount:32.41, gal:7.538 },
-  { date:"2026-08-02", amount:28.71, gal:6.381 },
-  { date:"2026-09-09", amount:34.07, gal:7.409 },
-  { date:"2026-09-29", amount:31.07, gal:6.154 },
-  { date:"2026-10-17", amount:42.16, gal:9.168 },
-];
-
-const SAMS_ITEMS = [
-  { date:"2026-11-16", name:"Blade Steak", qty:1, price:17.80, cat:"grocery" },
-  { date:"2026-11-16", name:"Green Grapes", qty:1, price:6.97, cat:"grocery" },
-  { date:"2026-11-16", name:"Carver Ham", qty:1, price:9.50, cat:"grocery" },
-  { date:"2026-11-16", name:"Cage-Free Eggs 60ct", qty:1, price:7.94, cat:"grocery" },
-  { date:"2026-11-16", name:"Babybel Org", qty:1, price:10.72, cat:"grocery" },
-  { date:"2026-11-16", name:"Mini Cucumbers", qty:1, price:3.97, cat:"grocery" },
-  { date:"2026-11-16", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
-  { date:"2026-11-16", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.60, cat:"grocery" },
-  { date:"2026-11-16", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-11-16", name:"MM Veggie Straws", qty:1, price:5.98, cat:"grocery" },
-  { date:"2026-11-16", name:"Listerine Cool Mint", qty:1, price:10.98, cat:"household" },
-  { date:"2026-11-09", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
-  { date:"2026-11-09", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-11-09", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
-  { date:"2026-11-09", name:"Garlic 2 lb", qty:1, price:4.96, cat:"grocery" },
-  { date:"2026-11-09", name:"Basmati Rice", qty:1, price:19.98, cat:"grocery" },
-  { date:"2026-11-09", name:"Starbucks Pike Place 32oz", qty:1, price:13.98, cat:"grocery" },
-  { date:"2026-11-03", name:"Cage-Free Eggs 60ct", qty:1, price:8.12, cat:"grocery" },
-  { date:"2026-11-03", name:"Horizon Whole Milk", qty:1, price:14.82, cat:"grocery" },
-  { date:"2026-11-03", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-11-03", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
-  { date:"2026-11-03", name:"BC Avocado Cups (18)", qty:1, price:6.88, cat:"grocery" },
-  { date:"2026-11-03", name:"Green Grapes", qty:1, price:5.97, cat:"grocery" },
-  { date:"2026-10-27", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.31, cat:"grocery" },
-  { date:"2026-10-27", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
-  { date:"2026-10-27", name:"Guac Minis", qty:1, price:8.46, cat:"grocery" },
-  { date:"2026-10-27", name:"Plums", qty:1, price:6.96, cat:"grocery" },
-  { date:"2026-10-27", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
-  { date:"2026-10-27", name:"Green Grapes", qty:1, price:5.97, cat:"grocery" },
-  { date:"2026-10-27", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-10-27", name:"MM Black Pepper Grinder", qty:1, price:7.98, cat:"grocery" },
-  { date:"2026-10-27", name:"B&C Spoons", qty:1, price:16.82, cat:"household" },
-  { date:"2026-10-27", name:"Quilted Northern 32 (toilet paper)", qty:1, price:24.48, cat:"household" },
-  { date:"2026-10-20", name:"Green Grapes", qty:1, price:5.97, cat:"grocery" },
-  { date:"2026-10-20", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
-  { date:"2026-10-20", name:"Vitafusion (vitamins)", qty:1, price:13.38, cat:"household" },
-  { date:"2026-10-20", name:"Starbucks Pike Place 32oz", qty:1, price:19.98, cat:"grocery" },
-  { date:"2026-10-20", name:"13 Gal Trash Bags", qty:1, price:19.98, cat:"household" },
-  { date:"2026-10-20", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
-  { date:"2026-10-20", name:"Horizon Whole Milk", qty:1, price:14.82, cat:"grocery" },
-  { date:"2026-10-20", name:"MM Wavy Chips", qty:1, price:3.28, cat:"grocery" },
-  { date:"2026-10-20", name:"MM Paper Towels", qty:1, price:20.93, cat:"household" },
-  { date:"2026-10-20", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-10-20", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
-  { date:"2026-09-29", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
-  { date:"2026-09-29", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
-  { date:"2026-09-29", name:"Pork Chops", qty:1, price:13.94, cat:"grocery" },
-  { date:"2026-09-29", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-09-29", name:"MM Veggie Straws", qty:1, price:5.98, cat:"grocery" },
-  { date:"2026-09-23", name:"Moon Drop Grapes", qty:1, price:5.97, cat:"grocery" },
-  { date:"2026-09-23", name:"MM Water (2)", qty:2, price:8.56, cat:"grocery" },
-  { date:"2026-09-23", name:"Organic Bananas", qty:1, price:2.16, cat:"grocery" },
-  { date:"2026-09-15", name:"Organic Green Grapes", qty:1, price:6.77, cat:"grocery" },
-  { date:"2026-09-15", name:"MM Water (3)", qty:3, price:12.84, cat:"grocery" },
-  { date:"2026-09-15", name:"Chicken Burgers", qty:1, price:14.46, cat:"grocery" },
-  { date:"2026-09-15", name:"Dove Men+Care Shampoo", qty:1, price:9.98, cat:"household" },
-  { date:"2026-09-09", name:"Bananas", qty:1, price:1.47, cat:"grocery" },
-  { date:"2026-09-09", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
-  { date:"2026-09-09", name:"Constellation (beverage)", qty:1, price:6.12, cat:"grocery" },
-  { date:"2026-09-09", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
-  { date:"2026-09-09", name:"17Z BC Tortillas", qty:1, price:4.91, cat:"grocery" },
-  { date:"2026-09-09", name:"Organic Green Grapes", qty:1, price:5.77, cat:"grocery" },
-  { date:"2026-09-09", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.84, cat:"grocery" },
-  { date:"2026-09-09", name:"Starbucks Pike Place 32oz", qty:1, price:17.48, cat:"grocery" },
-  { date:"2026-09-09", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-09-09", name:"Rana Lasagna", qty:1, price:13.82, cat:"grocery" },
-  { date:"2026-09-01", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-09-01", name:"Ziploc Slider Bags", qty:1, price:11.73, cat:"household" },
-  { date:"2026-09-01", name:"Organic Green Grapes", qty:1, price:5.77, cat:"grocery" },
-  { date:"2026-09-01", name:"Standard Foil 2pk", qty:1, price:24.98, cat:"household" },
-  { date:"2026-09-01", name:"Kinder's Bacon Seasoning", qty:1, price:5.98, cat:"grocery" },
-  { date:"2026-08-25", name:"CK One EDT 6.7oz", qty:1, price:29.84, cat:"household" },
-  { date:"2026-08-25", name:"Pork Chops", qty:1, price:12.20, cat:"grocery" },
-  { date:"2026-08-25", name:"Organic Green Grapes", qty:1, price:6.77, cat:"grocery" },
-  { date:"2026-08-25", name:"Cage-Free Eggs 60ct", qty:1, price:8.94, cat:"grocery" },
-  { date:"2026-08-25", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-08-25", name:"Bread", qty:1, price:5.38, cat:"grocery" },
-  { date:"2026-08-25", name:"MM Auto Dish (dishwasher pods)", qty:1, price:14.98, cat:"household" },
-  { date:"2026-08-18", name:"Starbucks Pike Place 32oz", qty:1, price:19.98, cat:"grocery" },
-  { date:"2026-08-18", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
-  { date:"2026-08-18", name:"Basmati Rice", qty:1, price:19.98, cat:"grocery" },
-  { date:"2026-08-18", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-08-18", name:"Sweet Sapphire Grapes", qty:1, price:5.87, cat:"grocery" },
-  { date:"2026-08-18", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:14.10, cat:"grocery" },
-  { date:"2026-08-18", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.74, cat:"grocery" },
-  { date:"2026-08-18", name:"Bar Soap", qty:1, price:15.48, cat:"household" },
-  { date:"2026-08-08", name:"RBK 8pk Sock", qty:1, price:8.98, cat:"clothing" },
-  { date:"2026-08-08", name:"Papaya (each)", qty:1, price:3.97, cat:"grocery" },
-  { date:"2026-08-08", name:"Oranges 6 lb", qty:1, price:8.42, cat:"grocery" },
-  { date:"2026-08-08", name:"Cantaloupe", qty:1, price:2.97, cat:"grocery" },
-  { date:"2026-08-08", name:"Clorox Wipes 60ct", qty:1, price:9.88, cat:"household" },
-  { date:"2026-08-08", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
-  { date:"2026-08-08", name:"MM Honey Vanilla Yogurt", qty:1, price:5.84, cat:"grocery" },
-  { date:"2026-08-08", name:"Cordon Bleu", qty:1, price:12.98, cat:"grocery" },
-  { date:"2026-08-08", name:"1 Gallon Water", qty:1, price:5.48, cat:"grocery" },
-  { date:"2026-08-08", name:"Candy Hearts", qty:1, price:6.87, cat:"grocery" },
-  { date:"2026-08-08", name:"Toothpaste", qty:1, price:13.98, cat:"household" },
-  { date:"2026-08-08", name:"Constellation (beverage)", qty:1, price:6.12, cat:"grocery" },
-  { date:"2026-08-02", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:16.29, cat:"grocery" },
-  { date:"2026-08-02", name:"Black Grapes", qty:1, price:4.87, cat:"grocery" },
-  { date:"2026-08-02", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.72, cat:"grocery" },
-  { date:"2026-08-02", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-08-02", name:"Hoka (shoes)", qty:1, price:99.98, cat:"clothing" },
-  { date:"2026-08-02", name:"EB Shirt Flannel (2)", qty:2, price:29.96, cat:"clothing" },
-  { date:"2026-08-02", name:"SS Tee", qty:1, price:16.98, cat:"clothing" },
-  { date:"2026-08-02", name:"SS Tee", qty:1, price:16.98, cat:"clothing" },
-  { date:"2026-08-02", name:"Crewneck", qty:1, price:24.98, cat:"clothing" },
-  { date:"2026-08-02", name:"Crewneck", qty:1, price:24.98, cat:"clothing" },
-  { date:"2026-08-02", name:"Lay's Sco Chips", qty:1, price:4.48, cat:"grocery" },
-  { date:"2026-07-26", name:"Babybel Org", qty:1, price:10.72, cat:"grocery" },
-  { date:"2026-07-26", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.72, cat:"grocery" },
-  { date:"2026-07-26", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-07-18", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-07-18", name:"Sweet Chili Sauce", qty:1, price:5.91, cat:"grocery" },
-  { date:"2026-07-18", name:"17Z BC Tortillas", qty:1, price:6.98, cat:"grocery" },
-  { date:"2026-07-18", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.62, cat:"grocery" },
-  { date:"2026-07-18", name:"Tiramisu", qty:1, price:14.98, cat:"grocery" },
-  { date:"2026-07-18", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:14.55, cat:"grocery" },
-  { date:"2026-07-18", name:"MM 10-Plate", qty:1, price:18.98, cat:"household" },
-  { date:"2026-07-12", name:"Coke 16.9oz", qty:1, price:17.78, cat:"grocery" },
-  { date:"2026-07-12", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-07-12", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.62, cat:"grocery" },
-  { date:"2026-07-12", name:"Limes", qty:1, price:3.67, cat:"grocery" },
-  { date:"2026-07-12", name:"Starbucks Pike Place Ground Coffee", qty:1, price:24.98, cat:"grocery" },
-  { date:"2026-07-12", name:"Guac Minis", qty:1, price:7.98, cat:"grocery" },
-  { date:"2026-07-05", name:"Cafe Cheese Pizza Slice (2)", qty:2, price:3.96, cat:"grocery" },
-  { date:"2026-07-05", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
-  { date:"2026-07-05", name:"Gap Wash Tee", qty:1, price:12.98, cat:"clothing" },
-  { date:"2026-07-05", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
-  { date:"2026-07-05", name:"Red Onion", qty:1, price:5.12, cat:"grocery" },
-  { date:"2026-07-05", name:"Pacifico Beer", qty:1, price:25.76, cat:"alcohol" },
-  { date:"2026-07-05", name:"Chicken Tenders", qty:1, price:11.98, cat:"grocery" },
-  { date:"2026-07-05", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-07-05", name:"Garlic 2 lb", qty:1, price:4.96, cat:"grocery" },
-  { date:"2026-07-05", name:"Tomato 3 lb", qty:1, price:4.97, cat:"grocery" },
-  { date:"2026-07-05", name:"Sourdough", qty:1, price:3.96, cat:"grocery" },
-  { date:"2026-07-03", name:"MM Water (2)", qty:2, price:7.96, cat:"grocery" },
-  { date:"2026-07-03", name:"Tomato 3 lb", qty:1, price:4.97, cat:"grocery" },
-  { date:"2026-07-03", name:"Sparklers", qty:1, price:11.98, cat:"household" },
-  { date:"2026-07-03", name:"Tiramisu", qty:1, price:14.98, cat:"grocery" },
-  { date:"2026-07-03", name:"Red Onion", qty:1, price:5.12, cat:"grocery" },
-  { date:"2026-06-26", name:"17Z BC Tortillas", qty:1, price:6.98, cat:"grocery" },
-  { date:"2026-06-26", name:"BC Avocado Cups (18)", qty:1, price:5.48, cat:"grocery" },
-  { date:"2026-06-26", name:"CRM Potato", qty:1, price:5.93, cat:"grocery" },
-  { date:"2026-06-26", name:"Bluemoon Beer", qty:1, price:16.76, cat:"alcohol" },
-  { date:"2026-06-26", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
-  { date:"2026-06-26", name:"French Bread (2ct)", qty:1, price:2.98, cat:"grocery" },
-  { date:"2026-06-26", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-06-26", name:"Coke Mini Cans (30)", qty:1, price:17.28, cat:"grocery" },
-  { date:"2026-06-15", name:"Stella 24pk", qty:1, price:29.36, cat:"alcohol" },
-  { date:"2026-06-15", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
-  { date:"2026-06-15", name:"Black Grapes", qty:1, price:6.87, cat:"grocery" },
-  { date:"2026-06-15", name:"1 Gallon Water (2)", qty:2, price:9.96, cat:"grocery" },
-  { date:"2026-06-10", name:"Purina Life Pro Dog Food (2)", qty:2, price:9.96, cat:"household" },
-  { date:"2026-06-10", name:"Lay's Wavy", qty:1, price:3.98, cat:"grocery" },
-  { date:"2026-06-04", name:"Black Grapes", qty:1, price:6.87, cat:"grocery" },
-  { date:"2026-06-04", name:"MM Pure Canola Oil", qty:1, price:12.88, cat:"grocery" },
-  { date:"2026-06-04", name:"XL Pineapple", qty:1, price:2.97, cat:"grocery" },
-  { date:"2026-06-04", name:"MM Water", qty:1, price:3.98, cat:"grocery" },
-  { date:"2026-06-04", name:"CRM Potato", qty:1, price:5.93, cat:"grocery" },
-  { date:"2026-06-04", name:"Stella 24pk", qty:1, price:29.36, cat:"alcohol" },
-  { date:"2026-05-21", name:"Safeguard Hand Wash", qty:1, price:7.96, cat:"household" },
-  { date:"2026-05-21", name:"MM Water (2)", qty:2, price:7.96, cat:"grocery" },
-  { date:"2026-05-21", name:"9 9/16 Plate", qty:1, price:12.53, cat:"household" },
-  { date:"2026-05-21", name:"MM Paper Towels", qty:1, price:18.93, cat:"household" },
-  { date:"2026-05-21", name:"Brioche Hot Dog Buns (6)", qty:1, price:3.98, cat:"grocery" },
-  { date:"2026-05-21", name:"CeraVe Cleanser", qty:1, price:18.96, cat:"household" },
-  { date:"2026-05-21", name:"Basmati Rice", qty:1, price:21.98, cat:"grocery" },
-  { date:"2026-05-21", name:"MM Twin Pack (meat, priced by weight)", qty:1, price:13.13, cat:"grocery" },
-  { date:"2026-05-13", name:"Salmon", qty:1, price:24.94, cat:"grocery" },
-  { date:"2026-05-13", name:"Starbucks Pike Place Ground Coffee", qty:1, price:24.98, cat:"grocery" },
-  { date:"2026-05-13", name:"Oranges", qty:1, price:6.34, cat:"grocery" },
-  { date:"2026-05-13", name:"Pork Belly", qty:1, price:14.21, cat:"grocery" },
-  { date:"2026-05-13", name:"MM Cage-Free Eggs (Large)", qty:1, price:4.67, cat:"grocery" },
-  { date:"2026-05-13", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-05-13", name:"Chicken", qty:1, price:4.98, cat:"grocery" },
-  { date:"2026-05-03", name:"Coke 16.9oz", qty:1, price:15.98, cat:"grocery" },
-  { date:"2026-05-03", name:"CeraVe Lotion", qty:1, price:19.86, cat:"household" },
-  { date:"2026-05-03", name:"Tiramisu", qty:1, price:14.98, cat:"grocery" },
-  { date:"2026-05-03", name:"MM Water (3)", qty:3, price:11.94, cat:"grocery" },
-  { date:"2026-05-03", name:"Just Bare Filet (chicken)", qty:1, price:13.87, cat:"grocery" },
-  { date:"2026-05-03", name:"Green Grapes", qty:1, price:7.87, cat:"grocery" },
-  { date:"2026-05-03", name:"Clementines", qty:1, price:5.67, cat:"grocery" },
-];
-
-/* Totals are derived from the rows above, so adding a receipt updates everything. */
-const SAMS_MONTHLY = (() => {
-  const keys = new Set([...Object.keys(SAMS_TAX), ...SAMS_ITEMS.map(i=>i.date.slice(0,7)), ...SAMS_FUEL.map(f=>f.date.slice(0,7))]);
-  return [...keys].sort().map(k => {
-    const row = { key:k, month: monthLabel(k + '-01'), grocery: SAMS_TAX[k] || 0, clothing:0, household:0, alcohol:0, fuel:0 };
-    SAMS_ITEMS.filter(i=>i.date.startsWith(k)).forEach(i=>{ row[i.cat] += i.price; });
-    SAMS_FUEL.filter(f=>f.date.startsWith(k)).forEach(f=>{ row.fuel += f.amount; });
-    return row;
+/* ---- Derived: tax share per item, receipt checks, flat item list ---- */
+const TAXED_BY_DEFAULT = new Set(['clothing','home','personal','beer']);
+SAMS_TRIPS.forEach((t, ti) => {
+  t.id = ti;
+  t.items.forEach(i => { i.off = i.off || 0; i.taxShare = 0; });
+  const taxed = t.items.filter(i => i.tx ?? TAXED_BY_DEFAULT.has(i.cat));
+  const base = taxed.reduce((s,i) => s + i.price + i.off, 0);
+  let left = t.tax;
+  taxed.forEach((i, k) => {
+    i.taxShare = k === taxed.length - 1 ? r2(left) : r2(t.tax * (i.price + i.off) / base);
+    left -= i.taxShare;
   });
-})();
-const SAMS_CATEGORIES = SAMS_CAT_META.map(c => ({ ...c, total: SAMS_MONTHLY.reduce((s,m)=>s+m[c.key],0) }));
-const SAMS_TOTAL = SAMS_CATEGORIES.reduce((s,c)=>s+c.total,0);
-const SAMS_FUEL_TOTAL = SAMS_FUEL.reduce((s,f)=>s+f.amount,0);
-const SAMS_FUEL_GAL = SAMS_FUEL.reduce((s,f)=>s+f.gal,0);
-const SAMS_TRIPS = new Set(SAMS_ITEMS.map(i=>i.date)).size;
+  t.items.forEach(i => { i.total = r2(i.price + i.taxShare); });
+  t.itemsSum = r2(t.items.reduce((s,i) => s + i.price, 0));
+  t.saved = r2(t.items.reduce((s,i) => s + i.off, 0));
+  if (Math.abs(t.itemsSum + t.tax - t.paid) > 0.005) console.warn('Receipt does not reconcile', t.date, t.itemsSum, t.tax, t.paid);
+});
+const SAMS_ITEMS = SAMS_TRIPS.flatMap(t => t.items.map(i => ({ ...i, date:t.date, trip:t })));
+
+const SAMS_CATEGORIES = SAMS_CATS.map(c => {
+  const rows = SAMS_ITEMS.filter(i => i.cat === c.key);
+  return { ...c, total: r2(rows.reduce((s,i) => s + i.total, 0)), count: rows.length };
+}).filter(c => c.count > 0);
+const catInfo = key => SAMS_CATEGORIES.find(c => c.key === key) || { color:'#999', label:key };
+
+const SAMS_TOTAL = r2(SAMS_TRIPS.reduce((s,t) => s + t.paid, 0));
+const FUEL_TRIPS = SAMS_TRIPS.filter(t => t.fuel);
+const STORE_TRIPS = SAMS_TRIPS.filter(t => !t.fuel);
+const SAMS_FUEL_TOTAL = r2(FUEL_TRIPS.reduce((s,t) => s + t.paid, 0));
+const SAMS_FUEL_GAL = FUEL_TRIPS.reduce((s,t) => s + t.items[0].gal, 0);
+const SAMS_SAVED = r2(SAMS_TRIPS.reduce((s,t) => s + t.saved, 0));
+const SAMS_TAX_TOTAL = r2(SAMS_TRIPS.reduce((s,t) => s + t.tax, 0));
+const MERCH_LINES = SAMS_ITEMS.filter(i => i.cat !== 'fuel');
+
+const MONTH_GROUPS = [
+  { key:'food',     label:'Food and drink', color:'var(--c-produce)',  test:c => catInfo(c).group === 'Food and drink' && c !== 'beer' },
+  { key:'beer',     label:'Beer',           color:'var(--c-beer)',     test:c => c === 'beer' },
+  { key:'clothing', label:'Clothing',       color:'var(--c-clothing)', test:c => c === 'clothing' },
+  { key:'homecare', label:'Home and care',  color:'var(--c-home)',     test:c => c === 'home' || c === 'personal' },
+  { key:'fuel',     label:'Fuel',           color:'var(--c-fuel)',     test:c => c === 'fuel' },
+];
+const SAMS_MONTHLY = [...new Set(SAMS_ITEMS.map(i => i.date.slice(0,7)))].sort().map(k => {
+  const row = { key:k, month: monthLabel(k + '-01') };
+  MONTH_GROUPS.forEach(g => { row[g.key] = r2(SAMS_ITEMS.filter(i => i.date.startsWith(k) && g.test(i.cat)).reduce((s,i) => s + i.total, 0)); });
+  return row;
+});
 
 /* ============================== POSTMATES DATA ============================== */
 const PM_PALETTE = ["var(--pm1)","var(--pm2)","var(--pm3)","var(--pm4)","var(--pm5)","var(--pm6)"];
@@ -633,152 +834,227 @@ const HASHTAG_ORDERS = [
 ];
 const HASHTAG_TOTAL = HASHTAG_ORDERS.reduce((s,o)=>s+o.total,0);
 const HASHTAG_ITEM_COUNT = HASHTAG_ORDERS.reduce((s,o)=>s+o.items.length,0);
-
-function monthLabel(iso){
-  const [y,m,d] = iso.split('-').map(Number);
-  return new Date(y, m-1, d).toLocaleDateString('en-US', { month:'short' });
-}
 const HASHTAG_MONTHLY = (() => {
   const map = new Map();
   HASHTAG_ORDERS.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(o=>{
     const key = o.date.slice(0,7);
-    const label = monthLabel(o.date);
-    if(!map.has(key)) map.set(key, { month: label, total: 0 });
+    if(!map.has(key)) map.set(key, { month: monthLabel(o.date), total: 0 });
     map.get(key).total += o.total;
   });
   return Array.from(map.values());
 })();
 
-/* ============================== HEADER / PSEUDO TOTAL ============================== */
-document.getElementById('pseudoTotal').textContent = fmt(SAMS_TOTAL + PM_TOTAL + HASHTAG_TOTAL);
-document.getElementById('pseudoSams').textContent = fmt(SAMS_TOTAL);
-document.getElementById('pseudoPM').textContent = fmt(PM_TOTAL);
-document.getElementById('pseudoHashtag').textContent = fmt(HASHTAG_TOTAL);
-document.getElementById('tabSamsTotal').textContent = `· ${fmt(SAMS_TOTAL)}`;
-document.getElementById('tabPMTotal').textContent = `· ${fmt(PM_TOTAL)}`;
-document.getElementById('tabHashtagTotal').textContent = `· ${fmt(HASHTAG_TOTAL)}`;
-document.getElementById('samsStatTotal').textContent = fmt(SAMS_TOTAL);
-document.getElementById('samsStatMerch').textContent = fmt(SAMS_TOTAL - SAMS_FUEL_TOTAL);
-document.getElementById('samsStatTrips').textContent = `${SAMS_TRIPS} store trips · ${SAMS_FUEL.length} fill-ups`;
-document.getElementById('samsStatFuel').textContent = fmt(SAMS_FUEL_TOTAL);
-document.getElementById('samsStatGal').textContent = `${SAMS_FUEL_GAL.toFixed(1)} gal`;
-document.getElementById('samsStatItems').textContent = `${SAMS_ITEMS.length} line items`;
-document.getElementById('samsStatAvg').textContent = fmt((SAMS_TOTAL - SAMS_FUEL_TOTAL) / SAMS_TRIPS);
-document.getElementById('pmStatTotal').textContent = fmt(PM_TOTAL);
-document.getElementById('pmStatAvg').textContent = fmt(PM_TOTAL / 13);
+/* ============================== HEADER / STATS ============================== */
+const $ = id => document.getElementById(id);
+$('pseudoTotal').textContent = fmt(SAMS_TOTAL + PM_TOTAL + HASHTAG_TOTAL);
+$('pseudoSams').textContent = fmt(SAMS_TOTAL);
+$('pseudoPM').textContent = fmt(PM_TOTAL);
+$('pseudoHashtag').textContent = fmt(HASHTAG_TOTAL);
+$('tabSamsTotal').textContent = fmt(SAMS_TOTAL);
+$('tabPMTotal').textContent = fmt(PM_TOTAL);
+$('tabHashtagTotal').textContent = fmt(HASHTAG_TOTAL);
+$('samsStatTotal').textContent = fmt(SAMS_TOTAL);
+$('samsStatTrips').textContent = `${STORE_TRIPS.length} receipts, ${FUEL_TRIPS.length} fill-ups`;
+$('samsStatMerch').textContent = fmt(SAMS_TOTAL - SAMS_FUEL_TOTAL);
+$('samsStatItems').textContent = `${MERCH_LINES.length} line items, avg ${fmt((SAMS_TOTAL - SAMS_FUEL_TOTAL) / STORE_TRIPS.length)}`;
+$('samsStatFuel').textContent = fmt(SAMS_FUEL_TOTAL);
+$('samsStatGal').textContent = `${SAMS_FUEL_GAL.toFixed(1)} gal, avg ${fmt(SAMS_FUEL_TOTAL / SAMS_FUEL_GAL)}/gal`;
+$('samsStatSaved').textContent = fmt(SAMS_SAVED);
+$('samsStatTax').textContent = `${fmt(SAMS_TAX_TOTAL)} paid in sales tax`;
+$('pmStatTotal').textContent = fmt(PM_TOTAL);
+$('pmStatAvg').textContent = fmt(PM_TOTAL / 13);
 
 const hashtagMax = HASHTAG_ORDERS.reduce((a,b)=> b.total > a.total ? b : a);
-document.getElementById('hashtagStatTotal').textContent = fmt(HASHTAG_TOTAL);
-document.getElementById('hashtagStatOrders').textContent = `${HASHTAG_ORDERS.length} orders · May–Jul 2026`;
-document.getElementById('hashtagStatAvg').textContent = fmt(HASHTAG_TOTAL / HASHTAG_ORDERS.length);
-document.getElementById('hashtagStatMax').textContent = fmt(hashtagMax.total);
-document.getElementById('hashtagStatMaxDate').textContent = fmtDate(hashtagMax.date);
-document.getElementById('hashtagStatItems').textContent = HASHTAG_ITEM_COUNT;
-document.getElementById('hashtagStatItemsSub').textContent = `across ${HASHTAG_ORDERS.length} orders`;
+$('hashtagStatTotal').textContent = fmt(HASHTAG_TOTAL);
+$('hashtagStatOrders').textContent = `${HASHTAG_ORDERS.length} orders, May to Jul 2026`;
+$('hashtagStatAvg').textContent = fmt(HASHTAG_TOTAL / HASHTAG_ORDERS.length);
+$('hashtagStatMax').textContent = fmt(hashtagMax.total);
+$('hashtagStatMaxDate').textContent = fmtDate(hashtagMax.date);
+$('hashtagStatItems').textContent = HASHTAG_ITEM_COUNT;
+$('hashtagStatItemsSub').textContent = `across ${HASHTAG_ORDERS.length} orders`;
 
 /* ============================== TABS ============================== */
 function switchTab(tab){
-  document.getElementById('panelSams').classList.toggle('active', tab==='sams');
-  document.getElementById('panelPM').classList.toggle('active', tab==='pm');
-  document.getElementById('panelHashtag').classList.toggle('active', tab==='hashtag');
-  document.getElementById('tabBtnSams').classList.toggle('active', tab==='sams');
-  document.getElementById('tabBtnPM').classList.toggle('active', tab==='pm');
-  document.getElementById('tabBtnHashtag').classList.toggle('active', tab==='hashtag');
+  ['sams','pm','hashtag'].forEach(t => {
+    const key = t === 'sams' ? 'Sams' : t === 'pm' ? 'PM' : 'Hashtag';
+    $('panel' + key).classList.toggle('active', tab === t);
+    $('tabBtn' + key).classList.toggle('active', tab === t);
+  });
 }
 
-/* ============================== SAM'S: CATEGORY LIST + DONUT ============================== */
-let samsFilter = 'all';
-let samsSort = 'date';
-
-function catInfo(key){ return SAMS_CATEGORIES.find(c=>c.key===key) || { color:'#999', label:key }; }
+/* ============================== SAM'S: CATEGORIES ============================== */
+let samsFilter = 'all', samsView = 'trips', samsSort = 'date', samsQuery = '';
+const maxCat = Math.max(...SAMS_CATEGORIES.map(c => c.total));
 
 function renderSamsCatList(){
-  const el = document.getElementById('samsCatList');
-  el.innerHTML = SAMS_CATEGORIES.map(c=>{
-    const pct = (c.total / SAMS_TOTAL) * 100;
-    const dim = samsFilter !== 'all' && samsFilter !== c.key;
-    return `<div class="cat-row" style="opacity:${dim?0.4:1}" onclick="samsSetFilter('${c.key}')">
-      <div class="top">
-        <span class="name"><span class="swatch" style="background:${c.color}"></span>${c.label}</span>
-        <span class="amt">${fmt(c.total)} <span class="pct">(${pct.toFixed(0)}%)</span></span>
-      </div>
+  let html = '', group = '';
+  SAMS_CATEGORIES.forEach(c => {
+    if (c.group !== group){
+      group = c.group;
+      const gt = SAMS_CATEGORIES.filter(x => x.group === group).reduce((s,x) => s + x.total, 0);
+      html += `<div class="cat-group">${group} <span class="num">${fmt(gt)}</span></div>`;
+    }
+    const pct = c.total / SAMS_TOTAL * 100;
+    const cls = samsFilter === c.key ? 'on' : (samsFilter !== 'all' ? 'dim' : '');
+    html += `<div class="cat-row ${cls}" role="button" tabindex="0" onclick="samsSetFilter('${c.key}')" onkeydown="if(event.key==='Enter')samsSetFilter('${c.key}')">
+      <span class="name"><span class="swatch" style="background:${c.color}"></span>${c.label}</span>
+      <span class="amt num">${fmt(c.total)}</span>
+      <span class="sub"><span class="bar" style="width:${Math.max(4, c.total / maxCat * 120)}px;background:${c.color}"></span>${pct.toFixed(1)}% of total, ${c.count} ${c.count === 1 ? 'line' : 'lines'}</span>
     </div>`;
+  });
+  $('samsCatList').innerHTML = html;
+}
+
+/* ============================== SAM'S: CLOTHING ============================== */
+function renderClothing(){
+  const rows = SAMS_ITEMS.filter(i => i.cat === 'clothing').sort((a,b) => b.date.localeCompare(a.date) || b.price - a.price);
+  const total = rows.reduce((s,i) => s + i.total, 0);
+  const pieces = rows.reduce((s,i) => s + i.qty, 0);
+  $('clothTotal').textContent = fmt(total);
+  $('clothList').innerHTML = rows.map(i => {
+    const each = i.qty > 1 ? `${i.qty} at ${fmt(i.price / i.qty)}` : (i.off ? `${fmt(i.price + i.off)} less ${fmt(i.off)} off` : fmt(i.price));
+    return `<li class="cl-item">
+      <span class="n">${esc(i.name)}${i.qty > 1 ? ` <span style="color:var(--muted);font-weight:500">x${i.qty}</span>` : ''}</span>
+      <span class="p num">${fmt(i.total)}</span>
+      <span class="d">${fmtDate(i.date)} · ${esc(i.code)}</span>
+      <span class="t num">${each} + ${fmt(i.taxShare)} tax</span>
+    </li>`;
+  }).join('') + `<li class="d" style="font-size:12px;color:var(--muted);padding:2px 2px 0">${pieces} pieces across ${new Set(rows.map(r => r.date)).size} trips, tax included.</li>`;
+}
+
+/* ============================== SAM'S: RECEIPTS + ITEMS ============================== */
+function matches(i){
+  if (samsFilter !== 'all' && i.cat !== samsFilter) return false;
+  if (samsQuery && !(i.name + ' ' + i.code).toLowerCase().includes(samsQuery)) return false;
+  return true;
+}
+function samsSetFilter(key){
+  samsFilter = (samsFilter === key || key === 'all') ? 'all' : key;
+  const pill = $('samsClearFilter');
+  pill.classList.toggle('show', samsFilter !== 'all');
+  pill.textContent = samsFilter === 'all' ? '' : `${catInfo(samsFilter).label}  ×`;
+  renderSamsCatList();
+  renderSamsList();
+  if (samsFilter !== 'all' && window.matchMedia('(max-width:980px)').matches){
+    document.querySelector('.a-receipts').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' });
+  }
+}
+function samsSetQuery(q){ samsQuery = q.trim().toLowerCase(); renderSamsList(); }
+function samsSetView(v){
+  samsView = v;
+  $('viewTrips').classList.toggle('active', v === 'trips');
+  $('viewItems').classList.toggle('active', v === 'items');
+  $('sortSeg').style.display = v === 'items' ? 'inline-flex' : 'none';
+  renderSamsList();
+}
+function samsSetSort(s){
+  samsSort = s;
+  $('sortDate').classList.toggle('active', s === 'date');
+  $('sortPrice').classList.toggle('active', s === 'price');
+  renderSamsList();
+}
+
+function lineHTML(i, dim, showDate){
+  const bits = [];
+  if (showDate) bits.push(fmtDateShort(i.date));
+  bits.push(esc(i.code));
+  if (i.qty > 1) bits.push(`${i.qty} at ${fmt(i.price / i.qty)}`);
+  if (i.off) bits.push(`<span class="save">saved ${fmt(i.off)}</span>`);
+  return `<div class="line ${dim ? 'dim' : ''}">
+    <span class="swatch" style="background:${catInfo(i.cat).color}" title="${catInfo(i.cat).label}"></span>
+    <div><div class="n">${esc(i.name)}</div><div class="c">${bits.join(' · ')}</div></div>
+    <div class="pr num">${fmt(i.price)}${i.taxShare ? `<small>+${fmt(i.taxShare)} tax</small>` : ''}</div>
+  </div>`;
+}
+
+function renderSamsList(){
+  const el = $('samsList');
+  const filtering = samsFilter !== 'all' || samsQuery;
+  if (samsView === 'items'){
+    const rows = SAMS_ITEMS.filter(matches).sort((a,b) => samsSort === 'date' ? b.date.localeCompare(a.date) : b.total - a.total);
+    const sum = rows.reduce((s,i) => s + i.total, 0);
+    $('samsListTitle').textContent = 'Every item';
+    $('samsListMeta').innerHTML = `${rows.length} lines · <span class="num">${fmt(sum)}</span>`;
+    el.innerHTML = rows.length ? rows.map(i => lineHTML(i, false, true)).join('') : `<div class="empty">Nothing matches. Try a different word or clear the category filter.</div>`;
+    return;
+  }
+  const trips = SAMS_TRIPS.filter(t => !filtering || t.items.some(matches));
+  const matchSum = SAMS_ITEMS.filter(matches).reduce((s,i) => s + i.total, 0);
+  $('samsListTitle').textContent = 'Receipts';
+  $('samsListMeta').innerHTML = filtering
+    ? `${trips.length} receipts · <span class="num">${fmt(matchSum)}</span> matching`
+    : `${trips.length} receipts · <span class="num">${fmt(SAMS_TOTAL)}</span>`;
+  if (!trips.length){ el.innerHTML = `<div class="empty">Nothing matches. Try a different word or clear the category filter.</div>`; return; }
+  el.innerHTML = trips.map((t, idx) => {
+    const cats = [...new Set(t.items.map(i => i.cat))];
+    const lines = t.items.length;
+    const desc = t.fuel ? t.items[0].name : `${lines} ${lines === 1 ? 'line' : 'lines'} · ${t.via}`;
+    const open = filtering || idx === 0 ? 'open' : '';
+    return `<details class="rcpt" ${open}>
+      <summary>
+        <div class="when">${fmtDateShort(t.date)}<small>${fmtDow(t.date)}${t.time ? ' · ' + t.time : ''}</small></div>
+        <div class="what">${desc}<div class="dots">${cats.map(c => `<i style="background:${catInfo(c).color}" title="${catInfo(c).label}"></i>`).join('')}</div></div>
+        <div class="paid num">${fmt(t.paid)}${t.saved ? `<small>saved ${fmt(t.saved)}</small>` : ''}</div>
+      </summary>
+      <div class="rcpt-body">
+        ${t.items.map(i => lineHTML(i, filtering && !matches(i), false)).join('')}
+        <dl class="totals">
+          <dt>Items</dt><dd class="num">${fmt(t.itemsSum)}</dd>
+          ${t.saved ? `<dt>Instant savings (already in prices)</dt><dd class="num" style="color:var(--electric)">${fmt(t.saved)}</dd>` : ''}
+          <dt>Sales tax</dt><dd class="num">${fmt(t.tax)}</dd>
+          <dt class="paid-row">Paid, ${t.pay}</dt><dd class="num paid-row">${fmt(t.paid)}</dd>
+        </dl>
+      </div>
+    </details>`;
   }).join('');
 }
 
-function samsSetFilter(key){
-  samsFilter = (samsFilter === key) ? 'all' : key;
-  renderSamsCatList();
-  renderSamsTable();
-  document.getElementById('samsClearFilter').style.display = samsFilter==='all' ? 'none':'inline';
-  document.getElementById('samsListTitle').textContent = samsFilter==='all' ? 'Every item purchased' : `Every item purchased — ${catInfo(samsFilter).label}`;
-}
-function samsToggleSort(){
-  samsSort = samsSort === 'date' ? 'price' : 'date';
-  document.getElementById('samsSortToggle').textContent = `Sort: ${samsSort==='date' ? 'Newest first' : 'Highest price'}`;
-  renderSamsTable();
-}
-function renderSamsTable(){
-  let list = samsFilter==='all' ? SAMS_ITEMS.slice() : SAMS_ITEMS.filter(i=>i.cat===samsFilter);
-  list.sort((a,b)=> samsSort==='date' ? b.date.localeCompare(a.date) : b.price - a.price);
-  document.getElementById('samsTableBody').innerHTML = list.map(it=>`
-    <tr>
-      <td class="date">${fmtDateShort(it.date)}</td>
-      <td><span class="swatch" style="background:${catInfo(it.cat).color}; margin-right:7px;"></span>${it.name}</td>
-      <td class="center" style="color:var(--muted)">${it.qty}</td>
-      <td class="price num">${fmt(it.price)}</td>
-    </tr>`).join('');
-}
-
-/* ============================== POSTMATES: RESTAURANT LIST ============================== */
+/* ============================== POSTMATES ============================== */
 let pmFilter = 'all';
 function restInfo(name){ return PM_RESTAURANTS.find(r=>r.name===name) || { color:'#999' }; }
-
 function renderPMRestList(){
-  const el = document.getElementById('pmRestList');
-  el.innerHTML = PM_RESTAURANTS.map(r=>{
+  $('pmRestList').innerHTML = PM_RESTAURANTS.map(r=>{
     const pct = (r.total / PM_TOTAL) * 100;
     const dim = pmFilter !== 'all' && pmFilter !== r.name;
-    return `<div class="cat-row" style="opacity:${dim?0.4:1}" onclick="pmSetFilter('${r.name.replace(/'/g,"\\'")}')">
+    return `<div class="cat-row-pm" style="opacity:${dim?0.4:1}" onclick="pmSetFilter('${r.name.replace(/'/g,"\\'")}')">
       <div class="top">
         <span class="name"><span class="swatch" style="background:${r.color}"></span>${r.name}</span>
-        <span class="amt">${fmt(r.total)} <span class="pct">(${pct.toFixed(0)}%)</span></span>
+        <span class="num">${fmt(r.total)} <span style="color:var(--muted)">(${pct.toFixed(0)}%)</span></span>
       </div>
       <div class="orders">${r.orders} order${r.orders>1?'s':''}</div>
     </div>`;
   }).join('');
 }
-
 function pmSetFilter(name){
   pmFilter = (pmFilter === name) ? 'all' : name;
   renderPMRestList();
   renderPMOrders();
-  document.getElementById('pmClearFilter').style.display = pmFilter==='all' ? 'none':'inline';
-  document.getElementById('pmListTitle').textContent = pmFilter==='all' ? 'Order history' : `Order history — ${pmFilter}`;
+  $('pmClearFilter').style.display = pmFilter==='all' ? 'none':'inline';
+  $('pmListTitle').textContent = pmFilter==='all' ? 'Order history' : `Order history: ${pmFilter}`;
 }
 function renderPMOrders(){
-  let list = pmFilter==='all' ? PM_ORDERS.slice() : PM_ORDERS.filter(o=>o.restaurant===pmFilter);
-  document.getElementById('pmOrderList').innerHTML = list.map(o=>`
+  const list = pmFilter==='all' ? PM_ORDERS.slice() : PM_ORDERS.filter(o=>o.restaurant===pmFilter);
+  $('pmOrderList').innerHTML = list.map(o=>`
     <div class="order-card">
       <div class="order-top">
         <div class="order-rest">
           <span class="swatch" style="background:${restInfo(o.restaurant).color}"></span>
           <span class="name">${o.restaurant}</span>
-          <span class="date">${fmtDate(o.date)} · ${o.time}</span>
+          <span class="date">${fmtDate(o.date)}, ${o.time}</span>
         </div>
         <span class="order-total">${fmt(o.total)}</span>
       </div>
       <div class="order-items">
-        ${o.items.map(it=>`<div class="order-item"><span>${it.qty>1?it.qty+'× ':''}${it.name}</span><span>${fmt(it.price)}</span></div>`).join('')}
+        ${o.items.map(it=>`<div class="order-item"><span>${it.qty>1?it.qty+' x ':''}${it.name}</span><span class="num">${fmt(it.price)}</span></div>`).join('')}
       </div>
       ${o.note ? `<div class="order-note">${o.note}</div>` : ''}
     </div>`).join('');
 }
 
-/* ============================== HASHTAG APP: ORDER LIST ============================== */
+/* ============================== HASHTAG APP ============================== */
 function renderHashtagOrders(){
   const list = HASHTAG_ORDERS.slice().sort((a,b)=> b.date.localeCompare(a.date));
-  document.getElementById('hashtagOrderList').innerHTML = list.map(o=>`
+  $('hashtagOrderList').innerHTML = list.map(o=>`
     <div class="order-card">
       <div class="order-top">
         <div class="order-rest">
@@ -795,120 +1071,68 @@ function renderHashtagOrders(){
 }
 
 /* ============================== INIT: DATA FIRST, ALWAYS ============================== */
-/* This runs regardless of whether Chart.js (loaded from a CDN) succeeds, so the
-   item list and order history are never blocked by a chart/library failure. */
 renderSamsCatList();
-renderSamsTable();
+renderClothing();
+renderSamsList();
 renderPMRestList();
 renderPMOrders();
 renderHashtagOrders();
 
 /* ============================== CHARTS (best-effort) ============================== */
 function resolveColor(v){
-  if(v.startsWith('var(')){
-    const name = v.slice(4,-1).trim();
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  }
+  if(v.startsWith('var(')) return getComputedStyle(document.documentElement).getPropertyValue(v.slice(4,-1).trim()).trim();
   return v;
 }
-
 function renderCharts(){
   if (typeof Chart === 'undefined') {
-    console.warn('Chart.js failed to load (likely blocked or offline) — showing data without charts.');
     document.querySelectorAll('.chart-box').forEach(box=>{
-      box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;text-align:center;padding:0 12px;">Chart unavailable — could not load chart library.<br>Data below is unaffected.</div>';
+      box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;text-align:center;padding:0 12px;">Chart library did not load. The numbers below are unaffected.</div>';
     });
     return;
   }
-
   Chart.defaults.font.family = "'DM Sans', sans-serif";
   Chart.defaults.font.size = 12;
-  Chart.defaults.color = '#8a8065';
+  Chart.defaults.color = '#5f6b64';
+  const axis = { x:{ grid:{ display:false }, border:{ color:'#dfe5df' } }, y:{ grid:{ color:'#edf1ec' }, border:{ display:false }, ticks:{ callback:v=>'$'+v } } };
 
-  new Chart(document.getElementById('samsDonut'), {
+  new Chart($('samsDonut'), {
     type:'doughnut',
-    data:{
-      labels: SAMS_CATEGORIES.map(c=>c.label),
-      datasets:[{ data: SAMS_CATEGORIES.map(c=>c.total), backgroundColor: SAMS_CATEGORIES.map(c=>resolveColor(c.color)), borderColor:'#fffdf8', borderWidth:2 }]
-    },
-    options:{
-      cutout:'62%', maintainAspectRatio:false,
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)}` } } }
-    }
+    data:{ labels: SAMS_CATEGORIES.map(c=>c.label),
+      datasets:[{ data: SAMS_CATEGORIES.map(c=>c.total), backgroundColor: SAMS_CATEGORIES.map(c=>resolveColor(c.color)), borderColor:'#ffffff', borderWidth:2 }] },
+    options:{ cutout:'62%', maintainAspectRatio:false,
+      onClick:(e, els) => { if (els.length) samsSetFilter(SAMS_CATEGORIES[els[0].index].key); },
+      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)}` } } } }
   });
 
-  new Chart(document.getElementById('samsBar'), {
+  new Chart($('samsBar'), {
     type:'bar',
-    data:{
-      labels: SAMS_MONTHLY.map(m=>m.month),
-      datasets:[
-        { label:'Grocery', data: SAMS_MONTHLY.map(m=>m.grocery), backgroundColor: resolveColor('var(--grocery)'), stack:'a' },
-        { label:'Clothing', data: SAMS_MONTHLY.map(m=>m.clothing), backgroundColor: resolveColor('var(--clothing)'), stack:'a' },
-        { label:'Household', data: SAMS_MONTHLY.map(m=>m.household), backgroundColor: resolveColor('var(--household)'), stack:'a' },
-        { label:'Beer', data: SAMS_MONTHLY.map(m=>m.alcohol), backgroundColor: resolveColor('var(--beer)'), stack:'a' },
-        { label:'Fuel', data: SAMS_MONTHLY.map(m=>m.fuel), backgroundColor: resolveColor('var(--fuel)'), stack:'a', borderRadius:{topLeft:3,topRight:3} },
-      ]
-    },
-    options:{
-      maintainAspectRatio:false,
-      scales:{
-        x:{ stacked:true, grid:{ display:false }, border:{ color:'#e5ddc8' } },
-        y:{ stacked:true, grid:{ color:'#eee7d5' }, border:{ display:false }, ticks:{ callback:v=>'$'+v } }
-      },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)}` } } }
-    }
+    data:{ labels: SAMS_MONTHLY.map(m=>m.month),
+      datasets: MONTH_GROUPS.map((g, gi) => ({ label:g.label, data: SAMS_MONTHLY.map(m=>m[g.key]), backgroundColor: resolveColor(g.color), stack:'a',
+        borderRadius: gi === MONTH_GROUPS.length - 1 ? { topLeft:3, topRight:3 } : 0 })) },
+    options:{ maintainAspectRatio:false,
+      scales:{ x:{ ...axis.x, stacked:true }, y:{ ...axis.y, stacked:true } },
+      plugins:{ legend:{ display:true, position:'bottom', labels:{ boxWidth:10, boxHeight:10, padding:10, font:{ size:11 } } },
+        tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)}`, footer: items => `Total: ${fmt(items.reduce((s,i)=>s+i.raw,0))}` } } } }
   });
+  $('samsBar').parentElement.style.height = '240px';
 
-  new Chart(document.getElementById('pmDonut'), {
+  new Chart($('pmDonut'), {
     type:'doughnut',
-    data:{
-      labels: PM_RESTAURANTS.map(r=>r.name),
-      datasets:[{ data: PM_RESTAURANTS.map(r=>r.total), backgroundColor: PM_RESTAURANTS.map(r=>resolveColor(r.color)), borderColor:'#fffdf8', borderWidth:2 }]
-    },
-    options:{
-      cutout:'62%', maintainAspectRatio:false,
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)}` } } }
-    }
+    data:{ labels: PM_RESTAURANTS.map(r=>r.name), datasets:[{ data: PM_RESTAURANTS.map(r=>r.total), backgroundColor: PM_RESTAURANTS.map(r=>resolveColor(r.color)), borderColor:'#ffffff', borderWidth:2 }] },
+    options:{ cutout:'62%', maintainAspectRatio:false, plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)}` } } } }
   });
-
-  new Chart(document.getElementById('pmBar'), {
+  new Chart($('pmBar'), {
     type:'bar',
-    data:{
-      labels: PM_MONTHLY.map(m=>m.month),
-      datasets:[{ data: PM_MONTHLY.map(m=>m.total), backgroundColor: resolveColor('var(--pm1)'), borderRadius:{topLeft:3,topRight:3} }]
-    },
-    options:{
-      maintainAspectRatio:false,
-      scales:{
-        x:{ grid:{ display:false }, border:{ color:'#e5ddc8' } },
-        y:{ grid:{ color:'#eee7d5' }, border:{ display:false }, ticks:{ callback:v=>'$'+v } }
-      },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${fmt(ctx.raw)}` } } }
-    }
+    data:{ labels: PM_MONTHLY.map(m=>m.month), datasets:[{ data: PM_MONTHLY.map(m=>m.total), backgroundColor: resolveColor('var(--pm1)'), borderRadius:{topLeft:3,topRight:3} }] },
+    options:{ maintainAspectRatio:false, scales:axis, plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${fmt(ctx.raw)}` } } } }
   });
-
-  new Chart(document.getElementById('hashtagBar'), {
+  new Chart($('hashtagBar'), {
     type:'bar',
-    data:{
-      labels: HASHTAG_MONTHLY.map(m=>m.month),
-      datasets:[{ data: HASHTAG_MONTHLY.map(m=>m.total), backgroundColor: resolveColor('var(--hashtag)'), borderRadius:{topLeft:3,topRight:3} }]
-    },
-    options:{
-      maintainAspectRatio:false,
-      scales:{
-        x:{ grid:{ display:false }, border:{ color:'#e5ddc8' } },
-        y:{ grid:{ color:'#eee7d5' }, border:{ display:false }, ticks:{ callback:v=>'$'+v } }
-      },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${fmt(ctx.raw)}` } } }
-    }
+    data:{ labels: HASHTAG_MONTHLY.map(m=>m.month), datasets:[{ data: HASHTAG_MONTHLY.map(m=>m.total), backgroundColor: resolveColor('var(--hashtag)'), borderRadius:{topLeft:3,topRight:3} }] },
+    options:{ maintainAspectRatio:false, scales:axis, plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${fmt(ctx.raw)}` } } } }
   });
 }
-
-try {
-  renderCharts();
-} catch (e) {
-  console.error('Chart rendering failed, but item data above is unaffected:', e);
-}
+try { renderCharts(); } catch (e) { console.error('Chart rendering failed, item data is unaffected:', e); }
 </script>
 </body>
 </html>
