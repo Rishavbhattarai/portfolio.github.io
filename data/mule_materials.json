@@ -1,0 +1,148 @@
+{
+  "core": [
+    {
+      "id": "mcore-fundamentals",
+      "title": "Anypoint Platform Development: Fundamentals (Mule 4)",
+      "domain": "ovr",
+      "why": "The official self-paced course the exam is built on. Its labs (American Flights API) cover every section. Finishing it has come with free exam attempts; confirm the current offer on the course page.",
+      "links": [
+        {
+          "label": "Course page",
+          "url": "https://training.mulesoft.com/course/development-fundamentals-mule4"
+        }
+      ]
+    },
+    {
+      "id": "mcore-examguide",
+      "title": "Official exam guide",
+      "domain": "ovr",
+      "why": "The list of objectives per section, the format (60 questions, 120 minutes, 70% to pass) and the release the questions follow. Re-read it the day you book.",
+      "links": [
+        {
+          "label": "Exam guide",
+          "url": "https://help.salesforce.com/s/articleView?id=005298959&type=1"
+        }
+      ]
+    },
+    {
+      "id": "mcore-errors",
+      "title": "Mule 4 error handling docs",
+      "domain": "errors",
+      "why": "Source for On Error Propagate vs Continue, error types, the error object and error mapping. The exam's trickiest trace-the-flow questions come from here.",
+      "links": [
+        {
+          "label": "Error handling",
+          "url": "https://docs.mulesoft.com/mule-runtime/latest/error-handling"
+        },
+        {
+          "label": "On Error scopes",
+          "url": "https://docs.mulesoft.com/mule-runtime/latest/on-error-scope-concept"
+        }
+      ]
+    },
+    {
+      "id": "mcore-dw",
+      "title": "DataWeave 2.0 docs and Playground",
+      "domain": "dw",
+      "why": "Core functions, selectors and types. Drill in the Playground until you can write map, filter, groupBy, pluck and reduce without looking.",
+      "links": [
+        {
+          "label": "Core functions",
+          "url": "https://docs.mulesoft.com/dataweave/latest/dw-core"
+        },
+        {
+          "label": "Playground",
+          "url": "https://dataweave.mulesoft.com/learn/playground"
+        }
+      ]
+    },
+    {
+      "id": "mcore-event",
+      "title": "Mule event, flows and scopes docs",
+      "domain": "events",
+      "why": "What payload, attributes and vars hold after each processor, and how flows, subflows, For Each, Scatter-Gather and Batch change them.",
+      "links": [
+        {
+          "label": "Mule event",
+          "url": "https://docs.mulesoft.com/mule-runtime/latest/about-mule-event"
+        },
+        {
+          "label": "Target variables",
+          "url": "https://docs.mulesoft.com/mule-runtime/latest/target-variables"
+        },
+        {
+          "label": "Batch",
+          "url": "https://docs.mulesoft.com/mule-runtime/latest/batch-processing-concept"
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "mres-studio",
+      "title": "Anypoint Studio (download and install)",
+      "type": "Tool",
+      "free": true,
+      "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio"
+    },
+    {
+      "id": "mres-trial",
+      "title": "Anypoint Platform free trial (30 days, start it on Day 1 of hands-on work)",
+      "type": "Tool",
+      "free": true,
+      "url": "https://anypoint.mulesoft.com/login/signup"
+    },
+    {
+      "id": "mres-raml",
+      "title": "RAML 1.0 tutorial",
+      "type": "Tutorial",
+      "free": true,
+      "url": "https://raml.org/developers/raml-100-tutorial"
+    },
+    {
+      "id": "mres-apiled",
+      "title": "What is API-led connectivity (MuleSoft blog)",
+      "type": "Article",
+      "free": true,
+      "url": "https://blogs.mulesoft.com/learn-apis/api-led-connectivity/what-is-api-led-connectivity/"
+    },
+    {
+      "id": "mres-apikit",
+      "title": "APIkit docs",
+      "type": "Docs",
+      "free": true,
+      "url": "https://docs.mulesoft.com/apikit/latest/"
+    },
+    {
+      "id": "mres-apim",
+      "title": "API Manager: Autodiscovery, SLA tiers, client apps",
+      "type": "Docs",
+      "free": true,
+      "url": "https://docs.mulesoft.com/api-manager/latest/api-auto-discovery-new-concept"
+    },
+    {
+      "id": "mres-ch2",
+      "title": "CloudHub 2.0 docs",
+      "type": "Docs",
+      "free": true,
+      "url": "https://docs.mulesoft.com/cloudhub-2/"
+    },
+    {
+      "id": "mres-maint",
+      "title": "Trailhead: MuleSoft Developer maintenance (Winter '26), shows what changed recently",
+      "type": "Trailhead",
+      "free": true,
+      "url": "https://trailhead.salesforce.com/content/learn/modules/mulesoft-developer-certification-maintenance-winter-26"
+    }
+  ],
+  "avoid": [
+    {
+      "name": "Brain dumps and \"actual exam questions\" sites",
+      "reason": "Answers are often wrong, and using them breaks the certification agreement. Practice with your own questions and the course quizzes."
+    },
+    {
+      "name": "Mule 3 material",
+      "reason": "Mule 3 used MEL and inbound/outbound properties. The exam is Mule 4 only: DataWeave everywhere, attributes instead of properties."
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+[
+  {
+    "name": "Exam Guide: Salesforce Certified MuleSoft Developer",
+    "type": "Link",
+    "link": "https://help.salesforce.com/s/articleView?id=005298959&type=1",
+    "domain": "ovr"
+  },
+  {
+    "name": "Free Course: Anypoint Platform Development Fundamentals (Mule 4)",
+    "type": "Link",
+    "link": "https://training.mulesoft.com/course/development-fundamentals-mule4",
+    "domain": "ovr"
+  },
+  {
+    "name": "DataWeave Playground",
+    "type": "Link",
+    "link": "https://dataweave.mulesoft.com/learn/playground",
+    "domain": "ovr"
+  },
+  {
+    "name": "Install Anypoint Studio",
+    "type": "Link",
+    "link": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+    "domain": "ovr"
+  },
+  {
+    "name": "API-led Connectivity & Application Networks",
+    "type": "Topic",
+    "link": "https://blogs.mulesoft.com/learn-apis/api-led-connectivity/what-is-api-led-connectivity/",
+    "domain": "net"
+  },
+  {
+    "name": "Anypoint Platform Components",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/general/",
+    "domain": "net"
+  },
+  {
+    "name": "HTTP Methods & Status Codes",
+    "type": "Topic",
+    "link": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status",
+    "domain": "net"
+  },
+  {
+    "name": "RAML Basics: Resources, Methods & Parameters",
+    "type": "Topic",
+    "link": "https://raml.org/developers/raml-100-tutorial",
+    "domain": "design"
+  },
+  {
+    "name": "RAML Types, Traits, Resource Types & Libraries",
+    "type": "Topic",
+    "link": "https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md",
+    "domain": "design"
+  },
+  {
+    "name": "Mocking Service & Publishing to Exchange",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/design-center/design-mocking-service",
+    "domain": "design"
+  },
+  {
+    "name": "Deploying to CloudHub",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/cloudhub-2/",
+    "domain": "deploy"
+  },
+  {
+    "name": "API Proxy vs API Autodiscovery",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/api-manager/latest/api-auto-discovery-new-concept",
+    "domain": "deploy"
+  },
+  {
+    "name": "Policies, SLA Tiers & Client Applications",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/api-manager/latest/defining-sla-tiers",
+    "domain": "deploy"
+  },
+  {
+    "name": "APIkit: Scaffolding Flows from RAML",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/apikit/latest/",
+    "domain": "iface"
+  },
+  {
+    "name": "HTTP Listener: Building Interfaces by Hand",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/http-connector/latest/http-listener-ref",
+    "domain": "iface"
+  },
+  {
+    "name": "The Mule Event: Payload, Attributes & Variables",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/about-mule-event",
+    "domain": "events"
+  },
+  {
+    "name": "DataWeave Expressions in Processors",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/dataweave",
+    "domain": "events"
+  },
+  {
+    "name": "Target Variables",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/target-variables",
+    "domain": "events"
+  },
+  {
+    "name": "Flows, Subflows & Private Flows",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/flow-component",
+    "domain": "struct"
+  },
+  {
+    "name": "Flow Reference vs VM Connector",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/vm-connector/latest/",
+    "domain": "struct"
+  },
+  {
+    "name": "Global Elements & Project Structure",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/global-elements",
+    "domain": "struct"
+  },
+  {
+    "name": "Properties & Secure Properties",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/secure-configuration-properties",
+    "domain": "struct"
+  },
+  {
+    "name": "Maven & Dependencies",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/mmp-concept",
+    "domain": "struct"
+  },
+  {
+    "name": "Database Connector",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/db-connector/latest/",
+    "domain": "conn"
+  },
+  {
+    "name": "File, FTP & SFTP Connectors",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/file-connector/latest/",
+    "domain": "conn"
+  },
+  {
+    "name": "HTTP Request Connector",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/http-connector/latest/http-request-ref",
+    "domain": "conn"
+  },
+  {
+    "name": "Web Service Consumer (SOAP)",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/web-service-consumer-connector/latest/",
+    "domain": "conn"
+  },
+  {
+    "name": "JMS & Salesforce Connectors",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/jms-connector/latest/",
+    "domain": "conn"
+  },
+  {
+    "name": "Scheduler: Fixed Frequency & Cron",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/scheduler-concept",
+    "domain": "conn"
+  },
+  {
+    "name": "Choice Router",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/choice-router-concept",
+    "domain": "route"
+  },
+  {
+    "name": "Scatter-Gather",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/scatter-gather-concept",
+    "domain": "route"
+  },
+  {
+    "name": "First Successful & Until Successful",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/until-successful-scope",
+    "domain": "route"
+  },
+  {
+    "name": "Validation Module",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/validation-connector/latest/",
+    "domain": "route"
+  },
+  {
+    "name": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/dataweave/latest/dataweave-variables",
+    "domain": "dw"
+  },
+  {
+    "name": "DataWeave Selectors",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/dataweave/latest/dataweave-selectors",
+    "domain": "dw"
+  },
+  {
+    "name": "DataWeave Core Functions",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/dataweave/latest/dw-core",
+    "domain": "dw"
+  },
+  {
+    "name": "DataWeave Types, Coercion & Formatting",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/dataweave/latest/dataweave-types",
+    "domain": "dw"
+  },
+  {
+    "name": "DataWeave Modules, .dwl Files & lookup()",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/dataweave/latest/dataweave-create-module",
+    "domain": "dw"
+  },
+  {
+    "name": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/dataweave/latest/dataweave-formats",
+    "domain": "dw"
+  },
+  {
+    "name": "For Each & Parallel For Each",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/for-each-scope-concept",
+    "domain": "records"
+  },
+  {
+    "name": "Batch Jobs: Phases, Steps & Aggregator",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/batch-processing-concept",
+    "domain": "records"
+  },
+  {
+    "name": "Watermarks & Object Store",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/object-store/",
+    "domain": "records"
+  },
+  {
+    "name": "On Error Propagate vs On Error Continue",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/on-error-scope-concept",
+    "domain": "errors"
+  },
+  {
+    "name": "Try Scope, Error Types & the Error Object",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/mule-error-concept",
+    "domain": "errors"
+  },
+  {
+    "name": "Global Error Handler, Raise Error & Error Mapping",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/error-handling",
+    "domain": "errors"
+  },
+  {
+    "name": "Studio Debugger & Breakpoints",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/studio/latest/visual-debugger-concept",
+    "domain": "debug"
+  },
+  {
+    "name": "Logging & Anypoint Monitoring",
+    "type": "Topic",
+    "link": "https://docs.mulesoft.com/mule-runtime/latest/logging-in-mule",
+    "domain": "debug"
+  }
+]

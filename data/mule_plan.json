@@ -1,0 +1,621 @@
+{
+  "start": "2026-11-26",
+  "sideTrack": {
+    "track": "da",
+    "minutes": 15,
+    "cap": 10
+  },
+  "routine": [
+    {
+      "time": "08:30–09:00",
+      "what": "Retrieval: yesterday's red and amber cards"
+    },
+    {
+      "time": "09:00–11:30",
+      "what": "Concept sprint, 50 on / 10 off"
+    },
+    {
+      "time": "11:30–13:00",
+      "what": "Hands-on: Studio and the DataWeave Playground"
+    },
+    {
+      "time": "13:00–14:00",
+      "what": "Break, away from screens"
+    },
+    {
+      "time": "14:00–16:30",
+      "what": "Flow tracing: debugger and edge cases"
+    },
+    {
+      "time": "16:30–17:30",
+      "what": "Feynman answers and recall matrix"
+    }
+  ],
+  "days": [
+    {
+      "id": "d0",
+      "date": "2026-11-26",
+      "title": "Setup, baseline, application networks",
+      "focus": "Get the tools working and learn the vocabulary the whole exam uses.",
+      "note": "It's Thanksgiving. If the afternoon goes, the setup block and the morning sprint are enough to start.",
+      "items": [
+        "Install Anypoint Studio",
+        "Free Course: Anypoint Platform Development Fundamentals (Mule 4)",
+        "API-led Connectivity & Application Networks",
+        "Anypoint Platform Components",
+        "HTTP Methods & Status Codes",
+        "RAML Basics: Resources, Methods & Parameters"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Setup",
+          "tasks": [
+            "Enroll in the free Fundamentals course and confirm whether it still includes free exam attempts.",
+            "Install Anypoint Studio and open it once so the first-run download finishes.",
+            "Bookmark the DataWeave Playground. Don't start the Anypoint trial yet: it lasts 30 days, so start it on Day 1."
+          ]
+        },
+        {
+          "time": "09:00–10:00",
+          "title": "Baseline",
+          "tasks": [
+            "Quiz → Mixed practice, 15 minutes, no notes. The score is your baseline, not a grade.",
+            "Write down the three sections that felt least familiar."
+          ]
+        },
+        {
+          "time": "10:00–11:30",
+          "title": "Concept sprint (50/10)",
+          "tasks": [
+            "API-led connectivity: System, Process and Experience APIs, and what a C4E does.",
+            "Anypoint Platform components: what Design Center, Exchange, API Manager, Runtime Manager and Monitoring each do.",
+            "HTTP methods and the status codes the exam uses (200, 201, 400, 401, 403, 404, 405, 415, 429, 500)."
+          ]
+        },
+        {
+          "time": "11:30–13:00",
+          "title": "Hands-on",
+          "tasks": [
+            "Course: watch the application network and API design modules.",
+            "Write a tiny RAML by hand: /flights with GET, a query parameter airline, and /flights/{ID}."
+          ]
+        },
+        {
+          "time": "14:00–16:30",
+          "title": "Practice",
+          "tasks": [
+            "Quiz the Day 0 topics from the Syllabus page.",
+            "Rate each Day 0 topic 1–5 on the Syllabus page."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Explain the difference between a URI parameter and a query parameter, and why an API gateway returns 429 when a rate limit is exceeded."
+    },
+    {
+      "id": "d1",
+      "date": "2026-11-27",
+      "title": "API design, deployment and governance",
+      "focus": "Design an API spec, publish it, deploy an app and put policies on it.",
+      "items": [
+        "RAML Types, Traits, Resource Types & Libraries",
+        "Mocking Service & Publishing to Exchange",
+        "Deploying to CloudHub",
+        "API Proxy vs API Autodiscovery",
+        "Policies, SLA Tiers & Client Applications",
+        "Properties & Secure Properties",
+        "Global Elements & Project Structure"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–11:30",
+          "title": "Concept sprint (50/10)",
+          "tasks": [
+            "RAML data types, traits (is:), resource types (type:), libraries (uses:) and !include fragments.",
+            "Mocking service and publishing a spec to Exchange.",
+            "Proxy vs Autodiscovery; Client ID enforcement (401), rate limiting (429), SLA tiers and contracts."
+          ]
+        },
+        {
+          "time": "11:30–13:00",
+          "title": "Hands-on",
+          "tasks": [
+            "Start the Anypoint Platform trial today.",
+            "In Design Center: create an API spec, turn on the mocking service, call it, publish to Exchange.",
+            "In API Manager: add Client ID enforcement and call the API without credentials. Note the status code."
+          ]
+        },
+        {
+          "time": "14:00–16:30",
+          "title": "Structure + deploy",
+          "tasks": [
+            "Move a connector config into global.xml and a properties file (config-dev.yaml). Reference it with ${...} in XML and p('...') in DataWeave.",
+            "Encrypt one value with Secure Properties and read it with ${secure::...}.",
+            "Deploy a hello-world app to CloudHub from Runtime Manager or Studio."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Explain when you'd put an API proxy in front of an API instead of using Autodiscovery, and what the client ID and secret in each case belong to."
+    },
+    {
+      "id": "d2",
+      "date": "2026-11-28",
+      "title": "Mule events, APIkit and app structure",
+      "focus": "Predict exactly what payload, attributes and vars hold after every processor.",
+      "items": [
+        "The Mule Event: Payload, Attributes & Variables",
+        "DataWeave Expressions in Processors",
+        "Target Variables",
+        "APIkit: Scaffolding Flows from RAML",
+        "HTTP Listener: Building Interfaces by Hand",
+        "Flows, Subflows & Private Flows",
+        "Flow Reference vs VM Connector",
+        "Maven & Dependencies"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–11:30",
+          "title": "Concept sprint (50/10)",
+          "tasks": [
+            "Mule event anatomy: message (payload + attributes) and variables.",
+            "Which processors replace attributes (HTTP Request does), and what target and targetValue change.",
+            "APIkit: router, flow names like get:\\flights\\(ID):config, and the APIKIT error types it maps to 400/404/405/406/415/501."
+          ]
+        },
+        {
+          "time": "11:30–13:00",
+          "title": "Hands-on",
+          "tasks": [
+            "Scaffold an app from your RAML with APIkit. Call a missing resource, a wrong method and a bad query param; note each status.",
+            "Put a breakpoint after an HTTP Request and inspect payload, attributes and vars, with and without a target."
+          ]
+        },
+        {
+          "time": "14:00–16:30",
+          "title": "Flow tracing",
+          "tasks": [
+            "Build a flow that calls a subflow, a private flow and a VM queue. Check which vars survive each call.",
+            "Quiz the Day 2 topics. Do every predict-the-output question twice."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Draw an HTTP Request call with a target variable and one without. Trace payload, attributes and vars before and after each."
+    },
+    {
+      "id": "d3",
+      "date": "2026-11-29",
+      "title": "Connectors and routing",
+      "focus": "Know what each connector returns and which route runs.",
+      "items": [
+        "Database Connector",
+        "File, FTP & SFTP Connectors",
+        "HTTP Request Connector",
+        "Web Service Consumer (SOAP)",
+        "JMS & Salesforce Connectors",
+        "Scheduler: Fixed Frequency & Cron",
+        "Choice Router",
+        "Scatter-Gather",
+        "First Successful & Until Successful",
+        "Validation Module",
+        "Watermarks & Object Store"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–11:30",
+          "title": "Concept sprint (50/10)",
+          "tasks": [
+            "Database: parameterized queries with :param and inputParameters; Select returns an array of objects.",
+            "File/FTP/SFTP listeners, post-processing, and automatic watermarking.",
+            "Scheduler: fixed frequency vs cron. HTTP Request config: base path, query params, response attributes."
+          ]
+        },
+        {
+          "time": "11:30–13:00",
+          "title": "Hands-on",
+          "tasks": [
+            "DB Select with an input parameter; log the payload type.",
+            "Scatter-Gather with two HTTP calls; inspect the result object and flatten it in DataWeave."
+          ]
+        },
+        {
+          "time": "14:00–16:30",
+          "title": "Routing",
+          "tasks": [
+            "Choice: first match wins, default when nothing matches.",
+            "Scatter-Gather errors (MULE:COMPOSITE_ROUTING), First Successful, Until Successful retries.",
+            "Validation module: is-not-null, is-number, and the VALIDATION:* errors."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "What does a Scatter-Gather with two successful routes return, and what happens when route 1 succeeds and route 2 fails?"
+    },
+    {
+      "id": "d4",
+      "date": "2026-11-30",
+      "title": "Mock exam 1 and gap analysis",
+      "focus": "Find out what you don't know while there's still time to fix it.",
+      "items": [],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–10:00",
+          "title": "Mock exam 1",
+          "tasks": [
+            "Quiz → Mock exam, under exam conditions. No notes."
+          ]
+        },
+        {
+          "time": "10:00–12:00",
+          "title": "Gap analysis",
+          "tasks": [
+            "For every miss, name the cause: DataWeave syntax, scope boundaries, error propagation, or platform knowledge.",
+            "Turn each miss into a flashcard (paste them into mule-ingest) and re-rate the weak topics on the Syllabus page."
+          ]
+        },
+        {
+          "time": "13:00–16:30",
+          "title": "Catch-up",
+          "tasks": [
+            "Redo any lab from Days 0–3 you skipped.",
+            "Quiz → Wrong answers until it's empty."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Pick your weakest section from the mock and explain it in five sentences without notes."
+    },
+    {
+      "id": "d5",
+      "date": "2026-12-01",
+      "title": "DataWeave I: syntax, selectors, core functions",
+      "focus": "Write transformations from memory.",
+      "items": [
+        "DataWeave Syntax: Header, Body, Variables & Functions",
+        "DataWeave Selectors",
+        "DataWeave Core Functions"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–11:30",
+          "title": "Concept sprint (50/10)",
+          "tasks": [
+            "Header vs body, %dw 2.0, output, var, fun, do blocks, if/else, match.",
+            "Selectors: .field, .*field, ..field, .@attr, [index], filters [?()]."
+          ]
+        },
+        {
+          "time": "11:30–16:30",
+          "title": "Playground drills",
+          "tasks": [
+            "Predict, then run: map, mapObject, filter, reduce, groupBy, pluck, flatten, orderBy, distinctBy, sizeOf, joinBy.",
+            "Write each one from memory on a blank Playground."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Write a DataWeave expression that groups an array of orders by status with groupBy and turns it into a list with pluck. Explain each step."
+    },
+    {
+      "id": "d6",
+      "date": "2026-12-02",
+      "title": "DataWeave II and processing records",
+      "focus": "Types and formats, then For Each and Batch.",
+      "items": [
+        "DataWeave Types, Coercion & Formatting",
+        "DataWeave Modules, .dwl Files & lookup()",
+        "DataWeave Output Formats: JSON, XML, CSV, Java",
+        "For Each & Parallel For Each",
+        "Batch Jobs: Phases, Steps & Aggregator"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–11:30",
+          "title": "DataWeave II (50/10)",
+          "tasks": [
+            "Coercion with as, formats for dates and numbers, default, null safety.",
+            "Modules: import from your own .dwl in src/main/resources; lookup() to call a flow; CSV and XML output settings."
+          ]
+        },
+        {
+          "time": "11:30–16:30",
+          "title": "Records",
+          "tasks": [
+            "For Each: counter, and the payload going back to the original collection after the scope.",
+            "Batch: Load and Dispatch, Process (steps, acceptExpression, acceptPolicy), On Complete (summary only); Batch Aggregator; block size; max failed records.",
+            "Lab: a batch job over 1,000 records with a failing step. Read the On Complete summary."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Explain what payload comes out of a For Each scope, and what the On Complete phase of a batch job can and can't see."
+    },
+    {
+      "id": "d7",
+      "date": "2026-12-03",
+      "title": "Error handling",
+      "focus": "Predict the HTTP status for every combination of handlers.",
+      "items": [
+        "On Error Propagate vs On Error Continue",
+        "Try Scope, Error Types & the Error Object",
+        "Global Error Handler, Raise Error & Error Mapping"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–11:30",
+          "title": "Concept sprint (50/10)",
+          "tasks": [
+            "Propagate: runs, rethrows, the HTTP Listener sends an error response (500 unless set). Continue: runs, swallows the error, the flow succeeds (200).",
+            "Try scope, error types and hierarchy, the error object (error.description, error.errorType), Raise Error, error mapping, the global default handler."
+          ]
+        },
+        {
+          "time": "11:30–16:30",
+          "title": "Error gauntlet",
+          "tasks": [
+            "Build: a main flow with Propagate calling a private flow with Continue, then with Propagate. Predict, then call, then compare.",
+            "Quiz the error topics until 90%."
+          ]
+        },
+        {
+          "time": "16:30–17:30",
+          "title": "Feynman + recall matrix",
+          "tasks": [
+            "Write today's Feynman answer below, then mark it Clear or Has gaps.",
+            "Notes → Recall mode on today's topics. Anything Missed or Partly becomes a flashcard automatically."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "A main flow with On Error Propagate calls a private flow that has On Error Continue, and the error happens in the private flow. Walk through what the caller receives."
+    },
+    {
+      "id": "d8",
+      "date": "2026-12-04",
+      "title": "Debugging and full mock exam",
+      "focus": "Simulate the real thing.",
+      "items": [
+        "Studio Debugger & Breakpoints",
+        "Logging & Anypoint Monitoring"
+      ],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–10:30",
+          "title": "Debugging",
+          "tasks": [
+            "Breakpoints, step over and into, Evaluate Expression, port conflicts, missing metadata, Maven dependency errors.",
+            "Log levels in log4j2.xml; where logs live in Runtime Manager and Monitoring."
+          ]
+        },
+        {
+          "time": "10:30–12:30",
+          "title": "Full mock exam",
+          "tasks": [
+            "Quiz → Mock exam: all questions, timed. No notes, no breaks."
+          ]
+        },
+        {
+          "time": "13:30–16:30",
+          "title": "Gap analysis",
+          "tasks": [
+            "Tag every miss by cause and turn it into a flashcard.",
+            "Re-rate every topic on the Syllabus page."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Explain how you'd find out why a deployed app returns 500 for one request, step by step."
+    },
+    {
+      "id": "d9",
+      "date": "2026-12-05",
+      "title": "Fix gaps, checklist, book the exam",
+      "focus": "Book only when the checklist is all green.",
+      "items": [],
+      "blocks": [
+        {
+          "time": "08:30–09:00",
+          "title": "Warm-up retrieval",
+          "tasks": [
+            "Flashcards → Review all due. Grade honestly; misses come back tomorrow."
+          ]
+        },
+        {
+          "time": "09:00–13:00",
+          "title": "Fix gaps",
+          "tasks": [
+            "Quiz → Wrong answers until empty.",
+            "Re-do the Feynman prompts marked Has gaps."
+          ]
+        },
+        {
+          "time": "14:00–15:00",
+          "title": "Book",
+          "tasks": [
+            "Re-read the official exam guide for any change.",
+            "Go through the pre-exam checklist below. If every item is ticked, book for Dec 7–9."
+          ]
+        },
+        {
+          "time": "Any gap",
+          "title": "Side track: Data Architect (15 min)",
+          "tasks": [
+            "Switch to Data Architect and clear its due flashcards. Stop at 15 minutes."
+          ]
+        }
+      ],
+      "feynman": "Explain the three scope-return rules: For Each, Scatter-Gather and Batch On Complete."
+    }
+  ],
+  "checklist": [
+    "Flow tracing: I can step through any flow and predict payload, attributes and vars after every processor.",
+    "Error propagation: I can predict the final HTTP status for every mix of On Error Propagate and On Error Continue across nested flows.",
+    "Scope returns: For Each gives back the original collection, Scatter-Gather returns an object keyed by route index, Batch On Complete sees only the summary.",
+    "DataWeave: I can write map, filter, groupBy, pluck and reduce from scratch without the docs.",
+    "APIkit: I can say which flow and which error handler a given REST call reaches.",
+    "Governance: I know when to use an API proxy vs Autodiscovery, and how SLA tiers and Client ID enforcement work.",
+    "Structure: I can explain flows vs subflows vs private flows, and Flow Reference vs VM queues.",
+    "Two mock exams at 80% or more, the latest one timed.",
+    "I re-read the official exam guide this week and nothing has changed."
+  ]
+}

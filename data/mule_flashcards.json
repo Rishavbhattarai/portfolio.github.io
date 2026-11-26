@@ -1,0 +1,597 @@
+[
+  {
+    "id": "api-led-connectivity-and-application-networks-c1",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "front": "API-led connectivity: name the three layers, bottom to top.",
+    "back": "System, Process, Experience."
+  },
+  {
+    "id": "api-led-connectivity-and-application-networks-c2",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "front": "Which API layer unlocks data from a system of record?",
+    "back": "System API."
+  },
+  {
+    "id": "api-led-connectivity-and-application-networks-c3",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "front": "Which API layer orchestrates data across several systems for a business process?",
+    "back": "Process API."
+  },
+  {
+    "id": "api-led-connectivity-and-application-networks-c4",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "front": "Which API layer shapes data for a specific channel like mobile?",
+    "back": "Experience API."
+  },
+  {
+    "id": "api-led-connectivity-and-application-networks-c5",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "front": "What is a C4E?",
+    "back": "A Center for Enablement: a cross-functional team that drives reuse by producing assets, templates and best practices so other teams can build APIs themselves."
+  },
+  {
+    "id": "api-led-connectivity-and-application-networks-c6",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "front": "What is an application network?",
+    "back": "A network of apps, data and devices connected by reusable APIs."
+  },
+  {
+    "id": "anypoint-platform-components-c1",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "front": "Which Anypoint component holds reusable API specs, fragments, connectors and templates?",
+    "back": "Exchange."
+  },
+  {
+    "id": "anypoint-platform-components-c2",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "front": "Which Anypoint component applies policies and SLA tiers to an API?",
+    "back": "API Manager."
+  },
+  {
+    "id": "anypoint-platform-components-c3",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "front": "Which Anypoint component deploys and manages running Mule apps?",
+    "back": "Runtime Manager."
+  },
+  {
+    "id": "anypoint-platform-components-c4",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "front": "Where do you write a RAML spec in the browser and mock it?",
+    "back": "Design Center (API Designer)."
+  },
+  {
+    "id": "anypoint-platform-components-c5",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "front": "Which Anypoint component manages users, roles, business groups and environments?",
+    "back": "Access Management."
+  },
+  {
+    "id": "http-methods-and-status-codes-c1",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "front": "HTTP status for a successful POST that created a resource?",
+    "back": "201 Created."
+  },
+  {
+    "id": "http-methods-and-status-codes-c2",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "front": "HTTP status when a client calls a method the resource doesn't support?",
+    "back": "405 Method Not Allowed."
+  },
+  {
+    "id": "http-methods-and-status-codes-c3",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "front": "HTTP status when the request's Content-Type isn't supported?",
+    "back": "415 Unsupported Media Type."
+  },
+  {
+    "id": "http-methods-and-status-codes-c4",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "front": "HTTP status when the client's Accept header asks for a format the API can't produce?",
+    "back": "406 Not Acceptable."
+  },
+  {
+    "id": "http-methods-and-status-codes-c5",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "front": "HTTP status when a rate limit is exceeded?",
+    "back": "429 Too Many Requests."
+  },
+  {
+    "id": "http-methods-and-status-codes-c6",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "front": "401 vs 403?",
+    "back": "401: missing or invalid credentials. 403: authenticated, but not allowed."
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-c1",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "front": "First line of every RAML 1.0 file?",
+    "back": "#%RAML 1.0"
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-c2",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "front": "In RAML, how is a URI parameter written?",
+    "back": "In braces in the resource path, e.g. /flights/{ID}."
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-c3",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "front": "In Mule 4, where do URI parameters arrive?",
+    "back": "attributes.uriParams"
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-c4",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "front": "In Mule 4, where do query parameters arrive?",
+    "back": "attributes.queryParams"
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-c5",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "front": "Are RAML 1.0 query parameters required by default?",
+    "back": "Yes. Make one optional with required: false or a ? after its name."
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-c1",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "front": "RAML keyword to apply a trait to a method?",
+    "back": "is: [traitName]"
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-c2",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "front": "RAML keyword to apply a resource type to a resource?",
+    "back": "type: resourceTypeName"
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-c3",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "front": "RAML keyword to import a library?",
+    "back": "uses:"
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-c4",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "front": "RAML keyword to pull in a separate file?",
+    "back": "!include"
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-c5",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "front": "Trait vs resource type?",
+    "back": "Trait: reusable at method level. Resource type: reusable at resource level."
+  },
+  {
+    "id": "mocking-service-and-publishing-to-exchange-c1",
+    "syllabusItem": "Mocking Service & Publishing to Exchange",
+    "domain": "design",
+    "front": "What does the API Designer mocking service return?",
+    "back": "The example responses defined in the API spec."
+  },
+  {
+    "id": "mocking-service-and-publishing-to-exchange-c2",
+    "syllabusItem": "Mocking Service & Publishing to Exchange",
+    "domain": "design",
+    "front": "Why mock an API before implementing it?",
+    "back": "Consumers can test against it and give feedback while the implementation is still being built."
+  },
+  {
+    "id": "mocking-service-and-publishing-to-exchange-c3",
+    "syllabusItem": "Mocking Service & Publishing to Exchange",
+    "domain": "design",
+    "front": "What happens when you publish a spec from Design Center?",
+    "back": "It becomes a versioned asset in Exchange that others can discover and reuse."
+  },
+  {
+    "id": "deploying-to-cloudhub-c1",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "front": "CloudHub 1.0: what's a worker?",
+    "back": "A dedicated Mule runtime instance that runs your app, sized in vCores."
+  },
+  {
+    "id": "deploying-to-cloudhub-c2",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "front": "CloudHub 2.0: what replaces workers?",
+    "back": "Replicas, running in shared or private spaces."
+  },
+  {
+    "id": "deploying-to-cloudhub-c3",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "front": "CloudHub 1.0: which property should the HTTP Listener port use?",
+    "back": "${http.port} (8081), or ${https.port} (8082) for HTTPS."
+  },
+  {
+    "id": "deploying-to-cloudhub-c4",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "front": "Which wins: a property set in Runtime Manager or the same property in the app's YAML file?",
+    "back": "The Runtime Manager property overrides the file."
+  },
+  {
+    "id": "deploying-to-cloudhub-c5",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "front": "Why must a CloudHub 1.0 app name be unique?",
+    "back": "It becomes part of the public domain name: <app>.<region>.cloudhub.io."
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-c1",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "front": "API Autodiscovery: what two values does the global element need?",
+    "back": "The API ID from API Manager and the flowRef of the flow with the HTTP Listener."
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-c2",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "front": "When would you use an API proxy instead of Autodiscovery?",
+    "back": "When the backend isn't a Mule app or you can't modify and redeploy it."
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-c3",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "front": "Autodiscovery: whose client ID and secret does the Mule runtime use to pair with API Manager?",
+    "back": "The environment's (org or business group) credentials, not a consumer client app's."
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-c4",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "front": "Where are policies enforced with an API proxy?",
+    "back": "In the proxy app, before the request reaches the backend."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-c1",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "front": "Client ID Enforcement: status code when credentials are missing?",
+    "back": "401 Unauthorized."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-c2",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "front": "Rate limiting policy: status code when the limit is exceeded?",
+    "back": "429 Too Many Requests."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-c3",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "front": "What does SLA-based rate limiting need from each request?",
+    "back": "The client ID, so it can look up the caller's tier."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-c4",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "front": "How does a consumer get a client ID and secret for an API?",
+    "back": "Request access in Exchange: register a client app, pick an SLA tier, get a contract."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-c5",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "front": "Do you redeploy the Mule app to add a policy?",
+    "back": "No. Policies are applied in API Manager at runtime."
+  },
+  {
+    "id": "properties-and-secure-properties-c1",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "front": "How do you read property db.host in XML?",
+    "back": "${db.host}"
+  },
+  {
+    "id": "properties-and-secure-properties-c2",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "front": "How do you read property db.host in DataWeave?",
+    "back": "p('db.host')"
+  },
+  {
+    "id": "properties-and-secure-properties-c3",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "front": "How do you read an encrypted property db.password in XML?",
+    "back": "${secure::db.password}"
+  },
+  {
+    "id": "properties-and-secure-properties-c4",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "front": "How does an encrypted value look in a secure properties file?",
+    "back": "![encryptedValue]"
+  },
+  {
+    "id": "properties-and-secure-properties-c5",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "front": "How do you mask a property's value in Runtime Manager?",
+    "back": "List it under secureProperties in mule-artifact.json."
+  },
+  {
+    "id": "global-elements-and-project-structure-c1",
+    "syllabusItem": "Global Elements & Project Structure",
+    "domain": "struct",
+    "front": "Where do flow XML files live in a Mule project?",
+    "back": "src/main/mule"
+  },
+  {
+    "id": "global-elements-and-project-structure-c2",
+    "syllabusItem": "Global Elements & Project Structure",
+    "domain": "struct",
+    "front": "Where do property files, .dwl modules and log4j2.xml live?",
+    "back": "src/main/resources"
+  },
+  {
+    "id": "global-elements-and-project-structure-c3",
+    "syllabusItem": "Global Elements & Project Structure",
+    "domain": "struct",
+    "front": "How does a processor point to a global element?",
+    "back": "With config-ref."
+  },
+  {
+    "id": "global-elements-and-project-structure-c4",
+    "syllabusItem": "Global Elements & Project Structure",
+    "domain": "struct",
+    "front": "Can a flow in orders.xml use a config defined in global.xml of the same app?",
+    "back": "Yes. Global elements are shared across the app's config files."
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-c1",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "front": "What two parts make up a Mule event?",
+    "back": "The message (payload + attributes) and variables."
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-c2",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "front": "Where are HTTP request headers in a Mule 4 event?",
+    "back": "attributes.headers"
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-c3",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "front": "After an HTTP Request operation (no target), what are the attributes?",
+    "back": "The HTTP response attributes: statusCode, headers, reasonPhrase."
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-c4",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "front": "Does an HTTP Request operation remove variables?",
+    "back": "No. Vars survive; payload and attributes are replaced."
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-c5",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "front": "How do you read a variable named orderId in DataWeave?",
+    "back": "vars.orderId"
+  },
+  {
+    "id": "dataweave-expressions-in-processors-c1",
+    "syllabusItem": "DataWeave Expressions in Processors",
+    "domain": "events",
+    "front": "What wraps a DataWeave expression in a processor field?",
+    "back": "#[ ]"
+  },
+  {
+    "id": "dataweave-expressions-in-processors-c2",
+    "syllabusItem": "DataWeave Expressions in Processors",
+    "domain": "events",
+    "front": "DataWeave operator to concatenate two strings?",
+    "back": "++"
+  },
+  {
+    "id": "dataweave-expressions-in-processors-c3",
+    "syllabusItem": "DataWeave Expressions in Processors",
+    "domain": "events",
+    "front": "DataWeave string interpolation syntax?",
+    "back": "$(expression) inside a string, e.g. \"Hi $(payload.name)\"."
+  },
+  {
+    "id": "dataweave-expressions-in-processors-c4",
+    "syllabusItem": "DataWeave Expressions in Processors",
+    "domain": "events",
+    "front": "How do you fall back to 0 when payload.discount is null?",
+    "back": "payload.discount default 0"
+  },
+  {
+    "id": "target-variables-c1",
+    "syllabusItem": "Target Variables",
+    "domain": "events",
+    "front": "What does target=\"customer\" do on an HTTP Request?",
+    "back": "Stores the response in vars.customer and leaves payload and attributes unchanged."
+  },
+  {
+    "id": "target-variables-c2",
+    "syllabusItem": "Target Variables",
+    "domain": "events",
+    "front": "Default targetValue?",
+    "back": "#[payload]: the operation's output payload."
+  },
+  {
+    "id": "target-variables-c3",
+    "syllabusItem": "Target Variables",
+    "domain": "events",
+    "front": "targetValue to store both payload and attributes of the response?",
+    "back": "#[message]"
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-c1",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "front": "APIkit main flow: which listener path and which component?",
+    "back": "/api/* followed by the APIkit Router."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-c2",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "front": "APIkit flow name for GET /flights/{ID}?",
+    "back": "get:\\flights\\(ID):<config-name>"
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-c3",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "front": "APIkit error type for a path not in the RAML, and its status?",
+    "back": "APIKIT:NOT_FOUND, 404."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-c4",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "front": "APIkit error type for an undeclared method, and its status?",
+    "back": "APIKIT:METHOD_NOT_ALLOWED, 405."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-c5",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "front": "APIkit error type when a required query param is missing, and its status?",
+    "back": "APIKIT:BAD_REQUEST, 400."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-c6",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "front": "How do the scaffolded error handlers set the HTTP status?",
+    "back": "They set vars.httpStatus, which the listener's error response uses."
+  },
+  {
+    "id": "http-listener-building-interfaces-by-hand-c1",
+    "syllabusItem": "HTTP Listener: Building Interfaces by Hand",
+    "domain": "iface",
+    "front": "HTTP Listener path for one flight by destination?",
+    "back": "/flights/{dest}, read with attributes.uriParams.dest."
+  },
+  {
+    "id": "http-listener-building-interfaces-by-hand-c2",
+    "syllabusItem": "HTTP Listener: Building Interfaces by Hand",
+    "domain": "iface",
+    "front": "What does host 0.0.0.0 mean on an HTTP Listener config?",
+    "back": "Listen on all network interfaces."
+  },
+  {
+    "id": "http-listener-building-interfaces-by-hand-c3",
+    "syllabusItem": "HTTP Listener: Building Interfaces by Hand",
+    "domain": "iface",
+    "front": "Building an interface by hand vs APIkit: what do you lose?",
+    "back": "Automatic validation of the request against the RAML, and the scaffolded routing and error handling."
+  },
+  {
+    "id": "flows-subflows-and-private-flows-c1",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "front": "Private flow vs subflow: which has its own error handler?",
+    "back": "The private flow. A subflow has none."
+  },
+  {
+    "id": "flows-subflows-and-private-flows-c2",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "front": "An error is raised in a subflow. Who handles it?",
+    "back": "The error handler of the flow that called it."
+  },
+  {
+    "id": "flows-subflows-and-private-flows-c3",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "front": "A flow called with Flow Reference sets vars.total. Can the caller read it afterwards?",
+    "back": "Yes. Flow Reference shares the same event."
+  },
+  {
+    "id": "flows-subflows-and-private-flows-c4",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "front": "What makes a flow 'private'?",
+    "back": "It has no event source, so it only runs when referenced."
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-c1",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "front": "Do vars survive a Flow Reference call?",
+    "back": "Yes. The same event is passed."
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-c2",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "front": "Do vars survive a VM Publish to another flow?",
+    "back": "No. The VM listener flow gets a new event without the caller's vars."
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-c3",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "front": "VM Publish vs Publish Consume?",
+    "back": "Publish sends and continues. Publish Consume sends and waits for the listener flow's response."
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-c4",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "front": "Transient vs persistent VM queue?",
+    "back": "Transient is in memory and lost on restart; persistent survives restarts."
+  },
+  {
+    "id": "maven-and-dependencies-c1",
+    "syllabusItem": "Maven & Dependencies",
+    "domain": "struct",
+    "front": "Where are a Mule app's connectors declared as dependencies?",
+    "back": "pom.xml"
+  },
+  {
+    "id": "maven-and-dependencies-c2",
+    "syllabusItem": "Maven & Dependencies",
+    "domain": "struct",
+    "front": "What builds the deployable Mule app JAR?",
+    "back": "The Mule Maven plugin, e.g. mvn clean package."
+  },
+  {
+    "id": "maven-and-dependencies-c3",
+    "syllabusItem": "Maven & Dependencies",
+    "domain": "struct",
+    "front": "What's the Maven groupId of an asset your org publishes to Exchange?",
+    "back": "Your organization ID."
+  }
+]

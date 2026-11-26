@@ -36,9 +36,9 @@ The dashboard is `data-architect.html` in this repo (GitHub Pages, live at https
 
 4. **Dry run, then write:**
    ```bash
-   node tools/da-ingest.mjs --module "<exact syllabus name>" <tmp>/input.json --dry-run
-   node tools/da-ingest.mjs --module "<exact syllabus name>" <tmp>/input.json
-   node tools/da-validate.mjs
+   node tools/da-ingest.mjs --track da --module "<exact syllabus name>" <tmp>/input.json --dry-run
+   node tools/da-ingest.mjs --track da --module "<exact syllabus name>" <tmp>/input.json
+   node tools/da-validate.mjs --track da
    ```
    The ingest script assigns ids (`<module-slug>-q<n>`, `-c<n>`, `-n<n>`), sets `syllabusItem` and `domain`, and skips entries already present for that module, so re-pasting is safe. If `da-validate` fails, fix the input and rerun; **never commit a failing state**.
 
@@ -51,9 +51,9 @@ The dashboard is `data-architect.html` in this repo (GitHub Pages, live at https
    Don't stage anything else. If `git status` shows other uncommitted changes, leave them alone and mention them. If the push is rejected, `git pull --rebase origin main` once and push again; if that fails, stop and report.
 
 6. **Report** in a few lines: module, counts added, duplicates skipped, any flagged facts, and the links:
-   - `https://rishavbhattarai.com.np/data-architect#quiz/<slug>`
-   - `https://rishavbhattarai.com.np/data-architect#cards/<slug>`
-   - `https://rishavbhattarai.com.np/data-architect#notes/<slug>`
+   - `https://rishavbhattarai.com.np/data-architect?track=da#quiz/<slug>`
+   - `https://rishavbhattarai.com.np/data-architect?track=da#cards/<slug>`
+   - `https://rishavbhattarai.com.np/data-architect?track=da#notes/<slug>`
 
    GitHub Pages takes about a minute to update.
 
@@ -61,4 +61,5 @@ The dashboard is `data-architect.html` in this repo (GitHub Pages, live at https
 
 - Quiz and flashcards are different things. Never turn quiz questions into flashcards or the other way round unless Rishav asks.
 - One fact per flashcard. If a pasted card holds several facts, keep it but mention it in the report.
+- The same page also hosts the MuleSoft Developer exam (`mule_*.json`, see the mule-ingest skill). The `?track=da` in links makes sure the Data Architect side opens.
 - To test the page locally: `npx serve -l 4317 .` then open http://localhost:4317/data-architect.

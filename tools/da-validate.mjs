@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 // Validates the Data Architect dashboard data files. Exits 1 on any error.
-// Usage: node tools/da-validate.mjs
+// Usage: node tools/da-validate.mjs [--track da|mule]   (default da)
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
+const args = process.argv.slice(2);
+const track = args.includes('--track') ? args[args.indexOf('--track') + 1] : 'da';
+if (!['da', 'mule'].includes(track)) { console.error('--track must be da or mule'); process.exit(2); }
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
 const read = (f) => {
@@ -12,11 +15,11 @@ const read = (f) => {
   catch (e) { errors.push(`${f}: ${e.message}`); return null; }
 };
 
-const syllabus = read('da_syllabus.json') || [];
-const meta = read('da_syllabus_meta.json') || {};
+const syllabus = read(`${track}_syllabus.json`) || [];
+const meta = read(`${track}_syllabus_meta.json`) || {};
 const names = new Set(syllabus.concat(meta.extraItems || []).map((i) => i.name));
 const domains = new Set((meta.domains || []).map((d) => d.id));
-for (const f of ['da_materials.json', 'da_notes.json']) read(f);
+for (const f of [`${track}_materials.json`, `${track}_notes.json`]) read(f);
 
 function checkList(file, check) {
   const list = read(file);
@@ -36,7 +39,7 @@ function checkList(file, check) {
 }
 
 const counts = {
-  questions: checkList('da_questions.json', (q, at) => {
+  questions: checkList(`${track}_questions.json`, (q, at) => {
     if (!q.question) errors.push(`${at}: empty question`);
     const letters = (q.options || []).map((o) => (/^\s*([A-Z])[).:]/.exec(o) || [])[1]);
     if (letters.length < 2 || letters.some((l) => !l)) errors.push(`${at}: options must look like "A) text"`);
@@ -44,18 +47,18 @@ const counts = {
     if (!Array.isArray(q.answer) || !q.answer.length) errors.push(`${at}: answer must be a non-empty array like ["B"]`);
     else q.answer.forEach((a) => { if (!letters.includes(a)) errors.push(`${at}: answer "${a}" is not one of the options`); });
   }),
-  flashcards: checkList('da_flashcards.json', (c, at) => {
+  flashcards: checkList(`${track}_flashcards.json`, (c, at) => {
     if (!c.front || !c.back) errors.push(`${at}: front and back are required`);
   }),
-  moduleNotes: checkList('da_module_notes.json', (n, at) => {
+  moduleNotes: checkList(`${track}_module_notes.json`, (n, at) => {
     for (const k of ['points', 'principles', 'recall']) if (n[k] !== undefined && !Array.isArray(n[k])) errors.push(`${at}: ${k} must be an array`);
     (n.recall || []).forEach((r, j) => { if (!r.q || !r.a) errors.push(`${at}: recall[${j}] needs q and a`); });
   })
 };
 
 if (errors.length) {
-  console.error(`da-validate: ${errors.length} problem(s)`);
+  console.error(`da-validate [${track}]: ${errors.length} problem(s)`);
   errors.forEach((e) => console.error('  - ' + e));
   process.exit(1);
 }
-console.log(`da-validate: OK (${counts.questions} questions, ${counts.flashcards} flashcards, ${counts.moduleNotes} module note entries)`);
+console.log(`da-validate [${track}]: OK (${counts.questions} questions, ${counts.flashcards} flashcards, ${counts.moduleNotes} module note entries)`);

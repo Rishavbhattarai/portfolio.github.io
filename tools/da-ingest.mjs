@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // Appends one module's quiz, flashcards and notes to the dashboard data files.
-// Usage: node tools/da-ingest.mjs --module "Data Modeling" path/to/input.json [--dry-run]
+// Usage: node tools/da-ingest.mjs [--track da|mule] --module "Data Modeling" path/to/input.json [--dry-run]
+// --track picks the data files: da_*.json (Data Architect, default) or mule_*.json (MuleSoft Developer).
 //
 // Input JSON (any part optional):
 // {
 //   "notes": { "key_concepts": [..], "core_principles": [..], "recall": [{ "q": "..", "a": ".." }] },
-//   "quiz": [{ "question": "..", "options": ["A) ..", "B) .."], "correct_answer": "C) .." | "C" | ["A","C"], "explanation": "..", "source": ".." }],
+//   "quiz": [{ "question": "..", "code": "optional Mule XML or DataWeave shown above the options", "options": ["A) ..", "B) .."], "correct_answer": "C) .." | "C" | ["A","C"], "explanation": "..", "source": ".." }],
 //   "flashcards": [{ "front": "..", "back": "..", "mnemonic": "..", "source": ".." }]
 // }
 // Entries already present for the module (same question / same front) are skipped.
@@ -16,10 +17,12 @@ import { dirname, join } from 'node:path';
 const args = process.argv.slice(2);
 const flag = (name) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : null; };
 const moduleName = flag('--module');
-const input = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--module');
+const track = flag('--track') || 'da';
+if (!['da', 'mule'].includes(track)) { console.error('--track must be da or mule'); process.exit(2); }
+const input = args.find((a, i) => !a.startsWith('--') && !['--module', '--track'].includes(args[i - 1]));
 const dryRun = args.includes('--dry-run');
 if (!moduleName || !input) {
-  console.error('Usage: node tools/da-ingest.mjs --module "<syllabus item name>" input.json [--dry-run]');
+  console.error('Usage: node tools/da-ingest.mjs [--track da|mule] --module "<syllabus item name>" input.json [--dry-run]');
   process.exit(2);
 }
 
@@ -29,8 +32,8 @@ const readData = (f) => JSON.parse(readFileSync(dataPath(f), 'utf8'));
 const slug = (s) => String(s).toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
 
-const syllabus = readData('da_syllabus.json');
-const meta = readData('da_syllabus_meta.json');
+const syllabus = readData(`${track}_syllabus.json`);
+const meta = readData(`${track}_syllabus_meta.json`);
 const all = syllabus.concat(meta.extraItems || []);
 const item = all.find((i) => i.name === moduleName) || all.find((i) => norm(i.name) === norm(moduleName));
 if (!item) {
@@ -38,7 +41,7 @@ if (!item) {
   process.exit(2);
 }
 const domain = item.domain || meta.items?.[item.name]?.domain;
-if (!domain) { console.error(`No domain mapped for "${item.name}" in da_syllabus_meta.json`); process.exit(2); }
+if (!domain) { console.error(`No domain mapped for "${item.name}" in ${track}_syllabus_meta.json`); process.exit(2); }
 const base = slug(item.name);
 
 const src = JSON.parse(readFileSync(input, 'utf8'));
@@ -61,7 +64,7 @@ function answerLetters(a, options) {
 
 const added = { questions: 0, flashcards: 0, notes: 0, skipped: 0 };
 
-const questions = readData('da_questions.json');
+const questions = readData(`${track}_questions.json`);
 const haveQ = new Set(questions.filter((q) => q.syllabusItem === item.name).map((q) => norm(q.question)));
 let qn = nextNum(questions, 'q');
 for (const q of src.quiz || []) {
@@ -69,12 +72,12 @@ for (const q of src.quiz || []) {
   const options = (q.options || []).map((o, i) => (/^\s*[A-Z][).:]/.test(o) ? o.trim() : `${String.fromCharCode(65 + i)}) ${o.trim()}`));
   const answer = answerLetters(q.answer ?? q.correct_answer, options);
   if (answer.some((x) => !x)) { console.error(`Could not read the answer for: ${q.question}`); process.exit(1); }
-  questions.push({ id: `${base}-q${qn++}`, syllabusItem: item.name, domain, question: q.question.trim(), options, answer, explanation: q.explanation || '', ...(q.source ? { source: q.source } : {}) });
+  questions.push({ id: `${base}-q${qn++}`, syllabusItem: item.name, domain, question: q.question.trim(), ...(q.code ? { code: q.code } : {}), options, answer, explanation: q.explanation || '', ...(q.source ? { source: q.source } : {}) });
   haveQ.add(norm(q.question));
   added.questions++;
 }
 
-const cards = readData('da_flashcards.json');
+const cards = readData(`${track}_flashcards.json`);
 const haveC = new Set(cards.filter((c) => c.syllabusItem === item.name).map((c) => norm(c.front)));
 let cn = nextNum(cards, 'c');
 for (const c of src.flashcards || []) {
@@ -84,7 +87,7 @@ for (const c of src.flashcards || []) {
   added.flashcards++;
 }
 
-const notes = readData('da_module_notes.json');
+const notes = readData(`${track}_module_notes.json`);
 const n = src.notes || {};
 const existing = notes.filter((x) => x.syllabusItem === item.name);
 const seenPts = new Set(existing.flatMap((x) => (x.points || []).concat(x.principles || [])).map(norm));
@@ -98,8 +101,8 @@ if (points.length + principles.length + recall.length) {
 }
 
 if (!dryRun) {
-  writeFileSync(dataPath('da_questions.json'), JSON.stringify(questions, null, 2) + '\n');
-  writeFileSync(dataPath('da_flashcards.json'), JSON.stringify(cards, null, 2) + '\n');
-  writeFileSync(dataPath('da_module_notes.json'), JSON.stringify(notes, null, 2) + '\n');
+  writeFileSync(dataPath(`${track}_questions.json`), JSON.stringify(questions, null, 2) + '\n');
+  writeFileSync(dataPath(`${track}_flashcards.json`), JSON.stringify(cards, null, 2) + '\n');
+  writeFileSync(dataPath(`${track}_module_notes.json`), JSON.stringify(notes, null, 2) + '\n');
 }
 console.log(`${dryRun ? '[dry run] ' : ''}${item.name} (${base}): +${added.questions} quiz, +${added.flashcards} flashcards, +${added.notes} note points, ${added.skipped} duplicates skipped`);

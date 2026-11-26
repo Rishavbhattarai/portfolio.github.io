@@ -1,0 +1,306 @@
+[
+  {
+    "id": "api-led-connectivity-and-application-networks-n1",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "points": [
+      "System APIs: unlock data from systems of record (SAP, Salesforce, databases) and hide their complexity from everyone above.",
+      "Process APIs: combine and orchestrate data from several System APIs to carry out a business process, with no knowledge of the source systems or the channel.",
+      "Experience APIs: reshape data for one channel or consumer, such as a mobile app or a partner portal.",
+      "Application network: apps, data and devices connected through reusable APIs, so each new project reuses what the last one built.",
+      "C4E (Center for Enablement): a cross-functional team that publishes reusable assets, templates and best practices so teams can build their own APIs. It enables, it doesn't deliver every project."
+    ],
+    "principles": [
+      "Reuse beats rebuild: a System API is built once and consumed by many Process APIs.",
+      "Change in one layer shouldn't ripple: swapping the CRM only touches its System API."
+    ],
+    "recall": [
+      {
+        "q": "Which API layer would you change when a mobile app needs a smaller response?",
+        "a": "The Experience API for that channel."
+      },
+      {
+        "q": "What problem does the C4E solve that a central IT team doesn't?",
+        "a": "IT can't build everything; the C4E makes reusable assets and practices so line-of-business teams can build self-serve."
+      }
+    ]
+  },
+  {
+    "id": "anypoint-platform-components-n1",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "points": [
+      "Design Center: where you write API specifications (API Designer) and turn on the mocking service.",
+      "Exchange: the catalog of reusable assets: API specs, RAML fragments, connectors, templates, examples and policies.",
+      "API Manager: manages API instances, applies policies, defines SLA tiers and approves client app contracts.",
+      "Runtime Manager: deploys Mule apps to CloudHub or your own servers, and sets their properties, workers or replicas.",
+      "Anypoint Monitoring: dashboards, metrics and logs for running apps.",
+      "Access Management: users, roles, business groups and environments (for example Sandbox and Production).",
+      "Anypoint Studio: the desktop IDE (Eclipse-based) for building Mule apps."
+    ],
+    "recall": [
+      {
+        "q": "You want to find a reusable Salesforce connector or an existing API spec. Where do you look?",
+        "a": "Exchange."
+      },
+      {
+        "q": "Where do you apply a rate-limiting policy without redeploying the app?",
+        "a": "API Manager."
+      }
+    ]
+  },
+  {
+    "id": "http-methods-and-status-codes-n1",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "points": [
+      "GET: read a resource. POST: create one. PUT: replace one. PATCH: update part of one. DELETE: remove one.",
+      "2xx success: 200 OK, 201 Created, 204 No Content.",
+      "401 Unauthorized: missing or invalid credentials, for example no client_id with Client ID enforcement.",
+      "403 Forbidden: credentials are fine but access isn't allowed, for example an IP blocklist.",
+      "404 Not Found, 405 Method Not Allowed, 406 Not Acceptable, 415 Unsupported Media Type.",
+      "429 Too Many Requests: a rate limit or spike control policy was exceeded.",
+      "500 Internal Server Error: the default when a Mule flow fails and the error is propagated. 503 Service Unavailable: the service can't take requests right now."
+    ]
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-n1",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "points": [
+      "Header: every RAML 1.0 file starts with #%RAML 1.0, then title, version and baseUri.",
+      "Resources: start with a slash (/flights) and can be nested (/flights/{ID}).",
+      "URI parameters: part of the path in braces, /flights/{ID}. In Mule they arrive in attributes.uriParams.ID.",
+      "Query parameters: declared under a method with queryParameters, ?airline=delta. In Mule they arrive in attributes.queryParams.airline.",
+      "Required by default: in RAML 1.0, parameters and properties are required unless you set required: false or add ? to the name.",
+      "Responses: keyed by status code, each with a body per media type, for example 200 > body > application/json > type and example."
+    ],
+    "recall": [
+      {
+        "q": "Write the RAML resource for one flight by ID.",
+        "a": "/flights: /{ID}: get:"
+      },
+      {
+        "q": "In Mule, where does the value of ?airline=delta end up?",
+        "a": "attributes.queryParams.airline"
+      }
+    ]
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-n1",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "points": [
+      "Data types: declared under types: and reused, e.g. Flight with properties; a ? suffix makes a property optional.",
+      "Traits: reusable method-level pieces (query params, headers, responses), applied with is: [pageable].",
+      "Resource types: reusable resource-level templates such as collection or member, applied with type: collection.",
+      "Libraries: a file of types, traits and resource types, imported with uses: and referenced with a prefix, e.g. lib.Flight.",
+      "Fragments: separate files with their own header (#%RAML 1.0 DataType, Trait, Library, NamedExample), pulled in with !include and shareable through Exchange."
+    ],
+    "recall": [
+      {
+        "q": "How do you apply a trait named pageable to a GET method?",
+        "a": "is: [pageable] under the method."
+      },
+      {
+        "q": "How do you reference a type Flight from a library imported as lib?",
+        "a": "lib.Flight"
+      }
+    ]
+  },
+  {
+    "id": "mocking-service-and-publishing-to-exchange-n1",
+    "syllabusItem": "Mocking Service & Publishing to Exchange",
+    "domain": "design",
+    "points": [
+      "Mocking service: in API Designer, it simulates the API from the spec and returns the example responses you defined, before any code exists.",
+      "Consumers can try the mock while the implementation is built in parallel.",
+      "Publishing: an API spec published from Design Center becomes a versioned Exchange asset (semantic versioning, e.g. 1.0.0).",
+      "Asset version vs API version: the asset uses major.minor.patch; the API's version field (e.g. v1) is part of the contract."
+    ]
+  },
+  {
+    "id": "deploying-to-cloudhub-n1",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "points": [
+      "CloudHub 1.0: apps run on workers. You choose the worker size in vCores, the number of workers and the Mule runtime version.",
+      "CloudHub 1.0 app name: forms the public URL <app>.<region>.cloudhub.io, so it must be unique across CloudHub.",
+      "CloudHub 1.0 ports: the HTTP Listener should use ${http.port} (8081) or ${https.port} (8082); the load balancer forwards 80 and 443 to them.",
+      "CloudHub 2.0: apps run as replicas in shared spaces or private spaces; you choose replica count and size.",
+      "Runtime Manager properties: set at deployment and override the values in the app's property files.",
+      "Deploy routes: from Studio, by uploading the JAR in Runtime Manager, or with the Mule Maven plugin."
+    ]
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-n1",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "points": [
+      "API instance: created in API Manager per environment; it has an API ID.",
+      "Autodiscovery: a global element in the Mule app with the API ID and a flowRef to the flow that has the HTTP Listener. The runtime pairs with API Manager and enforces its policies inside the app.",
+      "Autodiscovery credentials: the runtime connects with the environment's (org or business group) client ID and secret, not a consumer app's.",
+      "API proxy: API Manager generates a separate Mule app that sits in front of the implementation and enforces policies there.",
+      "When to proxy: the implementation isn't a Mule app, or you can't change and redeploy it."
+    ]
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-n1",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "points": [
+      "Client ID Enforcement: requests must carry a registered client_id and client_secret; missing or wrong gives 401.",
+      "Rate Limiting: caps requests per time window for the API; over the limit gives 429.",
+      "Rate Limiting - SLA based: limits come from the caller's SLA tier, so it needs the client ID; over the limit gives 429.",
+      "Spike Control: smooths bursts by delaying or rejecting extra requests; rejected requests get 429.",
+      "SLA tiers: named limits (e.g. Gold 100/min) on an API instance, approved automatically or manually.",
+      "Client applications: a consumer requests access in Exchange, picks a tier, and gets a contract plus client ID and secret.",
+      "Policies are applied in API Manager without redeploying the app."
+    ]
+  },
+  {
+    "id": "properties-and-secure-properties-n1",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "points": [
+      "Property placeholders: ${db.host} in XML; p('db.host') in DataWeave.",
+      "Configuration properties: a global element points to a file, often per environment, e.g. config-${env}.yaml with env passed as a system property.",
+      "Secure Configuration Properties: a module that reads encrypted values, written in the file as ![encryptedValue].",
+      "Secure reference: ${secure::db.password} in XML and p('secure::db.password') in DataWeave.",
+      "The encryption key is passed at runtime (e.g. a -D system property), never stored in the project.",
+      "Hide in Runtime Manager: list sensitive property names under secureProperties in mule-artifact.json so their values are masked."
+    ]
+  },
+  {
+    "id": "global-elements-and-project-structure-n1",
+    "syllabusItem": "Global Elements & Project Structure",
+    "domain": "struct",
+    "points": [
+      "Global elements: connector configurations (HTTP Listener config, Database config) defined once and referenced by processors through config-ref.",
+      "Global elements in any XML file under src/main/mule are visible to flows in every other file of the same app; a common pattern is a global.xml.",
+      "src/main/mule: flow XML files.",
+      "src/main/resources: property files, .dwl modules, log4j2.xml, and API specs under api/.",
+      "src/test/munit: MUnit tests.",
+      "pom.xml: Maven dependencies (connectors, Exchange assets) and the Mule Maven plugin. mule-artifact.json: app descriptor, e.g. secureProperties."
+    ]
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-n1",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "points": [
+      "Mule event: a message plus variables. The message holds payload and attributes.",
+      "Payload: the main content, e.g. the HTTP request body.",
+      "Attributes: metadata from the source or the last operation, e.g. headers, queryParams, uriParams, method and requestPath from an HTTP Listener.",
+      "Variables (vars): values you set with Set Variable; they stay with the event through the flow and through Flow Reference calls.",
+      "HTTP Request without a target: replaces both payload (response body) and attributes (statusCode, headers, reasonPhrase). Vars survive.",
+      "Logger: reads the event but doesn't change it."
+    ],
+    "recall": [
+      {
+        "q": "After an HTTP Request without a target, what happened to payload, attributes and vars?",
+        "a": "Payload and attributes are replaced by the response; vars are unchanged."
+      }
+    ]
+  },
+  {
+    "id": "dataweave-expressions-in-processors-n1",
+    "syllabusItem": "DataWeave Expressions in Processors",
+    "domain": "events",
+    "points": [
+      "Expression syntax: a field value wrapped in #[ ] is evaluated as DataWeave, e.g. #[payload.name].",
+      "Mule 4 uses DataWeave as its only expression language; Mule 3's MEL is gone.",
+      "Concatenation: ++ joins strings or arrays, e.g. #[\"Hello \" ++ payload.name].",
+      "Interpolation: $( ) inside a string, e.g. #[\"Hello $(payload.name)\"].",
+      "Default: payload.discount default 0 gives 0 when the value is null."
+    ]
+  },
+  {
+    "id": "target-variables-n1",
+    "syllabusItem": "Target Variables",
+    "domain": "events",
+    "points": [
+      "target: on an operation, stores its result in a variable instead of overwriting the payload.",
+      "With a target, payload and attributes stay as they were before the operation.",
+      "targetValue: what gets stored. Default #[payload] (the operation's output); #[message] stores payload and attributes; #[attributes.statusCode] stores just the status.",
+      "Use it to enrich: call a service, keep the result in a var, merge it into the original payload later."
+    ]
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-n1",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "points": [
+      "Scaffolding: APIkit reads the RAML and generates a main flow, a console flow, and one flow per resource and method.",
+      "Main flow: HTTP Listener on /api/* followed by the APIkit Router, which validates the request against the spec and routes it.",
+      "Flow names: method:\\resource:config, e.g. get:\\flights:api-config and get:\\flights\\(ID):api-config. Methods with a body add the media type: post:\\flights:application\\json:api-config.",
+      "Error mapping in the main flow: APIKIT:BAD_REQUEST 400, NOT_FOUND 404, METHOD_NOT_ALLOWED 405, NOT_ACCEPTABLE 406, UNSUPPORTED_MEDIA_TYPE 415, NOT_IMPLEMENTED 501.",
+      "Status codes: the scaffolded handlers set vars.httpStatus, and the listener's responses use it.",
+      "Regenerating after a spec change adds flows for new resources and keeps existing ones."
+    ],
+    "recall": [
+      {
+        "q": "Which flow handles GET /api/flights/LAX if the RAML has /flights/{ID}?",
+        "a": "get:\\flights\\(ID):<config>"
+      }
+    ]
+  },
+  {
+    "id": "http-listener-building-interfaces-by-hand-n1",
+    "syllabusItem": "HTTP Listener: Building Interfaces by Hand",
+    "domain": "iface",
+    "points": [
+      "Listener config: host (0.0.0.0 to accept from any interface), port, and an optional base path shared by all listeners using it.",
+      "Listener path: can contain URI parameters, /flights/{dest}, available as attributes.uriParams.dest; /* matches anything below.",
+      "Allowed methods: restrict a listener to e.g. GET or POST.",
+      "Response and error response: set status code and headers, e.g. statusCode #[vars.httpStatus default 200].",
+      "Without APIkit, nothing validates the request against a spec; you check parameters yourself, e.g. with the Validation module."
+    ]
+  },
+  {
+    "id": "flows-subflows-and-private-flows-n1",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "points": [
+      "Flow: an optional event source, processors, and its own error handling.",
+      "Private flow: a flow with no event source. It's called with Flow Reference and still has its own error handler.",
+      "Subflow: no event source and no error handler. It runs in the caller's context, so its errors go to the caller's handler.",
+      "Flow Reference: calls a flow or subflow synchronously with the same event. Changes to payload and vars in the called flow are visible to the caller afterwards."
+    ],
+    "recall": [
+      {
+        "q": "Which of flow, private flow and subflow can't have an error handler?",
+        "a": "Subflow."
+      }
+    ]
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-n1",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "points": [
+      "Flow Reference: an in-memory, synchronous call that passes the whole event, vars included.",
+      "VM connector: queues inside the app. Publish (fire and forget), Publish Consume (send and wait for the reply), Consume (read one message), and a Listener on the queue.",
+      "Across a VM queue the listener flow gets a new event: the payload (and attributes) travel, vars don't.",
+      "Queue types: transient (in memory, faster, lost on restart) or persistent (survives restarts).",
+      "On CloudHub 1.0 with persistent queues, VM messages can be picked up by any worker, which spreads load."
+    ],
+    "recall": [
+      {
+        "q": "Do variables cross a VM queue?",
+        "a": "No. Only the message goes; the listener flow starts a new event."
+      }
+    ]
+  },
+  {
+    "id": "maven-and-dependencies-n1",
+    "syllabusItem": "Maven & Dependencies",
+    "domain": "struct",
+    "points": [
+      "pom.xml: every connector and module the app uses is a Maven dependency there; adding one in Studio updates it.",
+      "Exchange assets (API specs, fragments, connectors) are pulled as Maven dependencies; the groupId is the organization ID.",
+      "Mule Maven plugin: builds the deployable JAR (mvn clean package) and can deploy it to CloudHub.",
+      "A missing or unreachable dependency fails the build; check the pom and repository credentials first."
+    ]
+  }
+]

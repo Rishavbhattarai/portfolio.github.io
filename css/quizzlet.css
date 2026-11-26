@@ -1,10 +1,6 @@
-/* ==========================================
-   0. FONTS & DESIGN TOKENS
-   ========================================== */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Cinzel:wght@600;700;800&display=swap');
-
-:root {
-  /* surfaces — Middle-earth dark tones */
+/* ApexLearn styles (was sfquiz.html), scoped to #apexView inside data-architect.html */
+#apexView {
+  
   --bg: #0D0A07;
   --bg-desktop: #080604;
   --surface: #1A130D;
@@ -14,105 +10,93 @@
   --border-strong: #4A3828;
   --ease: cubic-bezier(0.22, 0.9, 0.32, 1.16);
 
-  /* text — warm parchment */
+  
   --text: #E8DCC8;
   --text-dim: #A89880;
   --text-faint: #7A6B5A;
 
-  /* brand accent — One Ring gold */
+  
   --accent: #C9A84C;
   --accent-strong: #D4B95E;
   --accent-soft: #1E1A10;
 
-  /* secondary accent — Elvish green */
+  
   --accent-2: #5B9A6B;
   --accent-2-strong: #4A8A5A;
   --accent-2-soft: #101A14;
 
-  /* status */
+  
   --warn: #D4A24C;
   --danger: #C45C4C;
   --danger-soft: #2A1515;
 
-  /* motion */
+  
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* type */
+  
   --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-heading: 'Space Grotesk', 'Clash Display', sans-serif;
   --font-mono: 'JetBrains Mono', "SF Mono", Consolas, Monaco, monospace;
   --font-title: 'Cinzel', 'Space Grotesk', serif;
 }
-
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+#apexView *,
+#apexView *::before,
+#apexView *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-}
 
-/* ==========================================
-   1. RESET & BASE STYLES
-   ========================================== */
-* {
+}
+#apexView * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
-
-body {
+#apexView {
   font-family: var(--font-display);
-  background-color: var(--bg); /* Deep dark aesthetic background */
-  color: var(--text); /* Soft off-white text for readability */
+  background-color: var(--bg); 
+  color: var(--text); 
   line-height: 1.5;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-
-button {
+#apexView button {
   font-family: inherit;
 }
-
-:focus-visible {
+#apexView :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 6px;
 }
-
-/* ==========================================
-   2. APP SHELL LAYOUT (Phone/iPad Focused)
-   ========================================== */
-.app-shell {
+#apexView .app-shell {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   max-width: 100%;
   position: relative;
 }
-
-/* iPad and Mobile Screens Layout Container */
 @media screen and (max-width: 1024px) {
-  .app-shell {
+#apexView .app-shell {
     width: 100%;
     margin: 0 auto;
     background-color: #0a120d;
   }
-}
 
-/* Desktop safety viewport (forces mobile/tablet aspect ratio for testing) */
+}
 @media screen and (min-width: 1025px) {
-  body {
-    background-color: #050906; /* Even darker desktop backdrop */
+#apexView {
+    background-color: #050906; 
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
   }
-  .app-shell {
+#apexView .app-shell {
     width: 430px;
     height: 932px;
     border-radius: 40px;
@@ -121,13 +105,10 @@ button {
     background: #0a120d;
     border: 10px solid #1a3020;
   }
-}
 
-/* ==========================================
-   3. UNIFIED TOP HEADER & NAV
-   ========================================== */
-.app-header {
-  background-color: rgba(16, 28, 20, 0.92); /* Dark green header */
+}
+#apexView .app-header {
+  background-color: rgba(16, 28, 20, 0.92); 
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   position: fixed;
@@ -138,23 +119,20 @@ button {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
   border-bottom: 1px solid var(--border);
 }
-
 @media screen and (min-width: 1025px) {
-  .app-header {
+#apexView .app-header {
     position: absolute;
   }
-}
 
-/* Brand Bar */
-.header-top {
+}
+#apexView .header-top {
   padding: 16px 20px 10px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
-
-.header-home-link {
+#apexView .header-home-link {
   position: absolute;
   left: 20px;
   top: 50%;
@@ -172,28 +150,24 @@ button {
   font-size: 1rem;
   transition: color 0.3s var(--ease-smooth), background-color 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
 }
-.header-home-link:hover {
+#apexView .header-home-link:hover {
   color: var(--accent);
   transform: translateY(-50%) scale(1.08);
 }
-
-.header-title {
+#apexView .header-title {
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--accent); /* Bright vibrant green for dark mode */
+  color: var(--accent); 
   letter-spacing: -0.6px;
   position: relative;
 }
-
-/* Top Navigation Links Bar */
-.bottom-nav {
+#apexView .bottom-nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 4px 10px 12px 10px;
 }
-
-.nav-btn {
+#apexView .nav-btn {
   flex: 1;
   background: none;
   border: none;
@@ -202,7 +176,7 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-faint); /* Muted sage green */
+  color: var(--text-faint); 
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
@@ -211,65 +185,51 @@ button {
   padding: 8px 0;
   border-radius: 12px;
 }
-
-/* Icons styling */
-.nav-btn i {
+#apexView .nav-btn i {
   font-size: 1.3rem;
   transition: transform 0.3s var(--ease-smooth);
 }
-
-/* Hover/Active states */
-.nav-btn:hover {
+#apexView .nav-btn:hover {
   color: var(--text-dim);
 }
-.nav-btn:active {
+#apexView .nav-btn:active {
   transform: scale(0.94);
 }
-
-/* Aesthetic Active State (Pill effect) */
-.nav-btn.active {
+#apexView .nav-btn.active {
   color: var(--accent);
-  background-color: var(--surface-raised); /* Subtle dark green pill */
+  background-color: var(--surface-raised); 
 }
-
-.nav-btn.active i {
+#apexView .nav-btn.active i {
   transform: translateY(-1px) scale(1.05);
 }
-
-/* ==========================================
-   4. CONTENT MAIN BOX
-   ========================================== */
-.main-content {
+#apexView .main-content {
   margin-top: 130px;
   padding: 24px;
   flex: 1;
   overflow-y: auto;
 }
-
-/* iPad specific refinements for layout scaling */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
-  .main-content {
+#apexView .main-content {
     padding: 40px;
     max-width: 750px;
     margin-left: auto;
     margin-right: auto;
   }
-  .header-title {
+#apexView .header-title {
     font-size: 1.8rem;
   }
-  .nav-btn {
+#apexView .nav-btn {
     font-size: 0.85rem;
   }
-  .nav-btn i {
+#apexView .nav-btn i {
     font-size: 1.5rem;
   }
-}
 
-/* Section switching (drives the Quizz / Learn / Test / Profile tabs) */
-.content-section {
+}
+#apexView .content-section {
   display: none;
 }
-.content-section.active {
+#apexView .content-section.active {
   display: block;
   animation: fadeInSection 0.4s var(--ease-smooth);
 }
@@ -277,30 +237,24 @@ button {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.hidden {
+#apexView .hidden {
   display: none !important;
 }
-
-/* ==========================================
-   5. QUIZ HEADER & CATEGORY SCROLL
-   ========================================== */
-.quiz-header {
+#apexView .quiz-header {
   padding: 0 0 16px;
 }
-.quiz-header h2 {
+#apexView .quiz-header h2 {
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 4px;
   letter-spacing: -0.3px;
 }
-.quiz-header p {
+#apexView .quiz-header p {
   font-size: 0.9rem;
   color: var(--text-dim);
 }
-
-/* Reusable small uppercase label used above section titles */
-.section-eyebrow {
+#apexView .section-eyebrow {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
@@ -310,20 +264,17 @@ button {
   margin-bottom: 6px;
   display: block;
 }
-
-/* Horizontal Scroll Menu (Pills) */
-.quiz-category-nav {
+#apexView .quiz-category-nav {
   display: flex;
   gap: 10px;
   overflow-x: auto;
   padding: 0 0 20px 0;
   scrollbar-width: none;
 }
-.quiz-category-nav::-webkit-scrollbar {
+#apexView .quiz-category-nav::-webkit-scrollbar {
   display: none;
 }
-
-.cat-btn {
+#apexView .cat-btn {
   background-color: transparent;
   border: 1.5px solid var(--border-strong);
   padding: 8px 18px;
@@ -335,42 +286,36 @@ button {
   white-space: nowrap;
   transition: border-color 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth), background-color 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth), transform 0.2s var(--ease-smooth);
 }
-.cat-btn:hover {
+#apexView .cat-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-1px);
 }
-.cat-btn:active {
+#apexView .cat-btn:active {
   transform: translateY(0) scale(0.97);
 }
-.cat-btn.active {
+#apexView .cat-btn.active {
   background-color: var(--accent);
   border-color: var(--accent);
   color: #0D0A07;
   box-shadow: 0 6px 14px rgba(201, 168, 76, 0.25);
 }
-
-/* ==========================================
-   5b. REFERENCE — dual-tile chooser (ApexLearn / Beginner Developer)
-   ========================================== */
-.reference-header {
+#apexView .reference-header {
   padding: 4px 0 22px;
 }
-.reference-title {
+#apexView .reference-title {
   font-size: 1.7rem;
   font-weight: 800;
   color: var(--text);
   letter-spacing: -0.5px;
   margin-bottom: 16px;
 }
-
-.reference-tiles {
+#apexView .reference-tiles {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-
-.reference-tile {
+#apexView .reference-tile {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -385,7 +330,7 @@ button {
   overflow: hidden;
   transition: border-color 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
 }
-.reference-tile::before {
+#apexView .reference-tile::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -395,22 +340,21 @@ button {
   transform-origin: left;
   transition: transform 0.35s var(--ease-smooth);
 }
-.reference-tile[data-ref="beginnerdev"] {
+#apexView .reference-tile[data-ref="beginnerdev"] {
   --accent-track: var(--accent-2);
 }
-.reference-tile:hover {
+#apexView .reference-tile:hover {
   border-color: var(--border-strong);
   transform: translateY(-2px);
 }
-.reference-tile.active {
+#apexView .reference-tile.active {
   border-color: var(--accent-track, var(--accent));
   box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.5);
 }
-.reference-tile.active::before {
+#apexView .reference-tile.active::before {
   transform: scaleX(1);
 }
-
-.reference-tile-icon {
+#apexView .reference-tile-icon {
   width: 38px;
   height: 38px;
   border-radius: 12px;
@@ -423,19 +367,18 @@ button {
   flex-shrink: 0;
   transition: background-color 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth);
 }
-.reference-tile[data-ref="beginnerdev"] .reference-tile-icon {
+#apexView .reference-tile[data-ref="beginnerdev"] .reference-tile-icon {
   background-color: var(--accent-2-soft);
   color: var(--accent-2);
 }
-
-.reference-tile-text {
+#apexView .reference-tile-text {
   display: flex;
   flex-direction: column;
   gap: 3px;
   min-width: 0;
   width: 100%;
 }
-.reference-tile-name {
+#apexView .reference-tile-name {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text);
@@ -443,7 +386,7 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.reference-tile-meta {
+#apexView .reference-tile-meta {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 500;
@@ -452,11 +395,10 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.reference-tile.active .reference-tile-meta {
+#apexView .reference-tile.active .reference-tile-meta {
   color: var(--text-dim);
 }
-
-.reference-tile-arrow {
+#apexView .reference-tile-arrow {
   position: absolute;
   top: 16px;
   right: 14px;
@@ -466,28 +408,26 @@ button {
   transform: translateX(-4px);
   transition: opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
 }
-.reference-tile.active .reference-tile-arrow {
+#apexView .reference-tile.active .reference-tile-arrow {
   opacity: 1;
   transform: translateX(0);
   color: var(--accent-track, var(--accent));
 }
-
-.reference-panel {
+#apexView .reference-panel {
   display: none;
 }
-.reference-panel.active {
+#apexView .reference-panel.active {
   display: block;
   animation: fadeInSection 0.35s var(--ease-smooth);
 }
-
-.reference-empty-state {
+#apexView .reference-empty-state {
   background-color: var(--surface);
   border: 1.5px dashed var(--border-strong);
   border-radius: 20px;
   padding: 48px 24px;
   text-align: center;
 }
-.reference-empty-icon {
+#apexView .reference-empty-icon {
   width: 52px;
   height: 52px;
   border-radius: 16px;
@@ -499,24 +439,20 @@ button {
   font-size: 1.4rem;
   margin: 0 auto 18px;
 }
-.reference-empty-state h3 {
+#apexView .reference-empty-state h3 {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 8px;
 }
-.reference-empty-state p {
+#apexView .reference-empty-state p {
   font-size: 0.85rem;
   color: var(--text-dim);
   line-height: 1.6;
   max-width: 320px;
   margin: 0 auto;
 }
-
-/* ==========================================
-   6. QUIZ SETUP CARD
-   ========================================== */
-.quiz-card {
+#apexView .quiz-card {
   background-color: var(--surface);
   border-radius: 20px;
   margin: 0 0 30px;
@@ -525,11 +461,10 @@ button {
   border: 1px solid var(--border);
   transition: transform 0.35s var(--ease-smooth), opacity 0.3s var(--ease-smooth), box-shadow 0.35s var(--ease-smooth);
 }
-.quiz-card:hover {
+#apexView .quiz-card:hover {
   box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.5);
 }
-
-.card-badge {
+#apexView .card-badge {
   display: inline-block;
   background-color: var(--surface-raised);
   color: var(--accent);
@@ -542,30 +477,26 @@ button {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-
-.card-title {
+#apexView .card-title {
   font-size: 1.3rem;
   font-weight: 700;
   color: #E8DCC8;
   margin-bottom: 10px;
   line-height: 1.3;
 }
-
-.card-desc {
+#apexView .card-desc {
   color: #A89880;
   font-size: 0.9rem;
   line-height: 1.6;
   margin-bottom: 20px;
 }
-
-.length-options {
+#apexView .length-options {
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
   flex-wrap: wrap;
 }
-
-.length-btn {
+#apexView .length-btn {
   background-color: var(--bg);
   border: 1.5px solid var(--border);
   color: var(--text-dim);
@@ -576,20 +507,19 @@ button {
   cursor: pointer;
   transition: border-color 0.25s var(--ease-smooth), color 0.25s var(--ease-smooth), background-color 0.25s var(--ease-smooth), transform 0.2s var(--ease-smooth);
 }
-.length-btn:hover {
+#apexView .length-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
-.length-btn:active {
+#apexView .length-btn:active {
   transform: scale(0.96);
 }
-.length-btn.active {
+#apexView .length-btn.active {
   background-color: var(--text);
   border-color: var(--text);
   color: var(--bg);
 }
-
-.card-footer {
+#apexView .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -597,8 +527,7 @@ button {
   padding-top: 20px;
   margin-top: 20px;
 }
-
-.author-info {
+#apexView .author-info {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -606,8 +535,7 @@ button {
   color: #7A6B5A;
   font-weight: 600;
 }
-
-.avatar {
+#apexView .avatar {
   width: 32px;
   height: 32px;
   background: #142b1d;
@@ -618,8 +546,7 @@ button {
   justify-content: center;
   font-size: 1.1rem;
 }
-
-.start-btn {
+#apexView .start-btn {
   background: linear-gradient(135deg, #0fa958 0%, #0d964d 100%);
   color: white;
   border: none;
@@ -631,21 +558,20 @@ button {
   box-shadow: 0 4px 12px rgba(15, 169, 88, 0.2);
   transition: transform 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth), opacity 0.2s var(--ease-smooth);
 }
-.start-btn:hover:not(:disabled) {
+#apexView .start-btn:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(15, 169, 88, 0.28);
 }
-.start-btn:active {
+#apexView .start-btn:active {
   transform: translateY(1px);
   box-shadow: 0 2px 6px rgba(15, 169, 88, 0.2);
 }
-.start-btn:disabled {
+#apexView .start-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
 }
-
-.secondary-btn {
+#apexView .secondary-btn {
   background-color: #111f16;
   color: #E8DCC8;
   border: 1.5px solid #243d2d;
@@ -659,29 +585,23 @@ button {
   gap: 6px;
   transition: all 0.2s ease;
 }
-.secondary-btn:hover {
+#apexView .secondary-btn:hover {
   border-color: #C9A84C;
   color: #C9A84C;
 }
-.secondary-btn:active {
+#apexView .secondary-btn:active {
   transform: translateY(1px);
 }
-
-/* ==========================================
-   7. QUIZ GAME (active question flow)
-   ========================================== */
-.quiz-game {
+#apexView .quiz-game {
   padding-bottom: 10px;
 }
-
-.game-topbar {
+#apexView .game-topbar {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
 }
-
-.exit-btn {
+#apexView .exit-btn {
   background-color: #142b1d;
   border: none;
   color: #A89880;
@@ -696,26 +616,25 @@ button {
   flex-shrink: 0;
   transition: background-color 0.2s ease;
 }
-.exit-btn:hover {
+#apexView .exit-btn:hover {
   background-color: #3A2C1E;
 }
-
-.progress-bar-track {
+#apexView .progress-bar-track {
   flex: 1;
   height: 8px;
   background-color: #3A2C1E;
   border-radius: 8px;
   overflow: hidden;
 }
-.progress-bar-fill {
+#apexView .progress-bar-fill {
   height: 100%;
   width: 0%;
   background: linear-gradient(135deg, #0fa958 0%, #0d964d 100%);
   border-radius: 8px;
   transition: width 0.3s ease;
 }
-
-.score-pill, .timer-pill {
+#apexView .score-pill,
+#apexView .timer-pill {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 700;
@@ -725,21 +644,21 @@ button {
   flex-shrink: 0;
   transition: background-color 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth);
 }
-.score-pill {
+#apexView .score-pill {
   background-color: var(--surface-raised);
   color: var(--accent);
 }
-.timer-pill {
+#apexView .timer-pill {
   background-color: #332112;
   color: var(--warn);
   display: inline-flex;
   align-items: center;
   gap: 5px;
 }
-.timer-pill i {
+#apexView .timer-pill i {
   font-size: 0.85rem;
 }
-.timer-pill.timer-low {
+#apexView .timer-pill.timer-low {
   background-color: var(--danger-soft);
   color: var(--danger);
   animation: timerPulse 1s var(--ease-standard) infinite;
@@ -748,8 +667,7 @@ button {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
-
-.question-meta {
+#apexView .question-meta {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
@@ -758,8 +676,7 @@ button {
   letter-spacing: 0.5px;
   margin-bottom: 10px;
 }
-
-.question-card {
+#apexView .question-card {
   background-color: var(--surface);
   border-radius: 20px;
   padding: 22px;
@@ -768,22 +685,19 @@ button {
   margin-bottom: 16px;
   animation: fadeInSection 0.3s var(--ease-smooth);
 }
-
-.question-text {
+#apexView .question-text {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
   line-height: 1.4;
   margin-bottom: 20px;
 }
-
-.options-list {
+#apexView .options-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
-.option-btn {
+#apexView .option-btn {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -798,12 +712,12 @@ button {
   cursor: pointer;
   transition: border-color 0.2s var(--ease-smooth), background-color 0.2s var(--ease-smooth), transform 0.2s var(--ease-smooth), opacity 0.25s var(--ease-smooth);
 }
-.option-btn:hover:not(:disabled) {
+#apexView .option-btn:hover:not(:disabled) {
   border-color: var(--accent);
   background-color: var(--surface-raised);
   transform: translateX(2px);
 }
-.option-letter {
+#apexView .option-letter {
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -818,34 +732,33 @@ button {
   flex-shrink: 0;
   transition: background-color 0.2s var(--ease-smooth), color 0.2s var(--ease-smooth);
 }
-.option-btn:disabled {
+#apexView .option-btn:disabled {
   cursor: default;
 }
-.option-btn.selected {
+#apexView .option-btn.selected {
   border-color: #C9A84C;
   background-color: #142b1d;
 }
-.option-btn.correct {
+#apexView .option-btn.correct {
   border-color: #C9A84C;
   background-color: #10331d;
 }
-.option-btn.correct .option-letter {
+#apexView .option-btn.correct .option-letter {
   background-color: #C9A84C;
   color: #0a120d;
 }
-.option-btn.incorrect {
+#apexView .option-btn.incorrect {
   border-color: #d64545;
   background-color: #3b1717;
 }
-.option-btn.incorrect .option-letter {
+#apexView .option-btn.incorrect .option-letter {
   background-color: #d64545;
   color: #ffffff;
 }
-.option-btn.faded {
+#apexView .option-btn.faded {
   opacity: 0.55;
 }
-
-.explanation-box {
+#apexView .explanation-box {
   margin-top: 16px;
   padding: 14px 16px;
   border-radius: 14px;
@@ -853,7 +766,7 @@ button {
   border: 1px solid var(--border);
   animation: fadeInSection 0.3s var(--ease-smooth);
 }
-.explanation-label {
+#apexView .explanation-label {
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -861,16 +774,15 @@ button {
   margin-bottom: 6px;
   color: #C9A84C;
 }
-.explanation-label.wrong {
+#apexView .explanation-label.wrong {
   color: #f26868;
 }
-.explanation-box p {
+#apexView .explanation-box p {
   font-size: 0.85rem;
   color: #A89880;
   line-height: 1.5;
 }
-
-.next-btn {
+#apexView .next-btn {
   width: 100%;
   background: linear-gradient(135deg, #0fa958 0%, #0d964d 100%);
   color: white;
@@ -888,21 +800,17 @@ button {
   transition: transform 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth);
   animation: fadeInSection 0.25s var(--ease-smooth);
 }
-.next-btn:hover {
+#apexView .next-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(15, 169, 88, 0.28);
 }
-.next-btn:active {
+#apexView .next-btn:active {
   transform: translateY(1px);
 }
-
-/* ==========================================
-   8. RESULTS SCREEN
-   ========================================== */
-.quiz-results {
+#apexView .quiz-results {
   padding-top: 10px;
 }
-.result-card {
+#apexView .result-card {
   background-color: var(--surface);
   border-radius: 20px;
   padding: 32px 24px;
@@ -911,49 +819,48 @@ button {
   border: 1px solid var(--border);
   animation: fadeInSection 0.4s var(--ease-smooth);
 }
-.result-score {
+#apexView .result-score {
   font-family: var(--font-mono);
   font-size: 3rem;
   font-weight: 800;
   color: var(--accent);
   margin-bottom: 8px;
 }
-.result-score.mid {
+#apexView .result-score.mid {
   color: #e59a4c;
 }
-.result-score.low {
+#apexView .result-score.low {
   color: #d64545;
 }
-.result-card h3 {
+#apexView .result-card h3 {
   font-size: 1.2rem;
   font-weight: 700;
   color: #E8DCC8;
   margin-bottom: 6px;
 }
-.result-card p {
+#apexView .result-card p {
   font-size: 0.9rem;
   color: #A89880;
   margin-bottom: 22px;
 }
-.result-actions {
+#apexView .result-actions {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
-
-.section-breakdown {
+#apexView .section-breakdown {
   text-align: left;
   margin-bottom: 22px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.breakdown-row {
+#apexView .breakdown-row {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.breakdown-name {
+#apexView .breakdown-name {
   flex: 1;
   font-size: 0.8rem;
   font-weight: 600;
@@ -962,19 +869,19 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.breakdown-track {
+#apexView .breakdown-track {
   flex: 1.4;
   height: 8px;
   border-radius: 8px;
   background-color: #3A2C1E;
   overflow: hidden;
 }
-.breakdown-fill {
+#apexView .breakdown-fill {
   height: 100%;
   background: linear-gradient(135deg, #0fa958 0%, #0d964d 100%);
   border-radius: 8px;
 }
-.breakdown-pct {
+#apexView .breakdown-pct {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
@@ -983,22 +890,18 @@ button {
   text-align: right;
   flex-shrink: 0;
 }
-
-/* ==========================================
-   9. LEARN — CHAPTER STUDY GUIDE (accordion)
-   ========================================== */
-.learn-toolbar {
+#apexView .learn-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
 }
-.learn-toolbar-stat {
+#apexView .learn-toolbar-stat {
   font-size: 0.8rem;
   font-weight: 600;
   color: #7A6B5A;
 }
-.learn-toggle-all-btn {
+#apexView .learn-toggle-all-btn {
   background: none;
   border: 1.5px solid #243d2d;
   color: #A89880;
@@ -1009,19 +912,17 @@ button {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.learn-toggle-all-btn:hover {
+#apexView .learn-toggle-all-btn:hover {
   border-color: #C9A84C;
   color: #C9A84C;
 }
-
-.chapter-summary-list {
+#apexView .chapter-summary-list {
   display: flex;
   flex-direction: column;
   gap: 14px;
   margin-bottom: 24px;
 }
-
-.chapter-summary-card {
+#apexView .chapter-summary-card {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -1029,14 +930,13 @@ button {
   overflow: hidden;
   transition: border-color 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
 }
-.chapter-summary-card:hover {
+#apexView .chapter-summary-card:hover {
   transform: translateY(-1px);
 }
-.chapter-summary-card.open {
+#apexView .chapter-summary-card.open {
   border-color: #24462f;
 }
-
-.chapter-summary-header {
+#apexView .chapter-summary-header {
   width: 100%;
   display: flex;
   align-items: center;
@@ -1047,8 +947,7 @@ button {
   cursor: pointer;
   text-align: left;
 }
-
-.chapter-summary-icon {
+#apexView .chapter-summary-icon {
   width: 42px;
   height: 42px;
   border-radius: 13px;
@@ -1060,12 +959,11 @@ button {
   font-size: 1.2rem;
   flex-shrink: 0;
 }
-
-.chapter-summary-heading {
+#apexView .chapter-summary-heading {
   flex: 1;
   min-width: 0;
 }
-.chapter-summary-eyebrow {
+#apexView .chapter-summary-eyebrow {
   display: block;
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -1075,7 +973,7 @@ button {
   color: var(--accent);
   margin-bottom: 2px;
 }
-.chapter-summary-heading h3 {
+#apexView .chapter-summary-heading h3 {
   font-size: 1rem;
   font-weight: 700;
   color: #E8DCC8;
@@ -1083,8 +981,7 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.chapter-summary-score {
+#apexView .chapter-summary-score {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
@@ -1097,83 +994,77 @@ button {
   white-space: nowrap;
   transition: color 0.25s var(--ease-smooth), border-color 0.25s var(--ease-smooth);
 }
-.chapter-summary-score.high {
+#apexView .chapter-summary-score.high {
   color: #C9A84C;
   border-color: #1e4b30;
 }
-.chapter-summary-score.mid {
+#apexView .chapter-summary-score.mid {
   color: #e59a4c;
   border-color: #4b3a1e;
 }
-.chapter-summary-score.low {
+#apexView .chapter-summary-score.low {
   color: #f26868;
   border-color: #4b1e1e;
 }
-
-.chapter-summary-chevron {
+#apexView .chapter-summary-chevron {
   color: #7A6B5A;
   font-size: 1.1rem;
   flex-shrink: 0;
   transition: transform 0.4s var(--ease-smooth), color 0.3s var(--ease-smooth);
 }
-.chapter-summary-card.open .chapter-summary-chevron {
+#apexView .chapter-summary-card.open .chapter-summary-chevron {
   transform: rotate(180deg);
   color: #C9A84C;
 }
-
-.chapter-summary-body {
+#apexView .chapter-summary-body {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s var(--ease-smooth);
 }
-.chapter-summary-card.open .chapter-summary-body {
+#apexView .chapter-summary-card.open .chapter-summary-body {
   max-height: 4000px;
 }
-
-.chapter-summary-inner {
+#apexView .chapter-summary-inner {
   padding: 0 18px 20px;
   border-top: 1px solid #3A2C1E;
   padding-top: 16px;
 }
-
-.chapter-summary-intro {
+#apexView .chapter-summary-intro {
   font-size: 0.85rem;
   color: #A89880;
   line-height: 1.6;
   margin-bottom: 18px;
 }
-
-.chapter-topic {
+#apexView .chapter-topic {
   margin-bottom: 18px;
 }
-.chapter-topic:last-of-type {
+#apexView .chapter-topic:last-of-type {
   margin-bottom: 20px;
 }
-.chapter-topic h4 {
+#apexView .chapter-topic h4 {
   font-size: 0.82rem;
   font-weight: 800;
   color: #E8DCC8;
   margin-bottom: 8px;
   letter-spacing: 0.1px;
 }
-.chapter-topic-intro {
+#apexView .chapter-topic-intro {
   font-size: 0.82rem;
   color: #A89880;
   margin-bottom: 8px;
   line-height: 1.5;
 }
-
-.chapter-point-list {
+#apexView .chapter-point-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.chapter-point {
+#apexView .chapter-point {
   display: flex;
   gap: 10px;
   align-items: flex-start;
 }
-.chapter-point-dot {
+#apexView .chapter-point-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -1181,17 +1072,16 @@ button {
   margin-top: 7px;
   flex-shrink: 0;
 }
-.chapter-point-text {
+#apexView .chapter-point-text {
   font-size: 0.85rem;
   color: #A89880;
   line-height: 1.55;
 }
-.chapter-point-text strong {
+#apexView .chapter-point-text strong {
   color: #E8DCC8;
   font-weight: 700;
 }
-
-.chapter-code-block {
+#apexView .chapter-code-block {
   margin-top: 6px;
   background-color: #0a120d;
   border: 1px solid #3A2C1E;
@@ -1204,8 +1094,7 @@ button {
   word-break: break-word;
   line-height: 1.5;
 }
-
-.chapter-quiz-cta {
+#apexView .chapter-quiz-cta {
   width: 100%;
   background-color: #0a120d;
   border: 1.5px solid #C9A84C;
@@ -1221,14 +1110,13 @@ button {
   gap: 8px;
   transition: background-color 0.2s ease;
 }
-.chapter-quiz-cta:hover {
+#apexView .chapter-quiz-cta:hover {
   background-color: #142b1d;
 }
-.chapter-quiz-cta:active {
+#apexView .chapter-quiz-cta:active {
   transform: translateY(1px);
 }
-
-.exam-cta {
+#apexView .exam-cta {
   width: 100%;
   display: flex;
   align-items: center;
@@ -1241,14 +1129,14 @@ button {
   text-align: left;
   transition: border-color 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
 }
-.exam-cta:hover {
+#apexView .exam-cta:hover {
   border-color: #C9A84C;
   transform: translateY(-1px);
 }
-.exam-cta:active {
+#apexView .exam-cta:active {
   transform: scale(0.99);
 }
-.exam-cta-icon {
+#apexView .exam-cta-icon {
   width: 40px;
   height: 40px;
   border-radius: 12px;
@@ -1260,36 +1148,32 @@ button {
   font-size: 1.2rem;
   flex-shrink: 0;
 }
-.exam-cta-text {
+#apexView .exam-cta-text {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.exam-cta-text strong {
+#apexView .exam-cta-text strong {
   font-size: 0.9rem;
   color: #E8DCC8;
   font-weight: 700;
 }
-.exam-cta-text span {
+#apexView .exam-cta-text span {
   font-size: 0.78rem;
   color: #A89880;
 }
-.exam-cta > i {
+#apexView .exam-cta > i {
   color: #7A6B5A;
   font-size: 1.1rem;
 }
-
-/* ==========================================
-   10. PROFILE / STATS
-   ========================================== */
-.stats-grid {
+#apexView .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 28px;
 }
-.stat-card {
+#apexView .stat-card {
   background-color: var(--surface);
   border-radius: 16px;
   padding: 18px;
@@ -1297,30 +1181,28 @@ button {
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s var(--ease-smooth);
 }
-.stat-card:hover {
+#apexView .stat-card:hover {
   transform: translateY(-2px);
 }
-.stat-value {
+#apexView .stat-value {
   font-family: var(--font-mono);
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--accent);
   margin-bottom: 4px;
 }
-.stat-label {
+#apexView .stat-label {
   font-size: 0.78rem;
   color: #7A6B5A;
   font-weight: 600;
 }
-
-.section-subtitle {
+#apexView .section-subtitle {
   font-size: 1rem;
   font-weight: 700;
   color: #E8DCC8;
   margin-bottom: 14px;
 }
-
-.category-progress {
+#apexView .category-progress {
   background-color: #111f16;
   border-radius: 16px;
   padding: 18px;
@@ -1328,17 +1210,16 @@ button {
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
   margin-bottom: 24px;
 }
-
-.progress-row {
+#apexView .progress-row {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 14px;
 }
-.progress-row:last-child {
+#apexView .progress-row:last-child {
   margin-bottom: 0;
 }
-.progress-name {
+#apexView .progress-name {
   flex: 1.1;
   font-size: 0.82rem;
   font-weight: 600;
@@ -1347,20 +1228,20 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.progress-track {
+#apexView .progress-track {
   flex: 1.6;
   height: 8px;
   border-radius: 8px;
   background-color: #3A2C1E;
   overflow: hidden;
 }
-.progress-fill {
+#apexView .progress-fill {
   height: 100%;
   background: linear-gradient(135deg, #0fa958 0%, #0d964d 100%);
   border-radius: 8px;
   transition: width 0.5s var(--ease-smooth);
 }
-.progress-pct {
+#apexView .progress-pct {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
@@ -1369,12 +1250,11 @@ button {
   text-align: right;
   flex-shrink: 0;
 }
-.progress-empty {
+#apexView .progress-empty {
   font-size: 0.85rem;
   color: #7A6B5A;
 }
-
-.reset-btn {
+#apexView .reset-btn {
   width: 100%;
   background-color: #2b1111;
   color: #f26868;
@@ -1390,40 +1270,28 @@ button {
   gap: 8px;
   transition: background-color 0.2s ease;
 }
-.reset-btn:hover {
+#apexView .reset-btn:hover {
   background-color: #3b1717;
 }
-
-/* ==========================================
-   11. SHARED EMPTY / LOADING STATE
-   ========================================== */
-.empty-state {
+#apexView .empty-state {
   text-align: center;
   padding: 40px 20px;
   color: #7A6B5A;
   font-size: 0.9rem;
 }
-
-/* ==========================================
-   12. GUIDE — SPACED REPETITION (SRS)
-   ========================================== */
-
-/* Controls row */
-.guide-controls {
+#apexView .guide-controls {
   display: flex;
   align-items: flex-end;
   gap: 12px;
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
-
-.guide-setting {
+#apexView .guide-setting {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-
-.guide-setting label {
+#apexView .guide-setting label {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -1431,8 +1299,7 @@ button {
   letter-spacing: 0.5px;
   color: var(--text-faint);
 }
-
-.guide-setting input {
+#apexView .guide-setting input {
   width: 80px;
   padding: 8px 10px;
   border: 1.5px solid var(--border);
@@ -1445,30 +1312,25 @@ button {
   outline: none;
   transition: border-color 0.25s var(--ease-smooth);
 }
-
-.guide-setting input:focus {
+#apexView .guide-setting input:focus {
   border-color: var(--accent);
 }
-
-.guide-start-btn {
+#apexView .guide-start-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
-
-/* Chapter filter pills */
-.chapter-filter {
+#apexView .chapter-filter {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 8px;
   scrollbar-width: none;
 }
-.chapter-filter::-webkit-scrollbar {
+#apexView .chapter-filter::-webkit-scrollbar {
   display: none;
 }
-
-.chapter-pill {
+#apexView .chapter-pill {
   background-color: transparent;
   border: 1.5px solid var(--border-strong);
   padding: 7px 14px;
@@ -1480,38 +1342,35 @@ button {
   white-space: nowrap;
   transition: border-color 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth), background-color 0.3s var(--ease-smooth), transform 0.2s var(--ease-smooth);
 }
-.chapter-pill:hover {
+#apexView .chapter-pill:hover {
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-1px);
 }
-.chapter-pill:active {
+#apexView .chapter-pill:active {
   transform: translateY(0) scale(0.97);
 }
-.chapter-pill.active {
+#apexView .chapter-pill.active {
   background-color: var(--accent);
   border-color: var(--accent);
   color: var(--bg);
   box-shadow: 0 4px 10px rgba(18, 199, 102, 0.2);
 }
-
-/* SRS card */
-.guide-progress-bar {
+#apexView .guide-progress-bar {
   height: 6px;
   background-color: var(--border);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 6px;
 }
-.guide-progress-fill {
+#apexView .guide-progress-fill {
   height: 100%;
   width: 0%;
   background: linear-gradient(135deg, #0fa958 0%, #0d964d 100%);
   border-radius: 6px;
   transition: width 0.3s var(--ease-smooth);
 }
-
-.guide-progress-text {
+#apexView .guide-progress-text {
   text-align: right;
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -1519,8 +1378,7 @@ button {
   color: var(--text-faint);
   margin-bottom: 14px;
 }
-
-.srs-card {
+#apexView .srs-card {
   background-color: var(--surface);
   border-radius: 20px;
   padding: 24px;
@@ -1529,28 +1387,24 @@ button {
   margin-bottom: 14px;
   animation: fadeInSection 0.25s var(--ease-smooth);
 }
-
-.srs-card-header {
+#apexView .srs-card-header {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 18px;
 }
-
-.srs-card-heading {
+#apexView .srs-card-heading {
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-faint);
 }
-
-.srs-card-body {
+#apexView .srs-card-body {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--text);
   line-height: 1.6;
 }
-
-.srs-card-body .cloze-blank {
+#apexView .srs-card-body .cloze-blank {
   display: inline-block;
   min-width: 60px;
   border-bottom: 2px solid var(--accent);
@@ -1559,43 +1413,37 @@ button {
   font-weight: 800;
   padding: 0 4px;
 }
-
-.srs-card-body .cloze-reveal {
+#apexView .srs-card-body .cloze-reveal {
   background-color: var(--accent-soft);
   color: var(--accent);
   font-weight: 800;
   padding: 2px 6px;
   border-radius: 6px;
 }
-
-.srs-card-body .reverse-front {
+#apexView .srs-card-body .reverse-front {
   font-size: 1.2rem;
   font-weight: 800;
   color: var(--accent);
   text-align: center;
   margin-bottom: 14px;
 }
-
-.srs-card-body .reverse-divider {
+#apexView .srs-card-body .reverse-divider {
   border: none;
   border-top: 1px solid var(--border);
   margin: 14px 0;
 }
-
-.srs-card-body .reverse-back {
+#apexView .srs-card-body .reverse-back {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-dim);
   line-height: 1.5;
 }
-
-.srs-card-body .reverse-back .cloze-reveal {
+#apexView .srs-card-body .reverse-back .cloze-reveal {
   background-color: var(--accent-soft);
   color: var(--accent);
   font-weight: 800;
 }
-
-.srs-card-extra {
+#apexView .srs-card-extra {
   margin-top: 18px;
   padding-top: 14px;
   border-top: 1px solid var(--border);
@@ -1604,25 +1452,20 @@ button {
   color: var(--text-dim);
   line-height: 1.5;
 }
-
-/* Show answer button */
-.srs-show-btn {
+#apexView .srs-show-btn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
-
-/* Grade buttons */
-.srs-grade-buttons {
+#apexView .srs-grade-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   margin-bottom: 10px;
 }
-
-.btn-grade {
+#apexView .btn-grade {
   border: none;
   border-radius: 12px;
   padding: 12px 4px;
@@ -1633,50 +1476,42 @@ button {
   color: #0a120d;
   transition: transform 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth);
 }
-.btn-grade:active {
+#apexView .btn-grade:active {
   transform: translateY(1px) scale(0.97);
 }
-
-.btn-grade-again {
+#apexView .btn-grade-again {
   background-color: var(--danger);
 }
-.btn-grade-again:hover {
+#apexView .btn-grade-again:hover {
   box-shadow: 0 4px 12px rgba(242, 104, 104, 0.3);
 }
-
-.btn-grade-hard {
+#apexView .btn-grade-hard {
   background-color: var(--warn);
 }
-.btn-grade-hard:hover {
+#apexView .btn-grade-hard:hover {
   box-shadow: 0 4px 12px rgba(229, 154, 76, 0.3);
 }
-
-.btn-grade-good {
+#apexView .btn-grade-good {
   background-color: var(--accent);
 }
-.btn-grade-good:hover {
+#apexView .btn-grade-good:hover {
   box-shadow: 0 4px 12px rgba(18, 199, 102, 0.3);
 }
-
-.btn-grade-easy {
+#apexView .btn-grade-easy {
   background-color: var(--accent-2);
 }
-.btn-grade-easy:hover {
+#apexView .btn-grade-easy:hover {
   box-shadow: 0 4px 12px rgba(76, 158, 229, 0.3);
 }
-
-.guide-again-color { color: var(--danger) !important; }
-.guide-hard-color { color: var(--warn) !important; }
-.guide-good-color { color: var(--accent) !important; }
-.guide-easy-color { color: var(--accent-2) !important; }
-
-/* Edit row */
-.srs-edit-row {
+#apexView .guide-again-color { color: var(--danger) !important; }
+#apexView .guide-hard-color { color: var(--warn) !important; }
+#apexView .guide-good-color { color: var(--accent) !important; }
+#apexView .guide-easy-color { color: var(--accent-2) !important; }
+#apexView .srs-edit-row {
   text-align: center;
   margin-bottom: 8px;
 }
-
-.srs-edit-form {
+#apexView .srs-edit-form {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -1684,8 +1519,7 @@ button {
   margin-bottom: 10px;
   animation: fadeInSection 0.2s var(--ease-smooth);
 }
-
-.srs-edit-form textarea {
+#apexView .srs-edit-form textarea {
   width: 100%;
   min-height: 70px;
   padding: 10px 12px;
@@ -1700,29 +1534,21 @@ button {
   outline: none;
   transition: border-color 0.25s var(--ease-smooth);
 }
-
-.srs-edit-form textarea:focus {
+#apexView .srs-edit-form textarea:focus {
   border-color: var(--accent);
 }
-
-.edit-form-actions {
+#apexView .edit-form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 10px;
 }
-
-/* Summary icon */
-.guide-summary-icon {
+#apexView .guide-summary-icon {
   font-size: 2.5rem;
   color: var(--accent);
   margin-bottom: 10px;
 }
-
-/* ==========================================
-   13. HEATMAP (Profile tab)
-   ========================================== */
-.heatmap-section {
+#apexView .heatmap-section {
   background-color: var(--surface);
   border-radius: 16px;
   padding: 18px;
@@ -1730,35 +1556,30 @@ button {
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
   margin-bottom: 16px;
 }
-
-.heatmap-legend {
+#apexView .heatmap-legend {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
   margin-bottom: 10px;
 }
-
-.heatmap-legend-label {
+#apexView .heatmap-legend-label {
   font-size: 0.65rem;
   font-weight: 600;
   color: var(--text-faint);
   margin: 0 2px;
 }
-
-.heatmap-cell {
+#apexView .heatmap-cell {
   width: 11px;
   height: 11px;
   border-radius: 2px;
   background-color: var(--border);
 }
-
-.heatmap-cell[data-level="1"] { background-color: rgba(18, 199, 102, 0.25); }
-.heatmap-cell[data-level="2"] { background-color: rgba(18, 199, 102, 0.45); }
-.heatmap-cell[data-level="3"] { background-color: rgba(18, 199, 102, 0.65); }
-.heatmap-cell[data-level="4"] { background-color: rgba(18, 199, 102, 0.9); }
-
-.heatmap-grid {
+#apexView .heatmap-cell[data-level="1"] { background-color: rgba(18, 199, 102, 0.25); }
+#apexView .heatmap-cell[data-level="2"] { background-color: rgba(18, 199, 102, 0.45); }
+#apexView .heatmap-cell[data-level="3"] { background-color: rgba(18, 199, 102, 0.65); }
+#apexView .heatmap-cell[data-level="4"] { background-color: rgba(18, 199, 102, 0.9); }
+#apexView .heatmap-grid {
   display: grid;
   grid-template-rows: repeat(7, 1fr);
   grid-auto-flow: column;
@@ -1766,6 +1587,13 @@ button {
   overflow-x: auto;
   scrollbar-width: none;
 }
-.heatmap-grid::-webkit-scrollbar {
+#apexView .heatmap-grid::-webkit-scrollbar {
   display: none;
 }
+
+/* Embedded in the dashboard: no phone frame, no fixed header */
+#apexView { display: block; min-height: 0; border-radius: 20px; }
+#apexView .app-shell { width: auto; height: auto; min-height: 0; border: 0; border-radius: 20px; box-shadow: none; overflow: visible; background: var(--bg); }
+#apexView .app-header { position: -webkit-sticky; position: sticky; top: 0; border-radius: 20px 20px 0 0; }
+#apexView .main-content { margin-top: 0; max-width: 760px; width: 100%; margin-left: auto; margin-right: auto; }
+.apex-host { max-width: 1200px; }

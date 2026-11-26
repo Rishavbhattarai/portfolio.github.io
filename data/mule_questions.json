@@ -1,0 +1,504 @@
+[
+  {
+    "id": "api-led-connectivity-and-application-networks-q1",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "question": "A retailer's mobile app needs order data in a compact format. Order data comes from SAP and Salesforce, combined into an order history. Which API should format the data for the mobile app?",
+    "options": [
+      "A) A System API for SAP",
+      "B) A Process API for order history",
+      "C) An Experience API for mobile",
+      "D) A System API for Salesforce"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Experience APIs reshape data for a specific consumer. The Process API combines SAP and Salesforce data; the System APIs expose each source."
+  },
+  {
+    "id": "api-led-connectivity-and-application-networks-q2",
+    "syllabusItem": "API-led Connectivity & Application Networks",
+    "domain": "net",
+    "question": "What is the main goal of a Center for Enablement (C4E)?",
+    "options": [
+      "A) To build every integration project centrally",
+      "B) To promote reuse by producing and sharing assets and best practices",
+      "C) To approve every API deployment",
+      "D) To replace the API Manager"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "A C4E enables teams to build their own APIs by providing reusable assets, templates and guidance."
+  },
+  {
+    "id": "anypoint-platform-components-q1",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "question": "A developer wants to change the number of CloudHub workers for a running app and update one of its properties. Which component do they use?",
+    "options": [
+      "A) API Manager",
+      "B) Exchange",
+      "C) Runtime Manager",
+      "D) Design Center"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Runtime Manager controls deployed apps: workers or replicas, runtime version and properties."
+  },
+  {
+    "id": "anypoint-platform-components-q2",
+    "syllabusItem": "Anypoint Platform Components",
+    "domain": "net",
+    "question": "Which Anypoint component is the right place to publish an API specification so other teams can discover and reuse it?",
+    "options": [
+      "A) Exchange",
+      "B) Runtime Manager",
+      "C) Access Management",
+      "D) Anypoint Monitoring"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Exchange is the catalog for discovering and reusing assets, including API specs."
+  },
+  {
+    "id": "http-methods-and-status-codes-q1",
+    "syllabusItem": "HTTP Methods & Status Codes",
+    "domain": "net",
+    "question": "A client sends a POST with Content-Type: text/plain to an endpoint whose RAML only declares application/json. Which status code does the client get from APIkit?",
+    "options": [
+      "A) 400 Bad Request",
+      "B) 405 Method Not Allowed",
+      "C) 406 Not Acceptable",
+      "D) 415 Unsupported Media Type"
+    ],
+    "answer": [
+      "D"
+    ],
+    "explanation": "A request body type the API doesn't accept is APIKIT:UNSUPPORTED_MEDIA_TYPE, mapped to 415."
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-q1",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "question": "A RAML spec defines /flights/{destination} with a query parameter airline. A client calls GET /flights/SFO?airline=united. Which DataWeave expression returns \"united\"?",
+    "options": [
+      "A) attributes.uriParams.airline",
+      "B) attributes.queryParams.airline",
+      "C) payload.airline",
+      "D) vars.airline"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Query string values go to attributes.queryParams. The path value SFO is in attributes.uriParams.destination."
+  },
+  {
+    "id": "raml-basics-resources-methods-and-parameters-q2",
+    "syllabusItem": "RAML Basics: Resources, Methods & Parameters",
+    "domain": "design",
+    "question": "In this RAML, what happens when a client calls GET /flights without the airline parameter?",
+    "code": "#%RAML 1.0\ntitle: Flights\n/flights:\n  get:\n    queryParameters:\n      airline:\n        type: string",
+    "options": [
+      "A) The request succeeds; airline is null",
+      "B) APIkit rejects it with 400 Bad Request",
+      "C) APIkit returns 404 Not Found",
+      "D) APIkit returns 405 Method Not Allowed"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "RAML 1.0 parameters are required by default, so APIkit's validation fails with APIKIT:BAD_REQUEST (400)."
+  },
+  {
+    "id": "raml-types-traits-resource-types-and-libraries-q1",
+    "syllabusItem": "RAML Types, Traits, Resource Types & Libraries",
+    "domain": "design",
+    "question": "Several GET methods across an API need the same offset and limit query parameters. What's the cleanest RAML construct for this?",
+    "options": [
+      "A) A resource type",
+      "B) A trait",
+      "C) A data type",
+      "D) A security scheme"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Traits capture method-level characteristics like query parameters and are applied with is:."
+  },
+  {
+    "id": "mocking-service-and-publishing-to-exchange-q1",
+    "syllabusItem": "Mocking Service & Publishing to Exchange",
+    "domain": "design",
+    "question": "A team wants front-end developers to start calling an API today, though the Mule implementation won't be ready for two weeks. What should they do?",
+    "options": [
+      "A) Deploy an empty Mule app to CloudHub",
+      "B) Turn on the mocking service for the spec in Design Center and share it",
+      "C) Create an API proxy in API Manager",
+      "D) Publish a connector to Exchange"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The mocking service simulates the API from the spec's examples, so consumers can work before the implementation exists."
+  },
+  {
+    "id": "deploying-to-cloudhub-q1",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "question": "An app's config-prod.yaml sets api.timeout to 3000. In Runtime Manager, the deployment sets api.timeout to 5000. Which value does the running app use?",
+    "options": [
+      "A) 3000",
+      "B) 5000",
+      "C) Deployment fails because of the conflict",
+      "D) Whichever was changed last"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Properties set at deployment in Runtime Manager override the same keys in the app's property files."
+  },
+  {
+    "id": "deploying-to-cloudhub-q2",
+    "syllabusItem": "Deploying to CloudHub",
+    "domain": "deploy",
+    "question": "An app works locally on port 8081 but isn't reachable after deployment to CloudHub 1.0. The HTTP Listener config has port 9090. What's the fix?",
+    "options": [
+      "A) Change the port to ${http.port}",
+      "B) Add more workers",
+      "C) Make the app name shorter",
+      "D) Apply a Client ID policy"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "The CloudHub 1.0 load balancer forwards to ${http.port} (8081) and ${https.port} (8082). Other ports aren't exposed through it."
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-q1",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "question": "A legacy .NET REST service needs rate limiting and client ID enforcement. The service can't be changed. What's the best approach?",
+    "options": [
+      "A) Add Autodiscovery to the .NET service",
+      "B) Deploy an API proxy from API Manager in front of it and apply the policies",
+      "C) Rewrite the service as a Mule app first",
+      "D) Apply the policies in Exchange"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "A proxy is a Mule app that enforces policies in front of any backend, without changing it."
+  },
+  {
+    "id": "api-proxy-vs-api-autodiscovery-q2",
+    "syllabusItem": "API Proxy vs API Autodiscovery",
+    "domain": "deploy",
+    "question": "Which flow should the Autodiscovery element's flowRef point to in an APIkit project?",
+    "options": [
+      "A) The flow with the HTTP Listener and the APIkit router",
+      "B) Any private flow",
+      "C) The console flow",
+      "D) The global error handler"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Autodiscovery attaches to the flow that receives the API's requests: the main flow with the HTTP Listener."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-q1",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "question": "Partners on the Gold tier may call 1,000 times a minute, others 100. Which policy fits?",
+    "options": [
+      "A) Rate Limiting",
+      "B) Rate Limiting - SLA based",
+      "C) Spike Control",
+      "D) IP Allowlist"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Different limits per consumer tier is exactly what SLA-based rate limiting does, using the client ID to find the tier."
+  },
+  {
+    "id": "policies-sla-tiers-and-client-applications-q2",
+    "syllabusItem": "Policies, SLA Tiers & Client Applications",
+    "domain": "deploy",
+    "question": "An API has Client ID Enforcement applied. A request arrives with no client_id. What does the caller receive?",
+    "options": [
+      "A) 400 Bad Request",
+      "B) 401 Unauthorized",
+      "C) 403 Forbidden",
+      "D) 429 Too Many Requests"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Missing or invalid client credentials are rejected with 401."
+  },
+  {
+    "id": "properties-and-secure-properties-q1",
+    "syllabusItem": "Properties & Secure Properties",
+    "domain": "struct",
+    "question": "A secure properties file contains db.password: \"![nJ4f...]\". Which expression reads it in a Database connector config?",
+    "options": [
+      "A) ${db.password}",
+      "B) ${secure::db.password}",
+      "C) #[vars.db.password]",
+      "D) #[p('db.password')]"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Values from the Secure Configuration Properties module need the secure:: prefix."
+  },
+  {
+    "id": "global-elements-and-project-structure-q1",
+    "syllabusItem": "Global Elements & Project Structure",
+    "domain": "struct",
+    "question": "Two flows in different XML files need the same Database configuration. What's the recommended approach?",
+    "options": [
+      "A) Copy the config into both files",
+      "B) Define one Database config as a global element, e.g. in global.xml, and reference it with config-ref",
+      "C) Put the connection details in each processor",
+      "D) Use a VM queue"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Global elements are app-wide; defining one avoids duplication and makes it configurable through properties."
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-q1",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "question": "What does the Logger print?",
+    "code": "<flow name=\"lookup\">\n  <http:listener config-ref=\"api\" path=\"/orders/{id}\"/>\n  <set-variable variableName=\"orderId\" value=\"#[attributes.uriParams.id]\"/>\n  <http:request method=\"GET\" config-ref=\"crm\" path=\"/status\"/>\n  <logger message=\"#[vars.orderId] #[attributes.statusCode]\"/>\n</flow>",
+    "options": [
+      "A) The order id and the CRM response's status code",
+      "B) The order id and null, because attributes were cleared",
+      "C) null and the status code, because vars were cleared",
+      "D) The order id and the listener's request method"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "The HTTP Request replaces payload and attributes with the response (so statusCode is the CRM's), and vars are untouched."
+  },
+  {
+    "id": "the-mule-event-payload-attributes-and-variables-q2",
+    "syllabusItem": "The Mule Event: Payload, Attributes & Variables",
+    "domain": "events",
+    "question": "Which part of the Mule event holds the HTTP method and query parameters of an incoming request?",
+    "options": [
+      "A) payload",
+      "B) attributes",
+      "C) vars",
+      "D) error"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Source metadata such as method, headers, queryParams and uriParams is in attributes."
+  },
+  {
+    "id": "dataweave-expressions-in-processors-q1",
+    "syllabusItem": "DataWeave Expressions in Processors",
+    "domain": "events",
+    "question": "Which Set Payload value produces the text Hello Ana when payload.name is \"Ana\"?",
+    "options": [
+      "A) #[\"Hello \" + payload.name]",
+      "B) #[\"Hello \" ++ payload.name]",
+      "C) #[concat(\"Hello \", payload.name)]",
+      "D) ${\"Hello \" ++ payload.name}"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "DataWeave joins strings with ++, and expressions are wrapped in #[ ]. ${ } is for property placeholders."
+  },
+  {
+    "id": "target-variables-q1",
+    "syllabusItem": "Target Variables",
+    "domain": "events",
+    "question": "A client POSTs {\"item\":\"book\"}. What does the Logger print?",
+    "code": "<flow name=\"enrich\">\n  <http:listener config-ref=\"api\" path=\"/orders\"/>\n  <http:request method=\"GET\" config-ref=\"crm\" path=\"/customers/1\" target=\"customer\"/>\n  <logger message=\"#[payload]\"/>\n</flow>",
+    "options": [
+      "A) {\"item\":\"book\"}",
+      "B) The customer returned by the CRM",
+      "C) null",
+      "D) Both, merged"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "With target set, the response goes to vars.customer and the payload stays the request body."
+  },
+  {
+    "id": "target-variables-q2",
+    "syllabusItem": "Target Variables",
+    "domain": "events",
+    "question": "You need the response body and the response status code from an HTTP Request, without losing the current payload. What do you set?",
+    "options": [
+      "A) target=\"resp\" targetValue=\"#[message]\"",
+      "B) target=\"resp\" only",
+      "C) No target; read attributes afterwards",
+      "D) targetValue=\"#[attributes]\" without a target"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "#[message] stores payload and attributes in the var (vars.resp.payload and vars.resp.attributes.statusCode) and leaves the current payload alone."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-q1",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "question": "The RAML defines /flights with get and post, and /flights/{ID} with get only. A client sends DELETE /api/flights/AB12. What does it get back?",
+    "options": [
+      "A) 404 Not Found",
+      "B) 405 Method Not Allowed",
+      "C) 400 Bad Request",
+      "D) 501 Not Implemented"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The resource exists but DELETE isn't declared on it, so the router raises APIKIT:METHOD_NOT_ALLOWED (405)."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-q2",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "question": "Same RAML. A client sends GET /api/flight/AB12 (no s). What does it get back?",
+    "options": [
+      "A) 404 Not Found",
+      "B) 405 Method Not Allowed",
+      "C) 400 Bad Request",
+      "D) 200 with an empty body"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "No resource matches /flight/AB12, so the router raises APIKIT:NOT_FOUND (404)."
+  },
+  {
+    "id": "apikit-scaffolding-flows-from-raml-q3",
+    "syllabusItem": "APIkit: Scaffolding Flows from RAML",
+    "domain": "iface",
+    "question": "Which scaffolded flow handles GET /api/flights/AB12?",
+    "options": [
+      "A) get:\\flights:api-config",
+      "B) get:\\flights\\(ID):api-config",
+      "C) get:\\flights\\AB12:api-config",
+      "D) api-main"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "URI parameters appear in parentheses in the generated flow name; the router passes AB12 as attributes.uriParams.ID."
+  },
+  {
+    "id": "http-listener-building-interfaces-by-hand-q1",
+    "syllabusItem": "HTTP Listener: Building Interfaces by Hand",
+    "domain": "iface",
+    "question": "An HTTP Listener config has base path /api and a listener with path /flights/{dest}. A client calls GET /api/flights/SFO. What is attributes.uriParams.dest?",
+    "options": [
+      "A) \"/api/flights/SFO\"",
+      "B) \"SFO\"",
+      "C) null",
+      "D) \"flights\""
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The base path is matched first; the {dest} placeholder captures SFO."
+  },
+  {
+    "id": "flows-subflows-and-private-flows-q1",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "question": "A client calls the listener. What does it receive?",
+    "code": "<flow name=\"main\">\n  <http:listener config-ref=\"api\" path=\"/check\"/>\n  <flow-ref name=\"validate\"/>\n  <set-payload value=\"done\"/>\n  <error-handler>\n    <on-error-continue type=\"ANY\">\n      <set-payload value=\"handled\"/>\n    </on-error-continue>\n  </error-handler>\n</flow>\n\n<sub-flow name=\"validate\">\n  <raise-error type=\"APP:INVALID\"/>\n</sub-flow>",
+    "options": [
+      "A) 200 with \"done\"",
+      "B) 200 with \"handled\"",
+      "C) 500 with the error description",
+      "D) 400 Bad Request"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The subflow has no error handler, so the error goes to main's handler. On Error Continue handles it and the flow completes successfully, so the listener returns 200 with \"handled\". set-payload \"done\" never runs."
+  },
+  {
+    "id": "flows-subflows-and-private-flows-q2",
+    "syllabusItem": "Flows, Subflows & Private Flows",
+    "domain": "struct",
+    "question": "What does the Logger in main print?",
+    "code": "<flow name=\"main\">\n  <scheduler>...</scheduler>\n  <set-variable variableName=\"total\" value=\"#[1]\"/>\n  <flow-ref name=\"addTax\"/>\n  <logger message=\"#[vars.total]\"/>\n</flow>\n\n<flow name=\"addTax\">\n  <set-variable variableName=\"total\" value=\"#[vars.total + 1]\"/>\n</flow>",
+    "options": [
+      "A) 1",
+      "B) 2",
+      "C) null",
+      "D) An error, because addTax has no source"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Flow Reference passes the same event, so the private flow's change to vars.total is visible to main afterwards."
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-q1",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "question": "What does the Logger in worker print?",
+    "code": "<flow name=\"main\">\n  <http:listener config-ref=\"api\" path=\"/go\"/>\n  <set-variable variableName=\"user\" value=\"ana\"/>\n  <vm:publish-consume config-ref=\"vm\" queueName=\"jobs\"/>\n</flow>\n\n<flow name=\"worker\">\n  <vm:listener config-ref=\"vm\" queueName=\"jobs\"/>\n  <logger message=\"#[vars.user]\"/>\n</flow>",
+    "options": [
+      "A) ana",
+      "B) null",
+      "C) jobs",
+      "D) An error: vars can't be read in a VM flow"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "A VM queue carries the message, not the variables. The worker flow starts with a new event, so vars.user is null."
+  },
+  {
+    "id": "flow-reference-vs-vm-connector-q2",
+    "syllabusItem": "Flow Reference vs VM Connector",
+    "domain": "struct",
+    "question": "An app must hand work to another flow and keep it even if the app restarts before the work is done. Which option fits?",
+    "options": [
+      "A) Flow Reference",
+      "B) VM Publish to a persistent queue",
+      "C) VM Publish to a transient queue",
+      "D) Async scope"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Persistent VM queues survive restarts; Flow Reference and transient queues don't keep the work."
+  },
+  {
+    "id": "maven-and-dependencies-q1",
+    "syllabusItem": "Maven & Dependencies",
+    "domain": "struct",
+    "question": "A project builds in Studio but fails in CI with 'Could not resolve dependencies' for an Exchange connector. Where do you look first?",
+    "options": [
+      "A) log4j2.xml",
+      "B) pom.xml and the CI's Maven repository credentials for Exchange",
+      "C) The API Manager policies",
+      "D) mule-artifact.json secureProperties"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Dependencies come from pom.xml; CI needs credentials to download Exchange assets."
+  }
+]

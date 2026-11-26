@@ -1,6 +1,6 @@
 /**
  * Data Architect study dashboard
- * All content is fetched at runtime from data/da_*.json (never hardcoded here).
+ * All content is fetched at runtime from data/<track>_*.json (never hardcoded here).
  * Progress lives in localStorage under one key, keyed by stable ids, so content
  * files can grow module by module without resetting anything.
  * NOTE: fetch() requires http(s), e.g. `npx serve` locally.
@@ -16,9 +16,22 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'daStudy.v1';
+  // Two exams share this dashboard. Each has its own data files (data/<prefix>_*.json) and its own progress key.
+  const TRACKS = {
+    mule: { id: 'mule', key: 'muleStudy.v1', prefix: 'mule', name: 'MuleSoft Developer', short: 'MuleSoft', tag: 'Mule', icon: 'ph-plugs-connected', role: 'Main exam', unit: 'exam topic', ingest: 'mule-ingest', audience: 'a Mule developer', reader: 'has never built an integration' },
+    da: { id: 'da', key: 'daStudy.v1', prefix: 'da', name: 'Data Architect', short: 'Data Architect', tag: 'DA', icon: 'ph-database', role: 'Side track', unit: 'Trailhead module', ingest: 'da-ingest', audience: 'an architect', reader: 'has never used Salesforce' }
+  };
+  const T = TRACKS[(function () {
+    const q = new URLSearchParams(location.search).get('track');
+    if (TRACKS[q]) { try { localStorage.setItem('studyTrack', q); } catch (e) { /* ignore */ } return q; }
+    try { const t = localStorage.getItem('studyTrack'); if (TRACKS[t]) return t; } catch (e) { /* ignore */ }
+    return 'mule';
+  })()];
+  const OTHER = T.id === 'mule' ? TRACKS.da : TRACKS.mule;
+  const STORAGE_KEY = T.key;
+  const dataFile = (name) => `data/${T.prefix}_${name}.json`;
   const DAY = 86400000;
-  const VIEWS = ['home', 'map', 'materials', 'notes', 'quiz', 'cards'];
+  const VIEWS = ['home', 'map', 'materials', 'notes', 'quiz', 'cards', 'apex'];
   // Recall rating (1-5) -> days until the next review
   const REVIEW_GAP = { 1: 1, 2: 1, 3: 3, 4: 7, 5: 30 };
   const RATING_LABEL = { 1: 'Blank', 2: 'Shaky', 3: 'Partly', 4: 'Solid', 5: 'Easy' };
@@ -30,8 +43,8 @@
   const TODAY_CAP = 8;
 
   const state = {
-    syllabus: [],      // merged: da_syllabus.json + overlay
-    meta: null,        // da_syllabus_meta.json
+    syllabus: [],      // merged: <track>_syllabus.json + overlay
+    meta: null,        // <track>_syllabus_meta.json
     materials: null,
     notes: [],         // domain chapters
     moduleNotes: [],   // per syllabus item, appended over time
@@ -45,7 +58,9 @@
     lastRevealed: null,  // recall point the 1-3 keys grade
     quiz: null,        // active quiz session
     cards: null,       // active flashcard session
-    progress: null
+    progress: null,
+    plan: null,        // <prefix>_plan.json: day-by-day schedule and pre-exam checklist (optional)
+    planDay: null      // plan day shown on the home page; null means today
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -112,7 +127,7 @@
   }
 
   /* =========================================================
-     DATA LOADING (data/da_*.json are the single source of truth)
+     DATA LOADING (data/<track>_*.json are the single source of truth)
      ========================================================= */
   async function fetchJSON(path) {
     const res = await fetch(path, { cache: 'no-store' });
@@ -135,8 +150,8 @@
   }
 
   async function loadAll() {
-    const [syl, meta] = await Promise.all([fetchJSON('data/da_syllabus.json'), fetchJSON('data/da_syllabus_meta.json')]);
-    if (!Array.isArray(syl) || !syl.length) throw new Error('data/da_syllabus.json is empty or malformed');
+    const [syl, meta] = await Promise.all([fetchJSON(dataFile('syllabus')), fetchJSON(dataFile('syllabus_meta'))]);
+    if (!Array.isArray(syl) || !syl.length) throw new Error(`${dataFile('syllabus')} is empty or malformed`);
     state.meta = meta;
 
     const overlay = meta.items || {};
@@ -157,12 +172,14 @@
     });
 
     const optional = [
-      ['materials', 'data/da_materials.json', null],
-      ['notes', 'data/da_notes.json', []],
-      ['moduleNotes', 'data/da_module_notes.json', []],
-      ['questions', 'data/da_questions.json', []],
-      ['flashcards', 'data/da_flashcards.json', []]
+      ['materials', dataFile('materials'), null],
+      ['notes', dataFile('notes'), []],
+      ['moduleNotes', dataFile('module_notes'), []],
+      ['questions', dataFile('questions'), []],
+      ['flashcards', dataFile('flashcards'), []]
     ];
+    // Only some tracks have a day plan; a missing file is not a warning
+    state.plan = T.id === 'mule' ? await fetchJSON(dataFile('plan')).catch(() => null) : null;
     // Promise.allSettled is missing on older iPads, so settle each fetch by hand
     const results = await Promise.all(optional.map(([, p]) => fetchJSON(p).then(
       (value) => ({ status: 'fulfilled', value }),
@@ -340,8 +357,8 @@
     return `<a class="btn btn--sm" href="${esc(url)}" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out"></i>${esc(label)}</a>`;
   }
   function topbar() {
-    return `<div class="topbar"><span class="topbar__brand"><span class="nav__mark"><i class="ph ph-database"></i></span>Data Architect</span>
-      <span class="topbar__actions"><button class="btn btn--sm" type="button" data-act="focus-open" aria-label="Focus timer"><i class="ph ph-timer"></i></button>
+    return `<div class="topbar"><span class="topbar__brand"><span class="nav__mark"><i class="ph ${T.icon}"></i></span>${esc(T.short)}</span>
+      <span class="topbar__actions"><a class="btn btn--sm" href="?track=${OTHER.id}#home" aria-label="Switch to ${esc(OTHER.name)}"><i class="ph ph-swap"></i>${esc(OTHER.tag)}</a><button class="btn btn--sm" type="button" data-act="focus-open" aria-label="Focus timer"><i class="ph ph-timer"></i></button>
       <button class="btn btn--sm" type="button" data-act="theme" aria-label="Switch theme"><i class="ph ph-circle-half"></i></button></span></div>`;
   }
   function banner() {
@@ -352,6 +369,8 @@
     return `<header class="view-head"><a class="btn btn--ghost btn--sm back" href="#home"><i class="ph ph-arrow-left"></i>Syllabus</a><h1>${esc(title)}</h1>${sub ? `<p>${sub}</p>` : ''}</header>`;
   }
   const itemById = (id) => state.syllabus.find((i) => i.id === id);
+  const isStudy = (it) => it.type === 'Module' || it.type === 'Topic';
+  const unitOf = (it) => (it.type === 'Topic' ? 'exam topic' : it.type === 'Module' ? 'Trailhead module' : 'document');
   const itemByName = (name) => state.syllabus.find((i) => i.name === name);
   const countFor = (list, itemName) => list.filter((x) => x.syllabusItem === itemName).length;
   const moduleNotesFor = (itemName) => state.moduleNotes.filter((n) => n.syllabusItem === itemName);
@@ -373,7 +392,7 @@
     return `<section class="explain">
       <label class="explain__label" for="explain-${esc(id)}"><i class="ph ph-chat-text"></i>Explain it in your own words</label>
       <p class="explain__hint">${esc(prompt)}</p>
-      <textarea id="explain-${esc(id)}" data-explain="${esc(id)}" rows="5" placeholder="Write it as if teaching a friend who has never used Salesforce.">${esc(e.text)}</textarea>
+      <textarea id="explain-${esc(id)}" data-explain="${esc(id)}" rows="5" placeholder="Write it as if teaching a friend who ${T.reader}.">${esc(e.text)}</textarea>
       <div class="explain__foot">
         <span class="explain__saved" data-saved="${esc(id)}">${e.updated ? `Saved ${shortDate(e.updated)}` : 'Saves as you type'}</span>
         <span class="seg" role="group" aria-label="How clear was your explanation">
@@ -415,7 +434,7 @@
             <span class="today__text"><span class="today__name">${esc(r.it.name)}</span><span class="today__why">${esc(r.reason)}</span></span>
             <i class="ph ph-caret-right"></i></button></li>`;
         }).join('')}</ol>${today.length > TODAY_CAP ? `<p class="today__more">${today.length - TODAY_CAP} more after these.</p>` : ''}`
-      : `<p class="today__empty">Nothing due. Finish a module, then open it and rate how well you can recall it. It comes back here when it's due.</p>`;
+      : `<p class="today__empty">Nothing due. Finish a ${T.id === 'mule' ? 'topic' : 'module'}, then open it and rate how well you can recall it. It comes back here when it's due.</p>`;
 
     // Exam map: one bar, each segment as wide as the domain's exam weight
     const segs = studyDomains().map((d, i) => {
@@ -443,8 +462,9 @@
       .map((id) => ({ id, r: retention(id), list: p.reviews[id].slice(-6) }))
       .sort((a, b) => a.r - b.r);
 
-    return `${topbar()}${banner()}
-      <header class="view-head enter" style="--i:0"><h1>Syllabus</h1><p>Every module and document on the official trailmix, grouped by exam domain. Open a module to rate your recall, explain it, or start a focus session.</p></header>
+    return `${topbar()}${banner()}${mainTrackBanner()}
+      <header class="view-head enter" style="--i:0"><h1>${state.plan ? esc(T.name) : 'Syllabus'}</h1><p>${T.id === 'mule' ? 'Every exam topic, grouped by exam section. Open a topic to rate your recall, explain it, or start a focus session.' : 'Every module and document on the official trailmix, grouped by exam domain. Open a module to rate your recall, explain it, or start a focus session.'}</p></header>
+      ${renderPlan()}
       <section class="bento" aria-label="Overview">
         <article class="panel bento__count enter" style="--i:1">
           <div class="countdown__num"><span class="mono">${Math.max(s.daysLeft, 0)}</span><span>days to the exam<br>${s.exam.toLocaleDateString(undefined, { weekday: 'short', month: 'long', day: 'numeric' })}</span></div>
@@ -492,17 +512,120 @@
       </details>`;
   }
 
+  /* =========================================================
+     DAY PLAN (data/<prefix>_plan.json): today's blocks, side track, checklist
+     ========================================================= */
+  function dayItemNames(dayId) {
+    const d = state.plan && state.plan.days.find((x) => x.id === dayId);
+    return d ? d.items || [] : [];
+  }
+  function planTodayIndex() {
+    const days = state.plan.days;
+    const t = todayIso();
+    const i = days.findIndex((d) => d.date === t);
+    if (i >= 0) return i;
+    if (t < days[0].date) return 0;
+    const past = days.filter((d) => d.date < t).length;
+    return Math.min(past, days.length - 1);
+  }
+  // Due counts for the other exam, read straight from its saved progress (no data files needed)
+  function otherTrackDue() {
+    try {
+      const o = JSON.parse(localStorage.getItem(OTHER.key) || '{}');
+      const t = todayIso();
+      const cards = Object.values(o.srs || {}).filter((x) => x.dueDate <= t).length;
+      const topics = Object.keys(o.reviews || {}).filter((id) => {
+        const list = o.reviews[id];
+        if (!list || !list.length) return false;
+        const last = list[list.length - 1];
+        return addDaysIso(last.date, REVIEW_GAP[last.rating] || 1) <= t;
+      }).length;
+      return { cards, topics };
+    } catch (e) { return { cards: 0, topics: 0 }; }
+  }
+  function sideTrackCard() {
+    const side = state.plan.sideTrack || {};
+    const due = otherTrackDue();
+    const cap = side.cap || 10;
+    return `<article class="panel side-track">
+      <div class="side-track__head"><span class="nav__mark nav__mark--alt"><i class="ph ${OTHER.icon}"></i></span><div><h3>Side track: ${esc(OTHER.name)}</h3><p>${side.minutes || 15} minutes a day. Keep it warm, don't push it.</p></div></div>
+      <p class="side-track__due mono">${due.cards ? `${Math.min(due.cards, cap)} of ${due.cards} due cards` : 'No cards due'}${due.topics ? ` · ${due.topics} topic${due.topics === 1 ? '' : 's'} to re-rate` : ''}</p>
+      <a class="btn btn--sm" href="?track=${OTHER.id}#cards/all"><i class="ph ph-cards"></i>Review ${esc(OTHER.short)}</a>
+    </article>`;
+  }
+  function renderPlan() {
+    const plan = state.plan;
+    if (!plan || !Array.isArray(plan.days) || !plan.days.length) return '';
+    const p = state.progress;
+    const todayIdx = planTodayIndex();
+    const idx = state.planDay === null ? todayIdx : state.planDay;
+    const d = plan.days[idx];
+    const tid = (bi, ti) => `plan:${d.id}:${bi}:${ti}`;
+    let total = 0, done = 0;
+    const blocks = d.blocks.map((b, bi) => `<section class="plan-block">
+        <div class="plan-block__head"><span class="mono">${esc(b.time)}</span><h3>${esc(b.title)}</h3></div>
+        <ul class="plan-tasks">${b.tasks.map((task, ti) => { const id = tid(bi, ti); const on = !!p.done[id]; total++; if (on) done++;
+          return `<li class="${on ? 'is-done' : ''}">${checkBtn('done', id, on, task)}<span>${esc(task)}</span></li>`; }).join('')}</ul>
+      </section>`).join('');
+    const items = (d.items || []).map(itemByName).filter(Boolean);
+    const nQ = state.questions.filter((q) => (d.items || []).includes(q.syllabusItem)).length;
+    const nC = state.flashcards.filter((c) => (d.items || []).includes(c.syllabusItem)).length;
+    const when = d.date === todayIso() ? 'Today' : shortDate(d.date);
+    const strip = plan.days.map((x, i) => {
+      const ids = []; x.blocks.forEach((b, bi) => b.tasks.forEach((t, ti) => ids.push(`plan:${x.id}:${bi}:${ti}`)));
+      const n = ids.filter((k) => p.done[k]).length;
+      const cls = [i === idx ? 'is-on' : '', i === todayIdx ? 'is-today' : '', n === ids.length && ids.length ? 'is-complete' : ''].join(' ');
+      return `<button type="button" class="plan-day ${cls}" data-act="plan-day" data-val="${i}" aria-pressed="${i === idx}" aria-label="Day ${i}, ${esc(x.title)}, ${n} of ${ids.length} done"><span class="mono">D${i}</span><small>${esc(shortDate(x.date))}</small><span class="plan-day__bar" style="--f:${ids.length ? n / ids.length : 0}"></span></button>`;
+    }).join('');
+    const checks = (plan.checklist || []).map((c, i) => { const id = `check:${i}`; const on = !!p.done[id]; return `<li class="${on ? 'is-done' : ''}">${checkBtn('done', id, on, c)}<span>${esc(c)}</span></li>`; }).join('');
+    const nChecks = (plan.checklist || []).filter((c, i) => p.done[`check:${i}`]).length;
+    const allChecked = plan.checklist && nChecks === plan.checklist.length;
+    return `<section class="plan enter" style="--i:1" aria-labelledby="planTitle">
+      <nav class="plan-strip" aria-label="Plan days">${strip}</nav>
+      <div class="plan-grid">
+        <article class="panel plan-today">
+          <div class="plan-today__head">
+            <div><span class="chip chip--accent">${when} · Day ${idx}</span><h2 id="planTitle">${esc(d.title)}</h2><p>${esc(d.focus || '')}</p></div>
+            <span class="mono plan-today__count">${done}/${total}</span>
+          </div>
+          ${d.note ? `<p class="plan-note"><i class="ph ph-info"></i>${esc(d.note)}</p>` : ''}
+          ${items.length ? `<div class="plan-topics">${items.map((it) => `<button type="button" class="chip chip--link" data-act="open-row" data-id="${it.id}">${esc(it.name)}</button>`).join('')}</div>` : ''}
+          <div class="panel__row plan-actions">
+            ${nQ ? `<button class="btn btn--sm btn--primary" type="button" data-act="quiz-start" data-id="day:${d.id}" data-val="practice"><i class="ph ph-list-checks"></i>Quiz today's topics<span class="count">${nQ}</span></button>` : ''}
+            ${nC ? `<button class="btn btn--sm" type="button" data-act="cards-start" data-id="day:${d.id}"><i class="ph ph-cards"></i>Today's flashcards<span class="count">${nC}</span></button>` : ''}
+            <button class="btn btn--sm" type="button" data-act="focus-start" data-id="" data-val="50" data-brk="10"><i class="ph ph-timer"></i>Focus 50 + 10</button>
+          </div>
+          ${blocks}
+          ${d.feynman ? explainBox(`feynman-${d.id}`, d.feynman) : ''}
+        </article>
+        <div class="plan-side">
+          ${sideTrackCard()}
+          <details class="panel plan-routine"><summary><h3>Daily routine</h3><i class="ph ph-caret-down"></i></summary>
+            <dl>${(plan.routine || []).map((r) => `<div><dt class="mono">${esc(r.time)}</dt><dd>${esc(r.what)}</dd></div>`).join('')}</dl></details>
+          <details class="panel plan-check"${idx >= plan.days.length - 2 ? ' open' : ''}><summary><h3>Before you book</h3><span class="chip ${allChecked ? 'chip--green' : ''}">${nChecks}/${(plan.checklist || []).length}</span><i class="ph ph-caret-down"></i></summary>
+            <ul class="plan-tasks">${checks}</ul>
+            <p class="panel__hint">${allChecked ? 'Every item is ticked. Book the exam.' : 'Book the exam only when every item is ticked.'}</p></details>
+        </div>
+      </div>
+    </section>`;
+  }
+  // On the side track's home page, a pointer back to the main exam
+  function mainTrackBanner() {
+    if (T.id !== 'da') return '';
+    return `<a class="panel main-track" href="?track=mule#home"><span class="nav__mark nav__mark--alt"><i class="ph ${TRACKS.mule.icon}"></i></span><span><strong>Main exam: ${esc(TRACKS.mule.name)}</strong><small>Keep this side track to about 15 minutes a day, then switch back.</small></span><i class="ph ph-arrow-right"></i></a>`;
+  }
+
   function renderItem(it) {
     const p = state.progress;
     const done = !!p.done[it.id];
-    const isModule = it.type === 'Module';
+    const isModule = isStudy(it);
     const q = countFor(state.questions, it.name);
     const f = countFor(state.flashcards, it.name);
     const n = noteCount(it.name);
     const last = lastReview(it.id);
     const open = state.expanded === it.id;
     const chips = [
-      `<span class="chip${isModule ? ' chip--accent' : ''}">${isModule ? '<i class="ph ph-graduation-cap"></i>Trailhead' : '<i class="ph ph-file-text"></i>Doc'}</span>`,
+      `<span class="chip${isModule ? ' chip--accent' : ''}">${it.type === 'Topic' ? '<i class="ph ph-book-open"></i>Topic' : isModule ? '<i class="ph ph-graduation-cap"></i>Trailhead' : '<i class="ph ph-file-text"></i>Doc'}</span>`,
       last ? `<span class="chip chip--${ratingTone(last.rating)}">${last.rating}/5 ${dueLabel(it.id)}</span>` : '',
       p.explain[it.id] && p.explain[it.id].status === 'gaps' ? '<span class="chip chip--red"><i class="ph ph-warning-circle"></i>Gaps</span>' : '',
       p.focus[it.id] ? `<span class="chip"><i class="ph ph-clock"></i>${p.focus[it.id]} min</span>` : '',
@@ -519,7 +642,7 @@
         ${isModule || q ? `<a class="btn btn--sm btn--quiz" href="#quiz/${esc(it.id)}" aria-label="Quiz, ${q} questions"><i class="ph ph-list-checks"></i>Quiz<span class="count">${q}</span></a>` : ''}
         ${isModule || f ? `<a class="btn btn--sm btn--cards" href="#cards/${esc(it.id)}" aria-label="Flashcards, ${f} cards"><i class="ph ph-cards"></i>Flashcards<span class="count">${f}</span></a>` : ''}
         ${isModule || n ? `<a class="btn btn--sm btn--notes" href="#notes/${esc(it.id)}" aria-label="Notes, ${n} points"><i class="ph ph-notebook"></i>Notes<span class="count">${n}</span></a>` : ''}
-        ${openBtn(it.link, isModule ? 'Trail' : 'Open')}
+        ${openBtn(it.link, it.type === 'Topic' ? 'Docs' : isModule ? 'Trail' : 'Open')}
       </div>
       ${open ? renderPanel(it) : ''}
     </div>`;
@@ -534,7 +657,7 @@
         <div class="rates" role="group" aria-label="Recall rating">${rateBtns}</div>
         <p class="panel__hint">${last ? `Last rated ${last.rating}/5 on ${shortDate(last.date)}. ${dueLabel(it.id)}.` : 'Rate it after you finish the module. Low ratings come back tomorrow, high ones in a week or a month.'}</p>
       </section>
-      ${explainBox(it.id, `What is "${it.name}" about, and when would an architect use it?`)}
+      ${explainBox(it.id, `What is "${it.name}" about, and when would ${T.audience} use it?`)}
       <section class="panel__block panel__row">
         ${rereadBtn(it.id, true)}
         <button class="btn btn--sm" type="button" data-act="focus-start" data-id="${it.id}" data-val="25" data-brk="5"><i class="ph ph-timer"></i>Focus 25 min</button>
@@ -548,7 +671,7 @@
      ========================================================= */
   function renderMaterials() {
     const mat = state.materials;
-    if (!mat) return `${topbar()}${banner()}<div class="card error-card"><h2>Materials not available</h2><p>data/da_materials.json didn't load.</p></div>`;
+    if (!mat) return `${topbar()}${banner()}<div class="card error-card"><h2>Materials not available</h2><p>${dataFile('materials')} didn't load.</p></div>`;
     const p = state.progress;
     const core = mat.core.map((c) => `<article class="core__card">
         <div class="core__top"><h3>${esc(c.title)}</h3><span class="chip">${esc(domainOf(c.domain).name)}</span></div>
@@ -617,7 +740,13 @@
   function renderNotes() {
     if (state.route.arg) return renderModuleNotes(itemById(state.route.arg));
     const notes = state.notes;
-    if (!notes.length) return `${topbar()}${banner()}<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes yet</h2><p>Add chapters to data/da_notes.json.</p></div>`;
+    if (!notes.length) {
+      const withNotes = state.syllabus.filter((i) => noteCount(i.name));
+      return `${topbar()}${banner()}
+        <header class="view-head"><h1>Notes</h1><p>Read a topic's notes once, then switch on recall mode: try to recall each point before you reveal it.</p></header>
+        ${withNotes.length ? `<div class="decks">${withNotes.map((i) => `<a class="card deck" href="#notes/${i.id}"><span class="deck__name">${esc(i.name)}</span><span class="mono">${noteCount(i.name)} points</span></a>`).join('')}</div>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes yet</h2><p>Paste notes for a topic into the ${T.ingest} agent and they appear here.</p></div>`}
+        ${memoryHooks()}`;
+    }
     if (!state.noteDomain || !notes.some((n) => n.domain === state.noteDomain)) state.noteDomain = notes[0].domain;
     const ch = notes.find((n) => n.domain === state.noteDomain);
     const p = state.progress;
@@ -712,7 +841,7 @@
         <button type="button" class="btn btn--sm${on ? ' btn--primary' : ''}" data-act="map-recall" aria-pressed="${on}"><i class="ph ${on ? 'ph-eye-slash' : 'ph-brain'}"></i>${on ? 'Recreating from memory' : 'Recreate from memory'}</button>
         ${on ? `<span class="chip mono">${shown}/${total} revealed</span><button type="button" class="btn btn--sm" data-act="map-hide"><i class="ph ph-arrow-counter-clockwise"></i>Hide all again</button><span class="kbd-hint">Say each name out loud before you reveal it. Space reveals the next one.</span>` : ''}
       </div>
-      <section class="panel mm"><div class="mm__root"><span class="nav__mark"><i class="ph ph-database"></i></span><span><strong>${esc(state.meta.exam.name)}</strong><small>${state.meta.exam.questions} questions, ${state.meta.exam.minutes} minutes</small></span></div>
+      <section class="panel mm"><div class="mm__root"><span class="nav__mark"><i class="ph ${T.icon}"></i></span><span><strong>${esc(state.meta.exam.name)}</strong><small>${state.meta.exam.questions} questions, ${state.meta.exam.minutes} minutes</small></span></div>
         <ul class="mm__domains">${domains}</ul></section>`;
   }
 
@@ -727,18 +856,18 @@
     const pairHtml = pairs.length
       ? `<section class="note-block"><h3><i class="ph ph-question"></i>Recall questions</h3><ul class="recall-list">${pairs.map((pr, i) => recallPoint(`${key}:qa:${i}`, pr.q, pr.a, item.name)).join('')}</ul></section>`
       : '';
-    return `${topbar()}${banner()}${backHead(item.name, `Your notes for this ${item.type === 'Module' ? 'Trailhead module' : 'document'}.`)}
+    return `${topbar()}${banner()}${backHead(item.name, `Your notes for this ${unitOf(item)}.`)}
       ${entries.length ? `<article class="card chapter">
         <div class="chapter__head"><h2>Notes</h2><div class="item__meta">${recallScore(key)}${recallToggle()}</div></div>
         ${points.length ? `<section class="note-block"><h3><i class="ph ph-lightbulb"></i>Key concepts</h3>${pointList(points, `${key}:pts`, item.name)}</section>` : ''}
         ${principles.length ? `<section class="note-block"><h3><i class="ph ph-git-branch"></i>Core principles</h3>${pointList(principles, `${key}:prn`, item.name)}</section>` : ''}
         ${pairHtml}
-        ${explainBox(item.id, `What is "${item.name}" about, and when would an architect use it?`)}
+        ${explainBox(item.id, `What is "${item.name}" about, and when would ${T.audience} use it?`)}
         <div class="chapter__foot">
           <button class="btn ${p.notesRead[item.id] ? '' : 'btn--primary'}" type="button" data-act="noteread" data-id="${item.id}"><i class="ph ph-check"></i>${p.notesRead[item.id] ? 'Read' : 'Mark as read'}</button>
           ${rereadBtn(item.id, true)}
         </div>
-      </article>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes here yet</h2><p>Paste your notes for this module into the da-ingest agent and they appear here.</p>${explainBox(item.id, `What is "${item.name}" about, and when would an architect use it?`)}</div>`}`;
+      </article>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes here yet</h2><p>Paste your notes for this module into the ${T.ingest} agent and they appear here.</p>${explainBox(item.id, `What is "${item.name}" about, and when would ${T.audience} use it?`)}</div>`}`;
   }
 
   /* =========================================================
@@ -748,6 +877,7 @@
     const qs = state.questions;
     if (scope === 'all') return qs;
     if (scope === 'wrong') return qs.filter((q) => (state.progress.quizStats[q.id] || {}).last === false);
+    if (scope.indexOf('day:') === 0) { const names = dayItemNames(scope.slice(4)); return qs.filter((q) => names.includes(q.syllabusItem)); }
     const item = itemById(scope);
     return item ? qs.filter((q) => q.syllabusItem === item.name) : [];
   }
@@ -787,11 +917,11 @@
 
     if (item) {
       const pool = quizPool(item.id);
-      return `${topbar()}${banner()}${backHead(item.name, `Quiz questions for this ${item.type === 'Module' ? 'Trailhead module' : 'document'}.`)}
+      return `${topbar()}${banner()}${backHead(item.name, `Quiz questions for this ${unitOf(item)}.`)}
         <div class="card empty">
           <div class="empty__icon"><i class="ph ph-list-checks"></i></div>
           <h2>${pool.length ? `${pool.length} questions` : 'No questions here yet'}</h2>
-          <p>${pool.length ? 'Practice mode: answer, check, read the explanation. Wrong answers go into your review queue.' : 'Paste your quiz for this module into the da-ingest agent and it appears here.'}</p>
+          <p>${pool.length ? 'Practice mode: answer, check, read the explanation. Wrong answers go into your review queue.' : 'Paste your quiz for this module into the ${T.ingest} agent and it appears here.'}</p>
           ${pool.length ? `<button class="btn btn--primary" type="button" data-act="quiz-start" data-id="${item.id}" data-val="practice"><i class="ph ph-play"></i>Start practice</button>` : ''}
         </div>`;
     }
@@ -809,7 +939,7 @@
       </section>
       <h2 class="section-title">By module</h2>
       <div class="decks">${perItem.map((x) => `<a class="card deck" href="#quiz/${x.i.id}"><span class="deck__name">${esc(x.i.name)}</span><span class="mono">${x.n} questions</span></a>`).join('')}</div>`
-      : `<div class="card empty"><div class="empty__icon"><i class="ph ph-list-checks"></i></div><h2>No questions yet</h2><p>As you finish each Trailhead module, paste its quiz into the da-ingest agent. Questions show up here and on the module's row.</p></div>`}`;
+      : `<div class="card empty"><div class="empty__icon"><i class="ph ph-list-checks"></i></div><h2>No questions yet</h2><p>As you finish each ${T.unit}, paste its quiz into the ${T.ingest} agent. Questions show up here and on the module's row.</p></div>`}`;
   }
 
   function renderQuestion(z, item) {
@@ -836,6 +966,7 @@
       <article class="card question">
         <div class="item__meta"><span class="chip">${esc(domainOf(q.domain).name)}</span>${item ? '' : `<span class="chip">${esc(q.syllabusItem || '')}</span>`}${multi ? `<span class="chip chip--accent">Choose ${q.answer.length}</span>` : ''}</div>
         <p class="question__text">${esc(q.question)}</p>
+        ${codeBlock(q.code)}
         <div class="options">${opts}</div>
         ${checked ? `<div class="feedback feedback--${ok ? 'ok' : 'bad'}"><strong>${ok ? 'Correct' : `Not quite. Answer: ${q.answer.join(', ')}`}</strong>${q.explanation ? `<p>${esc(q.explanation)}</p>` : ''}${q.source ? `<a href="${esc(q.source)}" target="_blank" rel="noopener">Source</a>` : ''}</div>` : ''}
         <div class="question__foot">
@@ -863,8 +994,9 @@
         <dl class="metrics">${byDomain}</dl>
         <div class="panel__row"><button class="btn btn--primary" type="button" data-act="quiz-again"><i class="ph ph-arrow-clockwise"></i>Go again</button>${wrong.length ? '<button class="btn" type="button" data-act="quiz-start" data-id="wrong" data-val="practice"><i class="ph ph-arrow-counter-clockwise"></i>Redo wrong ones</button>' : ''}<button class="btn" type="button" data-act="quiz-exit">Done</button></div>
       </section>
-      ${wrong.length && z.mode === 'mock' ? `<h2 class="section-title">Review your misses</h2>${wrong.map((r) => `<article class="card question"><p class="question__text">${esc(r.q.question)}</p><p><strong>Answer: ${r.q.answer.join(', ')}</strong> (you picked ${(z.picks[r.q.id] || []).join(', ') || 'nothing'})</p>${r.q.explanation ? `<p class="panel__hint">${esc(r.q.explanation)}</p>` : ''}</article>`).join('')}` : ''}`;
+      ${wrong.length && z.mode === 'mock' ? `<h2 class="section-title">Review your misses</h2>${wrong.map((r) => `<article class="card question"><p class="question__text">${esc(r.q.question)}</p>${codeBlock(r.q.code)}<p><strong>Answer: ${r.q.answer.join(', ')}</strong> (you picked ${(z.picks[r.q.id] || []).join(', ') || 'nothing'})</p>${r.q.explanation ? `<p class="panel__hint">${esc(r.q.explanation)}</p>` : ''}</article>`).join('')}` : ''}`;
   }
+  const codeBlock = (code) => (code ? `<pre class="code"><code>${esc(code)}</code></pre>` : '');
   function fmtClock(ms) {
     const s = Math.ceil(ms / 1000);
     const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
@@ -899,6 +1031,7 @@
   function deckFor(scope) {
     if (scope === 'missed') return missedDeck();
     if (scope === 'all') return state.flashcards;
+    if (scope.indexOf('day:') === 0) { const names = dayItemNames(scope.slice(4)); return state.flashcards.filter((c) => names.includes(c.syllabusItem)); }
     const item = itemById(scope);
     return item ? state.flashcards.filter((c) => c.syllabusItem === item.name) : [];
   }
@@ -936,15 +1069,15 @@
     if (scope) {
       const cards = deckFor(scope);
       const st = deckStats(cards);
-      const title = item ? item.name : scope === 'missed' ? 'Missed from notes' : 'All flashcards';
+      const title = item ? item.name : scope === 'missed' ? 'Missed from notes' : scope.indexOf('day:') === 0 ? `Plan day ${scope.slice(5)}` : 'All flashcards';
       const nextDueIso = cards.filter((c) => !isNew(c.id)).map((c) => srsOf(c.id).dueDate).sort()[0];
-      return `${topbar()}${banner()}${backHead(title, item ? `Flashcards for this ${item.type === 'Module' ? 'Trailhead module' : 'document'}. One fact per card.` : '')}
+      return `${topbar()}${banner()}${backHead(title, item ? `Flashcards for this ${unitOf(item)}. One fact per card.` : '')}
         <div class="card empty">
           <div class="empty__icon"><i class="ph ph-cards"></i></div>
           <h2>${st.total ? `${st.due} due, ${st.fresh} new` : 'No flashcards here yet'}</h2>
           <p>${st.total
             ? (st.due + st.fresh ? `Recall the answer before you flip. Then grade yourself honestly: cards you miss come back sooner.` : `All caught up. Next card is due ${nextDueIso ? shortDate(nextDueIso) : 'later'}.`)
-            : scope === 'missed' ? 'Points you mark Missed or Partly in recall mode collect here.' : 'Paste your flashcards for this module into the da-ingest agent and they appear here.'}</p>
+            : scope === 'missed' ? 'Points you mark Missed or Partly in recall mode collect here.' : 'Paste your flashcards for this module into the ${T.ingest} agent and they appear here.'}</p>
           ${st.total ? `<div class="panel__row">${st.due + st.fresh ? `<button class="btn btn--primary" type="button" data-act="cards-start" data-id="${esc(scope)}"><i class="ph ph-play"></i>Start review</button>` : ''}<button class="btn" type="button" data-act="cards-cram" data-id="${esc(scope)}"><i class="ph ph-shuffle"></i>Go through all ${st.total}</button></div>` : ''}
         </div>`;
     }
@@ -960,7 +1093,7 @@
       </section>
       <div class="new-cap"><label for="newPerDay">New cards per session</label><input type="number" id="newPerDay" min="1" max="100" value="${state.progress.newPerDay}"></div>
       ${decks.length ? `<h2 class="section-title">By module</h2><div class="decks">${decks.map((x) => { const st = deckStats(x.cards); return `<a class="card deck" href="#cards/${x.i.id}"><span class="deck__name">${esc(x.i.name)}</span><span class="mono">${st.due} due · ${st.fresh} new</span></a>`; }).join('')}</div>`
-        : `<div class="card empty"><div class="empty__icon"><i class="ph ph-cards"></i></div><h2>No decks yet</h2><p>As you finish each Trailhead module, paste its flashcards into the da-ingest agent. Each module gets its own deck.</p></div>`}`;
+        : `<div class="card empty"><div class="empty__icon"><i class="ph ph-cards"></i></div><h2>No decks yet</h2><p>As you finish each ${T.unit}, paste its flashcards into the ${T.ingest} agent. Each module gets its own deck.</p></div>`}`;
   }
 
   function renderCardSession(s, item) {
@@ -1181,6 +1314,12 @@
     const v = state.route.view;
     const main = $('#main');
     const y = window.scrollY;
+    // ApexLearn (merged from sfquiz.html) is static markup driven by js/quizzlet.js, so it is shown, not rendered
+    const apex = v === 'apex';
+    main.hidden = apex;
+    $('#apexHost').hidden = !apex;
+    document.querySelectorAll('#navLinks a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    if (apex) { if (!keepScroll) window.scrollTo(0, 0); updateThemeLabel(); return; }
     main.classList.toggle('is-entering', !keepScroll);
     main.innerHTML = { home: renderHome, map: renderMap, materials: renderMaterials, notes: renderNotes, quiz: renderQuiz, cards: renderCards }[v]();
     document.querySelectorAll('#navLinks a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
@@ -1188,10 +1327,20 @@
     updateThemeLabel();
   }
 
+  // Sidebar brand shows the current exam, with a switch to the other one
+  function renderTrackSwitch() {
+    document.title = `${T.name} Study | Rishav Bhattarai`;
+    const brand = $('.nav__brand');
+    if (brand) brand.innerHTML = `<span class="nav__mark" aria-hidden="true"><i class="ph ${T.icon}"></i></span><span class="nav__title">${esc(T.name)}<small>${esc(T.role)}</small></span>`;
+    const sw = $('#trackSwitch');
+    if (sw) sw.innerHTML = [TRACKS.mule, TRACKS.da].map((t) => `<a href="?track=${t.id}#home" class="track-switch__opt"${t.id === T.id ? ' aria-current="true"' : ''}><i class="ph ${t.icon}"></i>${esc(t.short)}</a>`).join('');
+  }
+
   function cycleTheme() {
     const order = [null, 'light', 'dark'];
     const next = order[(order.indexOf(state.progress.theme) + 1) % order.length];
     state.progress.theme = next;
+    try { localStorage.setItem('studyTheme', next || 'auto'); } catch (e) { /* ignore */ }
     if (next) document.documentElement.dataset.theme = next; else delete document.documentElement.dataset.theme;
     saveProgress();
     updateThemeLabel();
@@ -1212,6 +1361,7 @@
       case 'reread': bumpReread(id); return render(true);
       case 'noteread': toggle('notesRead', id); return render(true);
       case 'chapter': state.noteDomain = id; return render(true);
+      case 'plan-day': state.planDay = Number(val) === planTodayIndex() ? null : Number(val); return render(true);
       case 'theme': return cycleTheme();
       case 'jump': {
         const g = document.getElementById(`group-${id}`);
@@ -1362,6 +1512,10 @@
      ========================================================= */
   async function init() {
     state.progress = loadProgress();
+    // Theme is shared by both exams
+    try { const th = localStorage.getItem('studyTheme'); if (th) state.progress.theme = th === 'auto' ? null : th; } catch (e) { /* ignore */ }
+    if (state.progress.theme) document.documentElement.dataset.theme = state.progress.theme; else delete document.documentElement.dataset.theme;
+    renderTrackSwitch();
     document.addEventListener('click', onClick);
     document.addEventListener('change', onChange);
     document.addEventListener('input', onInput);

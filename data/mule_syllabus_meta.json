@@ -1,0 +1,81 @@
+{
+  "exam": {
+    "name": "Salesforce Certified MuleSoft Developer",
+    "questions": 60,
+    "unscored": 5,
+    "minutes": 120,
+    "passingScore": 70,
+    "credentialUrl": "https://help.salesforce.com/s/articleView?id=005298959&type=1",
+    "defaultExamDate": "2026-12-08",
+    "note": "Weights are the 12-section split from the study guide and third-party summaries. Check them against the official exam guide before booking."
+  },
+  "domains": [
+    {
+      "id": "net",
+      "name": "Creating Application Networks",
+      "weight": 7
+    },
+    {
+      "id": "design",
+      "name": "Designing APIs",
+      "weight": 8
+    },
+    {
+      "id": "deploy",
+      "name": "Deploying & Managing APIs",
+      "weight": 7
+    },
+    {
+      "id": "iface",
+      "name": "Building API Implementation Interfaces",
+      "weight": 7
+    },
+    {
+      "id": "events",
+      "name": "Accessing & Modifying Mule Events",
+      "weight": 10
+    },
+    {
+      "id": "struct",
+      "name": "Structuring Mule Applications",
+      "weight": 10
+    },
+    {
+      "id": "conn",
+      "name": "Using Connectors",
+      "weight": 10
+    },
+    {
+      "id": "route",
+      "name": "Routing Events",
+      "weight": 8
+    },
+    {
+      "id": "dw",
+      "name": "Transforming Data with DataWeave",
+      "weight": 10
+    },
+    {
+      "id": "records",
+      "name": "Processing Records",
+      "weight": 10
+    },
+    {
+      "id": "errors",
+      "name": "Handling Errors",
+      "weight": 8
+    },
+    {
+      "id": "debug",
+      "name": "Debugging & Troubleshooting",
+      "weight": 5
+    },
+    {
+      "id": "ovr",
+      "name": "Exam Overview & Setup",
+      "weight": 0
+    }
+  ],
+  "items": {},
+  "extraItems": []
+}

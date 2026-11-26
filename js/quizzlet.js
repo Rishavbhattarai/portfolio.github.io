@@ -122,10 +122,10 @@
      DATA LOADING (from ../data/apex_quiz.json — the single source of truth)
   --------------------------------------------------- */
   async function loadQuestions() {
-    const res = await fetch('../data/apex_quiz.json', { cache: 'no-store' });
+    const res = await fetch('data/apex_quiz.json', { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to load ../data/apex_quiz.json (${res.status})`);
     const data = await res.json();
-    if (!Array.isArray(data) || !data.length) throw new Error('../data/apex_quiz.json is empty or malformed');
+    if (!Array.isArray(data) || !data.length) throw new Error('data/apex_quiz.json is empty or malformed');
 
     const map = new Map();
     data.forEach((q) => {
@@ -443,10 +443,10 @@
      LEARN TAB — CHAPTER STUDY GUIDE
   --------------------------------------------------- */
   async function loadChapters() {
-    const res = await fetch('../data/chapters.json', { cache: 'no-store' });
+    const res = await fetch('data/chapters.json', { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to load ../data/chapters.json (${res.status})`);
     const data = await res.json();
-    if (!Array.isArray(data)) throw new Error('../data/chapters.json is malformed');
+    if (!Array.isArray(data)) throw new Error('data/chapters.json is malformed');
     state.chapters = data;
   }
 
@@ -1183,6 +1183,7 @@
       /* Keyboard shortcuts */
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (document.getElementById('apexHost').hidden) return; // ApexLearn tab not open in the dashboard
         const guideActive = qs('refPanelGuide').classList.contains('active');
         if (!guideActive) return;
         if (e.key === ' ' || e.key === 'Enter') {
@@ -1203,7 +1204,7 @@
     /* Init */
     async init() {
       try {
-        const resp = await fetch('../data/apex_guide_cards.json', { cache: 'no-store' });
+        const resp = await fetch('data/apex_guide_cards.json', { cache: 'no-store' });
         this.allCards = await resp.json();
         this.allItems = this.expandCards(this.allCards);
       } catch (err) {
