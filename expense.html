@@ -97,6 +97,25 @@
   .tab-btn.active{ background:var(--electric); color:#fff; }
   .tab-btn .sub{ opacity:.75; font-weight:500; margin-left:4px; }
 
+  /* ---- Top dashboard: four main categories ---- */
+  .dash{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); padding:18px; box-shadow:var(--shadow-sm); margin-bottom:20px; }
+  .dash-tiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .dash-tile{
+    text-align:left; font:inherit; color:inherit; cursor:pointer; border:none;
+    border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:4px; min-width:0;
+    transition:transform var(--transition), box-shadow var(--transition);
+  }
+  .dash-tile:hover{ transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+  .dash-tile:active{ transform:scale(0.98); }
+  .dash-tile:focus-visible{ outline:2px solid var(--electric); outline-offset:2px; }
+  .dash-tile .k{ display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; }
+  .dash-tile .v{ font-family:'Syne',sans-serif; font-weight:800; font-size:28px; letter-spacing:-0.01em; line-height:1.1; margin-top:6px; }
+  .dash-tile .pct{ font-size:13px; font-weight:600; }
+  .dash-tile .s{ font-size:12px; color:var(--ink-2); line-height:1.45; }
+  .dash-bar{ display:flex; height:10px; border-radius:6px; overflow:hidden; margin-top:16px; gap:2px; }
+  .dash-bar span{ display:block; height:100%; }
+  .dash-note{ margin:10px 0 0; font-size:12.5px; color:var(--muted); }
+
   /* ---- Stat cards ---- */
   .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
   .stat{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); padding:16px 18px; box-shadow:var(--shadow-sm); min-width:0; }
@@ -254,6 +273,7 @@
     }
   }
   @media (max-width:820px){
+    .dash-tiles{ grid-template-columns:repeat(2,1fr); gap:10px; }
     .grid{ grid-template-columns:1fr; }
     .stats{ grid-template-columns:repeat(2,1fr); }
   }
@@ -269,6 +289,9 @@
     .pseudo-total .split div{ text-align:left; }
     .pseudo-total .split .v{ font-size:16px; }
     .stats{ gap:10px; }
+    .dash{ padding:12px; border-radius:16px; }
+    .dash-tile{ padding:13px; border-radius:13px; }
+    .dash-tile .v{ font-size:clamp(15px, 4.3vw, 22px); letter-spacing:-0.02em; white-space:nowrap; }
     .stat{ padding:13px 14px; border-radius:16px; }
     .stat .v{ font-size:21px; }
     .card{ padding:16px; border-radius:16px; }
@@ -317,6 +340,12 @@
 
   <!-- ===================== SAM'S PANEL ===================== -->
   <div class="panel active" id="panelSams">
+    <section class="dash" aria-label="Spending by main category">
+      <div class="dash-tiles" id="dashTiles"></div>
+      <div class="dash-bar" id="dashBar" aria-hidden="true"></div>
+      <p class="dash-note" id="dashNote"></p>
+    </section>
+
     <div class="stats">
       <div class="stat"><div class="l">Total paid</div><div class="v num" id="samsStatTotal" style="color:var(--rust)"></div><div class="s" id="samsStatTrips"></div></div>
       <div class="stat"><div class="l">Merchandise</div><div class="v num" id="samsStatMerch"></div><div class="s" id="samsStatItems"></div></div>
@@ -958,6 +987,47 @@ function renderClothing(){
   }).join('') + `<li class="d" style="font-size:12px;color:var(--muted);padding:2px 2px 0">${pieces} pieces across ${new Set(rows.map(r => r.date)).size} trips, tax included.</li>`;
 }
 
+/* ============================== SAM'S: TOP DASHBOARD ============================== */
+function renderDashboard(){
+  const food = SAMS_CATEGORIES.filter(c => c.group === 'Food and drink').map(c => c.key);
+  const tiles = [
+    { key:'grocery',  label:'Grocery',       cats:food,         color:'var(--c-produce)',  tint:'#eaf3ea', target:'.a-groc' },
+    { key:'fuel',     label:'Fuel',          cats:['fuel'],     color:'var(--c-fuel)',     tint:'#eaedf3', target:'.a-fuel' },
+    { key:'clothing', label:'Clothing',      cats:['clothing'], color:'var(--c-clothing)', tint:'#efecf6', target:'.a-clothes' },
+    { key:'personal', label:'Personal care', cats:['personal'], color:'var(--c-personal)', tint:'#e6f2f1', target:'.a-receipts', filter:'personal' },
+  ].map(t => {
+    const rows = SAMS_ITEMS.filter(i => t.cats.includes(i.cat));
+    const total = r2(rows.reduce((s,i) => s + i.total, 0));
+    const trips = new Set(rows.map(i => i.trip.id)).size;
+    const last = rows.reduce((m,i) => i.date > m ? i.date : m, '');
+    return { ...t, total, trips, lines: rows.length, last };
+  });
+  const shown = tiles.reduce((s,t) => s + t.total, 0);
+  const sub = {
+    grocery: t => `${t.trips} trips, about ${fmt(t.total / t.trips)} each`,
+    fuel: t => `${t.trips} fill-ups, avg ${fmt(SAMS_FUEL_TOTAL / SAMS_FUEL_GAL)}/gal`,
+    clothing: t => `${SAMS_ITEMS.filter(i => i.cat === 'clothing').reduce((s,i) => s + i.qty, 0)} pieces over ${t.trips} trips`,
+    personal: t => `${t.lines} items over ${t.trips} trips`,
+  };
+  $('dashTiles').innerHTML = tiles.map(t => `
+    <button class="dash-tile" style="background:${t.tint}" onclick="dashGo('${t.target}', ${t.filter ? `'${t.filter}'` : 'null'})">
+      <span class="k"><span class="swatch" style="background:${t.color}"></span>${t.label}</span>
+      <span class="v num">${fmt(t.total)}</span>
+      <span class="pct" style="color:${t.color}">${(t.total / SAMS_TOTAL * 100).toFixed(1)}% of Sam's</span>
+      <span class="s">${sub[t.key](t)}<br>Last: ${fmtDateShort(t.last)}</span>
+    </button>`).join('');
+  $('dashBar').innerHTML = tiles.map(t => `<span style="flex:${t.total};background:${t.color}" title="${t.label} ${fmt(t.total)}"></span>`).join('')
+    + `<span style="flex:${SAMS_TOTAL - shown};background:#dfe5df" title="Other ${fmt(SAMS_TOTAL - shown)}"></span>`;
+  $('dashNote').innerHTML = `These four add up to <span class="num">${fmt(shown)}</span> of <span class="num">${fmt(SAMS_TOTAL)}</span>. The other <span class="num">${fmt(SAMS_TOTAL - shown)}</span> is home and kitchen supplies (the grey sliver).`;
+}
+function dashGo(sel, filter){
+  if (filter && samsFilter !== filter) samsSetFilter(filter);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelector(sel).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'start' });
+  const groc = sel === '.a-groc' && document.querySelector('.gcat');
+  if (groc) groc.open = true;
+}
+
 /* ============================== SAM'S: GROCERIES ============================== */
 function renderGroceries(){
   const cats = SAMS_CATEGORIES.filter(c => c.group === 'Food and drink');
@@ -1161,6 +1231,7 @@ function renderHashtagOrders(){
 }
 
 /* ============================== INIT: DATA FIRST, ALWAYS ============================== */
+renderDashboard();
 renderSamsCatList();
 renderClothing();
 renderGroceries();
