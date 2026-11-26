@@ -1,0 +1,72 @@
+{
+  "source": "https://k2u.ai/certifications/mulesoft-certified-developer/",
+  "checked": "2026-11-26",
+  "note": "Objective headings per exam section, in exam order. The source also lists a Business Analyst objective under Creating Application Networks; it belongs to another exam and is left out.",
+  "exam": { "questions": 60, "unscored": 5, "minutes": 120, "pass": 70, "cost": 200, "retake": 100 },
+  "sections": [
+    { "id": "net", "title": "Creating Application Networks", "weight": 7, "objectives": [
+      "Identify core architectural concepts of the application network and modern APIs.",
+      "Identify features of an API-led approach.",
+      "Identify features of MuleSoft's recommended operational model (C4E).",
+      "Apply correct processors and syntax to consume RAML-based RESTful web services, and predict outcomes."
+    ] },
+    { "id": "design", "title": "Designing APIs", "weight": 8, "objectives": [
+      "Use REST API methods and resources.",
+      "Define REST API parameters and responses.",
+      "Identify when and how to define query parameters versus URI parameters."
+    ] },
+    { "id": "events", "title": "Accessing and Modifying Mule Events", "weight": 10, "objectives": [
+      "Access and modify Mule event payloads with processors and DataWeave, and predict outcomes.",
+      "Access and modify Mule event attributes, and predict outcomes.",
+      "Access and modify Mule variables, and predict outcomes.",
+      "Enrich Mule events using Mule 4 connector targets, and predict outcomes."
+    ] },
+    { "id": "struct", "title": "Structuring Mule Applications", "weight": 10, "objectives": [
+      "Specify when and how to split Mule applications into separate configuration and properties files, and predict outcomes.",
+      "Specify when and how to pass events between flows and subflows using connectors and flow references, and predict outcomes."
+    ] },
+    { "id": "iface", "title": "Building API Implementation Interfaces", "weight": 7, "objectives": [
+      "Manually build API implementations from an API specification, RAML or not.",
+      "Predict the results of APIkit based on a RAML specification.",
+      "Implement correct responses based on a RAML specification, manually or with APIkit."
+    ] },
+    { "id": "conn", "title": "Using Connectors", "weight": 10, "objectives": [
+      "Connect to databases with the correct processors and syntax, and predict outcomes.",
+      "Connect to files or FTP servers with the correct processors and syntax, and predict outcomes.",
+      "Retrieve and combine data in the middle of a flow, and predict outcomes."
+    ] },
+    { "id": "records", "title": "Processing Records", "weight": 10, "objectives": [
+      "Process individual records in a collection using For Each scopes, and predict outcomes.",
+      "Process individual records in a collection using batch scopes, and predict outcomes.",
+      "Process individual records in a collection using database listeners, and predict outcomes.",
+      "Persist data between flow executions."
+    ] },
+    { "id": "dw", "title": "Transforming Data", "weight": 10, "objectives": [
+      "Convert between output types and data types using DataWeave.",
+      "Predict the result of core DataWeave functions.",
+      "Write DataWeave transformations to coerce, format, order and filter data, and predict outcomes.",
+      "Call Mule flows from a DataWeave script.",
+      "Define, use and reuse DataWeave modules, functions and variables, and predict outcomes."
+    ] },
+    { "id": "route", "title": "Routing Events", "weight": 8, "objectives": [
+      "Route messages using DataWeave conditions within a Choice router, and predict outcomes.",
+      "Scatter and gather messages, and predict outcomes.",
+      "Validate Mule events, and predict outcomes."
+    ] },
+    { "id": "errors", "title": "Handling Errors", "weight": 8, "objectives": [
+      "Implement global error handlers, and predict outcomes.",
+      "Implement On Error Continue and On Error Propagate handlers, and predict outcomes.",
+      "Combine multiple error handlers, and predict outcomes.",
+      "Implement Try scopes, and predict outcomes.",
+      "Map custom errors, and predict outcomes."
+    ] },
+    { "id": "debug", "title": "Debugging and Troubleshooting Mule Applications", "weight": 5, "objectives": [
+      "Identify root causes for errors when debugging Mule applications, and predict outcomes."
+    ] },
+    { "id": "deploy", "title": "Deploying and Managing APIs and Integrations", "weight": 7, "objectives": [
+      "Deploy applications to CloudHub.",
+      "Manage APIs using separate proxies and autodiscovery.",
+      "Manage API policies."
+    ] }
+  ]
+}

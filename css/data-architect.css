@@ -990,3 +990,9 @@ pre.code {
 .tres__prompt[open] summary i { transform: rotate(180deg); }
 .tres__prompt pre { margin: 0 12px 10px; padding: 12px; max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; font: 13px/1.55 var(--mono); background: var(--surface); border-radius: var(--r-ctl); }
 .tres__prompt .btn { margin: 0 12px 12px; }
+
+/* Card-catalog syllabus figure (MuleSoft track; styles for the figure itself in css/mule-catalog.css) */
+.catalog { padding: 24px 28px 24px; display: grid; grid-gap: 16px; min-width: 0; }
+.catalog .mcat { min-width: 0; }
+.no-flexgap .catalog .exam-map__head > * + * { margin-left: 14px; }
+@media (max-width: 640px) { .catalog { padding: 18px 14px 20px; } }

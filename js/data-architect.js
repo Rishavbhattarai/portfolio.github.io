@@ -61,7 +61,9 @@
     progress: null,
     plan: null,        // <prefix>_plan.json: day-by-day schedule and pre-exam checklist (optional)
     planDay: null,     // plan day shown on the home page; null means today
-    resources: null    // <prefix>_resources.json: per-topic course, docs, tools and AI prompts (optional)
+    resources: null,   // <prefix>_resources.json: per-topic course, docs, tools and AI prompts (optional)
+    objectives: null,  // <prefix>_objectives.json: exam objectives per section, for the card-catalog figure
+    catalogSel: -1     // drawer open in the card-catalog figure (kept across re-renders)
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -182,6 +184,7 @@
     // Only some tracks have a day plan; a missing file is not a warning
     state.plan = T.id === 'mule' ? await fetchJSON(dataFile('plan')).catch(() => null) : null;
     state.resources = T.id === 'mule' ? await fetchJSON(dataFile('resources')).catch(() => null) : null;
+    state.objectives = T.id === 'mule' ? await fetchJSON(dataFile('objectives')).catch(() => null) : null;
     // Promise.allSettled is missing on older iPads, so settle each fetch by hand
     const results = await Promise.all(optional.map(([, p]) => fetchJSON(p).then(
       (value) => ({ status: 'fulfilled', value }),
@@ -493,10 +496,13 @@
           <div class="today__head">${today.length ? '<span class="live" aria-hidden="true"></span>' : ''}<h2 id="todayTitle">Study today</h2><span class="mono">${today.length}</span></div>
           ${todayHtml}
         </article>
-        <article class="panel bento__map exam-map enter" style="--i:4" aria-labelledby="mapTitle">
+        ${catalogReady() ? `<article class="panel bento__map catalog enter" style="--i:4" aria-labelledby="mapTitle">
+          <div class="exam-map__head"><h2 id="mapTitle">Exam syllabus</h2><span>Twelve sections, filed by weight. Tap a drawer to see what that section tests.</span></div>
+          <div class="mcat" id="mcat"></div>
+        </article>` : `<article class="panel bento__map exam-map enter" style="--i:4" aria-labelledby="mapTitle">
           <div class="exam-map__head"><h2 id="mapTitle">Exam map</h2><span>Bar width is each domain's share of the exam. The fill is how much of it you've finished.</span></div>
           ${map}
-        </article>
+        </article>`}
       </section>
       ${groups}
       <details class="group panel history"${timetable.some((t) => t.r < TARGET_RETENTION) ? ' open' : ''}>
@@ -512,6 +518,38 @@
           </div>`).join('')}
         </div>` : '<p class="today__empty history__empty">Rate a module after you study it. Each rating lands here, and the forgetting curve decides when it comes back.</p>'}
       </details>`;
+  }
+
+  /* =========================================================
+     CARD CATALOG (js/mule-catalog.js): the syllabus as twelve drawers
+     ========================================================= */
+  function catalogReady() {
+    return !!(state.objectives && Array.isArray(state.objectives.sections) && window.MuleCatalog);
+  }
+  function mountCatalog() {
+    const el = document.getElementById('mcat');
+    if (!el || !catalogReady()) return;
+    const p = state.progress;
+    const sections = state.objectives.sections.map((s) => {
+      const items = state.syllabus.filter((x) => x.domain === s.id);
+      const done = items.filter((x) => p.done[x.id]).length;
+      return { id: s.id, title: s.title, weight: s.weight, objectives: s.objectives, topics: items.length, done, frac: items.length ? done / items.length : 0 };
+    });
+    try {
+      window.MuleCatalog.mount(el, {
+        sections,
+        selected: state.catalogSel,
+        onSelect: (id) => { state.catalogSel = sections.findIndex((s) => s.id === id); },
+        onPick: jumpTo
+      });
+    } catch (e) {
+      console.warn('[data-architect] card catalog failed, showing the plain list', e);
+      el.innerHTML = '';
+    }
+  }
+  function jumpTo(id) {
+    const g = document.getElementById(`group-${id}`);
+    if (g) { g.open = true; g.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' }); }
   }
 
   /* =========================================================
@@ -1348,6 +1386,7 @@
     if (apex) { if (!keepScroll) window.scrollTo(0, 0); updateThemeLabel(); return; }
     main.classList.toggle('is-entering', !keepScroll);
     main.innerHTML = { home: renderHome, map: renderMap, materials: renderMaterials, notes: renderNotes, quiz: renderQuiz, cards: renderCards }[v]();
+    if (v === 'home') mountCatalog();
     document.querySelectorAll('#navLinks a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     window.scrollTo(0, keepScroll ? y : 0);
     updateThemeLabel();
@@ -1397,11 +1436,7 @@
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(src.textContent).then(done, fallback); else fallback();
         return;
       }
-      case 'jump': {
-        const g = document.getElementById(`group-${id}`);
-        if (g) { g.open = true; g.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' }); }
-        return;
-      }
+      case 'jump': return jumpTo(id);
       case 'expand': state.expanded = state.expanded === id ? null : id; return render(true);
       case 'open-row': {
         state.expanded = id;
