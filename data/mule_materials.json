@@ -91,6 +91,48 @@
   ],
   "resources": [
     {
+      "id": "mres-max150",
+      "title": "Getting Started with Anypoint Platform (MAX150) trailmix, about 4 hours (= DEX401 Part 1)",
+      "type": "Course",
+      "free": true,
+      "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/anypoint-platform-development-fundamentals-max-150"
+    },
+    {
+      "id": "mres-dex401",
+      "title": "Anypoint Platform Development: Fundamentals (DEX401) trailmix, about 38 hours. Main resource",
+      "type": "Course",
+      "free": true,
+      "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401"
+    },
+    {
+      "id": "mres-anypoint",
+      "title": "Anypoint Platform login (Design Center, Exchange, API Manager, CloudHub)",
+      "type": "Tool",
+      "free": true,
+      "url": "https://anypoint.mulesoft.com/login/"
+    },
+    {
+      "id": "mres-drill",
+      "title": "Mule 4 Exam Drill: timed mock, practice by section, cheat sheet",
+      "type": "Practice",
+      "free": true,
+      "url": "https://claude.ai/artifact/APth81uXnELxLzKsrhKNRt"
+    },
+    {
+      "id": "mres-thhelp",
+      "title": "Trailhead Help: scheduling the exam, maintenance, verifying status",
+      "type": "Info",
+      "free": true,
+      "url": "https://trailhead.salesforce.com/help"
+    },
+    {
+      "id": "mres-apiled-mule",
+      "title": "What is API-led connectivity? (mulesoft.com, open in a browser)",
+      "type": "Article",
+      "free": true,
+      "url": "https://www.mulesoft.com/resources/api/what-is-api-led-connectivity"
+    },
+    {
       "id": "mres-studio",
       "title": "Anypoint Studio (download and install)",
       "type": "Tool",

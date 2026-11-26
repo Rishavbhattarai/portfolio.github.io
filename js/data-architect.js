@@ -60,7 +60,8 @@
     cards: null,       // active flashcard session
     progress: null,
     plan: null,        // <prefix>_plan.json: day-by-day schedule and pre-exam checklist (optional)
-    planDay: null      // plan day shown on the home page; null means today
+    planDay: null,     // plan day shown on the home page; null means today
+    resources: null    // <prefix>_resources.json: per-topic course, docs, tools and AI prompts (optional)
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -180,6 +181,7 @@
     ];
     // Only some tracks have a day plan; a missing file is not a warning
     state.plan = T.id === 'mule' ? await fetchJSON(dataFile('plan')).catch(() => null) : null;
+    state.resources = T.id === 'mule' ? await fetchJSON(dataFile('resources')).catch(() => null) : null;
     // Promise.allSettled is missing on older iPads, so settle each fetch by hand
     const results = await Promise.all(optional.map(([, p]) => fetchJSON(p).then(
       (value) => ({ status: 'fulfilled', value }),
@@ -648,6 +650,28 @@
     </div>`;
   }
 
+  // Per-topic resources: docs, course module, practice tool, own tools, AI prompts
+  function topicResources(it) {
+    const r = state.resources;
+    if (!r) return '';
+    const dom = (r.byDomain || {})[it.domain] || {};
+    const link = (l) => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out"></i>${esc(l.label)}</a>${l.note ? `<small>${esc(l.note)}</small>` : ''}</li>`;
+    const group = (title, list) => (list && list.length ? `<div class="tres__group"><h5>${title}</h5><ul>${list.map(link).join('')}</ul></div>` : '');
+    const docs = (it.link ? [{ label: 'Official docs', url: it.link }] : []).concat((r.byTopic || {})[it.name] || []);
+    const over = (r.promptOverrides || {})[it.name] || {};
+    const fill = (s) => String(s || '').replace(/\{topic\}/g, it.name).replace(/\{section\}/g, domainOf(it.domain).name);
+    const prompts = [['notebooklm', 'NotebookLM: study chat'], ['audio', 'NotebookLM: Audio Overview → Customize'], ['gemini', 'Gemini: tutor session (paste NotebookLM\'s answer at the end)']]
+      .map(([k, label]) => { const text = fill(over[k] || (r.prompts || {})[k]); if (!text) return '';
+        const pid = `prompt-${it.id}-${k}`;
+        return `<details class="tres__prompt"><summary>${esc(label)}<i class="ph ph-caret-down"></i></summary>
+          <pre id="${pid}">${esc(text)}</pre><button class="btn btn--sm" type="button" data-act="copy" data-id="${pid}"><i class="ph ph-copy"></i>Copy prompt</button></details>`; }).join('');
+    return `<section class="panel__block tres" aria-label="Resources">
+      <h4><i class="ph ph-books"></i>Resources</h4>
+      <div class="tres__grid">${group('Read', docs)}${group('Course', dom.course)}${group('Practice', dom.practice)}${group('Your tools', r.common)}</div>
+      ${prompts ? `<div class="tres__group"><h5>AI study prompts</h5>${prompts}<p class="panel__hint">Add the docs page to NotebookLM as a Website source, run the first prompt, then paste its answer into the Gemini prompt.</p></div>` : ''}
+    </section>`;
+  }
+
   function renderPanel(it) {
     const last = lastReview(it.id);
     const rateBtns = [1, 2, 3, 4, 5].map((r) => `<button type="button" class="rate rate--${ratingTone(r)}${last && last.date === todayIso() && last.rating === r ? ' is-on' : ''}" data-act="rate" data-id="${it.id}" data-val="${r}"><span class="mono">${r}</span><small>${RATING_LABEL[r]}</small></button>`).join('');
@@ -658,6 +682,7 @@
         <p class="panel__hint">${last ? `Last rated ${last.rating}/5 on ${shortDate(last.date)}. ${dueLabel(it.id)}.` : 'Rate it after you finish the module. Low ratings come back tomorrow, high ones in a week or a month.'}</p>
       </section>
       ${explainBox(it.id, `What is "${it.name}" about, and when would ${T.audience} use it?`)}
+      ${topicResources(it)}
       <section class="panel__block panel__row">
         ${rereadBtn(it.id, true)}
         <button class="btn btn--sm" type="button" data-act="focus-start" data-id="${it.id}" data-val="25" data-brk="5"><i class="ph ph-timer"></i>Focus 25 min</button>
@@ -867,7 +892,8 @@
           <button class="btn ${p.notesRead[item.id] ? '' : 'btn--primary'}" type="button" data-act="noteread" data-id="${item.id}"><i class="ph ph-check"></i>${p.notesRead[item.id] ? 'Read' : 'Mark as read'}</button>
           ${rereadBtn(item.id, true)}
         </div>
-      </article>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes here yet</h2><p>Paste your notes for this module into the ${T.ingest} agent and they appear here.</p>${explainBox(item.id, `What is "${item.name}" about, and when would ${T.audience} use it?`)}</div>`}`;
+      </article>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes here yet</h2><p>Paste your notes for this module into the ${T.ingest} agent and they appear here.</p>${explainBox(item.id, `What is "${item.name}" about, and when would ${T.audience} use it?`)}</div>`}
+      ${state.resources ? `<article class="card chapter">${topicResources(item)}</article>` : ''}`;
   }
 
   /* =========================================================
@@ -1363,6 +1389,14 @@
       case 'chapter': state.noteDomain = id; return render(true);
       case 'plan-day': state.planDay = Number(val) === planTodayIndex() ? null : Number(val); return render(true);
       case 'theme': return cycleTheme();
+      case 'copy': {
+        const src = document.getElementById(id);
+        if (!src) return;
+        const done = () => { el.innerHTML = '<i class="ph ph-check"></i>Copied'; setTimeout(() => { el.innerHTML = '<i class="ph ph-copy"></i>Copy prompt'; }, 1600); };
+        const fallback = () => { const r = document.createRange(); r.selectNodeContents(src); const s = getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand('copy'); done(); } catch (_) { /* text stays selected */ } };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(src.textContent).then(done, fallback); else fallback();
+        return;
+      }
       case 'jump': {
         const g = document.getElementById(`group-${id}`);
         if (g) { g.open = true; g.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' }); }

@@ -972,3 +972,21 @@ pre.code {
   .exam-map__seg { min-width: 0; padding: 8px 0; }
   .exam-map__bar { gap: 2px; }
 }
+
+/* Per-topic resources (MuleSoft track) */
+.tres h4 { display: flex; align-items: center; gap: 8px; }
+.tres__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px 20px; }
+.tres__group { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.tres__group h5 { font-size: 12.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--text-faint); }
+.tres__group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.tres__group li { display: grid; gap: 2px; min-width: 0; }
+.tres__group li a { display: inline-flex; align-items: flex-start; gap: 6px; color: var(--accent-text); font-size: 14.5px; font-weight: 550; text-decoration: none; overflow-wrap: anywhere; }
+.tres__group li a:hover { text-decoration: underline; }
+.tres__group li a i { margin-top: 3px; flex: none; }
+.tres__group li small { color: var(--text-dim); font-size: 13px; line-height: 1.45; padding-left: 20px; }
+.tres__prompt { border: 1px solid var(--accent-line); border-radius: var(--r-ctl); background: var(--surface-2); }
+.tres__prompt summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; cursor: pointer; font-size: 14px; font-weight: 550; list-style: none; }
+.tres__prompt summary::-webkit-details-marker { display: none; }
+.tres__prompt[open] summary i { transform: rotate(180deg); }
+.tres__prompt pre { margin: 0 12px 10px; padding: 12px; max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; font: 13px/1.55 var(--mono); background: var(--surface); border-radius: var(--r-ctl); }
+.tres__prompt .btn { margin: 0 12px 12px; }

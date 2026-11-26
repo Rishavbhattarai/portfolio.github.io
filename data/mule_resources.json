@@ -1,0 +1,324 @@
+{
+  "checked": "2026-11-26",
+  "common": [
+    {
+      "label": "My NotebookLM notebook",
+      "url": "https://notebook.google.com/notebook/793ebbe1-c89e-4669-8a0f-4be3483d9baf",
+      "note": "Add this topic's docs page as a Website source, then run the prompt below."
+    },
+    {
+      "label": "Mule 4 Exam Drill",
+      "url": "https://claude.ai/artifact/APth81uXnELxLzKsrhKNRt",
+      "note": "Timed mock exam, practice by section, cheat sheet."
+    }
+  ],
+  "byDomain": {
+    "ovr": {
+      "course": [
+        {
+          "label": "MAX150 trailmix: Getting started with Anypoint Platform",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/anypoint-platform-development-fundamentals-max-150",
+          "note": "Part 1 of DEX401, about 4 hours. If the title on the page says DEX401, the links are swapped: go by the page title."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Platform",
+          "url": "https://anypoint.mulesoft.com/login/",
+          "note": "Design Center, Exchange, API Manager and CloudHub (free trial works)."
+        }
+      ]
+    },
+    "net": {
+      "course": [
+        {
+          "label": "MAX150 trailmix: Application networks and Anypoint Platform",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/anypoint-platform-development-fundamentals-max-150",
+          "note": "Part 1 of DEX401, about 4 hours. If the title on the page says DEX401, the links are swapped: go by the page title."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Platform",
+          "url": "https://anypoint.mulesoft.com/login/",
+          "note": "Design Center, Exchange, API Manager and CloudHub (free trial works)."
+        }
+      ]
+    },
+    "design": {
+      "course": [
+        {
+          "label": "MAX150 trailmix: Designing APIs",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/anypoint-platform-development-fundamentals-max-150",
+          "note": "Part 1 of DEX401, about 4 hours. If the title on the page says DEX401, the links are swapped: go by the page title."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Platform",
+          "url": "https://anypoint.mulesoft.com/login/",
+          "note": "Design Center, Exchange, API Manager and CloudHub (free trial works)."
+        }
+      ]
+    },
+    "deploy": {
+      "course": [
+        {
+          "label": "MAX150 trailmix: Deploying and managing APIs",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/anypoint-platform-development-fundamentals-max-150",
+          "note": "Part 1 of DEX401, about 4 hours. If the title on the page says DEX401, the links are swapped: go by the page title."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Platform",
+          "url": "https://anypoint.mulesoft.com/login/",
+          "note": "Design Center, Exchange, API Manager and CloudHub (free trial works)."
+        }
+      ]
+    },
+    "iface": {
+      "course": [
+        {
+          "label": "MAX150 trailmix: Building APIs",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/anypoint-platform-development-fundamentals-max-150",
+          "note": "Part 1 of DEX401, about 4 hours. If the title on the page says DEX401, the links are swapped: go by the page title."
+        },
+        {
+          "label": "DEX401 trailmix, Part 2: Consuming web services",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "events": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Accessing and modifying Mule events",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        },
+        {
+          "label": "DataWeave Playground",
+          "url": "https://dataweave.mulesoft.com/learn/playground",
+          "note": "Run the predict-the-output scripts in the browser."
+        }
+      ]
+    },
+    "struct": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Structuring Mule applications",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "conn": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Consuming web services",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        },
+        {
+          "label": "DEX401 trailmix, Part 2: Triggering flows",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "route": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Controlling event flow",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "dw": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Transforming data with DataWeave",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "DataWeave Playground",
+          "url": "https://dataweave.mulesoft.com/learn/playground",
+          "note": "Run the predict-the-output scripts in the browser."
+        },
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "records": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Processing records",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "errors": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Handling errors",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    },
+    "debug": {
+      "course": [
+        {
+          "label": "DEX401 trailmix, Part 2: Accessing and modifying Mule events (debugger)",
+          "url": "https://trailhead.salesforce.com/users/strailhead/trailmixes/getting-started-with-anypoint-platform-dex-401",
+          "note": "The main resource. Log in to Trailhead for the slides, exercise guide and student files."
+        }
+      ],
+      "practice": [
+        {
+          "label": "Anypoint Studio",
+          "url": "https://docs.mulesoft.com/studio/latest/to-download-and-install-studio",
+          "note": "Build the flow and step through it in the debugger."
+        }
+      ]
+    }
+  },
+  "byTopic": {
+    "API-led Connectivity & Application Networks": [
+      {
+        "label": "What is API-led connectivity? (mulesoft.com)",
+        "url": "https://www.mulesoft.com/resources/api/what-is-api-led-connectivity",
+        "note": "Blocks automated fetches. Open it in a browser; if NotebookLM can't read it, paste the page text."
+      }
+    ],
+    "Try Scope, Error Types & the Error Object": [
+      {
+        "label": "Try scope",
+        "url": "https://docs.mulesoft.com/mule-runtime/latest/try-scope-concept"
+      },
+      {
+        "label": "Error handler scopes",
+        "url": "https://docs.mulesoft.com/mule-runtime/latest/on-error-scope-concept"
+      }
+    ],
+    "Global Error Handler, Raise Error & Error Mapping": [
+      {
+        "label": "Error handler scopes",
+        "url": "https://docs.mulesoft.com/mule-runtime/latest/on-error-scope-concept"
+      }
+    ],
+    "DataWeave Syntax: Header, Body, Variables & Functions": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ],
+    "DataWeave Selectors": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ],
+    "DataWeave Core Functions": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ],
+    "DataWeave Types, Coercion & Formatting": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ],
+    "DataWeave Modules, .dwl Files & lookup()": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ],
+    "DataWeave Output Formats: JSON, XML, CSV, Java": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ],
+    "The Mule Event: Payload, Attributes & Variables": [
+      {
+        "label": "DataWeave docs home",
+        "url": "https://docs.mulesoft.com/dataweave/latest/"
+      }
+    ]
+  },
+  "prompts": {
+    "notebooklm": "Using only these sources, teach me {topic} for the Salesforce Certified MuleSoft Developer exam (section: {section}).\n\n1. Explain it in plain words in 3–4 sentences: what problem it solves and when a Mule 4 developer uses it.\n2. Break it into its key parts. For each one, give its purpose, when to use it, what it should and shouldn't be used for, and one concrete example.\n3. Walk through one end-to-end example in a Mule 4 app. Show the flow XML or DataWeave where it helps, and say what the payload, attributes and variables hold at each step.\n4. Explain how it connects to the rest of the exam: which other topics it depends on or is often confused with.\n5. List the key facts, defaults and error types to memorize, each in one line.\n6. Give me 5 exam traps: statements that sound right but are wrong.\n7. End with 5 scenario multiple-choice questions, ideally \"predict the output\" ones. Don't show the answers until I reply.\n\nCite the source for each point. If the source doesn't cover something, say so instead of filling it in.",
+    "audio": "Explain {topic} from these sources for someone studying for the MuleSoft Developer exam. Use one running example of a Mule 4 flow, cover the defaults and the common mistakes, and every few minutes have one host quiz the other with a \"what happens next?\" question before revealing the answer.",
+    "gemini": "You are my tutor for the Salesforce Certified MuleSoft Developer exam. Below are study notes on {topic} that NotebookLM made from MuleSoft's own documentation. Use them to help me learn this topic properly, not just read it.\n\nHow to run the session:\n1. Start by asking me 3 quick questions to see what I already know about {topic}. Wait for my answers.\n2. Based on my answers, teach the notes in short chunks: one idea at a time, at most 5–6 sentences each. After each chunk, ask me one check question and wait for my reply before moving on.\n3. If I get something wrong, explain it a different way, using a real-world analogy, and then re-test me on it.\n4. Use the running example from the notes. Draw it as a simple text diagram of the flow, showing what the payload, attributes and variables hold at each step.\n5. When we reach the exam traps section, give each trap as a true/false statement and make me say why before you reveal the answer.\n6. When we reach the multiple-choice questions, ask them one at a time and grade each answer.\n7. At the end, give me a 10-line summary I could review on exam morning, plus the 2 things I struggled with most.\n\nRules: Stick to what's in the notes. If you add anything from your own knowledge, label it \"(not from the notes)\". Keep the tone direct and don't pad.\n\nNOTES:\n[paste the NotebookLM output here]"
+  },
+  "promptOverrides": {
+    "API-led Connectivity & Application Networks": {
+      "notebooklm": "Using only this source, teach me API-led connectivity for the Salesforce Certified MuleSoft Developer exam.\n\n1. Explain it in plain words in 3–4 sentences: what problem it solves and why point-to-point integration fails.\n2. Break down the three layers (System, Process, Experience APIs). For each one, give its purpose, who usually owns it, what it should and shouldn't contain, and one concrete example.\n3. Walk through one end-to-end example, such as a mobile app showing a customer's orders, and say which API sits in which layer and what each one calls.\n4. Explain how this connects to the application network, reuse, and the C4E (Center for Enablement).\n5. List the benefits the source claims, like speed, reuse and agility, each in one line.\n6. Give me 5 exam traps: statements that sound right but are wrong. For example, \"Experience APIs should call databases directly.\"\n7. End with 5 scenario multiple-choice questions where I pick the right layer for an API. Don't show the answers until I reply.\n\nCite the source for each point. If the source doesn't cover something, say so instead of filling it in.",
+      "audio": "Explain API-led connectivity from this source for someone studying for the MuleSoft Developer exam. Cover the three layers with one running example (a mobile app showing customer orders), why it beats point-to-point integration, and how reuse and the C4E fit in. Every few minutes, one host quizzes the other on which layer an API belongs to before revealing the answer.",
+      "gemini": "You are my tutor for the Salesforce Certified MuleSoft Developer exam. Below are study notes on API-led connectivity that NotebookLM made from MuleSoft's own page. Use them to help me learn this topic properly, not just read it.\n\nHow to run the session:\n1. Start by asking me 3 quick questions to see what I already know about API-led connectivity. Wait for my answers.\n2. Based on my answers, teach the notes in short chunks: one idea at a time, at most 5–6 sentences each. After each chunk, ask me one check question and wait for my reply before moving on.\n3. If I get something wrong, explain it a different way, using a real-world analogy, and then re-test me on it.\n4. Use the running example from the notes (a mobile app showing customer orders). Draw it as a simple text diagram with the Experience, Process and System layers and the calls between them.\n5. When we reach the exam traps section, give each trap as a true/false statement and make me say why before you reveal the answer.\n6. When we reach the 5 multiple-choice questions, ask them one at a time and grade each answer.\n7. At the end, give me a 10-line summary I could review on exam morning, plus the 2 things I struggled with most.\n\nRules: Stick to what's in the notes. If you add anything from your own knowledge, label it \"(not from the notes)\". Keep the tone direct and don't pad.\n\nNOTES:\n[paste the NotebookLM output here]"
+    }
+  }
+}
