@@ -120,9 +120,12 @@
     grid-template-areas:
       "cats receipts"
       "clothes receipts"
+      "fuel receipts"
       "trend receipts";
   }
-  .a-cats{ grid-area:cats; } .a-clothes{ grid-area:clothes; } .a-trend{ grid-area:trend; } .a-receipts{ grid-area:receipts; }
+  .a-cats{ grid-area:cats; } .a-clothes{ grid-area:clothes; } .a-fuel{ grid-area:fuel; } .a-trend{ grid-area:trend; } .a-receipts{ grid-area:receipts; }
+  .fuel-item{ background:#eef1f6; }
+  .fuel-item .rate{ font-size:12px; font-weight:600; }
 
   /* Category rows */
   .cat-group{ font-size:12px; font-weight:600; color:var(--muted); margin:14px 0 4px; }
@@ -231,7 +234,7 @@
   @media (max-width:980px){
     .sams-grid{
       grid-template-columns:1fr;
-      grid-template-areas: "cats" "clothes" "receipts" "trend";
+      grid-template-areas: "cats" "clothes" "fuel" "receipts" "trend";
     }
   }
   @media (max-width:820px){
@@ -318,6 +321,14 @@
           <span class="cl-total num" id="clothTotal"></span>
         </div>
         <ul class="cl-list" id="clothList"></ul>
+      </div>
+
+      <div class="card a-fuel">
+        <div class="card-head">
+          <h2>Fuel log</h2>
+          <span class="cl-total num" id="fuelTotal"></span>
+        </div>
+        <ul class="cl-list" id="fuelList"></ul>
       </div>
 
       <div class="card a-trend">
@@ -454,7 +465,7 @@ const SAMS_TRIPS = [
     I("Horizon whole milk", "HO WHOLE MLK", 1, 14.82, "dairy"),
   ]},
   { date:"2026-11-24", time:"6:04 pm", via:"Fuel pump 8", pay:"Visa", tax:0, paid:29.67, fuel:true, items:[
-    I("Unleaded, 7.239 gal at $4.099", "FUEL UNLEAD", 1, 29.67, "fuel", { gal:7.239 }),
+    I("Unleaded, 7.239 gal at $4.099", "FUEL UNLEAD", 1, 29.67, "fuel", { gal:7.239, ppg:4.099 }),
   ]},
   { date:"2026-11-16", time:"6:04 pm", via:"Scan & Go", pay:"Visa", tax:1.09, paid:102.86, items:[
     I("Blade steak", "BLADE STEAK", 1, 17.80, "meat"),
@@ -510,7 +521,7 @@ const SAMS_TRIPS = [
     I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
     I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
   ]},
-  { date:"2026-10-17", via:"Fuel", pay:"Visa", tax:0, paid:42.16, fuel:true, items:[ I("Unleaded, 9.168 gal", "FUEL UNLEAD", 1, 42.16, "fuel", { gal:9.168 }) ]},
+  { date:"2026-10-17", time:"5:47 pm", via:"Fuel pump 9", pay:"Visa", tax:0, paid:42.16, fuel:true, items:[ I("Unleaded, 9.168 gal at $4.599", "FUEL UNLEAD", 1, 42.16, "fuel", { gal:9.168, ppg:4.599 }) ]},
   { date:"2026-09-29", time:"6:28 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:58.98, items:[
     I("Cage-free eggs, 60 ct", "CAGEFREE60CT", 1, 8.94, "dairy"),
     I("Coke mini cans, 30 pack", "COKE MINI 30", 1, 17.28, "drinks"),
@@ -518,7 +529,7 @@ const SAMS_TRIPS = [
     I("Member's Mark water", "MM WATER", 3, 12.84, "drinks"),
     I("Member's Mark veggie straws", "MM VEG STRAW", 1, 5.98, "pantry"),
   ]},
-  { date:"2026-09-29", via:"Fuel", pay:"Visa", tax:0, paid:31.07, fuel:true, items:[ I("Unleaded, 6.154 gal", "FUEL UNLEAD", 1, 31.07, "fuel", { gal:6.154 }) ]},
+  { date:"2026-09-29", time:"6:08 pm", via:"Fuel pump 8", pay:"Visa", tax:0, paid:31.07, fuel:true, items:[ I("Unleaded, 6.154 gal at $5.049", "FUEL UNLEAD", 1, 31.07, "fuel", { gal:6.154, ppg:5.049 }) ]},
   { date:"2026-09-23", time:"6:16 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:16.69, items:[
     I("Moon Drop grapes", "MOON DROP", 1, 5.97, "produce"),
     I("Member's Mark water", "MM WATER", 2, 8.56, "drinks"),
@@ -542,7 +553,7 @@ const SAMS_TRIPS = [
     I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
     I("Rana lasagna", "RANA LASAGNA", 1, 13.82, "ready"),
   ]},
-  { date:"2026-09-09", via:"Fuel", pay:"Visa", tax:0, paid:34.07, fuel:true, items:[ I("Unleaded, 7.409 gal", "FUEL UNLEAD", 1, 34.07, "fuel", { gal:7.409 }) ]},
+  { date:"2026-09-09", time:"6:30 pm", via:"Fuel pump 8", pay:"Visa", tax:0, paid:34.07, fuel:true, items:[ I("Unleaded, 7.409 gal at $4.599", "FUEL UNLEAD", 1, 34.07, "fuel", { gal:7.409, ppg:4.599 }) ]},
   { date:"2026-09-01", time:"6:29 pm", via:"Scan & Go", pay:"Visa", tax:3.30, paid:63.70, items:[
     I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
     I("Ziploc slider bags", "ZPLC SLIDER", 1, 11.73, "home", { off:2.75 }),
@@ -598,7 +609,7 @@ const SAMS_TRIPS = [
     I("Crewneck sweatshirt (second colour)", "CREWNECK", 1, 24.98, "clothing"),
     I("Lay's chips", "LAYS SCO", 1, 4.48, "pantry"),
   ]},
-  { date:"2026-08-02", via:"Fuel", pay:"Visa", tax:0, paid:28.71, fuel:true, items:[ I("Unleaded, 6.381 gal", "FUEL UNLEAD", 1, 28.71, "fuel", { gal:6.381 }) ]},
+  { date:"2026-08-02", time:"4:44 pm", via:"Fuel pump 1", pay:"Visa", tax:0, paid:28.71, fuel:true, items:[ I("Unleaded, 6.381 gal at $4.499", "FUEL UNLEAD", 1, 28.71, "fuel", { gal:6.381, ppg:4.499 }) ]},
   { date:"2026-07-26", time:"7:03 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:27.38, items:[
     I("Babybel organic cheese", "BABYBEL ORG", 1, 10.72, "dairy"),
     I("Member's Mark cage-free large eggs", "MM CF LG AA", 1, 4.72, "dairy"),
@@ -613,7 +624,7 @@ const SAMS_TRIPS = [
     I("Member's Mark twin pack (meat, by weight)", "MM TWIN PACK", 1, 14.55, "meat"),
     I("Member's Mark plates", "MM 10 PLATE", 1, 18.98, "home"),
   ]},
-  { date:"2026-07-18", via:"Fuel", pay:"Visa", tax:0, paid:32.41, fuel:true, items:[ I("Unleaded, 7.538 gal", "FUEL UNLEAD", 1, 32.41, "fuel", { gal:7.538 }) ]},
+  { date:"2026-07-18", time:"5:45 pm", via:"Fuel pump 8", pay:"Visa", tax:0, paid:32.41, fuel:true, items:[ I("Unleaded, 7.538 gal at $4.299", "FUEL UNLEAD", 1, 32.41, "fuel", { gal:7.538, ppg:4.299 }) ]},
   { date:"2026-07-12", time:"1:42 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:70.97, items:[
     I("Coke, 16.9 oz bottles", "COKE 16.9 OZ", 1, 17.78, "drinks"),
     I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
@@ -660,7 +671,7 @@ const SAMS_TRIPS = [
     I("Black grapes", "BLACK GRAPES", 1, 6.87, "produce"),
     I("1 gallon water", "1 GALLON WTR", 2, 9.96, "drinks", { off:1.00 }),
   ]},
-  { date:"2026-06-15", via:"Fuel", pay:"Visa", tax:0, paid:31.70, fuel:true, items:[ I("Unleaded, 7.373 gal", "FUEL UNLEAD", 1, 31.70, "fuel", { gal:7.373 }) ]},
+  { date:"2026-06-15", time:"7:26 pm", via:"Fuel pump 1", pay:"Visa", tax:0, paid:31.70, fuel:true, items:[ I("Unleaded, 7.373 gal at $4.299", "FUEL UNLEAD", 1, 31.70, "fuel", { gal:7.373, ppg:4.299 }) ]},
   { date:"2026-06-10", time:"6:06 pm", via:"Scan & Go", pay:"Visa", tax:0, paid:13.94, items:[
     I("Pure Life bottled water", "P LFE PUR D", 2, 9.96, "drinks"),
     I("Lay's wavy chips", "LAYS WAVY", 1, 3.98, "pantry", { off:0.50 }),
@@ -692,7 +703,7 @@ const SAMS_TRIPS = [
     I("Member's Mark water", "MM WATER", 3, 11.94, "drinks"),
     I("Hot chicken (taxed as prepared food)", "CHICKEN", 1, 4.98, "ready", { tx:true }),
   ]},
-  { date:"2026-05-13", via:"Fuel", pay:"Visa", tax:0, paid:39.10, fuel:true, items:[ I("Unleaded, 8.216 gal", "FUEL UNLEAD", 1, 39.10, "fuel", { gal:8.216 }) ]},
+  { date:"2026-05-13", time:"7:30 pm", via:"Fuel pump 3", pay:"Visa", tax:0, paid:39.10, fuel:true, items:[ I("Unleaded, 8.216 gal at $4.759", "FUEL UNLEAD", 1, 39.10, "fuel", { gal:8.216, ppg:4.759 }) ]},
   { date:"2026-05-03", time:"2:29 pm", via:"Scan & Go", pay:"Visa", tax:1.66, paid:91.83, items:[
     I("Coke, 16.9 oz bottles", "COKE 16.9 OZ", 1, 15.98, "drinks"),
     I("CeraVe lotion", "CERAVELOTION", 1, 19.86, "personal"),
@@ -922,6 +933,24 @@ function renderClothing(){
   }).join('') + `<li class="d" style="font-size:12px;color:var(--muted);padding:2px 2px 0">${pieces} pieces across ${new Set(rows.map(r => r.date)).size} trips, tax included.</li>`;
 }
 
+/* ============================== SAM'S: FUEL LOG ============================== */
+function renderFuel(){
+  const rows = FUEL_TRIPS.slice().sort((a,b) => b.date.localeCompare(a.date));
+  const ppgs = rows.map(t => t.items[0].ppg);
+  const lo = Math.min(...ppgs), hi = Math.max(...ppgs);
+  $('fuelTotal').textContent = fmt(SAMS_FUEL_TOTAL);
+  $('fuelList').innerHTML = rows.map(t => {
+    const f = t.items[0];
+    const tag = f.ppg === lo ? ' <span style="color:var(--electric)">cheapest</span>' : f.ppg === hi ? ' <span style="color:var(--rust)">priciest</span>' : '';
+    return `<li class="cl-item fuel-item">
+      <span class="n">${fmtDate(t.date)}</span>
+      <span class="p num">${fmt(t.paid)}</span>
+      <span class="d">${fmtDow(t.date)} · ${t.time} · ${t.via.replace('Fuel pump', 'pump')}</span>
+      <span class="t num">${f.gal.toFixed(3)} gal at $${f.ppg.toFixed(3)}/gal<span class="rate">${tag}</span></span>
+    </li>`;
+  }).join('') + `<li style="font-size:12px;color:var(--muted);padding:2px 2px 0">${rows.length} fill-ups, ${SAMS_FUEL_GAL.toFixed(3)} gal, average ${fmt(SAMS_FUEL_TOTAL / SAMS_FUEL_GAL)}/gal. Price ranged from $${lo.toFixed(3)} to $${hi.toFixed(3)}.</li>`;
+}
+
 /* ============================== SAM'S: RECEIPTS + ITEMS ============================== */
 function matches(i){
   if (samsFilter !== 'all' && i.cat !== samsFilter) return false;
@@ -1073,6 +1102,7 @@ function renderHashtagOrders(){
 /* ============================== INIT: DATA FIRST, ALWAYS ============================== */
 renderSamsCatList();
 renderClothing();
+renderFuel();
 renderSamsList();
 renderPMRestList();
 renderPMOrders();
