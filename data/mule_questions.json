@@ -500,5 +500,1280 @@
       "B"
     ],
     "explanation": "Dependencies come from pom.xml; CI needs credentials to download Exchange assets."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-q1",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "question": "What is the order of batch job phases?",
+    "options": [
+      "A) Process, Load and Dispatch, On Complete",
+      "B) Load and Dispatch, Process, On Complete",
+      "C) Input, Process, Output",
+      "D) On Start, Steps, On Complete"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Load and Dispatch splits the payload into records and queues them; Process runs the steps; On Complete runs once at the end."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-q2",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "question": "A record fails in step 1. Step 2 has the default accept policy. What happens to that record in step 2?",
+    "options": [
+      "A) It runs in step 2 as usual",
+      "B) It is skipped in step 2",
+      "C) The whole job stops immediately",
+      "D) It is retried in step 1"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The default acceptPolicy is NO_FAILURES. Use ONLY_FAILURES or ALL on a step to process failed records."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-q3",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "question": "What is the payload in the On Complete phase?",
+    "options": [
+      "A) The array of processed records",
+      "B) The last record",
+      "C) A BatchJobResult with counts such as totalRecords, successfulRecords and failedRecords",
+      "D) null"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "On Complete only gets the statistics, not the records."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-q4",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "question": "Inside a Batch Aggregator with size=\"100\", what is the payload?",
+    "options": [
+      "A) One record",
+      "B) An array of up to 100 record payloads",
+      "C) The BatchJobResult",
+      "D) The original input"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The aggregator collects records and runs its processors once per group, e.g. one bulk insert per 100."
+  },
+  {
+    "id": "choice-router-q1",
+    "syllabusItem": "Choice Router",
+    "domain": "route",
+    "question": "What is the payload after the Choice?",
+    "code": "<set-payload value=\"#[{ amount: 50 }]\"/>\n<choice>\n  <when expression=\"#[payload.amount > 100]\"><set-payload value=\"large\"/></when>\n  <when expression=\"#[payload.amount > 10]\"><set-payload value=\"medium\"/></when>\n  <when expression=\"#[payload.amount > 0]\"><set-payload value=\"small\"/></when>\n</choice>",
+    "options": [
+      "A) \"large\"",
+      "B) \"medium\"",
+      "C) \"small\"",
+      "D) \"small\", because the last match wins"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Choice evaluates the whens in order and runs only the first one that is true."
+  },
+  {
+    "id": "choice-router-q2",
+    "syllabusItem": "Choice Router",
+    "domain": "route",
+    "question": "Same Choice, but amount is -5 and there is no otherwise. What happens?",
+    "options": [
+      "A) A MULE:ROUTING error is raised",
+      "B) The payload { amount: -5 } continues unchanged",
+      "C) The payload becomes null",
+      "D) The first route runs"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "If no when matches and there is no otherwise (default) route, the event passes through unchanged."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-q1",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "question": "src/main/resources/modules/Utils.dwl declares fun clean(s) = trim(lower(s)). How does a Transform use it?",
+    "options": [
+      "A) import modules/Utils then Utils.clean(payload.name)",
+      "B) import * from modules::Utils then clean(payload.name)",
+      "C) require(\"modules/Utils.dwl\").clean(payload.name)",
+      "D) include modules::Utils then clean(payload.name)"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Module paths use :: from src/main/resources. You can also import modules::Utils and call Utils::clean()."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-q2",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "question": "What must NOT appear in a DataWeave module file?",
+    "options": [
+      "A) fun declarations",
+      "B) var declarations",
+      "C) The --- separator and a body expression",
+      "D) type declarations"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "A module only declares functions, variables, types and namespaces. It has no output directive and no body."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-q3",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "question": "lookup(\"getRates\", payload) points to a sub-flow named getRates. What happens?",
+    "options": [
+      "A) The sub-flow runs and its payload is returned",
+      "B) It fails: lookup only calls flows, not sub-flows",
+      "C) Mule converts it to a flow-ref",
+      "D) It returns null"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "lookup() calls a flow by name and returns its result payload. Sub-flows aren't supported."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-q2",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "question": "What happens with this script?",
+    "code": "%dw 2.0\noutput application/xml\n---\n[{ \"item\": 1 }, { \"item\": 2 }]",
+    "options": [
+      "A) <root><item>1</item><item>2</item></root>",
+      "B) <item>1</item><item>2</item>",
+      "C) An error: XML needs a single root element",
+      "D) <array>…</array>"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "XML must have exactly one root, so the top level must be an object with one key."
+  },
+  {
+    "id": "dataweave-selectors-q2",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "question": "payload is <order id=\"7\"><item>pen</item><item>ink</item></order>. What does payload.order.*item return?",
+    "options": [
+      "A) \"pen\"",
+      "B) [\"pen\", \"ink\"]",
+      "C) \"7\"",
+      "D) null"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": ".* (multi-value selector) returns every repeated element. payload.order.item would return only \"pen\"."
+  },
+  {
+    "id": "dataweave-selectors-q3",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "question": "What is the output of [10, 20, 30, 40][1 to 2]?",
+    "options": [
+      "A) [10, 20]",
+      "B) [20, 30]",
+      "C) [20, 30, 40]",
+      "D) 20"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Indexes are 0-based and the range is inclusive. [-1] would give the last element."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-q2",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "question": "payload is { \"status\": \"S\" }. What is the output?",
+    "code": "%dw 2.0\noutput application/json\n---\npayload.status match {\n  case \"A\" -> \"Active\"\n  case \"S\" -> \"Suspended\"\n  else -> \"Unknown\"\n}",
+    "options": [
+      "A) \"Active\"",
+      "B) \"Suspended\"",
+      "C) \"Unknown\"",
+      "D) \"S\""
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "match runs the first case that matches; else catches the rest."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-q3",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "question": "What separates the DataWeave header from the body?",
+    "options": [
+      "A) ***",
+      "B) ---",
+      "C) ===",
+      "D) A blank line"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Directives (%dw, output, var, fun, import, type, ns) go above ---; the single body expression goes below it."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-q2",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "question": "What happens with \"abc\" as Number?",
+    "options": [
+      "A) 0",
+      "B) null",
+      "C) A coercion error is raised",
+      "D) NaN"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "A string that is not a number cannot be coerced. Use default or a check if it can be invalid."
+  },
+  {
+    "id": "database-connector-q1",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "question": "The customers table has no rows for region \"north\". A client calls ?region=north. What is the payload after the Select?",
+    "code": "<db:select config-ref=\"Database_Config\">\n  <db:sql>SELECT id, name FROM customers WHERE region = :region</db:sql>\n  <db:input-parameters>#[{ region: attributes.queryParams.region }]</db:input-parameters>\n</db:select>",
+    "options": [
+      "A) null",
+      "B) An empty array []",
+      "C) A DB:QUERY_EXECUTION error is raised",
+      "D) The payload from before the Select"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Select returns an array of records (each a map of column to value). No matching rows gives an empty array, not an error."
+  },
+  {
+    "id": "database-connector-q2",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "question": "Why write WHERE region = :region with input parameters instead of concatenating the value into the SQL string?",
+    "options": [
+      "A) Concatenation is not allowed in DataWeave",
+      "B) Input parameters stop SQL injection and let the driver handle types",
+      "C) Input parameters make the query stream",
+      "D) Only input parameters work with MySQL"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Input parameters become a prepared statement: the value is never parsed as SQL."
+  },
+  {
+    "id": "database-connector-q3",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "question": "A flow receives an array of 500 customers and must insert all of them with one operation. Which operation fits?",
+    "options": [
+      "A) Insert inside a For Each",
+      "B) Bulk Insert",
+      "C) Execute Script",
+      "D) Stored Procedure"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Bulk Insert runs one parameterized statement for every item of an array in a single batch, which is far faster than 500 separate Inserts."
+  },
+  {
+    "id": "database-connector-q4",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "question": "What is the payload right after a db:insert that adds one row?",
+    "options": [
+      "A) The inserted row as an object",
+      "B) An object with affectedRows (and generatedKeys if requested)",
+      "C) true",
+      "D) The unchanged input payload"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Insert, Update and Delete return a statement result: affectedRows, plus generatedKeys when autoGenerateKeys is on."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-q1",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "question": "What are the payload and vars.orders after this?",
+    "code": "<set-payload value=\"original\"/>\n<file:read path=\"in/orders.csv\" target=\"orders\"/>",
+    "options": [
+      "A) payload is the file content; vars.orders is \"original\"",
+      "B) payload is \"original\"; vars.orders is the file content",
+      "C) Both are the file content",
+      "D) payload is null; vars.orders is the file content"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "target sends the operation result to a variable and leaves the payload untouched. This works on any connector operation."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-q2",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "question": "file:write uses mode CREATE_NEW and the file already exists. What happens?",
+    "options": [
+      "A) The file is overwritten",
+      "B) The content is appended",
+      "C) An error is raised (FILE:FILE_ALREADY_EXISTS)",
+      "D) A copy named orders(1).csv is written"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Write modes: OVERWRITE (default) replaces, APPEND adds to the end, CREATE_NEW fails if the file exists."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-q3",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "question": "An On New or Updated File listener keeps picking up the same file on every poll. What stops it?",
+    "options": [
+      "A) Set autoDelete or moveToDirectory on the listener",
+      "B) Add a Choice router after the listener",
+      "C) Lower the polling frequency",
+      "D) Use file:list instead"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "The listener needs to get the file out of the way (delete or move it), or use its watermark option."
+  },
+  {
+    "id": "first-successful-and-until-successful-q1",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "question": "Route 1 fails, route 2 succeeds. What does First Successful do?",
+    "code": "<first-successful>\n  <route><flow-ref name=\"primaryApi\"/></route>\n  <route><flow-ref name=\"backupApi\"/></route>\n  <route><flow-ref name=\"cache\"/></route>\n</first-successful>",
+    "options": [
+      "A) Runs all three and returns route 2",
+      "B) Returns route 2's result; route 3 never runs",
+      "C) Raises an error because route 1 failed",
+      "D) Retries route 1 first"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "First Successful tries routes in order and stops at the first that doesn't fail."
+  },
+  {
+    "id": "first-successful-and-until-successful-q2",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "question": "Until Successful keeps failing and runs out of retries. Which error is raised?",
+    "options": [
+      "A) MULE:COMPOSITE_ROUTING",
+      "B) MULE:RETRY_EXHAUSTED",
+      "C) MULE:TIMEOUT",
+      "D) The original error, unchanged"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "When every retry fails, Until Successful raises MULE:RETRY_EXHAUSTED."
+  },
+  {
+    "id": "first-successful-and-until-successful-q3",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "question": "Which router sends each new message to the next route in turn?",
+    "options": [
+      "A) Choice",
+      "B) First Successful",
+      "C) Round Robin",
+      "D) Scatter-Gather"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Round Robin alternates routes per event."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-q1",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "question": "What are the payload and vars.total after For Each?",
+    "code": "<set-payload value=\"#[[1, 2, 3]]\"/>\n<set-variable variableName=\"total\" value=\"#[0]\"/>\n<foreach>\n  <set-variable variableName=\"total\" value=\"#[vars.total + payload]\"/>\n  <set-payload value=\"#[payload * 100]\"/>\n</foreach>",
+    "options": [
+      "A) payload [100, 200, 300]; total 6",
+      "B) payload [1, 2, 3]; total 6",
+      "C) payload 300; total 6",
+      "D) payload [1, 2, 3]; total 0"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "For Each restores the original payload when it finishes. Variable changes made inside stay."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-q2",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "question": "For Each with batchSize=\"2\" over [1, 2, 3, 4, 5]. What is the payload inside on each iteration?",
+    "options": [
+      "A) 1, 2, 3, 4, 5",
+      "B) [1, 2], [3, 4], [5]",
+      "C) [1, 2], [3, 4]; 5 is dropped",
+      "D) [1, 2, 3, 4, 5] twice"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "batchSize splits the collection into sub-arrays; the last one may be smaller."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-q3",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "question": "A variable is set inside Parallel For Each. Is it available after the scope?",
+    "options": [
+      "A) Yes, with the last element's value",
+      "B) Yes, as an array of values",
+      "C) No: variable changes inside Parallel For Each are not kept",
+      "D) Only if maxConcurrency is 1"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Each element runs with a copy of the variables; after the scope, vars are the same as before. The payload is an array of the results."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-q4",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "question": "In For Each, which variable holds the iteration number?",
+    "options": [
+      "A) vars.index, starting at 0",
+      "B) vars.counter, starting at 1",
+      "C) attributes.counter",
+      "D) $$"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "counterVariableName defaults to counter and starts at 1. vars.rootMessage holds the original message."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-q1",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "question": "How do you make a global error handler apply to every flow without its own handler?",
+    "options": [
+      "A) Name it \"default\"",
+      "B) <configuration defaultErrorHandler-ref=\"globalHandler\"/>",
+      "C) Put it in a sub-flow",
+      "D) Reference it from every flow-ref"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "A global configuration element sets the app's default error handler."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-q2",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "question": "An HTTP Request has an error mapping from HTTP:NOT_FOUND to APP:ORDER_NOT_FOUND. Which handler type catches the 404?",
+    "options": [
+      "A) HTTP:NOT_FOUND",
+      "B) APP:ORDER_NOT_FOUND",
+      "C) MULE:NOT_FOUND",
+      "D) Both A and B"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Error mapping replaces the error type for that component only, so handlers must match the new type."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-q3",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "question": "What does this raise?",
+    "code": "<raise-error type=\"APP:INVALID_ORDER\" description=\"Order has no items\"/>",
+    "options": [
+      "A) An error with error.description \"Order has no items\"",
+      "B) An HTTP 400 automatically",
+      "C) A warning log only",
+      "D) MULE:UNKNOWN"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Raise Error throws a custom error type with your description; handle it like any other."
+  },
+  {
+    "id": "http-request-connector-q1",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "question": "The remote API returns 200. Which statement is true after the request?",
+    "code": "<set-variable variableName=\"orderId\" value=\"#[42]\"/>\n<http:request method=\"GET\" config-ref=\"Orders_API\" path=\"/orders/{id}\">\n  <http:uri-params>#[{ id: vars.orderId }]</http:uri-params>\n</http:request>",
+    "options": [
+      "A) payload is the response body, attributes are HTTP response attributes, vars.orderId is still 42",
+      "B) payload is the response body and all variables are cleared",
+      "C) attributes still hold the listener request attributes",
+      "D) payload is unchanged; the body is in attributes.body"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "An outbound request replaces payload and attributes with the response. Variables are not touched."
+  },
+  {
+    "id": "http-request-connector-q2",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "question": "The remote API returns 404 and there is no error mapping. What happens?",
+    "options": [
+      "A) payload is the 404 body and the flow continues",
+      "B) An HTTP:NOT_FOUND error is raised",
+      "C) Mule retries the request",
+      "D) payload becomes null"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The default response validator treats 4xx/5xx as failures and raises a typed error such as HTTP:NOT_FOUND or HTTP:INTERNAL_SERVER_ERROR."
+  },
+  {
+    "id": "http-request-connector-q3",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "question": "Where do you read the response status code after an HTTP Request?",
+    "options": [
+      "A) payload.statusCode",
+      "B) vars.httpStatus",
+      "C) attributes.statusCode",
+      "D) error.statusCode"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "HttpResponseAttributes holds statusCode, reasonPhrase and headers."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-q1",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "question": "Three instances of an app listen for \"order created\" messages. Each order must be processed by exactly one instance. What should the publisher use?",
+    "options": [
+      "A) A JMS topic",
+      "B) A JMS queue",
+      "C) A durable topic subscription on each instance",
+      "D) Scatter-Gather"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "A queue is point-to-point: each message goes to one consumer. A topic delivers every message to every subscriber."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-q2",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "question": "What does JMS Publish Consume do?",
+    "options": [
+      "A) Publishes to a topic and a queue at the same time",
+      "B) Sends a message and waits for a reply on a reply-to destination",
+      "C) Consumes and then republishes the same message",
+      "D) Publishes in a transaction"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Publish Consume is request-reply over JMS."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-q3",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "question": "A Salesforce Upsert must avoid duplicate Accounts coming from SAP. What must you set?",
+    "options": [
+      "A) The Salesforce record Id",
+      "B) An external ID field name (e.g. SAP_Id__c)",
+      "C) A SOQL query",
+      "D) The batch size"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Upsert matches on externalIdFieldName: existing records are updated, missing ones are created."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-q1",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "question": "A Logger is set to level DEBUG, but nothing appears in the console. Why?",
+    "options": [
+      "A) Loggers only work in Debug mode",
+      "B) The log4j2 level for that category is above DEBUG (INFO by default)",
+      "C) DEBUG logs only go to Anypoint Monitoring",
+      "D) The message must be a string"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Logger level filters against the log4j2 configuration. Lower the category to DEBUG to see it."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-q2",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "question": "Where is a Mule app's logging configuration?",
+    "options": [
+      "A) mule-artifact.json",
+      "B) src/main/resources/log4j2.xml",
+      "C) pom.xml",
+      "D) Runtime Manager only"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "log4j2.xml sets appenders, levels and categories (async loggers by default)."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-q3",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "question": "Which tool shows dashboards of response time, throughput and failures for a deployed app?",
+    "options": [
+      "A) Design Center",
+      "B) Anypoint Exchange",
+      "C) Anypoint Monitoring",
+      "D) API Designer"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "Anypoint Monitoring gives built-in dashboards and alerts. Runtime Manager shows the logs."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-q1",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "question": "A client calls the parent flow. What is the final payload?",
+    "code": "<flow name=\"parent\">\n  <set-payload value=\"A\"/>\n  <flow-ref name=\"child\"/>\n  <set-payload value=\"#[payload ++ 'D']\"/>\n</flow>\n\n<flow name=\"child\">\n  <set-payload value=\"B\"/>\n  <raise-error type=\"APP:FAIL\"/>\n  <set-payload value=\"C\"/>\n  <error-handler>\n    <on-error-continue>\n      <set-payload value=\"E\"/>\n    </on-error-continue>\n  </error-handler>\n</flow>",
+    "options": [
+      "A) \"BD\"",
+      "B) \"CD\"",
+      "C) \"ED\"",
+      "D) \"E\""
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "The child stops at raise-error (C never runs), On Error Continue sets \"E\" and returns success, so the parent continues and appends \"D\"."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-q2",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "question": "An HTTP Listener flow fails and its On Error Continue sets the payload to \"fallback\". What does the client get?",
+    "options": [
+      "A) 500 with the error description",
+      "B) 200 with \"fallback\"",
+      "C) 400 with \"fallback\"",
+      "D) No response"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "On Error Continue counts as success: the listener sends its normal (200) response with the handler's payload."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-q3",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "question": "Same flow but with On Error Propagate. What does the client get?",
+    "options": [
+      "A) 200 with the handler payload",
+      "B) 500 (error response)",
+      "C) 404",
+      "D) The request is retried"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Propagate re-throws after the handler runs, so the listener sends its error response (500 by default)."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-q4",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "question": "A flow has no error handler and a processor fails. What happens?",
+    "options": [
+      "A) The error is ignored",
+      "B) Mule's default error handler logs it and propagates it",
+      "C) The flow restarts",
+      "D) The next processor runs"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The implicit default handler behaves like On Error Propagate."
+  },
+  {
+    "id": "scatter-gather-q1",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "question": "After this Scatter-Gather, how do you get \"B\"?",
+    "code": "<scatter-gather>\n  <route><set-payload value=\"A\"/></route>\n  <route><set-payload value=\"B\"/></route>\n</scatter-gather>",
+    "options": [
+      "A) payload[1]",
+      "B) payload.\"1\".payload",
+      "C) payload.B",
+      "D) vars.route1"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The result is an object keyed by route index (\"0\", \"1\", ...). Each value is a Mule message with payload and attributes."
+  },
+  {
+    "id": "scatter-gather-q2",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "question": "One of three Scatter-Gather routes fails. What happens?",
+    "options": [
+      "A) The other routes are cancelled immediately",
+      "B) The failed route is skipped silently",
+      "C) After all routes finish, a MULE:COMPOSITE_ROUTING error is raised",
+      "D) The route is retried"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "All routes complete; then the failures are reported together as MULE:COMPOSITE_ROUTING (successful results are inside the error)."
+  },
+  {
+    "id": "scatter-gather-q3",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "question": "How do the Scatter-Gather routes run?",
+    "options": [
+      "A) One after another in order",
+      "B) In parallel",
+      "C) Only the first that succeeds",
+      "D) Alternating per request"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Routes run concurrently (limit with maxConcurrency). Variables set in routes are merged afterwards."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-q1",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "question": "When does a Scheduler with this cron expression fire?",
+    "code": "<scheduling-strategy>\n  <cron expression=\"0 0 6 * * ?\"/>\n</scheduling-strategy>",
+    "options": [
+      "A) Every 6 minutes",
+      "B) Every day at 06:00",
+      "C) At 00:06 every day",
+      "D) Every 6 hours"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Quartz cron order is seconds, minutes, hours, day-of-month, month, day-of-week. 0 0 6 = 06:00:00."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-q2",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "question": "What is the payload at the start of a flow triggered by a Scheduler?",
+    "options": [
+      "A) The time it fired",
+      "B) An empty object {}",
+      "C) null (no payload)",
+      "D) The previous run's payload"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "The Scheduler only triggers the flow; it brings no data. Fetch data with a connector next."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-q3",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "question": "An app with a Scheduler runs in a two-node on-prem cluster. How many nodes run the scheduled flow each time?",
+    "options": [
+      "A) Both nodes",
+      "B) Only the primary node",
+      "C) A random node",
+      "D) None until configured"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Schedulers run only on the primary node of a cluster, so the job doesn't run twice."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-q1",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "question": "Execution is paused at a breakpoint. Where do you see payload, attributes and variables?",
+    "options": [
+      "A) The Console view",
+      "B) The Mule Debugger view",
+      "C) Anypoint Monitoring",
+      "D) The Problems view"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The Mule Debugger view shows the event at the paused processor."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-q2",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "question": "While paused, you want to test payload.items filter ($.qty > 0). What do you use?",
+    "options": [
+      "A) Add a Logger and restart",
+      "B) The Evaluate DataWeave Expression window",
+      "C) The Problems view",
+      "D) MUnit"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "You can run any DataWeave expression against the current event without redeploying."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-q3",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "question": "What is the default port Studio's Mule debugger uses?",
+    "options": [
+      "A) 8081",
+      "B) 6666",
+      "C) 5005",
+      "D) 8082"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Change it in the debug run configuration if 6666 is taken."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-q1",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "question": "What is the final payload?",
+    "code": "<set-payload value=\"start\"/>\n<try>\n  <raise-error type=\"APP:BAD\"/>\n  <error-handler>\n    <on-error-continue type=\"APP:BAD\">\n      <set-payload value=\"handled\"/>\n    </on-error-continue>\n  </error-handler>\n</try>\n<set-payload value=\"#[payload ++ '-after']\"/>",
+    "options": [
+      "A) \"start-after\"",
+      "B) \"handled-after\"",
+      "C) \"handled\"",
+      "D) An APP:BAD error"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "On Error Continue inside Try handles the error, and the flow carries on after the Try with the handler's payload."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-q2",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "question": "An HTTP request raises HTTP:NOT_FOUND. What is error.errorType.identifier?",
+    "options": [
+      "A) \"HTTP\"",
+      "B) \"NOT_FOUND\"",
+      "C) \"HTTP:NOT_FOUND\"",
+      "D) 404"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Error types are NAMESPACE:IDENTIFIER. errorType.namespace is \"HTTP\"."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-q3",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "question": "An On Error Continue has type=\"MULE:CONNECTIVITY\". Does it catch HTTP:CONNECTIVITY?",
+    "options": [
+      "A) Yes, HTTP:CONNECTIVITY is a child of MULE:CONNECTIVITY",
+      "B) No, namespaces must match exactly",
+      "C) Only inside a Try scope",
+      "D) Only with a when expression"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Connector errors inherit from MULE errors, so handling the parent type catches them."
+  },
+  {
+    "id": "validation-module-q1",
+    "syllabusItem": "Validation Module",
+    "domain": "route",
+    "question": "payload.email is \"not-an-email\". What happens?",
+    "code": "<validation:is-email email=\"#[payload.email]\"/>",
+    "options": [
+      "A) The validator returns false and the flow continues",
+      "B) A VALIDATION:INVALID_EMAIL error is raised",
+      "C) The payload becomes null",
+      "D) A 400 response is sent automatically"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Validators don't return booleans; a failed validation raises an error in the VALIDATION namespace."
+  },
+  {
+    "id": "validation-module-q2",
+    "syllabusItem": "Validation Module",
+    "domain": "route",
+    "question": "You want every failed check reported together, not just the first. What do you use?",
+    "options": [
+      "A) Several validators in a row",
+      "B) The All validator wrapping them",
+      "C) A Choice router",
+      "D) Until Successful"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "All runs every inner validator and raises one VALIDATION:MULTIPLE error listing all failures."
+  },
+  {
+    "id": "watermarks-and-object-store-q1",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "question": "A scheduled flow uses a manual watermark. On the first run \"lastId\" isn't stored yet. What should the retrieve look like?",
+    "options": [
+      "A) <os:retrieve key=\"lastId\"/> and catch the error every time",
+      "B) <os:retrieve key=\"lastId\"> with a default value such as 0",
+      "C) <os:contains key=\"lastId\"/> only",
+      "D) A Database Select of lastId"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "retrieve with a default value returns the default on the first run. Without it, a missing key raises OS:KEY_NOT_FOUND."
+  },
+  {
+    "id": "watermarks-and-object-store-q2",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "question": "A Database On Table Row listener should only pick up new or changed rows. Which field does that?",
+    "options": [
+      "A) watermarkColumn",
+      "B) frequency",
+      "C) maxRows",
+      "D) transactionalAction"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "watermarkColumn (e.g. updated_at) is automatic watermarking; idColumn prevents duplicates."
+  },
+  {
+    "id": "watermarks-and-object-store-q3",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "question": "What makes an Object Store keep its values after the app restarts?",
+    "options": [
+      "A) persistent=\"true\"",
+      "B) A TTL of 0",
+      "C) maxEntries",
+      "D) A Try scope"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Persistent stores survive restarts; transient stores live in memory only."
+  },
+  {
+    "id": "web-service-consumer-soap-q1",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "question": "What does a Web Service Consumer configuration need to call a SOAP operation?",
+    "options": [
+      "A) A RAML file and base URI",
+      "B) WSDL location, service, port and address",
+      "C) Only the endpoint URL",
+      "D) An Exchange asset ID"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The WSDL describes the operations; service and port choose which binding; address is the endpoint."
+  },
+  {
+    "id": "web-service-consumer-soap-q2",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "question": "How should the payload be prepared before the Consume operation?",
+    "options": [
+      "A) As JSON matching the WSDL",
+      "B) As a Java map",
+      "C) As XML for the SOAP body, usually built with DataWeave using the WSDL metadata",
+      "D) As a full SOAP envelope string"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "You build only the body XML; the connector wraps it in the SOAP envelope."
+  },
+  {
+    "id": "web-service-consumer-soap-q3",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "question": "After Consume succeeds, where is the response body?",
+    "options": [
+      "A) payload.body",
+      "B) attributes.body",
+      "C) payload.envelope.body",
+      "D) vars.soapResponse"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "The Consume output payload has body, headers and attachments. A SOAP fault raises WSC:SOAP_FAULT."
+  },
+  {
+    "id": "dataweave-core-functions-q1",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "question": "What does map followed by filter output?",
+    "code": "%dw 2.0\noutput application/json\n---\n[1, 2, 3, 4] map ($ * 10) filter ($ > 15)",
+    "options": [
+      "A) [10, 20]",
+      "B) [20, 30, 40]",
+      "C) [2, 3, 4]",
+      "D) [true, true, true]"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "Left to right: map gives [10,20,30,40]; filter keeps values above 15."
+  },
+  {
+    "id": "dataweave-core-functions-q2",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "question": "What does reduce with a starting accumulator output?",
+    "code": "%dw 2.0\noutput application/json\n---\n[1, 2, 3] reduce ((item, acc = 10) -> acc + item)",
+    "options": [
+      "A) 6",
+      "B) 16",
+      "C) 10",
+      "D) [11, 12, 13]"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "reduce starts the accumulator at 10 and adds each item: 10+1+2+3."
+  },
+  {
+    "id": "dataweave-core-functions-q3",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "question": "What does pluck $$ output?",
+    "code": "%dw 2.0\noutput application/json\n---\n{ \"a\": 1, \"b\": 2 } pluck $$",
+    "options": [
+      "A) [1, 2]",
+      "B) [\"a\", \"b\"]",
+      "C) { \"a\": \"a\", \"b\": \"b\" }",
+      "D) [{ \"a\": 1 }, { \"b\": 2 }]"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "pluck turns an object into an array. In pluck, $ is the value, $$ the key and $$$ the index."
+  },
+  {
+    "id": "dataweave-core-functions-q4",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "question": "What does groupBy output?",
+    "code": "%dw 2.0\noutput application/json\n---\n[{ \"t\": \"x\", \"v\": 1 }, { \"t\": \"y\", \"v\": 2 }, { \"t\": \"x\", \"v\": 3 }] groupBy $.t",
+    "options": [
+      "A) [[1, 3], [2]]",
+      "B) { \"x\": [{ \"t\": \"x\", \"v\": 1 }, { \"t\": \"x\", \"v\": 3 }], \"y\": [{ \"t\": \"y\", \"v\": 2 }] }",
+      "C) { \"x\": 2, \"y\": 1 }",
+      "D) [\"x\", \"y\"]"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "groupBy returns an object: each key is a group value, each value is the array of items in that group."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-q3",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "question": "What XML does this script write?",
+    "code": "%dw 2.0\noutput application/xml\n---\n{ order @(id: \"7\"): { total: 10 } }",
+    "options": [
+      "A) <order><id>7</id><total>10</total></order>",
+      "B) <order id=\"7\"><total>10</total></order>",
+      "C) <order total=\"10\" id=\"7\"/>",
+      "D) An error"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "@( ) after a key writes XML attributes on that element."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-q4",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "question": "What CSV does this script write?",
+    "code": "%dw 2.0\noutput application/csv separator=\";\"\n---\n[{ \"id\": 1, \"name\": \"Ana\" }, { \"id\": 2, \"name\": \"Bo\" }]",
+    "options": [
+      "A) id;name / 1;Ana / 2;Bo (three lines)",
+      "B) 1;Ana / 2;Bo (no header)",
+      "C) id,name / 1,Ana / 2,Bo",
+      "D) An error: CSV needs strings"
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "CSV writes an array of flat objects; header=true by default, the separator is set by the writer property."
+  },
+  {
+    "id": "dataweave-selectors-q4",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "question": "What does this filter selector return?",
+    "code": "%dw 2.0\noutput application/json\nvar users = [{ \"name\": \"Ana\", \"age\": 31 }, { \"name\": \"Bo\", \"age\": 17 }]\n---\nusers[?($.age >= 18)].name",
+    "options": [
+      "A) \"Ana\"",
+      "B) [\"Ana\"]",
+      "C) [true, false]",
+      "D) [\"Ana\", \"Bo\"]"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "[?( )] keeps matching items; .name on an array returns an array of names."
+  },
+  {
+    "id": "dataweave-selectors-q5",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "question": "What does a single-value selector on an array return?",
+    "code": "%dw 2.0\noutput application/json\n---\n[{ \"name\": \"Ana\" }, { \"name\": \"Bo\" }].name",
+    "options": [
+      "A) null",
+      "B) \"Ana\"",
+      "C) [\"Ana\", \"Bo\"]",
+      "D) An error"
+    ],
+    "answer": [
+      "C"
+    ],
+    "explanation": "A single-value selector on an array applies to each element."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-q4",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "question": "What does this map with a function declared in the header output?",
+    "code": "%dw 2.0\noutput application/json\nvar greeting = \"Hi\"\nfun greet(name) = greeting ++ \", \" ++ name\n---\n[\"Ana\", \"Bo\"] map greet($)",
+    "options": [
+      "A) \"Hi, Ana, Bo\"",
+      "B) [\"Hi, Ana\", \"Hi, Bo\"]",
+      "C) [\"Ana\", \"Bo\"]",
+      "D) An error: functions can't use header vars"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "map calls greet for each item ($). ++ concatenates strings."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-q5",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "question": "What does this map using $$ output?",
+    "code": "%dw 2.0\noutput application/json\n---\n[\"a\", \"b\", \"c\"] map (($$ as String) ++ \":\" ++ $)",
+    "options": [
+      "A) [\"a:0\", \"b:1\", \"c:2\"]",
+      "B) [\"0:a\", \"1:b\", \"2:c\"]",
+      "C) [\"1:a\", \"2:b\", \"3:c\"]",
+      "D) \"0:a1:b2:c\""
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "In map, $ is the item and $$ is the index, starting at 0."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-q3",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "question": "What does formatting a Date as a String output?",
+    "code": "%dw 2.0\noutput application/json\n---\n|2026-11-26| as String { format: \"dd/MM/yyyy\" }",
+    "options": [
+      "A) \"2026-11-26\"",
+      "B) \"26/11/2026\"",
+      "C) \"11/26/2026\"",
+      "D) An error"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "as String with a format writes a Date using Java date patterns. dd = day, MM = month, yyyy = year."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-q4",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "question": "What does formatting a Number as a String output?",
+    "code": "%dw 2.0\noutput application/json\n---\n1234.5 as String { format: \"#,##0.00\" }",
+    "options": [
+      "A) \"1234.5\"",
+      "B) \"1,234.50\"",
+      "C) \"1,234.5\"",
+      "D) 1234.50"
+    ],
+    "answer": [
+      "B"
+    ],
+    "explanation": "The pattern adds a grouping comma and forces two decimals."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-q5",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "question": "What does adding a Period to a Date output?",
+    "code": "%dw 2.0\noutput application/json\n---\n|2026-11-30| + |P2D|",
+    "options": [
+      "A) \"2026-12-02\"",
+      "B) \"2026-11-32\"",
+      "C) An error: you can't add a Period",
+      "D) \"2026-11-30P2D\""
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "Adding a Period (P2D = two days) to a Date gives a Date; it rolls over the month."
   }
 ]

@@ -593,5 +593,992 @@
     "domain": "struct",
     "front": "What's the Maven groupId of an asset your org publishes to Exchange?",
     "back": "Your organization ID."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c1",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Batch job phases?",
+    "back": "Load and Dispatch → Process (batch steps) → On Complete."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c2",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Batch default block size?",
+    "back": "100 records."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c3",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Batch step acceptPolicy values?",
+    "back": "NO_FAILURES (default), ONLY_FAILURES, ALL. Plus acceptExpression."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c4",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Batch maxFailedRecords default?",
+    "back": "0: the job stops after the first failure. -1 allows unlimited failures."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c5",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Variables set in a batch step?",
+    "back": "Record-scoped: they follow that record to later steps."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c6",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Batch Aggregator payload?",
+    "back": "An array of record payloads (size N or streaming)."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c7",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "On Complete payload?",
+    "back": "BatchJobResult: totalRecords, successfulRecords, failedRecords, processedRecords, elapsedTimeInMillis."
+  },
+  {
+    "id": "batch-jobs-phases-steps-and-aggregator-c8",
+    "syllabusItem": "Batch Jobs: Phases, Steps & Aggregator",
+    "domain": "records",
+    "front": "Does the flow wait for the batch job?",
+    "back": "No. The job runs asynchronously; the flow continues right away."
+  },
+  {
+    "id": "choice-router-c1",
+    "syllabusItem": "Choice Router",
+    "domain": "route",
+    "front": "Choice router: how many routes run?",
+    "back": "Exactly one: the first when that is true, or otherwise if none are."
+  },
+  {
+    "id": "choice-router-c2",
+    "syllabusItem": "Choice Router",
+    "domain": "route",
+    "front": "Choice with no match and no otherwise?",
+    "back": "No error. The event continues unchanged."
+  },
+  {
+    "id": "choice-router-c3",
+    "syllabusItem": "Choice Router",
+    "domain": "route",
+    "front": "Choice when expression must return?",
+    "back": "A Boolean (DataWeave expression)."
+  },
+  {
+    "id": "dataweave-core-functions-c1",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "map vs mapObject?",
+    "back": "map: array → array. mapObject: object → object, callback (value, key, index)."
+  },
+  {
+    "id": "dataweave-core-functions-c2",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "pluck?",
+    "back": "Object → array. Callback (value, key, index), so $$ is the key."
+  },
+  {
+    "id": "dataweave-core-functions-c3",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "reduce: parameters?",
+    "back": "(item, acc). acc starts as the first item unless you give a default: (item, acc = 0)."
+  },
+  {
+    "id": "dataweave-core-functions-c4",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "groupBy result type?",
+    "back": "An object of arrays, keyed by the group value."
+  },
+  {
+    "id": "dataweave-core-functions-c5",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "orderBy descending on a number?",
+    "back": "orderBy -$.price (or orderBy then reverse with [-1 to 0])."
+  },
+  {
+    "id": "dataweave-core-functions-c6",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "joinBy / splitBy?",
+    "back": "[\"a\",\"b\"] joinBy \"-\" → \"a-b\"; \"a,b\" splitBy \",\" → [\"a\",\"b\"]."
+  },
+  {
+    "id": "dataweave-core-functions-c7",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "flatten [[1,2],[3]]?",
+    "back": "[1, 2, 3]"
+  },
+  {
+    "id": "dataweave-core-functions-c8",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "distinctBy?",
+    "back": "Removes duplicates by an expression, e.g. payload distinctBy $.id."
+  },
+  {
+    "id": "dataweave-core-functions-c9",
+    "syllabusItem": "DataWeave Core Functions",
+    "domain": "dw",
+    "front": "sizeOf, isEmpty, contains?",
+    "back": "Length of array/string/object; true if empty or null; true if the array/string contains the value."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-c1",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "front": "Where do custom DataWeave modules live?",
+    "back": "Under src/main/resources, e.g. modules/Utils.dwl → modules::Utils."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-c2",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "front": "Three ways to import a module?",
+    "back": "import modules::Utils (call Utils::fn), import * from modules::Utils, import fn from modules::Utils."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-c3",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "front": "Module file rules?",
+    "back": "Only declarations (fun, var, type, ns). No output directive and no --- body."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-c4",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "front": "Transform Message: use an external script?",
+    "back": "Set resource=\"dw/myTransform.dwl\" on the set-payload/variable instead of inline code."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-c5",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "front": "lookup()?",
+    "back": "lookup(\"flowName\", input) calls a flow (not a sub-flow) and returns its payload."
+  },
+  {
+    "id": "dataweave-modules-dwl-files-and-lookup-c6",
+    "syllabusItem": "DataWeave Modules, .dwl Files & lookup()",
+    "domain": "dw",
+    "front": "Built-in module for string helpers?",
+    "back": "dw::core::Strings (capitalize, camelize, pluralize, substringAfter ...)."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c1",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "Common output MIME types?",
+    "back": "application/json, application/xml, application/csv, application/java, text/plain, application/x-www-form-urlencoded, multipart/form-data."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c2",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "XML attribute syntax in DataWeave?",
+    "back": "key @(attr: value): ..."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c3",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "Repeated XML elements from DataWeave?",
+    "back": "Repeat the key in one object: { items: { item: 1, item: 2 } }."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c4",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "XML output: top-level rule?",
+    "back": "One root key. An array at the top level fails."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c5",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "CSV writer properties?",
+    "back": "separator (default \",\"), header (default true), quoteValues, etc.: output application/csv separator=\";\" header=false"
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c6",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "When use output application/java?",
+    "back": "When passing Java objects (maps, lists) to a component, e.g. Database input parameters, without serialising."
+  },
+  {
+    "id": "dataweave-output-formats-json-xml-csv-java-c7",
+    "syllabusItem": "DataWeave Output Formats: JSON, XML, CSV, Java",
+    "domain": "dw",
+    "front": "JSON writer property to drop nulls?",
+    "back": "skipNullOn=\"everywhere\" (also indent=false to minify)."
+  },
+  {
+    "id": "dataweave-selectors-c1",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: .key",
+    "back": "Single value. On an array, returns that key from every element."
+  },
+  {
+    "id": "dataweave-selectors-c2",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: .*key",
+    "back": "Multi-value: every matching key (e.g. repeated XML elements)."
+  },
+  {
+    "id": "dataweave-selectors-c3",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: ..key",
+    "back": "Descendants: the key at any depth."
+  },
+  {
+    "id": "dataweave-selectors-c4",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: .@attr",
+    "back": "XML attribute, e.g. payload.order.@id."
+  },
+  {
+    "id": "dataweave-selectors-c5",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: key?",
+    "back": "Existence check: true or false."
+  },
+  {
+    "id": "dataweave-selectors-c6",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: [?(cond)]",
+    "back": "Filter: keeps elements where cond is true."
+  },
+  {
+    "id": "dataweave-selectors-c7",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selector: [-1] and [1 to 2]",
+    "back": "Last element; inclusive range of indexes."
+  },
+  {
+    "id": "dataweave-selectors-c8",
+    "syllabusItem": "DataWeave Selectors",
+    "domain": "dw",
+    "front": "Selecting a missing key?",
+    "back": "Returns null (use default to fall back, e.g. payload.x default \"n/a\")."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c1",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "DataWeave header directives?",
+    "back": "%dw 2.0, output, input, var, fun, import, type, ns. Body comes after ---."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c2",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "DataWeave function declaration?",
+    "back": "fun name(a, b) = expression"
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c3",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "DataWeave lambda syntax?",
+    "back": "(x) -> x * 2, or $ / $$ shorthand for the first / second parameter."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c4",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "map: what are $ and $$?",
+    "back": "$ = item, $$ = index (0-based)."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c5",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "Local variables in a DataWeave expression?",
+    "back": "do { var x = 1 --- x + 1 }"
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c6",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "String concatenation in DataWeave?",
+    "back": "++ (e.g. \"a\" ++ \"b\"). Also works for arrays and objects."
+  },
+  {
+    "id": "dataweave-syntax-header-body-variables-and-functions-c7",
+    "syllabusItem": "DataWeave Syntax: Header, Body, Variables & Functions",
+    "domain": "dw",
+    "front": "Conditional in DataWeave?",
+    "back": "if (cond) a else b, or match { case ... -> ... else -> ... }."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-c1",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "front": "DataWeave date literals?",
+    "back": "In pipes: |2026-11-26| (Date), |2026-11-26T10:00:00Z| (DateTime), |P1D| (Period)."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-c2",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "front": "Parse a string date?",
+    "back": "\"26-11-2026\" as Date { format: \"dd-MM-yyyy\" }"
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-c3",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "front": "Format a number with two decimals?",
+    "back": "n as String { format: \"#,##0.00\" }"
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-c4",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "front": "Check a type?",
+    "back": "x is Number (Boolean result) or typeOf(x)."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-c5",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "front": "Custom type declaration?",
+    "back": "type Money = Number { format: \"#.00\" } in the header."
+  },
+  {
+    "id": "dataweave-types-coercion-and-formatting-c6",
+    "syllabusItem": "DataWeave Types, Coercion & Formatting",
+    "domain": "dw",
+    "front": "Fallback for null or a missing value?",
+    "back": "default, e.g. payload.qty default 0."
+  },
+  {
+    "id": "database-connector-c1",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "front": "Database Select: what does the payload hold?",
+    "back": "An array of records, each a map of column name to value. No rows gives []."
+  },
+  {
+    "id": "database-connector-c2",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "front": "Database input parameters: syntax?",
+    "back": ":name inside the SQL, with values supplied by the inputParameters map, e.g. #[{ name: vars.n }]."
+  },
+  {
+    "id": "database-connector-c3",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "front": "Insert / Update / Delete: result payload?",
+    "back": "A statement result with affectedRows (and generatedKeys when autoGenerateKeys is true)."
+  },
+  {
+    "id": "database-connector-c4",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "front": "Bulk Insert / Update / Delete: input?",
+    "back": "An array of parameter maps; the same SQL runs once per map in one batch."
+  },
+  {
+    "id": "database-connector-c5",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "front": "Database Connector: what must the project include for the connection to work?",
+    "back": "The JDBC driver for the database, added as a dependency (Studio offers to add it)."
+  },
+  {
+    "id": "database-connector-c6",
+    "syllabusItem": "Database Connector",
+    "domain": "conn",
+    "front": "Database On Table Row listener: which fields stop rows being processed twice?",
+    "back": "watermarkColumn (e.g. updated_at) and idColumn."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-c1",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "front": "File write modes?",
+    "back": "OVERWRITE (default), APPEND, CREATE_NEW (fails if the file exists)."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-c2",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "front": "After file:read, where are the file name, path and size?",
+    "back": "In attributes (fileName, path, size, timestamps). The content is the payload."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-c3",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "front": "FTP vs SFTP?",
+    "back": "FTP is plain FTP (port 21). SFTP runs over SSH (port 22) and is encrypted."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-c4",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "front": "file:list: what does it return?",
+    "back": "An array of messages, one per file, each with its own payload and attributes."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-c5",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "front": "File listener: how do you only pick up *.csv files?",
+    "back": "A matcher (file matching rules) with filenamePattern, e.g. *.csv."
+  },
+  {
+    "id": "file-ftp-and-sftp-connectors-c6",
+    "syllabusItem": "File, FTP & SFTP Connectors",
+    "domain": "conn",
+    "front": "target attribute on any operation: effect?",
+    "back": "The result goes into vars.<target>; payload and attributes stay as they were."
+  },
+  {
+    "id": "first-successful-and-until-successful-c1",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "front": "First Successful?",
+    "back": "Tries routes in order; returns the first that succeeds. Error only if all fail."
+  },
+  {
+    "id": "first-successful-and-until-successful-c2",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "front": "Until Successful defaults?",
+    "back": "maxRetries 5, millisBetweenRetries 60000."
+  },
+  {
+    "id": "first-successful-and-until-successful-c3",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "front": "Until Successful: retries exhausted error?",
+    "back": "MULE:RETRY_EXHAUSTED."
+  },
+  {
+    "id": "first-successful-and-until-successful-c4",
+    "syllabusItem": "First Successful & Until Successful",
+    "domain": "route",
+    "front": "Round Robin?",
+    "back": "Each event goes to the next route in turn."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c1",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "For Each: payload after the scope?",
+    "back": "The original payload, restored. Changes inside are lost unless saved to a variable."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c2",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "For Each: variable changes inside?",
+    "back": "Kept after the scope."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c3",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "For Each built-in variables?",
+    "back": "vars.counter (starts at 1) and vars.rootMessage."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c4",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "For Each: error on one element?",
+    "back": "Iteration stops and the error propagates."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c5",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "Parallel For Each: output payload?",
+    "back": "An array of results (Mule messages) in the input order."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c6",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "Parallel For Each: variables?",
+    "back": "Not changed by the scope: changes inside are not kept."
+  },
+  {
+    "id": "for-each-and-parallel-for-each-c7",
+    "syllabusItem": "For Each & Parallel For Each",
+    "domain": "records",
+    "front": "Parallel For Each: options?",
+    "back": "maxConcurrency and timeout. Failures raise MULE:COMPOSITE_ROUTING after all finish."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-c1",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "front": "Set a default error handler for the app?",
+    "back": "<configuration defaultErrorHandler-ref=\"name\"/> pointing at a global error-handler."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-c2",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "front": "Reuse a global error handler in a flow?",
+    "back": "<error-handler ref=\"globalHandler\"/>"
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-c3",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "front": "Raise Error fields?",
+    "back": "type (e.g. APP:INVALID_ORDER) and description."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-c4",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "front": "Custom error namespace rule?",
+    "back": "Use your own (e.g. APP), not a connector namespace like HTTP or DB."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-c5",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "front": "Error mapping?",
+    "back": "On one component, maps an error type (e.g. HTTP:NOT_FOUND) to a custom one (APP:ORDER_NOT_FOUND)."
+  },
+  {
+    "id": "global-error-handler-raise-error-and-error-mapping-c6",
+    "syllabusItem": "Global Error Handler, Raise Error & Error Mapping",
+    "domain": "errors",
+    "front": "Match several types in one scope?",
+    "back": "type=\"HTTP:NOT_FOUND, HTTP:BAD_REQUEST\" or a when expression."
+  },
+  {
+    "id": "http-request-connector-c1",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "front": "HTTP Request: payload and attributes afterwards?",
+    "back": "payload = response body; attributes = HttpResponseAttributes (statusCode, reasonPhrase, headers). vars unchanged."
+  },
+  {
+    "id": "http-request-connector-c2",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "front": "HTTP Request: how are URI params, query params and headers sent?",
+    "back": "Child elements http:uri-params, http:query-params and http:headers, each a DataWeave map."
+  },
+  {
+    "id": "http-request-connector-c3",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "front": "HTTP Request: what error does a 4xx/5xx response raise?",
+    "back": "A typed HTTP error, e.g. HTTP:NOT_FOUND, HTTP:BAD_REQUEST, HTTP:INTERNAL_SERVER_ERROR."
+  },
+  {
+    "id": "http-request-connector-c4",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "front": "HTTP Request: what error when the host is unreachable or times out?",
+    "back": "HTTP:CONNECTIVITY (can't connect) or HTTP:TIMEOUT (no response in time)."
+  },
+  {
+    "id": "http-request-connector-c5",
+    "syllabusItem": "HTTP Request Connector",
+    "domain": "conn",
+    "front": "HTTP Request config vs operation: where do host, port and base path go?",
+    "back": "In the request configuration. The operation sets method and path (relative to the base path)."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-c1",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "front": "JMS queue vs topic?",
+    "back": "Queue: point-to-point, one consumer per message. Topic: publish-subscribe, every subscriber gets it."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-c2",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "front": "JMS operations?",
+    "back": "Publish, Consume, Publish Consume (request-reply), and the On New Message listener."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-c3",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "front": "JMS acknowledgement modes?",
+    "back": "AUTO (default), MANUAL, IMMEDIATE, DUPS_OK."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-c4",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "front": "Salesforce Query: language and result?",
+    "back": "SOQL; the payload is an array (iterator) of records."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-c5",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "front": "Salesforce Upsert needs?",
+    "back": "The object type and externalIdFieldName."
+  },
+  {
+    "id": "jms-and-salesforce-connectors-c6",
+    "syllabusItem": "JMS & Salesforce Connectors",
+    "domain": "conn",
+    "front": "Salesforce listeners for changes?",
+    "back": "On New Object, On Modified Object, On Deleted Object, plus streaming/replay channel listeners."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-c1",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "front": "Logger levels?",
+    "back": "TRACE, DEBUG, INFO (default), WARN, ERROR."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-c2",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "front": "Logger category?",
+    "back": "A name you set so log4j2 can filter or raise the level for those messages."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-c3",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "front": "Logging configuration file?",
+    "back": "src/main/resources/log4j2.xml"
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-c4",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "front": "CloudHub app logs: where?",
+    "back": "Runtime Manager → the application → Logs."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-c5",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "front": "Anypoint Monitoring?",
+    "back": "Built-in dashboards (requests, response time, failures), custom dashboards and alerts."
+  },
+  {
+    "id": "logging-and-anypoint-monitoring-c6",
+    "syllabusItem": "Logging & Anypoint Monitoring",
+    "domain": "debug",
+    "front": "Anypoint Visualizer?",
+    "back": "A live graph of how apps and APIs in the application network call each other."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c1",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "On Error Continue: result for the caller?",
+    "back": "Success. The handler's payload is the flow's result."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c2",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "On Error Propagate: result for the caller?",
+    "back": "Error. The handler runs, then the error is re-thrown."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c3",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "HTTP Listener response: Continue vs Propagate?",
+    "back": "Continue → 200 (normal response). Propagate → 500 (error response)."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c4",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "Processors after the failing one in the same flow?",
+    "back": "Never run, with either handler."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c5",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "Flow with no error handler?",
+    "back": "Default handler: logs and propagates."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c6",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "Several error scopes in one handler: which runs?",
+    "back": "The first whose type or when matches, top to bottom."
+  },
+  {
+    "id": "on-error-propagate-vs-on-error-continue-c7",
+    "syllabusItem": "On Error Propagate vs On Error Continue",
+    "domain": "errors",
+    "front": "Can a sub-flow have an error handler?",
+    "back": "No. Errors go to the calling flow's handler."
+  },
+  {
+    "id": "scatter-gather-c1",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "front": "Scatter-Gather output shape?",
+    "back": "An object keyed \"0\", \"1\", ... with one Mule message (payload, attributes) per route."
+  },
+  {
+    "id": "scatter-gather-c2",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "front": "Scatter-Gather: route failure?",
+    "back": "Waits for all routes, then raises MULE:COMPOSITE_ROUTING."
+  },
+  {
+    "id": "scatter-gather-c3",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "front": "Scatter-Gather: execution?",
+    "back": "Routes run in parallel. timeout and maxConcurrency are optional."
+  },
+  {
+    "id": "scatter-gather-c4",
+    "syllabusItem": "Scatter-Gather",
+    "domain": "route",
+    "front": "Scatter-Gather: variables set inside routes?",
+    "back": "Merged and available after the scope."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-c1",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "front": "Fixed Frequency scheduler: fields?",
+    "back": "frequency, timeUnit (default MILLISECONDS) and startDelay."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-c2",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "front": "Cron scheduler: expression format?",
+    "back": "Quartz cron with seconds first: sec min hour day-of-month month day-of-week. Plus a timeZone field."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-c3",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "front": "Cron \"0 */15 * * * ?\" means?",
+    "back": "Every 15 minutes, on the minute (second 0)."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-c4",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "front": "Scheduler in a cluster?",
+    "back": "Runs only on the primary node."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-c5",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "front": "Scheduler payload?",
+    "back": "null. The Scheduler starts the flow without data."
+  },
+  {
+    "id": "scheduler-fixed-frequency-and-cron-c6",
+    "syllabusItem": "Scheduler: Fixed Frequency & Cron",
+    "domain": "conn",
+    "front": "Deployed app: where can you run a scheduler now or disable it?",
+    "back": "Runtime Manager → the application → Schedules."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-c1",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "front": "Start the app with breakpoints active?",
+    "back": "Run → Debug (Debug project), not Run."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-c2",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "front": "Mule Debugger view shows?",
+    "back": "The Mule event at the breakpoint: payload, attributes, variables."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-c3",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "front": "Conditional breakpoint?",
+    "back": "A breakpoint with a DataWeave condition; it pauses only when true."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-c4",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "front": "Evaluate DataWeave Expression?",
+    "back": "Runs an expression against the paused event."
+  },
+  {
+    "id": "studio-debugger-and-breakpoints-c5",
+    "syllabusItem": "Studio Debugger & Breakpoints",
+    "domain": "debug",
+    "front": "Studio debugger default port?",
+    "back": "6666."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-c1",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "front": "Try scope purpose?",
+    "back": "Handle errors for a few processors without ending the flow; it has its own error handler."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-c2",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "front": "Error type format?",
+    "back": "NAMESPACE:IDENTIFIER, e.g. HTTP:TIMEOUT, DB:CONNECTIVITY, MULE:EXPRESSION."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-c3",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "front": "Error object fields?",
+    "back": "error.description, error.errorType (namespace, identifier), error.cause, error.errorMessage, error.childErrors."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-c4",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "front": "Error type ANY?",
+    "back": "Matches every error (except critical ones)."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-c5",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "front": "HTTP:CONNECTIVITY parent?",
+    "back": "MULE:CONNECTIVITY."
+  },
+  {
+    "id": "try-scope-error-types-and-the-error-object-c6",
+    "syllabusItem": "Try Scope, Error Types & the Error Object",
+    "domain": "errors",
+    "front": "Try scope transactional actions?",
+    "back": "INDIFFERENT (default), ALWAYS_BEGIN, BEGIN_OR_JOIN."
+  },
+  {
+    "id": "validation-module-c1",
+    "syllabusItem": "Validation Module",
+    "domain": "route",
+    "front": "Validation module failure?",
+    "back": "Raises an error in the VALIDATION namespace, e.g. VALIDATION:INVALID_EMAIL."
+  },
+  {
+    "id": "validation-module-c2",
+    "syllabusItem": "Validation Module",
+    "domain": "route",
+    "front": "Validation All scope?",
+    "back": "Runs every inner validator and reports all failures as VALIDATION:MULTIPLE."
+  },
+  {
+    "id": "validation-module-c3",
+    "syllabusItem": "Validation Module",
+    "domain": "route",
+    "front": "Common validators?",
+    "back": "is-true, is-false, is-not-null, is-null, is-email, is-number, matches-regex, validate-size, is-not-empty."
+  },
+  {
+    "id": "watermarks-and-object-store-c1",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "front": "Object Store operations?",
+    "back": "store, retrieve, retrieve-all, contains, remove, clear."
+  },
+  {
+    "id": "watermarks-and-object-store-c2",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "front": "os:retrieve on a missing key with no default?",
+    "back": "Raises OS:KEY_NOT_FOUND."
+  },
+  {
+    "id": "watermarks-and-object-store-c3",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "front": "Manual watermark steps?",
+    "back": "1. retrieve last value (default for first run) 2. query records > value 3. process 4. store the new max value."
+  },
+  {
+    "id": "watermarks-and-object-store-c4",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "front": "Automatic watermarking: which listeners?",
+    "back": "Database On Table Row (watermarkColumn), Salesforce On New/Modified Object, File/FTP/SFTP listeners (by timestamp)."
+  },
+  {
+    "id": "watermarks-and-object-store-c5",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "front": "Object Store v2 on CloudHub: how long are entries kept?",
+    "back": "Until their TTL expires (default 30 days)."
+  },
+  {
+    "id": "watermarks-and-object-store-c6",
+    "syllabusItem": "Watermarks & Object Store",
+    "domain": "records",
+    "front": "Persistent vs transient Object Store?",
+    "back": "Persistent survives restarts; transient is in-memory only."
+  },
+  {
+    "id": "web-service-consumer-soap-c1",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "front": "Web Service Consumer: configuration fields?",
+    "back": "WSDL location, service, port, address."
+  },
+  {
+    "id": "web-service-consumer-soap-c2",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "front": "Consume output structure?",
+    "back": "payload.body, payload.headers, payload.attachments."
+  },
+  {
+    "id": "web-service-consumer-soap-c3",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "front": "SOAP fault from the service: error type?",
+    "back": "WSC:SOAP_FAULT."
+  },
+  {
+    "id": "web-service-consumer-soap-c4",
+    "syllabusItem": "Web Service Consumer (SOAP)",
+    "domain": "conn",
+    "front": "What do you build in DataWeave before Consume?",
+    "back": "Only the SOAP body XML (with the right namespace). The connector adds the envelope."
   }
 ]
