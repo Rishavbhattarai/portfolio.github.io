@@ -53,7 +53,8 @@
           "tasks": [
             "Enroll in the free Fundamentals course and confirm whether it still includes free exam attempts.",
             "Install Anypoint Studio and open it once so the first-run download finishes.",
-            "Bookmark the DataWeave Playground. Don't start the Anypoint trial yet: it lasts 30 days, so start it on Day 1."
+            "Bookmark the DataWeave Playground. Don't start the Anypoint trial yet: it lasts 30 days, so start it on Day 1.",
+            "Open your NotebookLM notebook (Materials → My NotebookLM notebook) and keep it in a tab for questions during the day."
           ]
         },
         {

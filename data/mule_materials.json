@@ -1,6 +1,18 @@
 {
   "core": [
     {
+      "id": "mcore-notebooklm",
+      "title": "My NotebookLM notebook",
+      "domain": "ovr",
+      "why": "Your own MuleSoft notebook. Use it to ask questions about the study guide and sources, get audio overviews, and check answers after each quiz.",
+      "links": [
+        {
+          "label": "Open notebook",
+          "url": "https://notebook.google.com/notebook/793ebbe1-c89e-4669-8a0f-4be3483d9baf"
+        }
+      ]
+    },
+    {
       "id": "mcore-fundamentals",
       "title": "Anypoint Platform Development: Fundamentals (Mule 4)",
       "domain": "ovr",
