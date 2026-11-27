@@ -18,7 +18,7 @@ kit = kit.replace('const convex = options.convex ?? true;', 'const convex = opti
 kit = kit.replace('(groups.get(level) ?? "")', '(groups.get(level) || "")');
 // ISO_CSS ships as a stylesheet instead of a string in the script
 kit = kit.replace(/const ISO_CSS = `[\s\S]*?`;\n?/, '');
-const src = readFileSync(join(HERE, 'catalog.src.js'), 'utf8');
+const src = readFileSync(join(HERE, 'catalog.src.js'), 'utf8') + '\n' + readFileSync(join(HERE, 'sorter.src.js'), 'utf8');
 const js = `/* Built by tools/mule-catalog/build.mjs. Do not edit; edit catalog.src.js. Kit: Anatomy (MIT). */\n(function () {\n${kit}\n${src}\n})();\n`;
 
 // Features Safari 12 can't run. The app itself avoids the same list.
@@ -50,6 +50,7 @@ ${rules}
 .mcat .iso-figure{margin:0}
 .mcat .iso-plate{border-radius:var(--r-card,18px);box-shadow:none;border:1px solid var(--anatomy-faint)}
 .mcat .iso-plate-corners{top:18px;right:20px;bottom:18px;left:20px}
+.mcat .iso-plate-corner{font-size:12px}
 .mcat .iso-svg{max-width:760px}
 .mcat .iso-keys>*{margin:3px 18px 3px 0}
 .mcat .iso-keys{gap:0}
@@ -67,6 +68,9 @@ ${rules}
 .mcat-detail__list{margin:0;padding-left:22px;color:var(--text-dim);font-size:14.5px;line-height:1.55}
 .mcat-detail__list li+li{margin-top:4px}
 .mcat-detail .btn{justify-self:start}
+.msort .iso-plate{padding-top:44px;padding-bottom:46px}
+.msort .iso-legend{margin-top:10px}
+.msort .iso-svg{max-width:820px}
 @media (max-width:560px){.mcat .iso-plate{padding:46px 10px 64px}}
 `;
 writeFileSync(join(ROOT, 'css', 'mule-catalog.css'), css);
@@ -78,7 +82,12 @@ for (const theme of ['dark', 'light']) {
   const page = `<!doctype html><html lang="en" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Card catalog</title>
 <style>body{margin:0;background:${theme === 'dark' ? '#0C0D10' : '#F6F7F9'};color:${theme === 'dark' ? '#e6e6e6' : '#18181a'};font:14px/1.6 -apple-system,system-ui,sans-serif;--text-dim:#888;--text-faint:#777}main{width:860px;max-width:calc(100% - 32px);margin:40px auto}.chip,.btn{display:inline-block;border:1px solid #8885;border-radius:99px;padding:2px 10px;font-size:13px}.btn{background:none;color:inherit}</style>
 <style>${css}</style></head><body><main><div class="mcat" id="fig"></div></main>
-<script>${js.replace(/<\/(script)/gi, "<\\/$1")}</script><script>MuleCatalog.mount(document.getElementById('fig'), { sections: ${JSON.stringify(sample)}, selected: ${process.argv.includes('--pick') ? 7 : 0} });</script></body></html>`;
+<div class="mcat-sorter-host" id="sorter" style="margin-top:40px"></div><p><button class="btn" id="good">Good</button> <button class="btn" id="again">Again</button></p>
+<script>${js.replace(/<\/(script)/gi, "<\\/$1")}</script><script>MuleCatalog.mount(document.getElementById('fig'), { sections: ${JSON.stringify(sample)}, selected: ${process.argv.includes('--pick') ? 7 : 0} });
+var m = { bins: [{ count: 12 }, { count: 30 }, { count: 9 }, { count: 4, safe: true }], due: 17, fresh: 150, stand: true, safe: 4, total: 226, combo: 3, flag: 'DEC 8', readout: '18 left · 4 of 226 exam-safe' };
+var sorter = MuleSorter.create({}); document.getElementById('sorter').appendChild(sorter.root); sorter.set(m);
+document.getElementById('good').onclick = function () { m.bins[1].count++; m.due--; m.combo++; m.readout = 'Good · back in 6 days'; sorter.set(m, { to: 'bin', bin: 1 }); };
+document.getElementById('again').onclick = function () { m.combo = 0; m.readout = 'Again · back in the hopper'; sorter.set(m, { to: 'hopper' }); };</script></body></html>`;
   writeFileSync(join(HERE, theme === 'dark' ? 'preview.html' : 'preview-light.html'), page);
 }
 console.log(`built js/mule-catalog.js (${(js.length / 1024).toFixed(1)} KB), css/mule-catalog.css, previews`);

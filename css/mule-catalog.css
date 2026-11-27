@@ -117,6 +117,7 @@
 .mcat .iso-figure{margin:0}
 .mcat .iso-plate{border-radius:var(--r-card,18px);box-shadow:none;border:1px solid var(--anatomy-faint)}
 .mcat .iso-plate-corners{top:18px;right:20px;bottom:18px;left:20px}
+.mcat .iso-plate-corner{font-size:12px}
 .mcat .iso-svg{max-width:760px}
 .mcat .iso-keys>*{margin:3px 18px 3px 0}
 .mcat .iso-keys{gap:0}
@@ -134,4 +135,7 @@
 .mcat-detail__list{margin:0;padding-left:22px;color:var(--text-dim);font-size:14.5px;line-height:1.55}
 .mcat-detail__list li+li{margin-top:4px}
 .mcat-detail .btn{justify-self:start}
+.msort .iso-plate{padding-top:44px;padding-bottom:46px}
+.msort .iso-legend{margin-top:10px}
+.msort .iso-svg{max-width:820px}
 @media (max-width:560px){.mcat .iso-plate{padding:46px 10px 64px}}

@@ -12,18 +12,31 @@ var MCAT = (function () {
   'use strict';
 
   // ---------- Model ----------
-  var COLS = 4, ROWS = 3;
+  // Four drawers across on wide screens; three across (a taller cabinet) on phones,
+  // so the drawers stay big enough to read and tap at 390 px.
+  var COLS, ROWS, W, BODY1, TOP1, WIDTH, HEIGHT, P;
   var OW = 36, OH = 20, ST = 3;            // drawer opening and frame stile
-  var W = COLS * OW + (COLS + 1) * ST;     // 159
   var D = 50;                              // carcass depth; front face at y = D
   var FOOT = 5, PLINTH = 8;
   var BODY0 = FOOT + PLINTH;               // 13
-  var BODY1 = BODY0 + ROWS * OH + (ROWS + 1) * ST; // 85
-  var TOP = 5, TOP1 = BODY1 + TOP;         // 90
+  var TOP = 5;
   var PER_PCT = 4;                          // drawer travel per 1% of the exam
   var TRAY_LEN = 46, WALL_H = 9, WALL_T = 1.2;
   var CARD_GAP = 3.6, CARD_H = 13, CARD_UP = 2.6;
-  var WIDTH = 640, HEIGHT = 430;
+
+  function setup(cols) {
+    COLS = cols; ROWS = 12 / cols;
+    W = COLS * OW + (COLS + 1) * ST;                 // 159 or 120
+    BODY1 = BODY0 + ROWS * OH + (ROWS + 1) * ST;     // 85 or 108
+    TOP1 = BODY1 + TOP;
+    WIDTH = 640; HEIGHT = cols === 4 ? 430 : 540;
+    var pts = boxCorners({ x: -3, y: -1, w: W + 6, d: D + 4 }, 0, TOP1 + 6);
+    for (var i = 0; i < 12; i++) {
+      var o = openingOf(i);
+      pts.push([o.x0, D + 10 * PER_PCT + 1, o.zb], [o.x0, D + 10 * PER_PCT + 1, o.zb + OH + CARD_UP + 4]);
+    }
+    P = fitProjection(pts, WIDTH, HEIGHT, { pad: cols === 4 ? 22 : 10, azimuth: 58 });
+  }
 
   function openingOf(i) {
     var c = i % COLS, r = Math.floor(i / COLS);
@@ -31,13 +44,6 @@ var MCAT = (function () {
     var zt = BODY1 - ST - r * (OH + ST);
     return { x0: x0, zb: zt - OH, cx: x0 + OW / 2 };
   }
-
-  var fitPts = boxCorners({ x: -3, y: -1, w: W + 6, d: D + 4 }, 0, TOP1 + 6);
-  for (var fi = 0; fi < 12; fi++) {
-    var o0 = openingOf(fi);
-    fitPts.push([o0.x0, D + 10 * PER_PCT + 1, o0.zb], [o0.x0, D + 10 * PER_PCT + 1, o0.zb + OH + CARD_UP + 4]);
-  }
-  var P = fitProjection(fitPts, WIDTH, HEIGHT, { pad: 22, azimuth: 58 });
 
   var at = function (p) { return iso(p, P); };
   var S = function (paths, style) { return solidSvg(paths, style); };
@@ -232,10 +238,12 @@ var MCAT = (function () {
   function mount(root, opts) {
     if (live) live.stop();
     var sections = opts.sections;
+    var narrow = opts.cols ? opts.cols === 3 : (root.clientWidth || 999) < 520;
+    setup(narrow ? 3 : 4);
     var t = top(sections);
     var stage = '<div class="iso-stage mcat-stage" tabindex="0" role="slider" aria-label="Exam sections as catalog drawers. Arrow keys open the next or previous drawer, Enter opens its topics." aria-valuemin="1" aria-valuemax="12" aria-valuenow="1">' + svgOf(sections, t) + '</div>';
     root.innerHTML = plateHtml({
-      fig: 'Fig 1', title: 'The exam, filed', hint: opts.hint || 'Tap a drawer · tap again for its topics', readout: '',
+      fig: 'Fig 1', title: 'The exam, filed', hint: opts.hint || (narrow ? 'Tap a drawer' : 'Tap a drawer · tap again for its topics'), readout: '',
       keys: [
         { mark: 'lit', label: 'Cards stand up as you finish the section\'s topics' },
         { mark: 'raised', label: 'One card per exam objective' },
@@ -356,6 +364,6 @@ var MCAT = (function () {
     return live;
   }
 
-  return { mount: mount, size: { width: WIDTH, height: HEIGHT } };
+  return { mount: mount };
 })();
 if (typeof window !== 'undefined') window.MuleCatalog = MCAT;

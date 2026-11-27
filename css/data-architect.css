@@ -897,7 +897,7 @@ button { font: inherit; color: inherit; }
   font: inherit; cursor: pointer; overflow: hidden;
 }
 .plan-day .mono { font-size: 14px; font-weight: 600; color: var(--text); }
-.plan-day small { font-size: 11.5px; }
+.plan-day small { font-size: 12.5px; }
 .plan-day.is-today { border-color: var(--accent-line); }
 .plan-day.is-today .mono { color: var(--accent-text); }
 .plan-day.is-on { background: var(--accent-soft); border-color: var(--accent); }
@@ -915,7 +915,7 @@ button { font: inherit; color: inherit; }
 .plan-note .ph { margin-top: 3px; }
 .plan-topics { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip--link { border: 1px solid var(--accent-line); background: transparent; color: var(--accent-text); cursor: pointer; font-family: inherit; height: auto; min-height: 28px; padding: 3px 12px; white-space: normal; text-align: left; }
-.plan-actions .btn--primary .count { color: var(--accent-ink); opacity: .8; }
+.btn--primary .count { color: var(--accent-ink); opacity: .8; }
 .plan-block { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid var(--border); }
 .plan-block__head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .plan-block__head .mono { font-size: 13px; color: var(--text-faint); min-width: 92px; }
@@ -996,3 +996,29 @@ pre.code {
 .catalog .mcat { min-width: 0; }
 .no-flexgap .catalog .exam-map__head > * + * { margin-left: 14px; }
 @media (max-width: 640px) { .catalog { padding: 18px 14px 20px; } }
+
+/* Materials core cards: let long section chips wrap instead of pushing the card wider than its column */
+.core__card { min-width: 0; }
+.core__top .chip { max-width: 100%; height: auto; min-height: 24px; padding: 3px 10px; white-space: normal; line-height: 1.35; }
+/* Six cards: 2 + 3, then the sixth runs full width instead of sitting alone in a third of a row */
+.core__card:nth-child(6):last-child { grid-column: span 6; }
+@media (max-width: 900px) { .core__card:nth-child(6):last-child { grid-column: span 2; } }
+@media (max-width: 640px) { .core__card:nth-child(6):last-child { grid-column: span 1; } }
+
+/* Flashcards: Game / Notes switch and the card-sorter slot (MuleSoft track) */
+.mode-switch .seg__btn { min-height: var(--tap); color: var(--text-dim); }
+.mode-switch .seg__btn.is-on { background: var(--accent-soft); color: var(--accent-text); }
+.mode-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
+.mode-row__hint { font-size: 14px; color: var(--text-dim); }
+.no-flexgap .mode-row > * + * { margin-left: 14px; }
+.sorter-slot { margin-bottom: 12px; }
+.sorter-slot .iso-plate { padding: 34px 12px 38px; }
+/* Keep the card and the grade buttons on the first screen: the machine gets at most about a third of it */
+.sorter-slot .iso-svg { height: 30vh; max-height: 300px; min-height: 150px; width: 100%; }
+.sorter-slot .iso-legend { display: none; }
+.flash__topic { margin: 0 0 10px; }
+@media (max-width: 640px) {
+  .quiz-top { flex-wrap: wrap; }
+  .sorter-slot .iso-plate { padding: 34px 4px 50px; }
+  .sorter-slot .iso-svg { height: auto; min-height: 0; }
+}

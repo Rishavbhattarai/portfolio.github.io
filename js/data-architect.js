@@ -18,8 +18,8 @@
 
   // Two exams share this dashboard. Each has its own data files (data/<prefix>_*.json) and its own progress key.
   const TRACKS = {
-    mule: { id: 'mule', key: 'muleStudy.v1', prefix: 'mule', name: 'MuleSoft Developer', short: 'MuleSoft', tag: 'Mule', icon: 'ph-plugs-connected', role: 'Main exam', unit: 'exam topic', ingest: 'mule-ingest', audience: 'a Mule developer', reader: 'has never built an integration' },
-    da: { id: 'da', key: 'daStudy.v1', prefix: 'da', name: 'Data Architect', short: 'Data Architect', tag: 'DA', icon: 'ph-database', role: 'Side track', unit: 'Trailhead module', ingest: 'da-ingest', audience: 'an architect', reader: 'has never used Salesforce' }
+    mule: { id: 'mule', key: 'muleStudy.v1', prefix: 'mule', name: 'MuleSoft Developer', short: 'MuleSoft', tag: 'Mule', icon: 'ph-plugs-connected', role: 'Main exam', unit: 'exam topic', word: 'topic', ingest: 'mule-ingest', audience: 'a Mule developer', reader: 'has never built an integration' },
+    da: { id: 'da', key: 'daStudy.v1', prefix: 'da', name: 'Data Architect', short: 'Data Architect', tag: 'DA', icon: 'ph-database', role: 'Side track', unit: 'Trailhead module', word: 'module', ingest: 'da-ingest', audience: 'an architect', reader: 'has never used Salesforce' }
   };
   const T = TRACKS[(function () {
     const q = new URLSearchParams(location.search).get('track');
@@ -63,7 +63,9 @@
     planDay: null,     // plan day shown on the home page; null means today
     resources: null,   // <prefix>_resources.json: per-topic course, docs, tools and AI prompts (optional)
     objectives: null,  // <prefix>_objectives.json: exam objectives per section, for the card-catalog figure
-    catalogSel: -1     // drawer open in the card-catalog figure (kept across re-renders)
+    catalogSel: -1,    // drawer open in the card-catalog figure (kept across re-renders)
+    sorter: null,      // the card-sorter figure, kept alive across re-renders so its motion isn't cut
+    sorterMove: null   // what the sorter should animate on the next render (set by a grade)
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -106,7 +108,8 @@
       focusLog: [],     // [{date, itemId, min}]
       timer: null,      // active focus timer
       timerPreset: { work: 25, brk: 5 }, // last custom Pomodoro lengths
-      ambient: false    // brown noise during focus blocks
+      ambient: false,   // brown noise during focus blocks
+      cardsMode: 'game' // flashcards on the MuleSoft track: 'game' (sorting machine) or 'notes' (plain cards)
     };
   }
   function loadProgress() {
@@ -468,7 +471,7 @@
       .sort((a, b) => a.r - b.r);
 
     return `${topbar()}${banner()}${mainTrackBanner()}
-      <header class="view-head enter" style="--i:0"><h1>${state.plan ? esc(T.name) : 'Syllabus'}</h1><p>${T.id === 'mule' ? 'Every exam topic, grouped by exam section. Open a topic to rate your recall, explain it, or start a focus session.' : 'Every module and document on the official trailmix, grouped by exam domain. Open a module to rate your recall, explain it, or start a focus session.'}</p></header>
+      <header class="view-head enter" style="--i:0"><h1>${state.plan ? esc(T.name) : 'Syllabus'}</h1><p>${T.id === 'mule' ? 'Today\'s plan first, then the exam syllabus: twelve sections and every topic in them. Open a topic to rate your recall, explain it, or start a focus session.' : 'Every module and document on the official trailmix, grouped by exam domain. Open a module to rate your recall, explain it, or start a focus session.'}</p></header>
       ${renderPlan()}
       <section class="bento" aria-label="Overview">
         <article class="panel bento__count enter" style="--i:1">
@@ -516,7 +519,7 @@
             <span class="mono timetable__ret tone--${retentionTone(t.r)}" role="cell">${Math.round(t.r * 100)}%</span>
             <span class="timetable__next" role="cell">${esc(dueLabel(t.id).replace('Review ', ''))}</span>
           </div>`).join('')}
-        </div>` : '<p class="today__empty history__empty">Rate a module after you study it. Each rating lands here, and the forgetting curve decides when it comes back.</p>'}
+        </div>` : '<p class="today__empty history__empty">Rate a ${T.word} after you study it. Each rating lands here, and the forgetting curve decides when it comes back.</p>'}
       </details>`;
   }
 
@@ -717,7 +720,7 @@
       <section class="panel__block">
         <h4>How well can you recall this without looking?</h4>
         <div class="rates" role="group" aria-label="Recall rating">${rateBtns}</div>
-        <p class="panel__hint">${last ? `Last rated ${last.rating}/5 on ${shortDate(last.date)}. ${dueLabel(it.id)}.` : 'Rate it after you finish the module. Low ratings come back tomorrow, high ones in a week or a month.'}</p>
+        <p class="panel__hint">${last ? `Last rated ${last.rating}/5 on ${shortDate(last.date)}. ${dueLabel(it.id)}.` : `Rate it after you finish the ${T.word}. Low ratings come back tomorrow, high ones in a week or a month.`}</p>
       </section>
       ${explainBox(it.id, `What is "${it.name}" about, and when would ${T.audience} use it?`)}
       ${topicResources(it)}
@@ -748,7 +751,7 @@
         <div class="res__actions">${checkBtn('done', r.id, !!p.done[r.id], `Mark ${r.title} done`)}${openBtn(r.url)}</div></div>`).join('');
     const avoid = (mat.avoid || []).map((a) => `<li><strong>${esc(a.name)}.</strong> ${esc(a.reason)}</li>`).join('');
     return `${topbar()}${banner()}
-      <header class="view-head"><h1>Materials</h1><p>Start with the five documents that most exam questions come from. Everything else supports them.</p></header>
+      <header class="view-head"><h1>Materials</h1><p>Start with the ${mat.core.length} core sources that most exam questions come from. Everything else supports them.</p></header>
       <h2 class="section-title" style="margin-top:0">High-yield core</h2>
       <section class="core">${core}</section>
       <h2 class="section-title">More resources</h2>
@@ -844,7 +847,7 @@
         </div>
       </article>
       ${memoryHooks()}
-      ${withNotes.length ? `<h2 class="section-title">Module notes</h2><div class="decks">${withNotes.map((i) => `<a class="card deck" href="#notes/${i.id}"><span class="deck__name">${esc(i.name)}</span><span class="mono">${noteCount(i.name)} points</span></a>`).join('')}</div>` : ''}`;
+      ${withNotes.length ? `<h2 class="section-title">${T.id === 'mule' ? 'Topic notes' : 'Module notes'}</h2><div class="decks">${withNotes.map((i) => `<a class="card deck" href="#notes/${i.id}"><span class="deck__name">${esc(i.name)}</span><span class="mono">${noteCount(i.name)} points</span></a>`).join('')}</div>` : ''}`;
   }
 
   /* =========================================================
@@ -899,7 +902,7 @@
     }).join('');
     const shown = [...state.revealed].filter((k) => k.startsWith('map:')).length;
     return `${topbar()}${banner()}
-      <header class="view-head"><h1>Syllabus map</h1><p>The whole exam on one page: domains, the modules in each, and the concepts in your notes. Read it top-down before the details. Later, hide the names and rebuild the map from memory.</p></header>
+      <header class="view-head"><h1>Syllabus map</h1><p>The whole exam on one page: domains, the ${T.word}s in each, and the concepts in your notes. Read it top-down before the details. Later, hide the names and rebuild the map from memory.</p></header>
       <div class="mm__bar">
         <button type="button" class="btn btn--sm${on ? ' btn--primary' : ''}" data-act="map-recall" aria-pressed="${on}"><i class="ph ${on ? 'ph-eye-slash' : 'ph-brain'}"></i>${on ? 'Recreating from memory' : 'Recreate from memory'}</button>
         ${on ? `<span class="chip mono">${shown}/${total} revealed</span><button type="button" class="btn btn--sm" data-act="map-hide"><i class="ph ph-arrow-counter-clockwise"></i>Hide all again</button><span class="kbd-hint">Say each name out loud before you reveal it. Space reveals the next one.</span>` : ''}
@@ -930,7 +933,7 @@
           <button class="btn ${p.notesRead[item.id] ? '' : 'btn--primary'}" type="button" data-act="noteread" data-id="${item.id}"><i class="ph ph-check"></i>${p.notesRead[item.id] ? 'Read' : 'Mark as read'}</button>
           ${rereadBtn(item.id, true)}
         </div>
-      </article>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes here yet</h2><p>Paste your notes for this module into the ${T.ingest} agent and they appear here.</p>${explainBox(item.id, `What is "${item.name}" about, and when would ${T.audience} use it?`)}</div>`}
+      </article>` : `<div class="card empty"><div class="empty__icon"><i class="ph ph-notebook"></i></div><h2>No notes here yet</h2><p>Paste your notes for this ${T.word} into the ${T.ingest} agent and they appear here.</p>${explainBox(item.id, `What is "${item.name}" about, and when would ${T.audience} use it?`)}</div>`}
       ${state.resources ? `<article class="card chapter">${topicResources(item)}</article>` : ''}`;
   }
 
@@ -985,7 +988,7 @@
         <div class="card empty">
           <div class="empty__icon"><i class="ph ph-list-checks"></i></div>
           <h2>${pool.length ? `${pool.length} questions` : 'No questions here yet'}</h2>
-          <p>${pool.length ? 'Practice mode: answer, check, read the explanation. Wrong answers go into your review queue.' : 'Paste your quiz for this module into the ${T.ingest} agent and it appears here.'}</p>
+          <p>${pool.length ? 'Practice mode: answer, check, read the explanation. Wrong answers go into your review queue.' : `Paste your quiz for this ${T.word} into the ${T.ingest} agent and it appears here.`}</p>
           ${pool.length ? `<button class="btn btn--primary" type="button" data-act="quiz-start" data-id="${item.id}" data-val="practice"><i class="ph ph-play"></i>Start practice</button>` : ''}
         </div>`;
     }
@@ -995,15 +998,15 @@
     const perItem = state.syllabus.map((i) => ({ i, n: countFor(all, i.name) })).filter((x) => x.n);
     const minutes = Math.ceil((state.meta.exam.minutes * Math.min(60, all.length)) / state.meta.exam.questions);
     return `${topbar()}${banner()}
-      <header class="view-head"><h1>Quiz</h1><p>Mixing modules in one session is harder than drilling one topic, and it sticks better.</p></header>
+      <header class="view-head"><h1>Quiz</h1><p>Mixing ${T.word}s in one session is harder than drilling one, and it sticks better.</p></header>
       ${all.length ? `<section class="quiz-modes">
-        <button class="card mode" type="button" data-act="quiz-start" data-id="all" data-val="practice"><i class="ph ph-shuffle"></i><strong>Mixed practice</strong><span>All ${all.length} questions, shuffled across modules, with instant feedback.</span></button>
+        <button class="card mode" type="button" data-act="quiz-start" data-id="all" data-val="practice"><i class="ph ph-shuffle"></i><strong>Mixed practice</strong><span>All ${all.length} questions, shuffled across ${T.word}s, with instant feedback.</span></button>
         <button class="card mode" type="button" data-act="quiz-start" data-id="wrong" data-val="practice"${wrong.length ? '' : ' disabled'}><i class="ph ph-arrow-counter-clockwise"></i><strong>Wrong answers</strong><span>${wrong.length ? `${wrong.length} questions you missed last time.` : 'Nothing to redo yet.'}</span></button>
         <button class="card mode" type="button" data-act="quiz-start" data-id="all" data-val="mock"><i class="ph ph-alarm"></i><strong>Mock exam</strong><span>${Math.min(60, all.length)} questions weighted like the real exam, ${minutes} minutes, scored at the end.</span></button>
       </section>
-      <h2 class="section-title">By module</h2>
+      <h2 class="section-title">By ${T.word}</h2>
       <div class="decks">${perItem.map((x) => `<a class="card deck" href="#quiz/${x.i.id}"><span class="deck__name">${esc(x.i.name)}</span><span class="mono">${x.n} questions</span></a>`).join('')}</div>`
-      : `<div class="card empty"><div class="empty__icon"><i class="ph ph-list-checks"></i></div><h2>No questions yet</h2><p>As you finish each ${T.unit}, paste its quiz into the ${T.ingest} agent. Questions show up here and on the module's row.</p></div>`}`;
+      : `<div class="card empty"><div class="empty__icon"><i class="ph ph-list-checks"></i></div><h2>No questions yet</h2><p>As you finish each ${T.unit}, paste its quiz into the ${T.ingest} agent. Questions show up here and on the ${T.word}'s row.</p></div>`}`;
   }
 
   function renderQuestion(z, item) {
@@ -1119,6 +1122,21 @@
     state.progress.srs[card.id] = sm2Update(srsOf(card.id), quality);
     saveProgress();
     s.graded++;
+    if (gameAvailable()) {
+      // Combo: Good/Easy add one, Hard holds, Again resets. Speed never scores.
+      s.combo = quality >= 4 ? (s.combo || 0) + 1 : quality === 3 ? (s.combo || 0) : 0;
+      const days = state.progress.srs[card.id].interval;
+      const name = { 0: 'Again', 3: 'Hard', 4: 'Good', 5: 'Easy' }[quality];
+      if (quality === 0) {
+        state.sorterMove = { to: 'hopper' };
+        s.lastMsg = 'Again · back in the hopper';
+      } else {
+        const bins = sorterBins();
+        const bi = binOf(bins, days);
+        state.sorterMove = { to: 'bin', bin: bi };
+        s.lastMsg = `${name} · back in ${days} day${days === 1 ? '' : 's'}${bins[bi].safe ? ' · exam-safe' : ''}`;
+      }
+    }
     if (quality === 0) { s.again++; s.queue.push(card); }
     s.idx++;
     s.flipped = false;
@@ -1141,7 +1159,7 @@
           <h2>${st.total ? `${st.due} due, ${st.fresh} new` : 'No flashcards here yet'}</h2>
           <p>${st.total
             ? (st.due + st.fresh ? `Recall the answer before you flip. Then grade yourself honestly: cards you miss come back sooner.` : `All caught up. Next card is due ${nextDueIso ? shortDate(nextDueIso) : 'later'}.`)
-            : scope === 'missed' ? 'Points you mark Missed or Partly in recall mode collect here.' : 'Paste your flashcards for this module into the ${T.ingest} agent and they appear here.'}</p>
+            : scope === 'missed' ? 'Points you mark Missed or Partly in recall mode collect here.' : `Paste your flashcards for this ${T.word} into the ${T.ingest} agent and they appear here.`}</p>
           ${st.total ? `<div class="panel__row">${st.due + st.fresh ? `<button class="btn btn--primary" type="button" data-act="cards-start" data-id="${esc(scope)}"><i class="ph ph-play"></i>Start review</button>` : ''}<button class="btn" type="button" data-act="cards-cram" data-id="${esc(scope)}"><i class="ph ph-shuffle"></i>Go through all ${st.total}</button></div>` : ''}
         </div>`;
     }
@@ -1150,14 +1168,14 @@
     const all = deckStats(state.flashcards);
     const missed = missedDeck();
     return `${topbar()}${banner()}
-      <header class="view-head"><h1>Flashcards</h1><p>One deck per module, scheduled with spaced repetition. Review what's due every day, even for 10 minutes.</p></header>
+      <header class="view-head"><h1>Flashcards</h1><p>One deck per ${T.word}, scheduled with spaced repetition. Review what's due every day, even for 10 minutes.</p>${gameAvailable() ? `<div class="mode-row">${modeSwitch()}<span class="mode-row__hint">${gameOn() ? 'Game: each card you grade is filed by the sorting machine.' : 'Notes: plain cards, nothing else on screen.'} Same schedule either way.</span></div>` : ''}</header>
       <section class="quiz-modes">
-        <button class="card mode" type="button" data-act="cards-start" data-id="all"${all.due + all.fresh ? '' : ' disabled'}><i class="ph ph-shuffle"></i><strong>Review all due</strong><span>${all.total ? `${all.due} due and ${all.fresh} new, interleaved so no two cards in a row come from the same module.` : 'No cards yet.'}</span></button>
+        <button class="card mode" type="button" data-act="cards-start" data-id="all"${all.due + all.fresh ? '' : ' disabled'}><i class="ph ph-shuffle"></i><strong>Review all due</strong><span>${all.total ? `${all.due} due and ${all.fresh} new, interleaved so no two cards in a row come from the same ${T.word}.` : 'No cards yet.'}</span></button>
         <a class="card mode" href="#cards/missed"><i class="ph ph-crosshair"></i><strong>Missed from notes</strong><span>${missed.length ? `${missed.length} ${missed.length === 1 ? 'point' : 'points'} you missed or only partly recalled.` : 'Points you mark Missed or Partly in recall mode land here.'}</span></a>
       </section>
       <div class="new-cap"><label for="newPerDay">New cards per session</label><input type="number" id="newPerDay" min="1" max="100" value="${state.progress.newPerDay}"></div>
-      ${decks.length ? `<h2 class="section-title">By module</h2><div class="decks">${decks.map((x) => { const st = deckStats(x.cards); return `<a class="card deck" href="#cards/${x.i.id}"><span class="deck__name">${esc(x.i.name)}</span><span class="mono">${st.due} due · ${st.fresh} new</span></a>`; }).join('')}</div>`
-        : `<div class="card empty"><div class="empty__icon"><i class="ph ph-cards"></i></div><h2>No decks yet</h2><p>As you finish each ${T.unit}, paste its flashcards into the ${T.ingest} agent. Each module gets its own deck.</p></div>`}`;
+      ${decks.length ? `<h2 class="section-title">By ${T.word}</h2><div class="decks">${decks.map((x) => { const st = deckStats(x.cards); return `<a class="card deck" href="#cards/${x.i.id}"><span class="deck__name">${esc(x.i.name)}</span><span class="mono">${st.due} due · ${st.fresh} new</span></a>`; }).join('')}</div>`
+        : `<div class="card empty"><div class="empty__icon"><i class="ph ph-cards"></i></div><h2>No decks yet</h2><p>As you finish each ${T.unit}, paste its flashcards into the ${T.ingest} agent. Each ${T.word} gets its own deck.</p></div>`}`;
   }
 
   function renderCardSession(s, item) {
@@ -1170,7 +1188,9 @@
     }
     const remaining = s.queue.length - s.idx;
     return `${topbar()}
-      <div class="quiz-top"><button class="btn btn--sm" type="button" data-act="cards-exit"><i class="ph ph-x"></i>Exit</button><span class="mono">${remaining} left</span><span class="chip">${esc(card.syllabusItem || '')}</span></div>
+      <div class="quiz-top"><button class="btn btn--sm" type="button" data-act="cards-exit"><i class="ph ph-x"></i>Exit</button>${modeSwitch()}<span class="mono">${remaining} left</span></div>
+      ${gameOn() ? '<div class="sorter-slot" id="sorterSlot"></div>' : ''}
+      <p class="flash__topic"><span class="chip">${esc(card.syllabusItem || '')}</span></p>
       <button type="button" class="flash${s.flipped ? ' is-flipped' : ''}" data-act="cards-flip" aria-label="${s.flipped ? 'Show question' : 'Show answer'}">
         <span class="flash__face flash__front"><small>Question</small><span>${esc(card.front)}</span><em>Recall it, then tap to flip</em></span>
         <span class="flash__face flash__back"><small>Answer</small><span>${esc(card.back)}</span>${card.mnemonic ? `<em><i class="ph ph-lightbulb"></i> ${esc(card.mnemonic)}</em>` : ''}</span>
@@ -1183,6 +1203,69 @@
       </div>
       <p class="panel__hint flash__hint">Tap the card or press Space to flip it. Keys 1 to 4 grade it.</p>`;
   }
+  /* ---------- Game mode: the card-sorter figure (js/mule-catalog.js) ---------- */
+  const gameAvailable = () => T.id === 'mule' && !!window.MuleSorter;
+  const gameOn = () => gameAvailable() && state.progress.cardsMode !== 'notes';
+  function modeSwitch() {
+    if (!gameAvailable()) return '';
+    const on = gameOn();
+    return `<span class="seg mode-switch" role="group" aria-label="Flashcard view (G switches)">
+      <button type="button" class="seg__btn${on ? ' is-on' : ''}" data-act="cards-mode" data-val="game" aria-pressed="${on}"><i class="ph ph-game-controller"></i>Game</button>
+      <button type="button" class="seg__btn${on ? '' : ' is-on'}" data-act="cards-mode" data-val="notes" aria-pressed="${!on}"><i class="ph ph-note"></i>Notes</button></span>`;
+  }
+  // Compartments by days until the card is due again; the last one is past exam day
+  function sorterBins() {
+    const D = Math.max(1, countdown().daysLeft);
+    const b = [{ from: 1, to: 1 }];
+    if (D >= 2) b.push({ from: 2, to: Math.min(6, D) });
+    if (D >= 7) b.push({ from: 7, to: D });
+    b.push({ from: D + 1, to: Infinity, safe: true });
+    return b;
+  }
+  function binOf(bins, days) {
+    for (let i = 0; i < bins.length; i++) if (days <= bins[i].to) return i;
+    return bins.length - 1;
+  }
+  const daysUntil = (iso) => Math.round((parseDate(iso) - todayLocal()) / DAY);
+  function sorterModel(s) {
+    const bins = sorterBins();
+    const cur = s.queue[s.idx];
+    const rest = {};
+    s.queue.slice(s.idx + 1).forEach((c) => { rest[c.id] = true; });
+    const counts = bins.map(() => 0);
+    let fresh = 0;
+    deckFor(s.scope).forEach((c) => {
+      if (rest[c.id] || (cur && c.id === cur.id)) return;
+      if (isNew(c.id)) { fresh++; return; }
+      counts[binOf(bins, daysUntil(srsOf(c.id).dueDate))]++;
+    });
+    const examIso = isoDate(examDate());
+    const total = state.flashcards.length;
+    const safe = state.flashcards.filter((c) => !isNew(c.id) && srsOf(c.id).dueDate > examIso).length;
+    const left = s.queue.length - s.idx;
+    return {
+      bins: bins.map((b, i) => ({ count: counts[i], safe: !!b.safe })),
+      due: Math.max(0, s.queue.length - s.idx - 1), fresh, stand: !!cur, safe, total, combo: s.combo || 0,
+      flag: examDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase(),
+      readout: `${s.lastMsg ? s.lastMsg + ' · ' : ''}${left} left · ${safe}/${total} exam-safe`
+    };
+  }
+  function mountSorter() {
+    const slot = document.getElementById('sorterSlot');
+    const move = state.sorterMove;
+    state.sorterMove = null;
+    if (!slot || !state.cards) return;
+    try {
+      if (!state.sorter) state.sorter = window.MuleSorter.create({});
+      slot.appendChild(state.sorter.root);
+      state.sorter.set(sorterModel(state.cards), move);
+    } catch (e) {
+      console.warn('[data-architect] card sorter failed, falling back to notes mode', e);
+      state.sorter = null;
+      slot.remove();
+    }
+  }
+
   // Flip in place: a re-render would replace the card and skip the animation
   function flipCard() {
     const s = state.cards;
@@ -1329,7 +1412,7 @@
       <span class="chip ${t.phase === 'work' ? 'chip--accent' : 'chip--green'}">${label}</span>
       <h2>${esc(item ? item.name : 'Study session')}</h2>
       ${t.phase === 'done'
-        ? `<p class="focus-note">Nice work. ${t.workMin} minutes logged${item ? ' on this module' : ''}.</p>
+        ? `<p class="focus-note">Nice work. ${t.workMin} minutes logged${item ? ` on this ${T.word}` : ''}.</p>
            <div class="panel__row"><button class="btn btn--primary" type="button" data-act="focus-start" data-id="${t.itemId || ''}" data-val="${t.workMin}" data-brk="${t.breakMin}"><i class="ph ph-play"></i>Another ${t.workMin} min</button><button class="btn" type="button" data-act="focus-stop">Close</button></div>`
         : `<span class="focus-clock mono" id="focusClock">${fmtClock(left)}</span>
            <p class="focus-note">${t.phase === 'work' ? 'Phone on Do Not Disturb and out of reach. One tab, one topic.' : 'Stand up, drink water, look away from the screen.'}</p>
@@ -1349,7 +1432,7 @@
     host.className = 'focus-overlay';
     host.innerHTML = `<div class="focus-box" role="dialog" aria-label="Start a focus session">
       <h2>Start a focus session</h2>
-      <p class="focus-note">To log time on a specific module, start the timer from that module's panel on the Syllabus page.</p>
+      <p class="focus-note">To log time on a specific ${T.word}, start the timer from that ${T.word}'s panel on the Syllabus page.</p>
       <div class="panel__row">
         <button class="btn btn--primary" type="button" data-act="focus-start" data-id="" data-val="25" data-brk="5"><i class="ph ph-timer"></i>25 + 5 break</button>
         <button class="btn btn--primary" type="button" data-act="focus-start" data-id="" data-val="50" data-brk="10"><i class="ph ph-timer"></i>50 + 10 break</button>
@@ -1387,6 +1470,7 @@
     main.classList.toggle('is-entering', !keepScroll);
     main.innerHTML = { home: renderHome, map: renderMap, materials: renderMaterials, notes: renderNotes, quiz: renderQuiz, cards: renderCards }[v]();
     if (v === 'home') mountCatalog();
+    if (v === 'cards') mountSorter(); else state.sorterMove = null;
     document.querySelectorAll('#navLinks a').forEach((a) => { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     window.scrollTo(0, keepScroll ? y : 0);
     updateThemeLabel();
@@ -1488,6 +1572,7 @@
       case 'cards-flip': return flipCard();
       case 'cards-grade': gradeCard(Number(val)); return render(true);
       case 'cards-exit': state.cards = null; return render(false);
+      case 'cards-mode': state.progress.cardsMode = val === 'notes' ? 'notes' : 'game'; saveProgress(); return render(true);
       case 'focus-open': return openFocusPicker();
       case 'focus-cancel': return renderTimer();
       case 'focus-start': startFocus(id || null, Number(val), Number(el.dataset.brk) || null); return;
@@ -1556,6 +1641,9 @@
   function onKey(e) {
     if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test(e.target.tagName)) return;
     if (recallKey(e)) return;
+    if (state.route.view === 'cards' && (e.key === 'g' || e.key === 'G') && gameAvailable()) {
+      state.progress.cardsMode = gameOn() ? 'notes' : 'game'; saveProgress(); render(true); return;
+    }
     if (state.route.view !== 'cards' || !state.cards) return;
     const s = state.cards;
     if (!s.queue[s.idx]) return;
